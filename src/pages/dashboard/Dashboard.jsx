@@ -28,6 +28,9 @@ import {
   ArrowRight,
   Calendar,
   RefreshCw,
+  AlertTriangle,
+  Star,
+  Tag,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -61,8 +64,13 @@ const Dashboard = () => {
     total_users: 3456,
     new_users_today: 12,
     new_users_this_week: 89,
+    total_products: 312,
     active_products: 245,
+    inactive_products: 67,
+    featured_products: 18,
     low_stock_products: 8,
+    total_categories: 24,
+    total_tags: 45,
     pending_orders: 34,
     processing_orders: 67,
   };
@@ -138,34 +146,46 @@ const Dashboard = () => {
 
       {/* Secondary Stats */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-border bg-card p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Orders Today</p>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+        <Link to={ROUTES.PRODUCTS} className="group">
+          <div className="rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-md">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Featured Products</p>
+              <Star className="h-4 w-4 text-amber-500" />
+            </div>
+            <p className="mt-2 text-2xl font-bold text-card-foreground">{displayStats.featured_products || 0}</p>
+            <p className="mt-1 text-xs text-muted-foreground group-hover:text-primary">View all products →</p>
           </div>
-          <p className="mt-2 text-2xl font-bold text-card-foreground">{displayStats.orders_today}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">This Week Revenue</p>
-            <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
+        </Link>
+        <Link to={ROUTES.PRODUCTS} className="group">
+          <div className="rounded-xl border border-border bg-card p-5 transition-all hover:border-destructive/50 hover:shadow-md">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Low Stock Alert</p>
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+            </div>
+            <p className="mt-2 text-2xl font-bold text-destructive">{displayStats.low_stock_products || 0}</p>
+            <p className="mt-1 text-xs text-muted-foreground group-hover:text-destructive">Check inventory →</p>
           </div>
-          <p className="mt-2 text-2xl font-bold text-card-foreground">₹{displayStats.revenue_this_week?.toLocaleString()}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Pending Orders</p>
-            <div className="h-2 w-2 animate-pulse rounded-full bg-yellow-500" />
+        </Link>
+        <Link to={ROUTES.CATEGORIES} className="group">
+          <div className="rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-md">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Categories</p>
+              <Package className="h-4 w-4 text-blue-500" />
+            </div>
+            <p className="mt-2 text-2xl font-bold text-card-foreground">{displayStats.total_categories || 0}</p>
+            <p className="mt-1 text-xs text-muted-foreground group-hover:text-primary">Manage categories →</p>
           </div>
-          <p className="mt-2 text-2xl font-bold text-card-foreground">{displayStats.pending_orders}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-card p-5">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Processing</p>
-            <div className="h-2 w-2 animate-pulse rounded-full bg-purple-500" />
+        </Link>
+        <Link to={ROUTES.TAGS} className="group">
+          <div className="rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-md">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Product Tags</p>
+              <Tag className="h-4 w-4 text-purple-500" />
+            </div>
+            <p className="mt-2 text-2xl font-bold text-card-foreground">{displayStats.total_tags || 0}</p>
+            <p className="mt-1 text-xs text-muted-foreground group-hover:text-primary">Manage tags →</p>
           </div>
-          <p className="mt-2 text-2xl font-bold text-card-foreground">{displayStats.processing_orders}</p>
-        </div>
+        </Link>
       </div>
 
       {/* Charts Row */}

@@ -10,7 +10,7 @@ import { useGetProductsQuery, useDeleteProductMutation } from '@/store/api/apiSl
 import PageHeader from '@/components/common/PageHeader';
 import StatusBadge from '@/components/common/StatusBadge';
 import { ROUTES } from '@/constants/routes';
-import { Plus, Edit, Trash2, Eye, Package } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, Package, Layers } from 'lucide-react';
 import { toast } from 'sonner';
 
 const ProductList = () => {
@@ -26,17 +26,8 @@ const ProductList = () => {
 
   const [deleteProduct] = useDeleteProductMutation();
 
-  // Mock data
-  const mockProducts = [
-    { id: '1', name: 'Business Cards - Premium', sku: 'BC-PREM-001', category: { name: 'Business Cards' }, base_price: 499, status: 'published', stock_status: 'in_stock' },
-    { id: '2', name: 'Letterhead - Standard', sku: 'LH-STD-001', category: { name: 'Letterheads' }, base_price: 299, status: 'published', stock_status: 'in_stock' },
-    { id: '3', name: 'Brochure - Tri-fold', sku: 'BR-TRI-001', category: { name: 'Brochures' }, base_price: 799, status: 'published', stock_status: 'low_stock' },
-    { id: '4', name: 'Flyer - A4', sku: 'FL-A4-001', category: { name: 'Flyers' }, base_price: 199, status: 'draft', stock_status: 'in_stock' },
-    { id: '5', name: 'Poster - A3', sku: 'PS-A3-001', category: { name: 'Posters' }, base_price: 599, status: 'published', stock_status: 'out_of_stock' },
-  ];
-
-  const products = data?.products || mockProducts;
-  const totalCount = data?.total || mockProducts.length;
+  const products = data?.items || [];
+  const totalCount = data?.total || 0;
 
   const handleDelete = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
@@ -57,12 +48,20 @@ const ProductList = () => {
         size: 250,
         Cell: ({ row }) => (
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-              <Package className="h-5 w-5 text-muted-foreground" />
-            </div>
+            {row.original.thumbnail_url ? (
+              <img
+                src={row.original.thumbnail_url}
+                alt={row.original.name}
+                className="h-10 w-10 rounded-lg object-cover"
+              />
+            ) : (
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                <Package className="h-5 w-5 text-muted-foreground" />
+              </div>
+            )}
             <div>
               <p className="font-medium">{row.original.name}</p>
-              <p className="text-xs text-muted-foreground">{row.original.sku}</p>
+              <p className="text-xs text-muted-foreground">{row.original.slug}</p>
             </div>
           </div>
         ),
@@ -77,19 +76,33 @@ const ProductList = () => {
         accessorKey: 'base_price',
         header: 'Base Price',
         size: 120,
-        Cell: ({ cell }) => `₹${cell.getValue()?.toLocaleString() || 0}`,
+        Cell: ({ cell }) => `₹${Number(cell.getValue() || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       },
       {
-        accessorKey: 'status',
+        accessorFn: (row) => row.variants?.length || 0,
+        id: 'variants',
+        header: 'Variants',
+        size: 100,
+      },
+      {
+        accessorKey: 'is_active',
         header: 'Status',
         size: 100,
-        Cell: ({ cell }) => <StatusBadge status={cell.getValue()} />,
+        Cell: ({ cell }) => (
+          <StatusBadge status={cell.getValue() ? 'active' : 'inactive'} />
+        ),
       },
       {
-        accessorKey: 'stock_status',
-        header: 'Stock',
+        accessorKey: 'is_featured',
+        header: 'Featured',
         size: 100,
-        Cell: ({ cell }) => <StatusBadge status={cell.getValue()} />,
+        Cell: ({ cell }) => (
+          cell.getValue() ? (
+            <span className="text-xs font-medium text-primary">Featured</span>
+          ) : (
+            <span className="text-xs text-muted-foreground">-</span>
+          )
+        ),
       },
     ],
     []
@@ -118,6 +131,13 @@ const ProductList = () => {
           title="View"
         >
           <Eye className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => navigate(`${ROUTES.PRODUCTS}/${row.original.id}/variants`)}
+          className="rounded p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+          title="Manage Variants"
+        >
+          <Layers className="h-4 w-4" />
         </button>
         <button
           onClick={() => navigate(`${ROUTES.PRODUCTS}/${row.original.id}/edit`)}

@@ -17,6 +17,7 @@ export const ROUTES = {
   USERS: '/users',
   USER_DETAIL: '/users/:id',
   ROLES: '/users/roles',
+  PERMISSIONS: '/users/permissions',
   INVITATIONS: '/invitations',
 
   // Product Management
@@ -24,6 +25,9 @@ export const ROUTES = {
   PRODUCT_DETAIL: '/products/:id',
   PRODUCT_CREATE: '/products/create',
   CATEGORIES: '/products/categories',
+  TAGS: '/products/tags',
+  SPECIFICATIONS: '/products/specifications',
+  PRICING_RULES: '/products/pricing-rules',
 
   // Order Management
   ORDERS: '/orders',

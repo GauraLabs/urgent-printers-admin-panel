@@ -28,6 +28,24 @@ export const PERMISSIONS = {
   CATEGORY_UPDATE: 'category:update',
   CATEGORY_DELETE: 'category:delete',
 
+  // Tag Management
+  TAG_READ: 'tag:read',
+  TAG_CREATE: 'tag:create',
+  TAG_UPDATE: 'tag:update',
+  TAG_DELETE: 'tag:delete',
+
+  // Specification Management (Materials, Sizes, Finishes, Colors)
+  SPECIFICATION_READ: 'specification:read',
+  SPECIFICATION_CREATE: 'specification:create',
+  SPECIFICATION_UPDATE: 'specification:update',
+  SPECIFICATION_DELETE: 'specification:delete',
+
+  // Pricing Rule Management
+  PRICING_RULE_READ: 'pricing_rule:read',
+  PRICING_RULE_CREATE: 'pricing_rule:create',
+  PRICING_RULE_UPDATE: 'pricing_rule:update',
+  PRICING_RULE_DELETE: 'pricing_rule:delete',
+
   // Order Management
   ORDER_READ: 'order:read',
   ORDER_UPDATE: 'order:update',
@@ -56,6 +74,12 @@ export const PERMISSIONS = {
   SETTINGS_READ: 'settings:read',
   SETTINGS_UPDATE: 'settings:update',
   SYSTEM_CONFIG: 'system:config',
+
+  // Permission Management
+  PERMISSION_READ: 'system:manage_roles',
+  PERMISSION_CREATE: 'system:manage_roles',
+  PERMISSION_UPDATE: 'system:manage_roles',
+  PERMISSION_DELETE: 'system:manage_roles',
 };
 
 export const ROLES = {

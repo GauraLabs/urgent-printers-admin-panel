@@ -28,11 +28,11 @@ const UserList = () => {
 
   // Mock data for demo
   const mockUsers = [
-    { id: '1', email: 'john@example.com', first_name: 'John', last_name: 'Doe', role: { name: 'admin' }, status: 'active', created_at: '2024-01-15' },
-    { id: '2', email: 'jane@example.com', first_name: 'Jane', last_name: 'Smith', role: { name: 'customer' }, status: 'active', created_at: '2024-01-14' },
-    { id: '3', email: 'bob@example.com', first_name: 'Bob', last_name: 'Wilson', role: { name: 'production_operator' }, status: 'active', created_at: '2024-01-13' },
-    { id: '4', email: 'alice@example.com', first_name: 'Alice', last_name: 'Brown', role: { name: 'customer' }, status: 'suspended', created_at: '2024-01-12' },
-    { id: '5', email: 'charlie@example.com', first_name: 'Charlie', last_name: 'Davis', role: { name: 'support_agent' }, status: 'active', created_at: '2024-01-11' },
+    { id: '1', email: 'john@example.com', first_name: 'John', last_name: 'Doe', roles: [{ id: '1', name: 'admin', description: 'Admin role' }], is_active: true, email_verified: true, created_at: '2024-01-15' },
+    { id: '2', email: 'jane@example.com', first_name: 'Jane', last_name: 'Smith', roles: [{ id: '2', name: 'customer', description: 'Customer role' }], is_active: true, email_verified: true, created_at: '2024-01-14' },
+    { id: '3', email: 'bob@example.com', first_name: 'Bob', last_name: 'Wilson', roles: [{ id: '3', name: 'production_operator', description: 'Production role' }], is_active: true, email_verified: true, created_at: '2024-01-13' },
+    { id: '4', email: 'alice@example.com', first_name: 'Alice', last_name: 'Brown', roles: [{ id: '2', name: 'customer', description: 'Customer role' }], is_active: false, email_verified: true, created_at: '2024-01-12' },
+    { id: '5', email: 'charlie@example.com', first_name: 'Charlie', last_name: 'Davis', roles: [{ id: '4', name: 'support_agent', description: 'Support role' }], is_active: true, email_verified: false, created_at: '2024-01-11' },
   ];
 
   const users = data?.users || mockUsers;
@@ -63,7 +63,7 @@ const UserList = () => {
         size: 150,
       },
       {
-        accessorFn: (row) => row.role?.name || '-',
+        accessorFn: (row) => row.roles?.[0]?.name || '-',
         id: 'role',
         header: 'Role',
         size: 120,
@@ -72,7 +72,8 @@ const UserList = () => {
         ),
       },
       {
-        accessorKey: 'status',
+        accessorFn: (row) => row.is_active ? 'active' : 'inactive',
+        id: 'status',
         header: 'Status',
         size: 100,
         Cell: ({ cell }) => <StatusBadge status={cell.getValue()} />,

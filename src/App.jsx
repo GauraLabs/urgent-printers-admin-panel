@@ -22,11 +22,17 @@ import Dashboard from '@/pages/dashboard/Dashboard';
 // User Management
 import UserList from '@/pages/users/UserList';
 import RoleManagement from '@/pages/users/RoleManagement';
+import PermissionsManagement from '@/pages/permissions/PermissionsManagement';
 import InvitationManagement from '@/pages/invitations/InvitationManagement';
 
 // Product Management
 import ProductList from '@/pages/products/ProductList';
+import ProductForm from '@/pages/products/ProductForm';
+import VariantManagement from '@/pages/products/VariantManagement';
 import CategoryManagement from '@/pages/products/CategoryManagement';
+import TagManagement from '@/pages/tags/TagManagement';
+import SpecificationManagement from '@/pages/specifications/SpecificationManagement';
+import PricingRuleManagement from '@/pages/pricing/PricingRuleManagement';
 
 // Order Management
 import OrderList from '@/pages/orders/OrderList';
@@ -63,11 +69,18 @@ function App() {
               {/* User Management */}
               <Route path={ROUTES.USERS} element={<UserList />} />
               <Route path={ROUTES.ROLES} element={<RoleManagement />} />
+              <Route path={ROUTES.PERMISSIONS} element={<PermissionsManagement />} />
               <Route path={ROUTES.INVITATIONS} element={<InvitationManagement />} />
 
               {/* Product Management */}
               <Route path={ROUTES.PRODUCTS} element={<ProductList />} />
+              <Route path={ROUTES.PRODUCT_CREATE} element={<ProductForm />} />
+              <Route path={`${ROUTES.PRODUCTS}/:id/edit`} element={<ProductForm />} />
+              <Route path={`${ROUTES.PRODUCTS}/:productId/variants`} element={<VariantManagement />} />
               <Route path={ROUTES.CATEGORIES} element={<CategoryManagement />} />
+              <Route path={ROUTES.TAGS} element={<TagManagement />} />
+              <Route path={ROUTES.SPECIFICATIONS} element={<SpecificationManagement />} />
+              <Route path={ROUTES.PRICING_RULES} element={<PricingRuleManagement />} />
 
               {/* Order Management */}
               <Route path={ROUTES.ORDERS} element={<OrderList />} />

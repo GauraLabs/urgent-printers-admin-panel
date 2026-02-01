@@ -19,6 +19,9 @@ import {
   Mail,
   Server,
   MailPlus,
+  Tag,
+  Percent,
+  Sliders,
 } from 'lucide-react';
 import { ROUTES } from './routes';
 import { PERMISSIONS } from './permissions';
@@ -56,6 +59,13 @@ export const MENU_ITEMS = [
         path: ROUTES.ROLES,
         permissions: [PERMISSIONS.ROLE_READ],
       },
+      {
+        id: 'permissions',
+        label: 'Permissions',
+        path: ROUTES.PERMISSIONS,
+        icon: Shield,
+        permissions: [PERMISSIONS.PERMISSION_READ],
+      },
     ],
   },
   {
@@ -74,7 +84,29 @@ export const MENU_ITEMS = [
         id: 'categories',
         label: 'Categories',
         path: ROUTES.CATEGORIES,
+        icon: FolderTree,
         permissions: [PERMISSIONS.CATEGORY_READ],
+      },
+      {
+        id: 'tags',
+        label: 'Tags',
+        path: ROUTES.TAGS,
+        icon: Tag,
+        permissions: [PERMISSIONS.TAG_READ],
+      },
+      {
+        id: 'specifications',
+        label: 'Specifications',
+        path: ROUTES.SPECIFICATIONS,
+        icon: Sliders,
+        permissions: [PERMISSIONS.SPECIFICATION_READ],
+      },
+      {
+        id: 'pricing-rules',
+        label: 'Pricing Rules',
+        path: ROUTES.PRICING_RULES,
+        icon: Percent,
+        permissions: [PERMISSIONS.PRICING_RULE_READ],
       },
     ],
   },

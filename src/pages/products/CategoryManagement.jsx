@@ -78,51 +78,9 @@ const CategoryItem = ({ category, level = 0, onEdit, onDelete }) => {
 };
 
 const CategoryManagement = () => {
-  const { data: categoriesData, isLoading } = useGetCategoriesQuery();
+  const { data: categoriesData, isLoading } = useGetCategoriesQuery({ include_inactive: true });
 
-  // Mock categories
-  const mockCategories = [
-    {
-      id: '1',
-      name: 'Business Stationery',
-      slug: 'business-stationery',
-      product_count: 45,
-      children: [
-        { id: '1a', name: 'Business Cards', slug: 'business-cards', product_count: 20 },
-        { id: '1b', name: 'Letterheads', slug: 'letterheads', product_count: 15 },
-        { id: '1c', name: 'Envelopes', slug: 'envelopes', product_count: 10 },
-      ],
-    },
-    {
-      id: '2',
-      name: 'Marketing Materials',
-      slug: 'marketing-materials',
-      product_count: 68,
-      children: [
-        { id: '2a', name: 'Brochures', slug: 'brochures', product_count: 25 },
-        { id: '2b', name: 'Flyers', slug: 'flyers', product_count: 23 },
-        { id: '2c', name: 'Posters', slug: 'posters', product_count: 20 },
-      ],
-    },
-    {
-      id: '3',
-      name: 'Labels & Stickers',
-      slug: 'labels-stickers',
-      product_count: 35,
-      children: [
-        { id: '3a', name: 'Product Labels', slug: 'product-labels', product_count: 20 },
-        { id: '3b', name: 'Stickers', slug: 'stickers', product_count: 15 },
-      ],
-    },
-    {
-      id: '4',
-      name: 'Packaging',
-      slug: 'packaging',
-      product_count: 28,
-    },
-  ];
-
-  const categories = categoriesData || mockCategories;
+  const categories = categoriesData || [];
 
   const handleEdit = (category) => {
     console.log('Edit category:', category);
@@ -167,14 +125,28 @@ const CategoryManagement = () => {
           </div>
         </div>
         <div className="p-4">
-          {categories.map((category) => (
-            <CategoryItem
-              key={category.id}
-              category={category}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
+          {categories.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <FolderTree className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-lg font-medium text-foreground mb-2">No categories yet</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                Get started by creating your first product category
+              </p>
+              <button className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+                <Plus className="h-4 w-4" />
+                Create First Category
+              </button>
+            </div>
+          ) : (
+            categories.map((category) => (
+              <CategoryItem
+                key={category.id}
+                category={category}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
