@@ -1,0 +1,189 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Makes Tailwind dark: classes respond to the .dark CSS class (next-themes)
+   instead of the OS prefers-color-scheme media query (Tailwind v4 default). */
+@custom-variant dark (&:is(.dark *));
+
+/* ─────────────────────────────────────────────────────────────
+   CLOUDFLARE-INSPIRED PALETTE  (OKLCH for perfect opacity modifiers)
+   @theme with direct values: Tailwind writes --color-* to :root
+   .dark overrides the same variables for dark mode
+───────────────────────────────────────────────────────────── */
+@theme {
+  /* ── Core (shadcn / Base UI required) ── */
+  --color-background:              oklch(0.975 0.004 258);
+  --color-foreground:              oklch(0.155 0.025 258);
+  --color-card:                    oklch(1 0 0);
+  --color-card-foreground:         oklch(0.155 0.025 258);
+  --color-popover:                 oklch(1 0 0);
+  --color-popover-foreground:      oklch(0.155 0.025 258);
+  --color-primary:                 oklch(0.56 0.22 263);
+  --color-primary-foreground:      oklch(1 0 0);
+  --color-secondary:               oklch(0.955 0.008 258);
+  --color-secondary-foreground:    oklch(0.155 0.025 258);
+  --color-muted:                   oklch(0.955 0.005 258);
+  --color-muted-foreground:        oklch(0.50 0.015 258);
+  --color-accent:                  oklch(0.945 0.015 263);
+  --color-accent-foreground:       oklch(0.40 0.12 263);
+  --color-destructive:             oklch(0.577 0.245 27);
+  --color-destructive-foreground:  oklch(1 0 0);
+  --color-border:                  oklch(0.905 0.009 258);
+  --color-input:                   oklch(0.905 0.009 258);
+  --color-ring:                    oklch(0.56 0.22 263);
+
+  /* ── Our semantic tokens ── */
+  --color-surface:                 oklch(1 0 0);
+  --color-surface-secondary:       oklch(0.975 0.004 258);
+  --color-border-subtle:           oklch(0.945 0.006 258);
+  --color-primary-hover:           oklch(0.50 0.22 263);
+  --color-success:                 oklch(0.63 0.17 152);
+  --color-success-bg:              oklch(0.97 0.03 152);
+  --color-success-border:          oklch(0.88 0.07 152);
+  --color-warning:                 oklch(0.70 0.20 47);
+  --color-warning-bg:              oklch(0.97 0.04 47);
+  --color-warning-border:          oklch(0.88 0.10 47);
+  --color-danger:                  oklch(0.577 0.245 27);
+  --color-danger-bg:               oklch(0.97 0.03 27);
+  --color-danger-border:           oklch(0.88 0.08 27);
+  --color-info:                    oklch(0.56 0.22 263);
+  --color-info-bg:                 oklch(0.965 0.02 263);
+  --color-info-border:             oklch(0.86 0.06 263);
+  --color-text-primary:            oklch(0.155 0.025 258);
+  --color-text-secondary:          oklch(0.40 0.015 258);
+  --color-text-muted:              oklch(0.56 0.012 258);
+  --color-text-disabled:           oklch(0.75 0.008 258);
+
+  /* ── Typography ── */
+  --font-sans:                     var(--font-inter);
+
+  /* ── Radii (Cloudflare uses moderate rounding) ── */
+  --radius-sm:                     0.25rem;
+  --radius-md:                     0.375rem;
+  --radius-lg:                     0.5rem;
+  --radius-xl:                     0.75rem;
+  --radius-default:                0.375rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DARK MODE
+───────────────────────────────────────────────────────────── */
+.dark {
+  --color-background:              oklch(0.135 0.025 258);
+  --color-foreground:              oklch(0.94 0.006 258);
+  --color-card:                    oklch(0.18 0.025 258);
+  --color-card-foreground:         oklch(0.94 0.006 258);
+  --color-popover:                 oklch(0.20 0.028 258);
+  --color-popover-foreground:      oklch(0.94 0.006 258);
+  --color-primary:                 oklch(0.62 0.20 263);
+  --color-primary-foreground:      oklch(1 0 0);
+  --color-secondary:               oklch(0.24 0.025 258);
+  --color-secondary-foreground:    oklch(0.94 0.006 258);
+  --color-muted:                   oklch(0.24 0.02 258);
+  --color-muted-foreground:        oklch(0.60 0.015 258);
+  --color-accent:                  oklch(0.26 0.04 263);
+  --color-accent-foreground:       oklch(0.75 0.14 263);
+  --color-destructive:             oklch(0.65 0.22 27);
+  --color-destructive-foreground:  oklch(1 0 0);
+  --color-border:                  oklch(0.30 0.025 258);
+  --color-input:                   oklch(0.30 0.025 258);
+  --color-ring:                    oklch(0.62 0.20 263);
+  --color-surface:                 oklch(0.18 0.025 258);
+  --color-surface-secondary:       oklch(0.15 0.022 258);
+  --color-border-subtle:           oklch(0.22 0.022 258);
+  --color-success-bg:              oklch(0.17 0.04 152);
+  --color-success-border:          oklch(0.28 0.07 152);
+  --color-warning-bg:              oklch(0.18 0.04 47);
+  --color-warning-border:          oklch(0.30 0.08 47);
+  --color-danger-bg:               oklch(0.18 0.04 27);
+  --color-danger-border:           oklch(0.30 0.08 27);
+  --color-info-bg:                 oklch(0.18 0.04 263);
+  --color-info-border:             oklch(0.28 0.08 263);
+  --color-text-primary:            oklch(0.94 0.006 258);
+  --color-text-secondary:          oklch(0.70 0.015 258);
+  --color-text-muted:              oklch(0.55 0.012 258);
+  --color-text-disabled:           oklch(0.40 0.008 258);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LEGACY CSS VAR ALIASES (backward compat with var(--surface) etc.)
+───────────────────────────────────────────────────────────── */
+:root {
+  --surface:            var(--color-card);
+  --surface-secondary:  var(--color-surface-secondary);
+  --border:             var(--color-border);
+  --border-subtle:      var(--color-border-subtle);
+  --ring:               var(--color-ring);
+  --primary:            var(--color-primary);
+  --primary-hover:      var(--color-primary-hover);
+  --primary-foreground: var(--color-primary-foreground);
+  --text-primary:       var(--color-foreground);
+  --text-secondary:     var(--color-text-secondary);
+  --text-muted:         var(--color-muted-foreground);
+  --text-disabled:      var(--color-text-disabled);
+  --success:            var(--color-success);
+  --success-bg:         var(--color-success-bg);
+  --success-border:     var(--color-success-border);
+  --warning:            var(--color-warning);
+  --warning-bg:         var(--color-warning-bg);
+  --warning-border:     var(--color-warning-border);
+  --danger:             var(--color-danger);
+  --danger-bg:          var(--color-danger-bg);
+  --danger-border:      var(--color-danger-border);
+  --info:               var(--color-info);
+  --info-bg:            var(--color-info-bg);
+  --info-border:        var(--color-info-border);
+  --radius:             var(--radius-md);
+
+  /* Sidebar — LIGHT MODE: clean white sidebar (Cloudflare-style) */
+  --sidebar-bg:          oklch(1 0 0);
+  --sidebar-border:      oklch(0.905 0.009 258);
+  --sidebar-text:        oklch(0.50 0.015 258);
+  --sidebar-text-active: oklch(0.155 0.025 258);
+  --sidebar-hover:       oklch(0.955 0.005 258);
+  --sidebar-active-bg:   oklch(0.945 0.018 263);
+  --sidebar-active-text: oklch(0.42 0.18 263);
+}
+
+/* Dark mode sidebar override — keep it dark */
+.dark {
+  --sidebar-bg:          oklch(0.145 0.028 258);
+  --sidebar-border:      oklch(0.22 0.025 258);
+  --sidebar-text:        oklch(0.60 0.018 258);
+  --sidebar-text-active: oklch(0.94 0.006 258);
+  --sidebar-hover:       oklch(1 0 0 / 0.05);
+  --sidebar-active-bg:   oklch(0.56 0.22 263 / 0.18);
+  --sidebar-active-text: oklch(0.75 0.16 263);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BASE
+───────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { height: 100%; -webkit-font-smoothing: antialiased; }
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-inter, 'Inter', system-ui, sans-serif);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  min-height: 100%;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar              { width: 4px; height: 4px; }
+::-webkit-scrollbar-track        { background: transparent; }
+::-webkit-scrollbar-thumb        { background: var(--color-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover  { background: var(--color-muted-foreground); }
+
+/* ─────────────────────────────────────────────────────────────
+   TABLE DENSITY
+───────────────────────────────────────────────────────────── */
+.table-compact td, .table-compact th {
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+}
