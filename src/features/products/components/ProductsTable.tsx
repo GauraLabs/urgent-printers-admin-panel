@@ -141,7 +141,7 @@ export function ProductsTable() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onSelect={() => setDeleteProduct(p)}
+                onClick={() => setDeleteProduct(p)}
                 className="text-[var(--danger)] focus:text-[var(--danger)]"
               >
                 <Trash2 className="h-3.5 w-3.5" /> Delete

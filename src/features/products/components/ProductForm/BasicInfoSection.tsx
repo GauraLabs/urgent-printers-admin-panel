@@ -58,9 +58,8 @@ export function BasicInfoSection({ form }: Props) {
       <div>
         <label className={labelClass}>Full Description</label>
         <RichTextEditor
-          value={watch('description') ?? ''}
+          defaultValue={form.getValues('description') ?? ''}
           onChange={(v) => setValue('description', v, { shouldDirty: true })}
-          rows={6}
         />
       </div>
 

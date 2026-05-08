@@ -9,7 +9,8 @@ import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
-import { ImageUpload } from '@/components/common/ImageUpload';
+import { MediaSection } from './MediaSection';
+import { InventorySection } from './InventorySection';
 import { BasicInfoSection } from './BasicInfoSection';
 import { PrintSpecsSection } from './PrintSpecsSection';
 import { PricingSection } from './PricingSection';
@@ -38,6 +39,12 @@ const schema = z.object({
   pricing_tiers: z.array(z.object({ id: z.string(), quantity: z.number(), price_per_unit: z.number(), is_best_value: z.boolean() })).optional(),
   turnaround_options: z.array(z.object({ type: z.string(), days: z.number(), extra_cost: z.number(), is_active: z.boolean() })).optional(),
   seo: z.object({ title: z.string().nullable().optional(), description: z.string().nullable().optional(), canonical_url: z.string().nullable().optional() }).optional(),
+  track_inventory: z.boolean().optional(),
+  stock_quantity: z.number().nullable().optional(),
+  low_stock_threshold: z.number().nullable().optional(),
+  // Populated by MediaSection callbacks — ordered keys of uploaded images + video
+  image_keys: z.array(z.string()).optional(),
+  video_key: z.string().nullable().optional(),
 });
 
 export type ProductFormValues = z.infer<typeof schema>;
@@ -88,19 +95,44 @@ export function ProductForm({ product }: ProductFormProps) {
     } : {
       status: 'draft',
       is_featured: false,
-      tags: [],
-      sizes: [],
-      paper_types: [],
-      finishes: [],
+      tags: ['printing', 'business', 'premium', 'fast-delivery'],
+      sizes: [
+        { id: '', label: '90mm × 54mm (Standard)', width_mm: 90, height_mm: 54, is_active: true },
+        { id: '', label: '85mm × 55mm (Euro)', width_mm: 85, height_mm: 55, is_active: true },
+        { id: '', label: '100mm × 60mm (Large)', width_mm: 100, height_mm: 60, is_active: true },
+      ],
+      paper_types: [
+        { id: '', label: '300 GSM Art Board', gsm: 300, is_active: true },
+        { id: '', label: '350 GSM Art Board', gsm: 350, is_active: true },
+        { id: '', label: '400 GSM Premium Board', gsm: 400, is_active: true },
+        { id: '', label: '450 GSM Ultra Thick', gsm: 450, is_active: true },
+      ],
+      finishes: [
+        { id: '', label: 'Gloss Lamination', is_active: true },
+        { id: '', label: 'Matte Lamination', is_active: true },
+        { id: '', label: 'Soft Touch Matte', is_active: true },
+        { id: '', label: 'Spot UV', is_active: true },
+      ],
       sides_options: ['Single Sided', 'Double Sided'],
-      quantity_steps: [100, 250, 500, 1000],
-      pricing_tiers: [],
+      quantity_steps: [100, 250, 500, 1000, 2500, 5000],
+      pricing_tiers: [
+        { id: '', quantity: 100,  price_per_unit: 12.00, is_best_value: false },
+        { id: '', quantity: 250,  price_per_unit: 9.00,  is_best_value: false },
+        { id: '', quantity: 500,  price_per_unit: 7.00,  is_best_value: true  },
+        { id: '', quantity: 1000, price_per_unit: 5.50,  is_best_value: false },
+        { id: '', quantity: 2500, price_per_unit: 4.20,  is_best_value: false },
+      ],
       turnaround_options: [
-        { type: 'standard', days: 5, extra_cost: 0, is_active: true },
-        { type: 'express', days: 3, extra_cost: 200, is_active: true },
-        { type: 'rush', days: 1, extra_cost: 500, is_active: true },
+        { type: 'standard', days: 5, extra_cost: 0,   is_active: true  },
+        { type: 'express',  days: 3, extra_cost: 200, is_active: false },
+        { type: 'rush',     days: 1, extra_cost: 500, is_active: false },
       ],
       seo: { title: null, description: null, canonical_url: null },
+      track_inventory: false,
+      stock_quantity: null,
+      low_stock_threshold: null,
+      image_keys: [],
+      video_key: null,
     },
   });
 
@@ -136,12 +168,13 @@ export function ProductForm({ product }: ProductFormProps) {
         <Section title="Basic Information">
           <BasicInfoSection form={form} />
         </Section>
-        <Section title="Images">
-          <ImageUpload
-            maxFiles={8}
-            onChange={(files) => {
-              /* In real backend, upload files and set image URLs */
-            }}
+        <Section title="Images & Video">
+          <MediaSection
+            context="product"
+            initialImages={product?.images ?? []}
+            initialVideo={product?.video}
+            onImagesChange={(keys) => setValue('image_keys', keys, { shouldDirty: true })}
+            onVideoChange={(key) => setValue('video_key', key, { shouldDirty: true })}
           />
         </Section>
         <Section title="Print Specifications">
@@ -152,6 +185,9 @@ export function ProductForm({ product }: ProductFormProps) {
         </Section>
         <Section title="Turnaround Options">
           <TurnaroundSection form={form} />
+        </Section>
+        <Section title="Inventory" defaultOpen={false}>
+          <InventorySection form={form} />
         </Section>
         <Section title="SEO Settings" defaultOpen={false}>
           <SeoSection form={form} />

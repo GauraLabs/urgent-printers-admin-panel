@@ -1,22 +1,27 @@
 'use client';
 
 import { useAuthStore } from '@/store/authStore';
-import { hasPermission } from '@/lib/utils/permissions';
+import { getEffectivePermissions } from '@/lib/utils/permissions';
 import type { Permission } from '@/types';
 
 export function usePermissions() {
   const user = useAuthStore((s) => s.user);
   const role = user?.role;
 
+  // Use pre-computed effective permissions (role + grants - revokes)
+  const effectivePerms = user ? new Set(getEffectivePermissions(user)) : new Set<Permission>();
+
   function can(permission: Permission): boolean {
-    if (!role) return false;
-    return hasPermission(role, permission);
+    if (!user) return false;
+    // Super admin always has everything
+    if (user.role === 'super_admin') return true;
+    return effectivePerms.has(permission);
   }
 
   return {
     role,
     can,
-    // convenience flags
+    effectivePermissions: [...effectivePerms],
     canViewOrders: can('orders.view'),
     canEditOrders: can('orders.edit'),
     canRefundOrders: can('orders.refund'),

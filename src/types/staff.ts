@@ -2,35 +2,31 @@ import type { Role, Permission, AdminUser, ActivityLog } from './auth';
 
 export type { Role, Permission, AdminUser, ActivityLog };
 
-export interface StaffListResponse {
-  items: AdminUser[];
+export interface PaginatedListResponse<T> {
+  items: T[];
   total: number;
-  page: number;
-  page_size: number;
-  total_pages: number;
+  offset: number;
+  limit: number;
 }
 
-export interface ActivityLogListResponse {
-  items: ActivityLog[];
-  total: number;
-  page: number;
-  page_size: number;
-  total_pages: number;
-}
+export type StaffListResponse = PaginatedListResponse<AdminUser>;
+export type ActivityLogListResponse = PaginatedListResponse<ActivityLog>;
 
 export interface CreateStaffRequest {
   email: string;
   name: string;
   role: Role;
   password: string;
-  permissions?: Permission[];
+  granted_permissions?: Permission[];
+  revoked_permissions?: Permission[];
 }
 
 export interface UpdateStaffRequest {
   name?: string;
   role?: Role;
   is_active?: boolean;
-  permissions?: Permission[];
+  granted_permissions?: Permission[];
+  revoked_permissions?: Permission[];
 }
 
 export interface RolePermissionMatrix {

@@ -36,12 +36,51 @@ export interface ProductTurnaroundOption {
   is_active: boolean;
 }
 
+// ── Media upload API response types ───────────────────────────────────────────
+export interface MediaVariant {
+  url: string;
+  width: number;
+  height: number;
+}
+
+export interface MediaUploadImageResult {
+  type: 'image';
+  key: string;
+  original: MediaVariant & { size_bytes: number };
+  variants: {
+    thumb: MediaVariant;
+    md: MediaVariant;
+    lg: MediaVariant;
+  };
+}
+
+export interface MediaUploadVideoResult {
+  type: 'video';
+  key: string;
+  video: { url: string; size_bytes: number; duration_seconds: number };
+  thumbnail: MediaVariant;
+}
+
+export type MediaUploadResult = MediaUploadImageResult | MediaUploadVideoResult;
+
+// ── Stored media on a product ──────────────────────────────────────────────────
 export interface ProductImage {
   id: string;
-  url: string;
+  key: string;
   alt: string | null;
   sort_order: number;
   is_primary: boolean;
+  original_url: string;
+  thumb_url: string;
+  md_url: string;
+  lg_url: string;
+}
+
+export interface ProductVideo {
+  key: string;
+  video_url: string;
+  thumbnail_url: string;
+  duration_seconds: number;
 }
 
 export interface ProductSeoMeta {
@@ -63,6 +102,7 @@ export interface Product {
   is_featured: boolean;
   tags: string[];
   images: ProductImage[];
+  video: ProductVideo | null;
   sizes: ProductSize[];
   paper_types: ProductPaperType[];
   finishes: ProductFinish[];

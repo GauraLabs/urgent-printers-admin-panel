@@ -7,8 +7,31 @@ import {
   updateStaffMember, deleteStaffMember, getActivityLog,
 } from '@/lib/api/staff';
 
+const STAFF_KEY = ['staff'];
+
 export function useStaff() {
-  return useQuery({ queryKey: ['staff'], queryFn: getStaff, staleTime: 60_000 });
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(50);
+  const [includeInactive, setIncludeInactive] = useState(false);
+
+  const query = useQuery({
+    queryKey: [...STAFF_KEY, page, pageSize, includeInactive],
+    queryFn: () => getStaff({
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+      include_inactive: includeInactive,
+    }),
+    staleTime: 60_000,
+  });
+
+  return {
+    query,
+    page,
+    pageSize,
+    setPage,
+    includeInactive,
+    setIncludeInactive,
+  };
 }
 
 export function useStaffMember(id: string) {
@@ -24,7 +47,7 @@ export function useCreateStaff() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: createStaffMember,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['staff'] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: STAFF_KEY }),
   });
 }
 
@@ -33,7 +56,7 @@ export function useUpdateStaff() {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Parameters<typeof updateStaffMember>[1] }) =>
       updateStaffMember(id, data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['staff'] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: STAFF_KEY }),
   });
 }
 
@@ -41,19 +64,28 @@ export function useDeleteStaff() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: deleteStaffMember,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['staff'] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: STAFF_KEY }),
   });
 }
 
+// ─── Activity Log ─────────────────────────────────────────────────────────────
 export function useActivityLog() {
-  const [filters, setFilters] = useState({ page: 1, admin_id: '', entity_type: '' });
+  const [filters, setFilters] = useState({
+    page: 1,
+    pageSize: 50,
+    actor_admin_id: '',
+    resource_type: '',
+    action: '',
+  });
 
   const query = useQuery({
     queryKey: ['activity-log', filters],
     queryFn: () => getActivityLog({
-      page: filters.page,
-      admin_id: filters.admin_id || undefined,
-      entity_type: filters.entity_type || undefined,
+      offset: (filters.page - 1) * filters.pageSize,
+      limit: filters.pageSize,
+      actor_admin_id: filters.actor_admin_id || undefined,
+      resource_type: filters.resource_type || undefined,
+      action: filters.action || undefined,
     }),
     staleTime: 30_000,
   });
@@ -62,7 +94,8 @@ export function useActivityLog() {
     query,
     filters,
     setPage: (page: number) => setFilters((f) => ({ ...f, page })),
-    setAdminId: (admin_id: string) => setFilters((f) => ({ ...f, admin_id, page: 1 })),
-    setEntityType: (entity_type: string) => setFilters((f) => ({ ...f, entity_type, page: 1 })),
+    setActorAdminId: (actor_admin_id: string) => setFilters((f) => ({ ...f, actor_admin_id, page: 1 })),
+    setResourceType: (resource_type: string) => setFilters((f) => ({ ...f, resource_type, page: 1 })),
+    setAction: (action: string) => setFilters((f) => ({ ...f, action, page: 1 })),
   };
 }

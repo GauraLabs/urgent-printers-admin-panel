@@ -109,7 +109,7 @@ export function CategoriesTable() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onSelect={() => setDeleteTarget(row.original)}
+              onClick={() => setDeleteTarget(row.original)}
               className="text-[var(--danger)] focus:text-[var(--danger)]"
             >
               <Trash2 className="h-3.5 w-3.5" /> Delete

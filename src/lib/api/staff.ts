@@ -1,57 +1,100 @@
+/**
+ * Staff & Activity Log — wired to the FastAPI admin endpoints.
+ * IDs come from the backend as numbers; we normalize to strings at the
+ * boundary so the rest of the frontend treats all IDs uniformly.
+ */
+
 import type { AdminUser, ActivityLog } from '@/types';
 import type { StaffListResponse, ActivityLogListResponse, CreateStaffRequest, UpdateStaffRequest } from '@/types/staff';
+import { get, post, patch, del } from './client';
 
-function delay(ms = 400): Promise<void> {
-  return new Promise((r) => setTimeout(r, ms + Math.random() * 400));
+// ─── Normalizers ──────────────────────────────────────────────────────────────
+function normalizeUser(raw: AdminUser & { id: string | number }): AdminUser {
+  return { ...raw, id: String(raw.id) };
 }
 
-export async function getStaff(): Promise<StaffListResponse> {
-  await delay();
-  const items: AdminUser[] = [
-    { id: 'admin-1', email: 'admin@urgentprinters.com', name: 'Raj Kumar', role: 'super_admin', permissions: [], avatar: null, last_login: new Date().toISOString(), is_active: true, created_at: '2025-01-01T00:00:00Z' },
-    { id: 'admin-2', email: 'ops@urgentprinters.com', name: 'Sunita Verma', role: 'operations_manager', permissions: [], avatar: null, last_login: new Date(Date.now() - 3600000).toISOString(), is_active: true, created_at: '2025-02-15T00:00:00Z' },
-    { id: 'admin-3', email: 'support@urgentprinters.com', name: 'Kiran Patel', role: 'customer_support', permissions: [], avatar: null, last_login: new Date(Date.now() - 7200000).toISOString(), is_active: true, created_at: '2025-03-01T00:00:00Z' },
-    { id: 'admin-4', email: 'catalogue@urgentprinters.com', name: 'Meera Joshi', role: 'catalogue_manager', permissions: [], avatar: null, last_login: null, is_active: false, created_at: '2025-04-01T00:00:00Z' },
-  ];
-  return { items, total: 4, page: 1, page_size: 20, total_pages: 1 };
+function normalizeActivity(raw: Omit<ActivityLog, 'id' | 'actor_admin_id' | 'resource_id'> & {
+  id: string | number;
+  actor_admin_id: string | number;
+  resource_id: string | number | null;
+}): ActivityLog {
+  return {
+    ...raw,
+    id: String(raw.id),
+    actor_admin_id: String(raw.actor_admin_id),
+    resource_id: raw.resource_id != null ? String(raw.resource_id) : null,
+  };
+}
+
+// ─── Staff ────────────────────────────────────────────────────────────────────
+interface GetStaffParams {
+  include_inactive?: boolean;
+  offset?: number;
+  limit?: number;
+}
+
+export async function getStaff(params: GetStaffParams = {}): Promise<StaffListResponse> {
+  const res = await get<{
+    items: (AdminUser & { id: string | number })[];
+    total: number;
+    offset: number;
+    limit: number;
+  }>('/admin/staff', {
+    include_inactive: params.include_inactive ?? false,
+    offset: params.offset ?? 0,
+    limit: params.limit ?? 50,
+  });
+  return { ...res, items: res.items.map(normalizeUser) };
 }
 
 export async function getStaffMember(id: string): Promise<AdminUser> {
-  await delay(300);
-  const list = await getStaff();
-  return list.items.find((s) => s.id === id) ?? list.items[0];
+  const user = await get<AdminUser & { id: string | number }>(`/admin/staff/${id}`);
+  return normalizeUser(user);
 }
 
 export async function createStaffMember(data: CreateStaffRequest): Promise<AdminUser> {
-  await delay();
-  return { id: `admin-${Date.now()}`, email: data.email, name: data.name, role: data.role, permissions: data.permissions ?? [], avatar: null, last_login: null, is_active: true, created_at: new Date().toISOString() };
+  const user = await post<AdminUser & { id: string | number }>('/admin/staff', data);
+  return normalizeUser(user);
 }
 
-export async function updateStaffMember(id: string, data: UpdateStaffRequest): Promise<AdminUser> {
-  await delay();
-  return getStaffMember(id);
+export async function updateStaffMember(id: string, data: UpdateStaffRequest & { password?: string }): Promise<AdminUser> {
+  const user = await patch<AdminUser & { id: string | number }>(`/admin/staff/${id}`, data);
+  return normalizeUser(user);
 }
 
-export async function deleteStaffMember(id: string): Promise<{ success: boolean }> {
-  await delay();
-  return { success: true };
+/**
+ * Soft delete — sets is_active = false. Returns the updated user object so
+ * the cache can be patched in place rather than refetched.
+ * Backend returns 403 if the actor tries to deactivate themselves.
+ */
+export async function deleteStaffMember(id: string): Promise<AdminUser> {
+  const user = await del<AdminUser & { id: string | number }>(`/admin/staff/${id}`);
+  return normalizeUser(user);
 }
 
-export async function getActivityLog(filters: { page?: number; admin_id?: string; entity_type?: string } = {}): Promise<ActivityLogListResponse> {
-  await delay();
-  const items: ActivityLog[] = Array.from({ length: 20 }, (_, i) => ({
-    id: `log-${i + 1}`,
-    admin_id: `admin-${(i % 3) + 1}`,
-    admin_name: ['Raj Kumar', 'Sunita Verma', 'Kiran Patel'][i % 3],
-    admin_role: (['super_admin', 'operations_manager', 'customer_support'] as const)[i % 3],
-    action: ['update_status', 'create_product', 'issue_refund', 'ban_customer', 'update_settings'][i % 5],
-    entity_type: ['order', 'product', 'payment', 'customer', 'settings'][i % 5],
-    entity_id: `entity-${i + 1}`,
-    entity_label: [`ORD-${2900 - i}`, `Business Cards`, `PAY-${i}`, `Rahul Sharma`, `General Settings`][i % 5],
-    before_value: null,
-    after_value: { status: 'updated' },
-    ip_address: '192.168.1.1',
-    created_at: new Date(Date.now() - i * 1000 * 60 * 30).toISOString(),
-  }));
-  return { items, total: 4820, page: filters.page ?? 1, page_size: 20, total_pages: 241 };
+// ─── Activity Log ─────────────────────────────────────────────────────────────
+interface GetActivityParams {
+  actor_admin_id?: string;
+  resource_type?: string;
+  resource_id?: string;
+  action?: string;
+  offset?: number;
+  limit?: number;
+}
+
+export async function getActivityLog(params: GetActivityParams = {}): Promise<ActivityLogListResponse> {
+  const res = await get<{
+    items: Parameters<typeof normalizeActivity>[0][];
+    total: number;
+    offset: number;
+    limit: number;
+  }>('/admin/activity', {
+    actor_admin_id: params.actor_admin_id || undefined,
+    resource_type: params.resource_type || undefined,
+    resource_id: params.resource_id || undefined,
+    action: params.action || undefined,
+    offset: params.offset ?? 0,
+    limit: params.limit ?? 50,
+  });
+  return { ...res, items: res.items.map(normalizeActivity) };
 }

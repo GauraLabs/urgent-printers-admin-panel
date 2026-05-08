@@ -149,13 +149,6 @@ export default function LoginPage() {
         </form>
       </div>
 
-      {/* Demo credentials hint */}
-      <div className="mt-4 p-3 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-xs text-[var(--text-muted)]">
-        <p className="font-medium text-[var(--text-secondary)] mb-1">Demo credentials</p>
-        <p>admin@urgentprinters.com / Admin@1234</p>
-        <p>ops@urgentprinters.com / Ops@1234</p>
-        <p>support@urgentprinters.com / Support@1234</p>
-      </div>
     </div>
   );
 }

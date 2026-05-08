@@ -96,7 +96,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'System',
     items: [
       { label: 'Staff', href: '/staff', icon: Users2, permission: 'staff.view' },
-      { label: 'Activity Log', href: '/staff/activity-log', icon: Activity, permission: 'staff.view' },
+      { label: 'Activity Log', href: '/staff/activity-log', icon: Activity, permission: 'system.view' },
       { label: 'Settings', href: '/settings/general', icon: Settings, permission: 'settings.view', matchPrefix: '/settings' },
       { label: 'System Health', href: '/system', icon: Server, permission: 'system.view' },
     ],

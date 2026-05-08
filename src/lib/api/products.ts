@@ -49,6 +49,7 @@ export async function getProduct(id: string): Promise<Product> {
     category_id: `cat-${(i % 3) + 1}`,
     tags: ['printing', 'business', 'professional'],
     images: [],
+    video: null,
     sizes: [
       { id: 's1', label: '90mm x 54mm', width_mm: 90, height_mm: 54, is_active: true },
       { id: 's2', label: '85mm x 55mm', width_mm: 85, height_mm: 55, is_active: true },

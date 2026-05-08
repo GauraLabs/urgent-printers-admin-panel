@@ -10,6 +10,7 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
+// ── Request interceptor: attach JWT ──────────────────────────────────────────
 apiClient.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
   if (token) {
@@ -17,6 +18,13 @@ apiClient.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// ── Response interceptor: unwrap { data, message } envelope ──────────────────
+// Backend wraps ALL successful responses as { data: <payload>, message: "..." }.
+// We unwrap once here so all api functions just receive the payload.
+function isWrapped(d: unknown): d is { data: unknown; message: unknown } {
+  return typeof d === 'object' && d !== null && 'data' in d && 'message' in d;
+}
 
 let isRefreshing = false;
 let failedQueue: Array<{ resolve: (v: string) => void; reject: (e: unknown) => void }> = [];
@@ -27,11 +35,25 @@ function processQueue(error: unknown, token: string | null) {
 }
 
 apiClient.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    if (isWrapped(res.data)) {
+      res.data = res.data.data;
+    }
+    return res;
+  },
   async (error: AxiosError) => {
     const original = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-    if (error.response?.status !== 401 || original._retry) {
+    // Don't try to refresh for the auth endpoints themselves —
+    // a 401 on /login means wrong credentials, a 401 on /refresh means the
+    // session is gone. Both should bubble straight to the caller.
+    const url = original.url ?? '';
+    const isAuthEndpoint =
+      url.includes('/admin/auth/login') ||
+      url.includes('/admin/auth/refresh') ||
+      url.includes('/admin/auth/logout');
+
+    if (error.response?.status !== 401 || original._retry || isAuthEndpoint) {
       throw toApiError(error);
     }
 
@@ -48,12 +70,13 @@ apiClient.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const res = await axios.post<{ access_token: string }>(
-        `${BASE_URL}/auth/refresh`,
+      // Refresh response is also wrapped: { data: { access_token, ... }, message }
+      const res = await axios.post<{ data: { access_token: string }; message: string }>(
+        `${BASE_URL}/admin/auth/refresh`,
         {},
         { withCredentials: true }
       );
-      const newToken = res.data.access_token;
+      const newToken = res.data.data.access_token;
       useAuthStore.getState().setToken(newToken);
       processQueue(null, newToken);
       if (original.headers) original.headers.Authorization = `Bearer ${newToken}`;
@@ -70,15 +93,23 @@ apiClient.interceptors.response.use(
 );
 
 function toApiError(error: AxiosError): ApiError {
+  // Backend may return either { detail: "..." } (FastAPI default) or
+  // { status, error, message: "..." } (custom envelope). Try both.
+  const data = error.response?.data as
+    | { detail?: string; message?: string; error?: string }
+    | undefined;
   return {
     message:
-      (error.response?.data as { detail?: string })?.detail ??
+      data?.detail ??
+      data?.message ??
       error.message ??
       'An unexpected error occurred',
     status: error.response?.status ?? 0,
   };
 }
 
+// ── Typed helpers ────────────────────────────────────────────────────────────
+// These return the unwrapped data because the response interceptor strips the envelope.
 export async function get<T>(path: string, params?: Record<string, unknown>, signal?: AbortSignal): Promise<T> {
   const res = await apiClient.get<T>(path, { params, signal });
   return res.data;

@@ -49,8 +49,17 @@ export interface AdminUser {
   email: string;
   name: string;
   role: Role;
+  /** Extra permissions granted on top of the role's defaults */
+  granted_permissions: Permission[];
+  /** Permissions removed from the role's defaults for this specific user */
+  revoked_permissions: Permission[];
+  /**
+   * Effective permissions pre-computed by the backend:
+   * = role_defaults + granted_permissions - revoked_permissions
+   * Frontend reads this for all permission checks.
+   */
   permissions: Permission[];
-  avatar: string | null;
+  avatar_url: string | null;
   last_login: string | null;
   is_active: boolean;
   created_at: string;
@@ -73,17 +82,18 @@ export interface LoginResponse {
   user: AdminUser;
 }
 
+/**
+ * Activity log entry — matches backend shape exactly.
+ * Actor's name/role are NOT included; frontend looks them up from the staff
+ * list cache via the actor_admin_id.
+ */
 export interface ActivityLog {
   id: string;
-  admin_id: string;
-  admin_name: string;
-  admin_role: Role;
-  action: string;
-  entity_type: string;
-  entity_id: string;
-  entity_label: string;
-  before_value: Record<string, unknown> | null;
-  after_value: Record<string, unknown> | null;
-  ip_address: string;
+  actor_admin_id: string;
+  action: string;            // e.g. "staff.created", "admin.login"
+  resource_type: string;     // e.g. "admin_user"
+  resource_id: string | null;
+  meta: Record<string, unknown>;
+  ip_address: string | null;
   created_at: string;
 }
