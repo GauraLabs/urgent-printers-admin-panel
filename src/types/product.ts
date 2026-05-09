@@ -1,29 +1,29 @@
 export type ProductStatus = 'draft' | 'active' | 'archived';
-export type ProductBadge = 'bestseller' | 'new' | 'sale' | 'popular' | null;
+// Backend enum: 'none' is the "no badge" value, not null
+export type ProductBadge = 'none' | 'bestseller' | 'new' | 'sale' | 'popular';
+export type SizeUnit = 'mm' | 'cm' | 'in' | 'ft';
 
+// ── Print spec sub-types (no id — backend stores these in JSONB) ───────────────
 export interface ProductSize {
-  id: string;
   label: string;
-  width_mm: number;
-  height_mm: number;
+  width: number;
+  height: number;
+  unit: SizeUnit;
   is_active: boolean;
 }
 
 export interface ProductPaperType {
-  id: string;
   label: string;
   gsm: number | null;
   is_active: boolean;
 }
 
 export interface ProductFinish {
-  id: string;
   label: string;
   is_active: boolean;
 }
 
 export interface ProductPricingTier {
-  id: string;
   quantity: number;
   price_per_unit: number;
   is_best_value: boolean;
@@ -34,6 +34,12 @@ export interface ProductTurnaroundOption {
   days: number;
   extra_cost: number;
   is_active: boolean;
+}
+
+export interface ProductSeoMeta {
+  title: string | null;
+  description: string | null;
+  canonical_url: string | null;
 }
 
 // ── Media upload API response types ───────────────────────────────────────────
@@ -63,46 +69,28 @@ export interface MediaUploadVideoResult {
 
 export type MediaUploadResult = MediaUploadImageResult | MediaUploadVideoResult;
 
-// ── Stored media on a product ──────────────────────────────────────────────────
-export interface ProductImage {
-  id: string;
+// ── Image variant URLs (from AdminProductResponse.images[]) ───────────────────
+export interface ProductImageURLSet {
   key: string;
-  alt: string | null;
-  sort_order: number;
-  is_primary: boolean;
-  original_url: string;
-  thumb_url: string;
-  md_url: string;
-  lg_url: string;
+  thumb: string;     // 300×300 — tables, small grids
+  md: string;        // 800px wide — product cards, storefront listing
+  lg: string;        // 1600px wide — product detail hero
+  original: string;  // full resolution — lightbox / download
 }
 
-export interface ProductVideo {
-  key: string;
-  video_url: string;
-  thumbnail_url: string;
-  duration_seconds: number;
-}
-
-export interface ProductSeoMeta {
-  title: string | null;
-  description: string | null;
-  canonical_url: string | null;
-}
-
+// ── Product — matches AdminProductResponse exactly ────────────────────────────
 export interface Product {
   id: string;
   name: string;
   slug: string;
-  short_description: string;
-  description: string;
-  category_id: string;
-  category_name: string;
+  description: string | null;
+  short_description: string | null;
+  category_id: string | null;
   status: ProductStatus;
   badge: ProductBadge;
   is_featured: boolean;
+  is_active: boolean;
   tags: string[];
-  images: ProductImage[];
-  video: ProductVideo | null;
   sizes: ProductSize[];
   paper_types: ProductPaperType[];
   finishes: ProductFinish[];
@@ -111,43 +99,44 @@ export interface Product {
   pricing_tiers: ProductPricingTier[];
   turnaround_options: ProductTurnaroundOption[];
   seo: ProductSeoMeta;
-  total_orders: number;
-  total_revenue: number;
+  // media
+  image_keys: string[];              // sent on save; source of truth for ordering
+  images: ProductImageURLSet[];      // resolved variant URLs per image
+  video_key: string | null;
+  video_url: string | null;
+  video_thumbnail_url: string | null;
+  // inventory
+  track_inventory: boolean;
+  stock_quantity: number | null;
+  low_stock_threshold: number | null;
+  // stats
+  rating: number;
+  review_count: number;
   created_at: string;
-  updated_at: string;
 }
 
-export interface ProductSummary {
-  id: string;
-  name: string;
-  slug: string;
-  category_name: string;
-  status: ProductStatus;
-  badge: ProductBadge;
-  is_featured: boolean;
+// ── ProductSummary — normalizer computes primary_image_url and min_price ───────
+export interface ProductSummary extends Product {
   primary_image_url: string | null;
   min_price: number;
-  total_orders: number;
-  total_revenue: number;
-  created_at: string;
 }
 
 export interface ProductsListResponse {
   items: ProductSummary[];
-  total: number;
   page: number;
   page_size: number;
+  total: number;
   total_pages: number;
 }
 
+// Backend list accepts is_active (bool) not status.
+// status='active' → is_active=true, else is_active=false.
+// status filter is limited until backend adds a status query param.
 export interface ProductFilters {
   status?: ProductStatus;
   category_id?: string;
-  search?: string;
   page?: number;
   page_size?: number;
-  sort_by?: string;
-  sort_dir?: 'asc' | 'desc';
 }
 
 export interface ProductPerformance {

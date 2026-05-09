@@ -86,7 +86,7 @@ export function PricingSection({ form }: Props) {
         variant="outline"
         size="sm"
         className="mt-3"
-        onClick={() => append({ id: '', quantity: 0, price_per_unit: 0, is_best_value: false })}
+        onClick={() => append({ quantity: 0, price_per_unit: 0, is_best_value: false })}
       >
         <Plus className="h-3.5 w-3.5" /> Add Tier
       </Button>

@@ -1,23 +1,31 @@
 import { get, post, patch, del } from './client';
+import type { ProductImageURLSet } from '@/types/product';
 
 export interface Category {
   id: string;
   name: string;
   slug: string;
   description: string | null;
-  image_url: string | null;
   parent_id: string | null;
   is_active: boolean;
   sort_order: number;
   product_count: number;
   meta_title: string | null;
   meta_description: string | null;
+  // media
+  image_keys: string[];
+  images: ProductImageURLSet[];
+  video_key: string | null;
+  video_url: string | null;
+  video_thumbnail_url: string | null;
   created_at: string;
 }
 
-type RawCategory = Omit<Category, 'id' | 'parent_id'> & {
+type RawCategory = Omit<Category, 'id' | 'parent_id' | 'image_keys' | 'images'> & {
   id: number | string;
   parent_id: number | string | null;
+  image_keys: string[];
+  images: ProductImageURLSet[];
 };
 
 function normalize(raw: RawCategory): Category {
@@ -35,6 +43,8 @@ export interface CategoryCreateRequest {
   is_active: boolean;
   meta_title?: string | null;
   meta_description?: string | null;
+  image_keys?: string[];
+  video_key?: string | null;
 }
 
 export interface CategoryUpdateRequest {
@@ -44,6 +54,8 @@ export interface CategoryUpdateRequest {
   is_active?: boolean;
   meta_title?: string | null;
   meta_description?: string | null;
+  image_keys?: string[];
+  video_key?: string | null;
 }
 
 export async function getCategories(): Promise<Category[]> {

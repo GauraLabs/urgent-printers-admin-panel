@@ -35,10 +35,10 @@ export function ProductsTable() {
     if (!deleteProduct) return;
     try {
       await deleteMutation.mutateAsync(deleteProduct.id);
-      toast.success(`"${deleteProduct.name}" deleted`);
+      toast.success(`"${deleteProduct.name}" archived`);
       setDeleteProduct(null);
     } catch {
-      toast.error('Failed to delete product');
+      toast.error('Failed to archive product');
     }
   }
 
@@ -66,7 +66,9 @@ export function ProductsTable() {
                 </Link>
                 {p.is_featured && <Star className="h-3 w-3 text-yellow-500 fill-yellow-500 flex-shrink-0" />}
               </div>
-              <p className="text-[11px] text-[var(--text-muted)]">{p.category_name}</p>
+              <p className="text-[11px] text-[var(--text-muted)]">
+                {p.category_id ? (categories?.find((c) => c.id === p.category_id)?.name ?? `Cat #${p.category_id}`) : '—'}
+              </p>
             </div>
           </div>
         );
@@ -81,7 +83,7 @@ export function ProductsTable() {
         return (
           <div className="flex items-center gap-1.5 flex-wrap">
             <ProductStatusBadge status={p.status} />
-            {p.badge && <ProductBadgeLabel badge={p.badge as NonNullable<ProductBadge>} />}
+            {p.badge && p.badge !== 'none' && <ProductBadgeLabel badge={p.badge} />}
           </div>
         );
       },
@@ -93,24 +95,6 @@ export function ProductsTable() {
       enableSorting: true,
       cell: ({ row }) => (
         <span className="text-xs font-medium tabular-nums">{formatPrice(row.original.min_price)}</span>
-      ),
-    },
-    {
-      id: 'total_orders',
-      accessorKey: 'total_orders',
-      header: 'Orders',
-      enableSorting: true,
-      cell: ({ row }) => (
-        <span className="text-xs tabular-nums text-[var(--text-secondary)]">{row.original.total_orders}</span>
-      ),
-    },
-    {
-      id: 'total_revenue',
-      accessorKey: 'total_revenue',
-      header: 'Revenue',
-      enableSorting: true,
-      cell: ({ row }) => (
-        <span className="text-xs tabular-nums font-medium">{formatPrice(row.original.total_revenue)}</span>
       ),
     },
     {
@@ -197,9 +181,9 @@ export function ProductsTable() {
       <ConfirmDialog
         open={!!deleteProduct}
         onOpenChange={(v) => !v && setDeleteProduct(null)}
-        title={`Delete "${deleteProduct?.name}"?`}
-        description="This will permanently delete the product and remove it from all categories. This cannot be undone."
-        confirmLabel="Delete Product"
+        title={`Archive "${deleteProduct?.name}"?`}
+        description="The product will be archived and hidden from the storefront. It can be restored by changing its status back to Active."
+        confirmLabel="Archive Product"
         onConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
         variant="danger"

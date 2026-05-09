@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -9,7 +9,7 @@ import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
-import { MediaSection } from './MediaSection';
+import { MediaSection, type MediaSectionHandle } from './MediaSection';
 import { InventorySection } from './InventorySection';
 import { BasicInfoSection } from './BasicInfoSection';
 import { PrintSpecsSection } from './PrintSpecsSection';
@@ -31,12 +31,12 @@ const schema = z.object({
   badge: z.string().optional(),
   is_featured: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
-  sizes: z.array(z.object({ id: z.string(), label: z.string(), width_mm: z.number(), height_mm: z.number(), is_active: z.boolean() })).optional(),
-  paper_types: z.array(z.object({ id: z.string(), label: z.string(), gsm: z.number().nullable(), is_active: z.boolean() })).optional(),
-  finishes: z.array(z.object({ id: z.string(), label: z.string(), is_active: z.boolean() })).optional(),
+  sizes: z.array(z.object({ label: z.string(), width: z.number(), height: z.number(), unit: z.enum(['mm', 'cm', 'in', 'ft']), is_active: z.boolean() })).optional(),
+  paper_types: z.array(z.object({ label: z.string(), gsm: z.number().nullable(), is_active: z.boolean() })).optional(),
+  finishes: z.array(z.object({ label: z.string(), is_active: z.boolean() })).optional(),
   sides_options: z.array(z.string()).optional(),
   quantity_steps: z.array(z.number()).optional(),
-  pricing_tiers: z.array(z.object({ id: z.string(), quantity: z.number(), price_per_unit: z.number(), is_best_value: z.boolean() })).optional(),
+  pricing_tiers: z.array(z.object({ quantity: z.number(), price_per_unit: z.number(), is_best_value: z.boolean() })).optional(),
   turnaround_options: z.array(z.object({ type: z.string(), days: z.number(), extra_cost: z.number(), is_active: z.boolean() })).optional(),
   seo: z.object({ title: z.string().nullable().optional(), description: z.string().nullable().optional(), canonical_url: z.string().nullable().optional() }).optional(),
   track_inventory: z.boolean().optional(),
@@ -71,17 +71,18 @@ export function ProductForm({ product }: ProductFormProps) {
   const saveMutation = useSaveProduct();
   const deleteMutation = useDeleteProduct();
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const mediaRef = useRef<MediaSectionHandle>(null);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(schema),
     defaultValues: product ? {
       name: product.name,
       slug: product.slug,
-      short_description: product.short_description,
-      description: product.description,
-      category_id: product.category_id,
+      short_description: product.short_description ?? '',
+      description: product.description ?? '',
+      category_id: product.category_id ?? '',
       status: product.status,
-      badge: product.badge ?? '',
+      badge: product.badge ?? 'none',
       is_featured: product.is_featured,
       tags: product.tags,
       sizes: product.sizes,
@@ -92,35 +93,41 @@ export function ProductForm({ product }: ProductFormProps) {
       pricing_tiers: product.pricing_tiers,
       turnaround_options: product.turnaround_options,
       seo: product.seo,
+      track_inventory: product.track_inventory,
+      stock_quantity: product.stock_quantity,
+      low_stock_threshold: product.low_stock_threshold,
+      image_keys: product.image_keys,
+      video_key: product.video_key,
     } : {
       status: 'draft',
+      badge: 'none',
       is_featured: false,
       tags: ['printing', 'business', 'premium', 'fast-delivery'],
       sizes: [
-        { id: '', label: '90mm × 54mm (Standard)', width_mm: 90, height_mm: 54, is_active: true },
-        { id: '', label: '85mm × 55mm (Euro)', width_mm: 85, height_mm: 55, is_active: true },
-        { id: '', label: '100mm × 60mm (Large)', width_mm: 100, height_mm: 60, is_active: true },
+        { label: '90 × 54 mm (Standard)', width: 90,  height: 54, unit: 'mm' as const, is_active: true },
+        { label: '85 × 55 mm (Euro)',     width: 85,  height: 55, unit: 'mm' as const, is_active: true },
+        { label: '100 × 60 mm (Large)',   width: 100, height: 60, unit: 'mm' as const, is_active: true },
       ],
       paper_types: [
-        { id: '', label: '300 GSM Art Board', gsm: 300, is_active: true },
-        { id: '', label: '350 GSM Art Board', gsm: 350, is_active: true },
-        { id: '', label: '400 GSM Premium Board', gsm: 400, is_active: true },
-        { id: '', label: '450 GSM Ultra Thick', gsm: 450, is_active: true },
+        { label: '300 GSM Art Board', gsm: 300, is_active: true },
+        { label: '350 GSM Art Board', gsm: 350, is_active: true },
+        { label: '400 GSM Premium Board', gsm: 400, is_active: true },
+        { label: '450 GSM Ultra Thick', gsm: 450, is_active: true },
       ],
       finishes: [
-        { id: '', label: 'Gloss Lamination', is_active: true },
-        { id: '', label: 'Matte Lamination', is_active: true },
-        { id: '', label: 'Soft Touch Matte', is_active: true },
-        { id: '', label: 'Spot UV', is_active: true },
+        { label: 'Gloss Lamination', is_active: true },
+        { label: 'Matte Lamination', is_active: true },
+        { label: 'Soft Touch Matte', is_active: true },
+        { label: 'Spot UV', is_active: true },
       ],
       sides_options: ['Single Sided', 'Double Sided'],
       quantity_steps: [100, 250, 500, 1000, 2500, 5000],
       pricing_tiers: [
-        { id: '', quantity: 100,  price_per_unit: 12.00, is_best_value: false },
-        { id: '', quantity: 250,  price_per_unit: 9.00,  is_best_value: false },
-        { id: '', quantity: 500,  price_per_unit: 7.00,  is_best_value: true  },
-        { id: '', quantity: 1000, price_per_unit: 5.50,  is_best_value: false },
-        { id: '', quantity: 2500, price_per_unit: 4.20,  is_best_value: false },
+        { quantity: 100,  price_per_unit: 12.00, is_best_value: false },
+        { quantity: 250,  price_per_unit: 9.00,  is_best_value: false },
+        { quantity: 500,  price_per_unit: 7.00,  is_best_value: true  },
+        { quantity: 1000, price_per_unit: 5.50,  is_best_value: false },
+        { quantity: 2500, price_per_unit: 4.20,  is_best_value: false },
       ],
       turnaround_options: [
         { type: 'standard', days: 5, extra_cost: 0,   is_active: true  },
@@ -140,9 +147,33 @@ export function ProductForm({ product }: ProductFormProps) {
   const currentStatus = watch('status') as ProductStatus;
 
   async function save(status: ProductStatus) {
-    const values = form.getValues();
+    const v = form.getValues();
+    const payload = {
+      name: v.name,
+      slug: v.slug,
+      short_description: v.short_description,
+      description: v.description ?? null,
+      category_id: v.category_id ? Number(v.category_id) : null,
+      status,
+      badge: v.badge || 'none',
+      is_featured: v.is_featured ?? false,
+      tags: v.tags ?? [],
+      sizes: v.sizes ?? [],
+      paper_types: v.paper_types ?? [],
+      finishes: v.finishes ?? [],
+      sides_options: v.sides_options ?? [],
+      quantity_steps: v.quantity_steps ?? [],
+      pricing_tiers: v.pricing_tiers ?? [],
+      turnaround_options: v.turnaround_options ?? [],
+      seo: v.seo ?? { title: null, description: null, canonical_url: null },
+      image_keys: v.image_keys ?? [],
+      video_key: v.video_key ?? null,
+      track_inventory: v.track_inventory ?? false,
+      stock_quantity: v.stock_quantity ?? null,
+      low_stock_threshold: v.low_stock_threshold ?? null,
+    };
     try {
-      await saveMutation.mutateAsync({ id: product?.id, data: { ...values, status } as Partial<Product> });
+      await saveMutation.mutateAsync({ id: product?.id, data: payload });
       toast.success(product ? 'Product updated' : 'Product created');
       if (!product) router.push(ROUTES.PRODUCTS);
     } catch {
@@ -154,10 +185,10 @@ export function ProductForm({ product }: ProductFormProps) {
     if (!product) return;
     try {
       await deleteMutation.mutateAsync(product.id);
-      toast.success(`"${product.name}" deleted`);
+      toast.success(`"${product.name}" archived`);
       router.push(ROUTES.PRODUCTS);
     } catch {
-      toast.error('Failed to delete product');
+      toast.error('Failed to archive product');
     }
   }
 
@@ -170,9 +201,12 @@ export function ProductForm({ product }: ProductFormProps) {
         </Section>
         <Section title="Images & Video">
           <MediaSection
+            ref={mediaRef}
             context="product"
-            initialImages={product?.images ?? []}
-            initialVideo={product?.video}
+            initialImages={product?.images}
+            initialVideoKey={product?.video_key}
+            initialVideoUrl={product?.video_url}
+            initialVideoThumbnailUrl={product?.video_thumbnail_url}
             onImagesChange={(keys) => setValue('image_keys', keys, { shouldDirty: true })}
             onVideoChange={(key) => setValue('video_key', key, { shouldDirty: true })}
           />
@@ -230,6 +264,17 @@ export function ProductForm({ product }: ProductFormProps) {
               onClick={() => save('draft')}
             >
               Save as Draft
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full text-muted-foreground"
+              onClick={async () => {
+                await mediaRef.current?.cleanupNewUploads();
+                router.push(ROUTES.PRODUCTS);
+              }}
+            >
+              Cancel
             </Button>
             {product && (
               <>

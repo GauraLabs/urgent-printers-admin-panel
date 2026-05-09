@@ -56,20 +56,25 @@ export function PrintSpecsSection({ form }: Props) {
   return (
     <div className="space-y-6">
       {/* Sizes */}
-      <DynamicList label="Sizes" items={sizes} onAdd={() => addSize({ id: '', label: '', width_mm: 0, height_mm: 0, is_active: true })} onRemove={removeSize}>
+      <DynamicList label="Sizes" items={sizes} onAdd={() => addSize({ label: '', width: 0, height: 0, unit: 'mm', is_active: true })} onRemove={removeSize}>
         {(i) => (
           <div className="flex items-center gap-2 flex-1 flex-wrap">
-            <input {...register(`sizes.${i}.label`)} placeholder="90mm × 54mm" className={`${inputCls} flex-1 min-w-28`} />
-            <input {...register(`sizes.${i}.width_mm`, { valueAsNumber: true })} placeholder="W" type="number" className={`${inputCls} w-16`} />
+            <input {...register(`sizes.${i}.label`)} placeholder="e.g. A4 Portrait" className={`${inputCls} flex-1 min-w-28`} />
+            <input {...register(`sizes.${i}.width`, { valueAsNumber: true })} placeholder="W" type="number" className={`${inputCls} w-16`} />
             <span className="text-xs text-[var(--text-muted)]">×</span>
-            <input {...register(`sizes.${i}.height_mm`, { valueAsNumber: true })} placeholder="H" type="number" className={`${inputCls} w-16`} />
-            <span className="text-[11px] text-[var(--text-muted)]">mm</span>
+            <input {...register(`sizes.${i}.height`, { valueAsNumber: true })} placeholder="H" type="number" className={`${inputCls} w-16`} />
+            <select {...register(`sizes.${i}.unit`)} className={`${inputCls} w-16`}>
+              <option value="mm">mm</option>
+              <option value="cm">cm</option>
+              <option value="in">in</option>
+              <option value="ft">ft</option>
+            </select>
           </div>
         )}
       </DynamicList>
 
       {/* Paper types */}
-      <DynamicList label="Paper Types" items={papers} onAdd={() => addPaper({ id: '', label: '', gsm: null, is_active: true })} onRemove={removePaper}>
+      <DynamicList label="Paper Types" items={papers} onAdd={() => addPaper({ label: '', gsm: null, is_active: true })} onRemove={removePaper}>
         {(i) => (
           <div className="flex items-center gap-2 flex-1">
             <input {...register(`paper_types.${i}.label`)} placeholder="350 GSM Art Board" className={`${inputCls} flex-1`} />
@@ -79,7 +84,7 @@ export function PrintSpecsSection({ form }: Props) {
       </DynamicList>
 
       {/* Finishes */}
-      <DynamicList label="Finishes" items={finishes} onAdd={() => addFinish({ id: '', label: '', is_active: true })} onRemove={removeFinish}>
+      <DynamicList label="Finishes" items={finishes} onAdd={() => addFinish({ label: '', is_active: true })} onRemove={removeFinish}>
         {(i) => <input {...register(`finishes.${i}.label`)} placeholder="Matte Lamination" className={`${inputCls} flex-1`} />}
       </DynamicList>
 

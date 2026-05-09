@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { MediaSection, type MediaSectionHandle } from '@/features/products/components/ProductForm/MediaSection';
 import { useSaveCategory } from '../hooks/useCategories';
 import { ROUTES } from '@/lib/constants/routes';
 import type { Category } from '@/lib/api/categories';
@@ -19,6 +20,8 @@ const schema = z.object({
   is_active: z.boolean(),
   meta_title: z.string().optional(),
   meta_description: z.string().optional(),
+  image_keys: z.array(z.string()).optional(),
+  video_key: z.string().nullable().optional(),
 });
 type FormValues = z.infer<typeof schema>;
 
@@ -42,6 +45,7 @@ const errorCls = 'mt-1 text-xs text-destructive';
 export function CategoryForm({ category }: { category?: Category }) {
   const router = useRouter();
   const mutation = useSaveCategory();
+  const mediaRef = useRef<MediaSectionHandle>(null);
 
   const { register, handleSubmit, watch, setValue, reset, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -52,8 +56,11 @@ export function CategoryForm({ category }: { category?: Category }) {
       is_active: category.is_active,
       meta_title: category.meta_title ?? '',
       meta_description: category.meta_description ?? '',
+      image_keys: category.image_keys,
+      video_key: category.video_key,
     } : {
       name: '', slug: '', description: '', is_active: true, meta_title: '', meta_description: '',
+      image_keys: [], video_key: null,
     },
   });
 
@@ -68,6 +75,8 @@ export function CategoryForm({ category }: { category?: Category }) {
         is_active: category.is_active,
         meta_title: category.meta_title ?? '',
         meta_description: category.meta_description ?? '',
+        image_keys: category.image_keys,
+        video_key: category.video_key,
       });
     }
   }, [category, reset]);
@@ -88,6 +97,8 @@ export function CategoryForm({ category }: { category?: Category }) {
           is_active: values.is_active,
           meta_title: values.meta_title || null,
           meta_description: values.meta_description || null,
+          image_keys: values.image_keys ?? [],
+          video_key: values.video_key ?? null,
         },
       });
       toast.success(category ? 'Category updated' : 'Category created');
@@ -117,6 +128,23 @@ export function CategoryForm({ category }: { category?: Category }) {
       <div>
         <label className={labelCls}>Description</label>
         <textarea {...register('description')} rows={3} className={inputCls} placeholder="Brief description of this category…" />
+      </div>
+
+      {/* Images & Video */}
+      <div className="pt-2 border-t border-border space-y-3">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Images & Video — optional</p>
+        <MediaSection
+          ref={mediaRef}
+          context="category"
+          maxImages={4}
+          videoLabel="Category Video"
+          initialImages={category?.images}
+          initialVideoKey={category?.video_key}
+          initialVideoUrl={category?.video_url}
+          initialVideoThumbnailUrl={category?.video_thumbnail_url}
+          onImagesChange={(keys) => setValue('image_keys', keys, { shouldDirty: true })}
+          onVideoChange={(key) => setValue('video_key', key, { shouldDirty: true })}
+        />
       </div>
 
       <label className="flex items-center gap-3 cursor-pointer">
@@ -158,7 +186,10 @@ export function CategoryForm({ category }: { category?: Category }) {
         <Button type="submit" disabled={isSubmitting || mutation.isPending}>
           {mutation.isPending ? 'Saving…' : category ? 'Save Changes' : 'Create Category'}
         </Button>
-        <Button type="button" variant="outline" onClick={() => router.push(ROUTES.CATEGORIES)}>
+        <Button type="button" variant="outline" onClick={async () => {
+          await mediaRef.current?.cleanupNewUploads();
+          router.push(ROUTES.CATEGORIES);
+        }}>
           Cancel
         </Button>
       </div>

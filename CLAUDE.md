@@ -6,15 +6,16 @@ Production admin panel for an online printing business. Standalone Next.js 16 ap
 
 ## Project status
 All 15 UI build steps are complete. Currently in **Step 15 — wiring to real backend**.
-- Wired: auth, staff management, activity log, permissions catalog
-- Pending: orders, products, customers, payments, coupons, content, shipping, reviews, communications (wire as backend ships each endpoint)
+- Wired: auth, staff, activity log, permissions catalog, categories, products
+- Pending: orders, customers, payments, coupons, content, shipping, reviews, communications
 
 ## Stack
 - Next.js 16.2.4 · React 19 · TypeScript strict
 - Tailwind CSS v4 · shadcn 4.x with **Base UI** (not Radix)
 - TanStack Query v5 · TanStack Table v8
 - Zustand v5 (persist) · React Hook Form · Zod v4
-- Motion (motion/react) · Recharts · Sonner
+- Tiptap v3 (rich text — `immediatelyRender: false`, uncontrolled via `defaultValue`)
+- Motion (motion/react) · Recharts · Sonner · react-dropzone
 
 ## Directory structure
 ```
@@ -62,7 +63,8 @@ src/
 
 ## shadcn 4.x / Base UI gotchas
 - No `asChild` on Trigger components — style them directly with `className`
-- Button has no `asChild` — use raw `<Link>` with button classes, or a `<button>` wrapping `<Link>`
+- Button has no `asChild` — use raw `<Link>` with button classes. Always add `cursor-pointer` to button base styles.
+- **DropdownMenuItem uses `onClick`, NOT `onSelect`** — `onSelect` is Radix-only and silently does nothing in Base UI
 - Select `onValueChange` types value as `string | null` — coerce with `?? ''`
 - Dark mode requires `@custom-variant dark (&:is(.dark *))` in globals.css — NOT media query
 

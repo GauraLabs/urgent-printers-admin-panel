@@ -2,14 +2,16 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { getProducts, getProduct, createProduct, updateProduct, deleteProduct } from '@/lib/api/products';
-import type { ProductFilters, Product } from '@/types';
+import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, type ProductPayload } from '@/lib/api/products';
+import type { ProductFilters, ProductStatus } from '@/types';
+
+const PRODUCTS_KEY = ['products'];
 
 export function useProducts() {
   const [filters, setFilters] = useState<ProductFilters>({ page: 1, page_size: 20 });
 
   const query = useQuery({
-    queryKey: ['products', filters],
+    queryKey: [...PRODUCTS_KEY, filters],
     queryFn: () => getProducts(filters),
     staleTime: 60_000,
   });
@@ -18,8 +20,8 @@ export function useProducts() {
     query,
     filters,
     setPage: (page: number) => setFilters((f) => ({ ...f, page })),
-    setSearch: (search: string) => setFilters((f) => ({ ...f, search: search || undefined, page: 1 })),
-    setStatus: (status: ProductFilters['status']) => setFilters((f) => ({ ...f, status, page: 1 })),
+    setSearch: () => { /* backend search not yet implemented */ },
+    setStatus: (status: ProductStatus | undefined) => setFilters((f) => ({ ...f, status, page: 1 })),
     setCategory: (category_id: string | undefined) => setFilters((f) => ({ ...f, category_id, page: 1 })),
   };
 }
@@ -36,10 +38,10 @@ export function useProductDetail(id: string) {
 export function useSaveProduct() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id?: string; data: Partial<Product> }) =>
+    mutationFn: ({ id, data }: { id?: string; data: ProductPayload }) =>
       id ? updateProduct(id, data) : createProduct(data),
     onSuccess: (_, { id }) => {
-      qc.invalidateQueries({ queryKey: ['products'] });
+      qc.invalidateQueries({ queryKey: PRODUCTS_KEY });
       if (id) qc.invalidateQueries({ queryKey: ['product', id] });
     },
   });
@@ -49,6 +51,6 @@ export function useDeleteProduct() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteProduct(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: PRODUCTS_KEY }),
   });
 }

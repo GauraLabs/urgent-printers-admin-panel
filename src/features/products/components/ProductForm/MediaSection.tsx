@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, X, ArrowUp, ArrowDown, Film, AlertCircle, Loader2 } from 'lucide-react';
+import { Upload, X, ArrowUp, ArrowDown, Film, AlertCircle, Loader2, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { uploadMedia, deleteMedia } from '@/lib/api/media';
-import type { ProductImage, ProductVideo, MediaUploadImageResult, MediaUploadVideoResult } from '@/types/product';
+import type { ProductImageURLSet, MediaUploadImageResult, MediaUploadVideoResult } from '@/types/product';
+
+const MAX_VIDEO_MB = 150;
 
 // ── Image item state machine ───────────────────────────────────────────────────
 type ImageItem =
@@ -18,62 +20,101 @@ type VideoItem =
   | { status: 'done';      blobUrl: string; result: MediaUploadVideoResult }
   | { status: 'error';     blobUrl: string; message: string };
 
-// ── Helpers ────────────────────────────────────────────────────────────────────
-function fromExistingImage(img: ProductImage): ImageItem {
+// ── Helpers — use real variant URLs from the backend, no guessing ─────────────
+function fromExistingImage(img: ProductImageURLSet): ImageItem {
   return {
     status: 'done',
-    tempId: img.id,
-    blobUrl: img.thumb_url,
+    tempId: img.key,
+    blobUrl: img.thumb,   // show thumb in the 96px grid cell
     result: {
       type: 'image',
       key: img.key,
-      original: { url: img.original_url, width: 0, height: 0, size_bytes: 0 },
+      original: { url: img.original, width: 0, height: 0, size_bytes: 0 },
       variants: {
-        thumb: { url: img.thumb_url, width: 300, height: 300 },
-        md:    { url: img.md_url,    width: 800, height: 533 },
-        lg:    { url: img.lg_url,    width: 1600, height: 1067 },
+        thumb: { url: img.thumb,    width: 300,  height: 300 },
+        md:    { url: img.md,       width: 800,  height: 533 },
+        lg:    { url: img.lg,       width: 1600, height: 1067 },
       },
     },
   };
 }
 
-function fromExistingVideo(v: ProductVideo): VideoItem {
+function fromExistingVideo(
+  key: string,
+  videoUrl: string,
+  thumbnailUrl: string,
+): VideoItem {
   return {
     status: 'done',
-    blobUrl: v.thumbnail_url,
+    blobUrl: thumbnailUrl,   // poster shown in the video preview box
     result: {
       type: 'video',
-      key: v.key,
-      video: { url: v.video_url, size_bytes: 0, duration_seconds: v.duration_seconds },
-      thumbnail: { url: v.thumbnail_url, width: 1280, height: 720 },
+      key,
+      video: { url: videoUrl, size_bytes: 0, duration_seconds: 0 },
+      thumbnail: { url: thumbnailUrl, width: 1280, height: 720 },
     },
   };
 }
 
+// ── Public handle exposed via ref ──────────────────────────────────────────────
+export interface MediaSectionHandle {
+  cleanupNewUploads: () => Promise<void>;
+}
+
 // ── Props ──────────────────────────────────────────────────────────────────────
 interface MediaSectionProps {
-  context?: string;                          // R2 folder prefix, e.g. "product"
-  initialImages?: ProductImage[];
-  initialVideo?: ProductVideo | null;
-  onImagesChange?: (keys: string[]) => void; // called with ordered array of done keys
+  context?: string;
+  maxImages?: number;
+  videoLabel?: string;
+  initialImages?: ProductImageURLSet[];
+  initialVideoKey?: string | null;
+  initialVideoUrl?: string | null;
+  initialVideoThumbnailUrl?: string | null;
+  onImagesChange?: (keys: string[]) => void;
   onVideoChange?: (key: string | null) => void;
 }
 
-export function MediaSection({
+export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(function MediaSection({
   context = 'product',
+  maxImages = 8,
+  videoLabel = 'Product Video',
   initialImages = [],
-  initialVideo = null,
+  initialVideoKey = null,
+  initialVideoUrl = null,
+  initialVideoThumbnailUrl = null,
   onImagesChange,
   onVideoChange,
-}: MediaSectionProps) {
+}: MediaSectionProps, ref: React.Ref<MediaSectionHandle>) {
   const [images, setImages] = useState<ImageItem[]>(() =>
-    [...initialImages]
-      .sort((a, b) => a.sort_order - b.sort_order)
-      .map(fromExistingImage)
+    initialImages.map(fromExistingImage)
   );
   const [video, setVideo] = useState<VideoItem | null>(
-    initialVideo ? fromExistingVideo(initialVideo) : null
+    initialVideoKey && initialVideoUrl && initialVideoThumbnailUrl
+      ? fromExistingVideo(initialVideoKey, initialVideoUrl, initialVideoThumbnailUrl)
+      : null
   );
+
+  // Expose cleanup handle — deletes only media uploaded in this session.
+  useImperativeHandle(ref, () => ({
+    async cleanupNewUploads() {
+      const existingKeys = new Set(initialImages.map((i) => i.key));
+      const newImageKeys = images
+        .filter((i): i is Extract<ImageItem, { status: 'done' }> =>
+          i.status === 'done' && !existingKeys.has(i.result.key)
+        )
+        .map((i) => i.result.key);
+
+      const newVideoKey =
+        video?.status === 'done' && !initialVideoKey
+          ? video.result.key
+          : null;
+
+      await Promise.allSettled([
+        ...newImageKeys.map((k) => deleteMedia(k)),
+        newVideoKey ? deleteMedia(newVideoKey) : Promise.resolve(),
+      ]);
+    },
+  }));
 
   // Notify parent of done image keys in current order
   useEffect(() => {
@@ -110,7 +151,7 @@ export function MediaSection({
   }
 
   const onImageDrop = useCallback((files: File[]) => {
-    files.slice(0, 8 - images.length).forEach((file) => {
+    files.slice(0, maxImages - images.length).forEach((file) => {
       const blobUrl = URL.createObjectURL(file);
       const tempId = crypto.randomUUID();
 
@@ -159,9 +200,16 @@ export function MediaSection({
     setVideo(null);
   }
 
+  const [videoSizeError, setVideoSizeError] = useState<string | null>(null);
+
   const onVideoDrop = useCallback((files: File[]) => {
     const file = files[0];
     if (!file) return;
+    setVideoSizeError(null);
+    if (file.size > MAX_VIDEO_MB * 1024 * 1024) {
+      setVideoSizeError(`Video is too large (${(file.size / 1024 / 1024).toFixed(0)} MB). Maximum is ${MAX_VIDEO_MB} MB.`);
+      return;
+    }
     const blobUrl = URL.createObjectURL(file);
     setVideo({ status: 'uploading', blobUrl, progress: 0 });
 
@@ -184,7 +232,7 @@ export function MediaSection({
     onDrop: onImageDrop,
     accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.webp'] },
     multiple: true,
-    disabled: images.length >= 8,
+    disabled: images.length >= maxImages,
   });
 
   const { getRootProps: vidRootProps, getInputProps: vidInputProps, isDragActive: vidDrag } = useDropzone({
@@ -285,7 +333,7 @@ export function MediaSection({
       )}
 
       {/* Image dropzone */}
-      {images.length < 8 && (
+      {images.length < maxImages && (
         <div {...imgRootProps()} className={cn(
           'border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-colors',
           imgDrag ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-muted/30'
@@ -296,7 +344,7 @@ export function MediaSection({
             {imgDrag ? 'Drop images here' : 'Drag & drop or click to upload images'}
           </p>
           <p className="text-[11px] text-muted-foreground/70 mt-0.5">
-            JPG, PNG, WebP · Up to {8 - images.length} more · Variants generated automatically
+            JPG, PNG, WebP · Up to {maxImages - images.length} more · Variants generated automatically
           </p>
         </div>
       )}
@@ -305,7 +353,7 @@ export function MediaSection({
       <div className="pt-3 border-t border-border space-y-3">
         <p className="flex items-center gap-1.5 text-xs font-medium text-foreground">
           <Film className="h-3.5 w-3.5 text-muted-foreground" />
-          Product Video
+          {videoLabel}
           <span className="text-muted-foreground font-normal">— optional</span>
         </p>
 
@@ -359,11 +407,18 @@ export function MediaSection({
               {vidDrag ? 'Drop video here' : 'Drag & drop or click to upload video'}
             </p>
             <p className="text-[11px] text-muted-foreground/70 mt-0.5">
-              MP4, MOV, WebM · Thumbnail extracted automatically
+              MP4, MOV, WebM · Max {MAX_VIDEO_MB} MB · Thumbnail extracted automatically
             </p>
           </div>
+        )}
+
+        {videoSizeError && (
+          <p className="flex items-center gap-1.5 text-xs text-destructive mt-1">
+            <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />
+            {videoSizeError}
+          </p>
         )}
       </div>
     </div>
   );
-}
+});

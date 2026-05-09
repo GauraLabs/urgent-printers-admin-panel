@@ -37,7 +37,15 @@ function processQueue(error: unknown, token: string | null) {
 apiClient.interceptors.response.use(
   (res) => {
     if (isWrapped(res.data)) {
-      res.data = res.data.data;
+      const payload = res.data.data;
+      const meta = (res.data as Record<string, unknown>).meta;
+      // paginated() returns { data: [...items], message, meta: {...} }.
+      // Fold meta into the payload so callers receive { items, page, page_size, total, total_pages }.
+      if (Array.isArray(payload) && meta && typeof meta === 'object') {
+        res.data = { items: payload, ...meta };
+      } else {
+        res.data = payload;
+      }
     }
     return res;
   },

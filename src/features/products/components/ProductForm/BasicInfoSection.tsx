@@ -8,11 +8,11 @@ import { RichTextEditor } from '@/components/common/RichTextEditor';
 import type { ProductFormValues } from './index';
 
 const BADGES = [
-  { value: '', label: 'None' },
+  { value: 'none',       label: 'None' },
   { value: 'bestseller', label: 'Bestseller' },
-  { value: 'new', label: 'New' },
-  { value: 'sale', label: 'Sale' },
-  { value: 'popular', label: 'Popular' },
+  { value: 'new',        label: 'New' },
+  { value: 'sale',       label: 'Sale' },
+  { value: 'popular',    label: 'Popular' },
 ];
 
 function slugify(str: string): string {
