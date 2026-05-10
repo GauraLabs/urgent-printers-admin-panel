@@ -2,6 +2,16 @@ export type ProductStatus = 'draft' | 'active' | 'archived';
 // Backend enum: 'none' is the "no badge" value, not null
 export type ProductBadge = 'none' | 'bestseller' | 'new' | 'sale' | 'popular';
 export type SizeUnit = 'mm' | 'cm' | 'in' | 'ft';
+export type CustomizationMode = 'artwork' | 'template' | 'both' | 'none';
+
+export interface TemplateField {
+  id: string;
+  label: string;
+  type: 'text' | 'email' | 'phone' | 'multiline' | 'url';
+  placeholder?: string;
+  required: boolean;
+  max_length?: number;
+}
 
 // ── Print spec sub-types (no id — backend stores these in JSONB) ───────────────
 export interface ProductSize {
@@ -10,17 +20,29 @@ export interface ProductSize {
   height: number;
   unit: SizeUnit;
   is_active: boolean;
+  is_default: boolean;
+  price_multiplier: number;
 }
 
 export interface ProductPaperType {
   label: string;
   gsm: number | null;
   is_active: boolean;
+  is_default: boolean;
+  price_multiplier: number;
 }
 
 export interface ProductFinish {
   label: string;
   is_active: boolean;
+  is_default: boolean;
+  price_multiplier: number;
+}
+
+export interface ProductSideOption {
+  label: string;
+  is_default: boolean;
+  price_multiplier: number;
 }
 
 export interface ProductPricingTier {
@@ -94,7 +116,7 @@ export interface Product {
   sizes: ProductSize[];
   paper_types: ProductPaperType[];
   finishes: ProductFinish[];
-  sides_options: string[];
+  sides_options: ProductSideOption[];
   quantity_steps: number[];
   pricing_tiers: ProductPricingTier[];
   turnaround_options: ProductTurnaroundOption[];
@@ -105,6 +127,9 @@ export interface Product {
   video_key: string | null;
   video_url: string | null;
   video_thumbnail_url: string | null;
+  // customization
+  customization_mode: CustomizationMode;
+  template_fields: TemplateField[];
   // inventory
   track_inventory: boolean;
   stock_quantity: number | null;

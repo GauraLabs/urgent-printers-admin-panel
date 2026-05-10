@@ -1,17 +1,24 @@
 import { get, post, patch, del } from './client';
-import type { Product, ProductSummary, ProductsListResponse, ProductFilters } from '@/types';
+import type { Product, ProductSummary, ProductsListResponse, ProductFilters, ProductSideOption, CustomizationMode } from '@/types';
 
 // ── Normalizer ────────────────────────────────────────────────────────────────
-type RawProduct = Omit<Product, 'id' | 'category_id'> & {
+type RawProduct = Omit<Product, 'id' | 'category_id' | 'sides_options'> & {
   id: number | string;
   category_id: number | string | null;
+  // Backend may return old string[] format during migration — normalise to object[]
+  sides_options: Array<string | ProductSideOption>;
 };
+
+function normalizeSide(s: string | ProductSideOption): ProductSideOption {
+  return typeof s === 'string' ? { label: s, is_default: false, price_multiplier: 1.0 } : s;
+}
 
 function normalize(raw: RawProduct): ProductSummary {
   const product: Product = {
     ...raw,
     id: String(raw.id),
     category_id: raw.category_id != null ? String(raw.category_id) : null,
+    sides_options: (raw.sides_options ?? []).map(normalizeSide),
   };
   return {
     ...product,
@@ -66,7 +73,7 @@ export interface ProductPayload {
   sizes?: object[];
   paper_types?: object[];
   finishes?: object[];
-  sides_options?: string[];
+  sides_options?: object[];
   quantity_steps?: number[];
   pricing_tiers?: object[];
   turnaround_options?: object[];
@@ -76,6 +83,8 @@ export interface ProductPayload {
   track_inventory?: boolean;
   stock_quantity?: number | null;
   low_stock_threshold?: number | null;
+  customization_mode?: CustomizationMode;
+  template_fields?: object[];
 }
 
 export async function createProduct(data: ProductPayload): Promise<ProductSummary> {

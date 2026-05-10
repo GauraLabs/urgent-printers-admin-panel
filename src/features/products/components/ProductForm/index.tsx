@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { MediaSection, type MediaSectionHandle } from './MediaSection';
+import { CustomizationSection } from './CustomizationSection';
 import { InventorySection } from './InventorySection';
 import { BasicInfoSection } from './BasicInfoSection';
 import { PrintSpecsSection } from './PrintSpecsSection';
@@ -31,10 +32,10 @@ const schema = z.object({
   badge: z.string().optional(),
   is_featured: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
-  sizes: z.array(z.object({ label: z.string(), width: z.number(), height: z.number(), unit: z.enum(['mm', 'cm', 'in', 'ft']), is_active: z.boolean() })).optional(),
-  paper_types: z.array(z.object({ label: z.string(), gsm: z.number().nullable(), is_active: z.boolean() })).optional(),
-  finishes: z.array(z.object({ label: z.string(), is_active: z.boolean() })).optional(),
-  sides_options: z.array(z.string()).optional(),
+  sizes: z.array(z.object({ label: z.string(), width: z.number(), height: z.number(), unit: z.enum(['mm', 'cm', 'in', 'ft']), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
+  paper_types: z.array(z.object({ label: z.string(), gsm: z.number().nullable(), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
+  finishes: z.array(z.object({ label: z.string(), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
+  sides_options: z.array(z.object({ label: z.string(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
   quantity_steps: z.array(z.number()).optional(),
   pricing_tiers: z.array(z.object({ quantity: z.number(), price_per_unit: z.number(), is_best_value: z.boolean() })).optional(),
   turnaround_options: z.array(z.object({ type: z.string(), days: z.number(), extra_cost: z.number(), is_active: z.boolean() })).optional(),
@@ -45,6 +46,15 @@ const schema = z.object({
   // Populated by MediaSection callbacks — ordered keys of uploaded images + video
   image_keys: z.array(z.string()).optional(),
   video_key: z.string().nullable().optional(),
+  customization_mode: z.enum(['artwork', 'template', 'both', 'none']),
+  template_fields: z.array(z.object({
+    id: z.string(),
+    label: z.string(),
+    type: z.enum(['text', 'email', 'phone', 'multiline', 'url']),
+    placeholder: z.string().optional(),
+    required: z.boolean(),
+    max_length: z.number().optional(),
+  })).optional(),
 });
 
 export type ProductFormValues = z.infer<typeof schema>;
@@ -98,29 +108,34 @@ export function ProductForm({ product }: ProductFormProps) {
       low_stock_threshold: product.low_stock_threshold,
       image_keys: product.image_keys,
       video_key: product.video_key,
+      customization_mode: product.customization_mode,
+      template_fields: product.template_fields,
     } : {
       status: 'draft',
       badge: 'none',
       is_featured: false,
       tags: ['printing', 'business', 'premium', 'fast-delivery'],
       sizes: [
-        { label: '90 × 54 mm (Standard)', width: 90,  height: 54, unit: 'mm' as const, is_active: true },
-        { label: '85 × 55 mm (Euro)',     width: 85,  height: 55, unit: 'mm' as const, is_active: true },
-        { label: '100 × 60 mm (Large)',   width: 100, height: 60, unit: 'mm' as const, is_active: true },
+        { label: '90 × 54 mm (Standard)', width: 90,  height: 54, unit: 'mm' as const, is_active: true, is_default: true,  price_multiplier: 1.0 },
+        { label: '85 × 55 mm (Euro)',     width: 85,  height: 55, unit: 'mm' as const, is_active: true, is_default: false, price_multiplier: 1.0 },
+        { label: '100 × 60 mm (Large)',   width: 100, height: 60, unit: 'mm' as const, is_active: true, is_default: false, price_multiplier: 1.1 },
       ],
       paper_types: [
-        { label: '300 GSM Art Board', gsm: 300, is_active: true },
-        { label: '350 GSM Art Board', gsm: 350, is_active: true },
-        { label: '400 GSM Premium Board', gsm: 400, is_active: true },
-        { label: '450 GSM Ultra Thick', gsm: 450, is_active: true },
+        { label: '300 GSM Art Board',     gsm: 300, is_active: true, is_default: true,  price_multiplier: 1.0  },
+        { label: '350 GSM Art Board',     gsm: 350, is_active: true, is_default: false, price_multiplier: 1.1  },
+        { label: '400 GSM Premium Board', gsm: 400, is_active: true, is_default: false, price_multiplier: 1.25 },
+        { label: '450 GSM Ultra Thick',   gsm: 450, is_active: true, is_default: false, price_multiplier: 1.4  },
       ],
       finishes: [
-        { label: 'Gloss Lamination', is_active: true },
-        { label: 'Matte Lamination', is_active: true },
-        { label: 'Soft Touch Matte', is_active: true },
-        { label: 'Spot UV', is_active: true },
+        { label: 'Gloss Lamination', is_active: true, is_default: true,  price_multiplier: 1.0  },
+        { label: 'Matte Lamination', is_active: true, is_default: false, price_multiplier: 1.05 },
+        { label: 'Soft Touch Matte', is_active: true, is_default: false, price_multiplier: 1.15 },
+        { label: 'Spot UV',          is_active: true, is_default: false, price_multiplier: 1.3  },
       ],
-      sides_options: ['Single Sided', 'Double Sided'],
+      sides_options: [
+        { label: 'Single Sided', is_default: true,  price_multiplier: 1.0  },
+        { label: 'Double Sided', is_default: false, price_multiplier: 1.35 },
+      ],
       quantity_steps: [100, 250, 500, 1000, 2500, 5000],
       pricing_tiers: [
         { quantity: 100,  price_per_unit: 12.00, is_best_value: false },
@@ -140,6 +155,8 @@ export function ProductForm({ product }: ProductFormProps) {
       low_stock_threshold: null,
       image_keys: [],
       video_key: null,
+      customization_mode: 'none' as const,
+      template_fields: [],
     },
   });
 
@@ -171,6 +188,8 @@ export function ProductForm({ product }: ProductFormProps) {
       track_inventory: v.track_inventory ?? false,
       stock_quantity: v.stock_quantity ?? null,
       low_stock_threshold: v.low_stock_threshold ?? null,
+      customization_mode: v.customization_mode,
+      template_fields: v.template_fields ?? [],
     };
     try {
       await saveMutation.mutateAsync({ id: product?.id, data: payload });
@@ -198,6 +217,9 @@ export function ProductForm({ product }: ProductFormProps) {
       <div className="xl:col-span-2 space-y-4">
         <Section title="Basic Information">
           <BasicInfoSection form={form} />
+        </Section>
+        <Section title="Customization">
+          <CustomizationSection form={form} />
         </Section>
         <Section title="Images & Video">
           <MediaSection
