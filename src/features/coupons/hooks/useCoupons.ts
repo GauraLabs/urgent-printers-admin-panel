@@ -45,6 +45,6 @@ export function useDeleteCoupon() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteCoupon(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['coupons'] }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['coupons'] }); },
   });
 }

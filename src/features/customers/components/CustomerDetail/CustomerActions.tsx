@@ -53,12 +53,14 @@ export function CustomerActions({ customer }: { customer: CustomerWithDetails })
         </div>
 
         <div className="border-t border-[var(--border-subtle)] pt-3 space-y-2">
-          <a
-            href={`mailto:${customer.email}`}
-            className="flex items-center gap-2 w-full px-3 py-2 text-xs border border-[var(--border)] rounded-lg text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)] transition-colors"
-          >
-            <Mail className="h-3.5 w-3.5" /> Send Email
-          </a>
+          {customer.email && (
+            <a
+              href={`mailto:${customer.email}`}
+              className="flex items-center gap-2 w-full px-3 py-2 text-xs border border-[var(--border)] rounded-lg text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)] transition-colors"
+            >
+              <Mail className="h-3.5 w-3.5" /> Send Email
+            </a>
+          )}
 
           {isBanned ? (
             <button

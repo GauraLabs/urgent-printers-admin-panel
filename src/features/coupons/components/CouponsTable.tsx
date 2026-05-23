@@ -138,7 +138,7 @@ export function CouponsTable() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onSelect={() => setDeleteTarget(c)}
+                onClick={() => setDeleteTarget(c)}
                 className="text-[var(--danger)] focus:text-[var(--danger)]"
               >
                 <Trash2 className="h-3.5 w-3.5" /> Delete

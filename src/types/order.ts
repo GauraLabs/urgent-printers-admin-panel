@@ -122,6 +122,7 @@ export interface OrdersListResponse {
 export interface OrderFilters {
   status?: OrderStatus;
   turnaround?: TurnaroundType;
+  customer_id?: string;
   date_from?: string;
   date_to?: string;
   search?: string;

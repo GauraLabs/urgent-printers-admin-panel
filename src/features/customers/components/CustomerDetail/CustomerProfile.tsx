@@ -22,12 +22,14 @@ export function CustomerProfile({ customer }: { customer: CustomerWithDetails })
         <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-3">Identity</h3>
         <Row label="Full Name" value={<span className="font-medium">{customer.name}</span>} />
         <Row label="Email" value={
-          <span className="flex items-center justify-end gap-1.5">
-            {customer.email}
-            {customer.email_verified
-              ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-              : <XCircle className="h-3.5 w-3.5 text-[var(--text-muted)]" />}
-          </span>
+          customer.email ? (
+            <span className="flex items-center justify-end gap-1.5">
+              {customer.email}
+              {customer.email_verified
+                ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                : <XCircle className="h-3.5 w-3.5 text-[var(--text-muted)]" />}
+            </span>
+          ) : '—'
         } />
         <Row label="Phone" value={customer.phone ?? '—'} />
         <Row label="Status" value={

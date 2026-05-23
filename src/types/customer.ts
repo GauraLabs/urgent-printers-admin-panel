@@ -16,7 +16,7 @@ export interface CustomerAddress {
 export interface Customer {
   id: string;
   name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   status: CustomerStatus;
   avatar_url: string | null;

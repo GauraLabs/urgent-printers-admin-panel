@@ -1,5 +1,6 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { CouponForm } from './CouponForm';
 import { CouponAnalytics } from './CouponAnalytics';
@@ -9,6 +10,8 @@ import { LoadingSkeleton } from '@/components/common/LoadingSkeleton';
 export function CouponDetailClient({ id }: { id: string }) {
   const isNew = id === 'new';
   const { data: coupon, isLoading } = useCouponDetail(id);
+  const searchParams = useSearchParams();
+  const defaultTab = searchParams.get('tab') === 'analytics' ? 'analytics' : 'edit';
 
   if (!isNew && isLoading) return <LoadingSkeleton rows={6} className="max-w-2xl" />;
 
@@ -17,7 +20,7 @@ export function CouponDetailClient({ id }: { id: string }) {
   }
 
   return (
-    <Tabs defaultValue="edit">
+    <Tabs defaultValue={defaultTab}>
       <TabsList className="mb-5">
         <TabsTrigger value="edit">Edit</TabsTrigger>
         <TabsTrigger value="analytics">Analytics</TabsTrigger>

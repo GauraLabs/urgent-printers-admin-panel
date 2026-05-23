@@ -53,7 +53,7 @@ export function CustomersTable() {
         const initials = c.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
         return (
           <div className="flex items-center gap-3 min-w-[180px]">
-            <div className="w-8 h-8 rounded-full bg-[var(--sidebar-active)] flex items-center justify-center text-xs font-semibold text-white flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-[var(--sidebar-active-bg)] flex items-center justify-center text-xs font-semibold text-[var(--sidebar-active-text)] flex-shrink-0">
               {initials}
             </div>
             <div className="min-w-0">
@@ -61,10 +61,16 @@ export function CustomersTable() {
                 {c.name}
               </Link>
               <div className="flex items-center gap-1">
-                <p className="text-[11px] text-[var(--text-muted)] truncate">{c.email}</p>
-                {c.email_verified
-                  ? <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
-                  : <XCircle className="h-3 w-3 text-[var(--text-muted)] flex-shrink-0" />}
+                {c.email ? (
+                  <>
+                    <p className="text-[11px] text-[var(--text-muted)] truncate">{c.email}</p>
+                    {c.email_verified
+                      ? <CheckCircle2 className="h-3 w-3 text-green-500 flex-shrink-0" />
+                      : <XCircle className="h-3 w-3 text-[var(--text-muted)] flex-shrink-0" />}
+                  </>
+                ) : (
+                  <p className="text-[11px] text-[var(--text-muted)] truncate">{c.phone ?? '—'}</p>
+                )}
               </div>
             </div>
           </div>
@@ -134,12 +140,12 @@ export function CustomersTable() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {c.status === 'banned' ? (
-                <DropdownMenuItem onSelect={() => setConfirmAction({ customer: c, action: 'unban' })}>
+                <DropdownMenuItem onClick={() => setConfirmAction({ customer: c, action: 'unban' })}>
                   <ShieldCheck className="h-3.5 w-3.5 text-green-600" /> Reinstate Customer
                 </DropdownMenuItem>
               ) : (
                 <DropdownMenuItem
-                  onSelect={() => setConfirmAction({ customer: c, action: 'ban' })}
+                  onClick={() => setConfirmAction({ customer: c, action: 'ban' })}
                   className="text-[var(--danger)] focus:text-[var(--danger)]"
                 >
                   <ShieldOff className="h-3.5 w-3.5" /> Ban Customer

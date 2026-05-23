@@ -41,7 +41,7 @@ export function CustomerDetailClient({ id }: { id: string }) {
     <div>
       <PageHeader
         title={customer.name}
-        description={customer.email}
+        description={customer.email ?? customer.phone ?? undefined}
         actions={
           <div className="flex items-center gap-2">
             <span className={cn('w-2 h-2 rounded-full flex-shrink-0', STATUS_DOT[customer.status] ?? 'bg-gray-400')} />
@@ -104,11 +104,11 @@ export function CustomerDetailClient({ id }: { id: string }) {
           <div className="xl:sticky xl:top-20 space-y-4">
             {/* Avatar card */}
             <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 text-center">
-              <div className="w-16 h-16 rounded-full bg-[var(--sidebar-active)] flex items-center justify-center text-xl font-bold text-white mx-auto mb-3">
+              <div className="w-16 h-16 rounded-full bg-[var(--sidebar-active-bg)] flex items-center justify-center text-xl font-bold text-[var(--sidebar-active-text)] mx-auto mb-3">
                 {initials}
               </div>
               <p className="text-sm font-semibold text-[var(--text-primary)]">{customer.name}</p>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">{customer.email}</p>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">{customer.email ?? customer.phone ?? '—'}</p>
             </div>
             <CustomerActions customer={customer} />
           </div>

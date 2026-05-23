@@ -26,7 +26,6 @@ export function CouponAnalytics({ couponId }: { couponId: string }) {
   const chartData = data.uses_over_time.map((d) => ({
     date: format(parseISO(d.date), 'd MMM'),
     Uses: d.uses,
-    Discount: d.discount,
   }));
 
   return (

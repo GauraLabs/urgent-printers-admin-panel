@@ -1,5 +1,6 @@
 export type DiscountType = 'percentage' | 'fixed';
 export type CouponStatus = 'active' | 'inactive' | 'expired' | 'exhausted';
+export type CouponTrigger = 'on_signup' | 'on_nth_order' | 'on_spend_milestone';
 
 export interface Coupon {
   id: string;
@@ -17,10 +18,11 @@ export interface Coupon {
   status: CouponStatus;
   valid_from: string;
   valid_until: string | null;
-  created_by_id: string;
-  created_by_name: string;
+  trigger: CouponTrigger | null;
+  trigger_config: Record<string, unknown>;
+  is_personal: boolean;
+  is_active: boolean;
   created_at: string;
-  updated_at: string;
 }
 
 export interface CouponAnalytics {
@@ -30,7 +32,7 @@ export interface CouponAnalytics {
   total_order_revenue: number;
   unique_customers: number;
   avg_order_value: number;
-  uses_over_time: Array<{ date: string; uses: number; discount: number }>;
+  uses_over_time: Array<{ date: string; uses: number }>;
 }
 
 export interface CouponsListResponse {
@@ -44,6 +46,7 @@ export interface CouponsListResponse {
 export interface CouponFilters {
   status?: CouponStatus;
   discount_type?: DiscountType;
+  trigger?: CouponTrigger;
   search?: string;
   page?: number;
   page_size?: number;
@@ -62,4 +65,8 @@ export interface CreateCouponRequest {
   applicable_category_ids?: string[];
   valid_from: string;
   valid_until?: string;
+  trigger?: CouponTrigger | null;
+  trigger_config?: Record<string, unknown>;
+  is_personal?: boolean;
+  is_active?: boolean;
 }
