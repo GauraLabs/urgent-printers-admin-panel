@@ -14,14 +14,19 @@ export function OrderItems({ items }: { items: OrderItem[] }) {
       </div>
       <ul className="divide-y divide-[var(--border-subtle)]">
         {items.map((item) => {
+          const specLine = [item.size, item.paper_type, item.finish, item.sides].filter(
+            (v): v is string => Boolean(v)
+          );
           return (
             <li key={item.id} className="p-4">
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
                   <p className="text-sm font-semibold text-[var(--text-primary)]">{item.product_name}</p>
-                  <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                    {item.size} · {item.paper_type} · {item.finish} · {item.sides}
-                  </p>
+                  {specLine.length > 0 && (
+                    <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                      {specLine.join(' · ')}
+                    </p>
+                  )}
                 </div>
                 <div className="text-right flex-shrink-0">
                   <p className="text-sm font-semibold text-[var(--text-primary)] tabular-nums">{formatPrice(item.total_price)}</p>

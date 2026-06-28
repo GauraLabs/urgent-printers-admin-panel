@@ -19,10 +19,11 @@ export interface OrderItem {
   product_id: string;
   product_name: string;
   product_slug: string;
-  size: string;
-  paper_type: string;
-  finish: string;
-  sides: string;
+  // Absent when the corresponding option category doesn't apply to this product
+  size: string | null;
+  paper_type: string | null;
+  finish: string | null;
+  sides: string | null;
   quantity: number;
   unit_price: number;
   total_price: number;
