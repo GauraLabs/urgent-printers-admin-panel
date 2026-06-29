@@ -16,9 +16,9 @@ import { formatApiDate } from '@/lib/utils/formatDate';
 import type { OrderStatus, DateRange } from '@/types';
 
 const STATUSES: OrderStatus[] = [
-  'pending', 'confirmed', 'artwork_pending', 'artwork_approved',
-  'printing', 'ready_to_dispatch', 'dispatched', 'out_for_delivery',
-  'delivered', 'cancelled', 'refunded',
+  'placed', 'confirmed', 'artwork_pending', 'artwork_approved',
+  'printing', 'shipped', 'delivered', 'cancelled',
+  'refund_initiated', 'refunded',
 ];
 
 interface OrderFiltersProps {

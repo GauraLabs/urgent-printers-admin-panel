@@ -44,7 +44,7 @@ export async function getOrdersReport(from: string, to: string): Promise<OrdersR
     cancellation_rate_trend: makeSeries(30, 3.5, 3),
     orders_by_status: [
       { status: 'delivered', count: 698 },
-      { status: 'dispatched', count: 82 },
+      { status: 'shipped', count: 82 },
       { status: 'printing', count: 33 },
       { status: 'cancelled', count: 34 },
     ],

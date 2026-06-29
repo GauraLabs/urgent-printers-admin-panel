@@ -11,8 +11,8 @@ function delay(ms = 400): Promise<void> {
 }
 
 const STATUSES: OrderStatus[] = [
-  'pending', 'confirmed', 'artwork_pending', 'artwork_approved',
-  'printing', 'ready_to_dispatch', 'dispatched', 'delivered', 'cancelled',
+  'placed', 'confirmed', 'artwork_pending', 'artwork_approved',
+  'printing', 'shipped', 'delivered', 'cancelled', 'refund_initiated', 'refunded',
 ];
 
 const CUSTOMERS = [
@@ -116,9 +116,9 @@ export async function getOrder(id: string): Promise<OrderWithDetails> {
       country: 'India',
     },
     shipping: {
-      courier: base.status === 'dispatched' ? 'Shiprocket' : null,
-      awb_number: base.status === 'dispatched' ? '42098374982' : null,
-      tracking_url: base.status === 'dispatched' ? 'https://shiprocket.co/track/42098374982' : null,
+      courier: base.status === 'shipped' ? 'Shiprocket' : null,
+      awb_number: base.status === 'shipped' ? '42098374982' : null,
+      tracking_url: base.status === 'shipped' ? 'https://shiprocket.co/track/42098374982' : null,
       estimated_delivery: null,
       dispatched_at: null,
       delivered_at: null,

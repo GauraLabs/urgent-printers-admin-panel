@@ -1,14 +1,13 @@
 export type OrderStatus =
-  | 'pending'
+  | 'placed'
   | 'confirmed'
   | 'artwork_pending'
   | 'artwork_approved'
   | 'printing'
-  | 'ready_to_dispatch'
-  | 'dispatched'
-  | 'out_for_delivery'
+  | 'shipped'
   | 'delivered'
   | 'cancelled'
+  | 'refund_initiated'
   | 'refunded';
 
 export type TurnaroundType = 'standard' | 'express' | 'rush';
