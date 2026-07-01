@@ -7,7 +7,8 @@ Production admin panel for an online printing business. Standalone Next.js 16 ap
 ## Project status
 All 15 UI build steps are complete. Currently in **Step 15 — wiring to real backend**.
 - Wired: auth, staff, activity log, permissions catalog, categories, products
-- Pending: orders, customers, payments, coupons, content, shipping, reviews, communications
+- Partially wired (orders): artwork proof workflow (Step 4A–4I) — ProofUploadDialog, OrderProofs panel, proof API functions, proof hooks
+- Pending: orders (full wiring), customers, payments, coupons, content, shipping, reviews, communications
 
 ## Stack
 - Next.js 16.2.4 · React 19 · TypeScript strict

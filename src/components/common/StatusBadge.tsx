@@ -5,7 +5,7 @@
  */
 
 import { cn } from '@/lib/utils/cn';
-import type { OrderStatus, ProductStatus, CustomerStatus, PaymentStatus, RefundStatus, CouponStatus, ArtworkStatus, TurnaroundType, ProductBadge } from '@/types';
+import type { OrderStatus, ProductStatus, CustomerStatus, PaymentStatus, RefundStatus, CouponStatus, ArtworkStatus, TurnaroundType, ProductBadge, ProofStatus } from '@/types';
 import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/constants/orderStatuses';
 
 // ─── Core variant system ──────────────────────────────────────────────────────
@@ -177,16 +177,16 @@ export function CouponStatusBadge({ status, className }: { status: CouponStatus;
 // ─── Artwork status ───────────────────────────────────────────────────────────
 
 const ARTWORK_STATUS_VARIANT: Record<ArtworkStatus, BadgeVariant> = {
-  pending:            'warning',
-  approved:           'success',
-  rejected:           'danger',
-  reupload_requested: 'warning',
+  none:             'default',
+  sent_for_approval: 'warning',
+  approved:          'success',
+  needs_revision:    'danger',
 };
 const ARTWORK_STATUS_LABEL: Record<ArtworkStatus, string> = {
-  pending:            'Awaiting Upload',
-  approved:           'Approved',
-  rejected:           'Rejected',
-  reupload_requested: 'Reupload Requested',
+  none:             'No Proof',
+  sent_for_approval: 'Awaiting Approval',
+  approved:          'Approved',
+  needs_revision:    'Needs Revision',
 };
 
 export function ArtworkStatusBadge({ status, className }: { status: ArtworkStatus; className?: string }) {
@@ -197,4 +197,25 @@ export function ArtworkStatusBadge({ status, className }: { status: ArtworkStatu
 
 export function ActiveBadge({ active, className }: { active: boolean; className?: string }) {
   return <Badge label={active ? 'Active' : 'Inactive'} variant={active ? 'success' : 'default'} dot className={className} />;
+}
+
+// ─── Proof status ─────────────────────────────────────────────────────────────
+
+const PROOF_STATUS_VARIANT: Record<ProofStatus, BadgeVariant> = {
+  pending_review: 'default',
+  sent:           'warning',
+  approved:       'success',
+  rejected:       'danger',
+  superseded:     'default',
+};
+const PROOF_STATUS_LABEL: Record<ProofStatus, string> = {
+  pending_review: 'Ready to Send',
+  sent:           'Sent — Awaiting',
+  approved:       'Approved',
+  rejected:       'Rejected',
+  superseded:     'Superseded',
+};
+
+export function ProofStatusBadge({ status, className }: { status: ProofStatus; className?: string }) {
+  return <Badge label={PROOF_STATUS_LABEL[status]} variant={PROOF_STATUS_VARIANT[status]} dot className={className} />;
 }

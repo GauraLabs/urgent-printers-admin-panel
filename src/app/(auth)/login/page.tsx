@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, Printer, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Logo } from '@/components/common/Logo';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/store/authStore';
 import { loginUser } from '@/lib/api/auth';
@@ -54,11 +55,8 @@ export default function LoginPage() {
     <div className="w-full max-w-sm">
       {/* Logo */}
       <div className="flex flex-col items-center mb-8">
-        <div className="w-12 h-12 rounded-xl bg-[var(--primary)] flex items-center justify-center mb-4">
-          <Printer className="h-6 w-6 text-white" />
-        </div>
-        <h1 className="text-xl font-semibold text-[var(--text-primary)]">Urgent Printers</h1>
-        <p className="text-sm text-[var(--text-muted)] mt-1">Admin Panel</p>
+        <Logo variant="color" style={{ height: 36 }} className="mb-3" />
+        <p className="text-sm text-[var(--text-muted)]">Admin Panel</p>
       </div>
 
       {/* Card */}

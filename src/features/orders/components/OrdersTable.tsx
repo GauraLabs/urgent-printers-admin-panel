@@ -130,14 +130,14 @@ export function OrdersTable() {
                   <Eye className="h-3.5 w-3.5" /> View Detail
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setStatusDialogOrder(order)}>
+              <DropdownMenuItem onClick={() => setStatusDialogOrder(order)}>
                 <RefreshCw className="h-3.5 w-3.5" /> Update Status
               </DropdownMenuItem>
               {!['cancelled', 'refunded', 'delivered'].includes(order.status) && (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onSelect={() => setCancelOrder(order)}
+                    onClick={() => setCancelOrder(order)}
                     className="text-[var(--danger)] focus:text-[var(--danger)]"
                   >
                     Cancel Order

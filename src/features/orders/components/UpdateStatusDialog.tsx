@@ -58,7 +58,7 @@ export function UpdateStatusDialog({
 
   async function onSubmit(values: FormValues) {
     try {
-      await mutation.mutateAsync({ id: orderId, status: values.status as OrderStatus, note: values.note });
+      await mutation.mutateAsync({ id: orderId, status: values.status as OrderStatus });
       toast.success(`${orderNumber} moved to ${ORDER_STATUS_LABELS[values.status as OrderStatus]}`);
       reset();
       onOpenChange(false);

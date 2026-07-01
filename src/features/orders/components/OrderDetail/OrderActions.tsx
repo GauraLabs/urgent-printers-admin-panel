@@ -12,7 +12,7 @@ import { ORDER_STATUS_LABELS } from '@/lib/constants/orderStatuses';
 import type { OrderWithDetails, OrderStatus } from '@/types';
 
 const QUICK_ACTIONS: Partial<Record<OrderStatus, { label: string; nextStatus: OrderStatus; icon: React.ReactNode; variant?: 'danger' }[]>> = {
-  artwork_pending: [{ label: 'Approve Artwork', nextStatus: 'artwork_approved', icon: <CheckCircle className="h-4 w-4" /> }],
+  artwork_pending: [{ label: 'Force Approve', nextStatus: 'artwork_approved', icon: <CheckCircle className="h-4 w-4" /> }],
   artwork_approved: [{ label: 'Start Printing', nextStatus: 'printing', icon: <RefreshCw className="h-4 w-4" /> }],
   printing: [{ label: 'Mark Shipped', nextStatus: 'shipped', icon: <Truck className="h-4 w-4" /> }],
   shipped: [{ label: 'Mark Delivered', nextStatus: 'delivered', icon: <CheckCircle className="h-4 w-4" /> }],

@@ -11,6 +11,7 @@ export type Permission =
   | 'orders.edit'
   | 'orders.cancel'
   | 'orders.refund'
+  | 'orders.manage_proofs'
   | 'printing_queue.view'
   | 'printing_queue.manage'
   | 'products.view'

@@ -17,10 +17,12 @@ export function OrderShipping({ address, shipping }: Props) {
             <MapPin className="h-3 w-3" /> Delivery Address
           </p>
           <address className="not-italic text-xs text-[var(--text-secondary)] leading-relaxed">
-            <span className="font-medium text-[var(--text-primary)]">{address.name}</span><br />
+            <span className="font-medium text-[var(--text-primary)]">{address.full_name}</span><br />
             {address.line1}{address.line2 ? `, ${address.line2}` : ''}<br />
             {address.city}, {address.state} {address.pincode}<br />
-            <a href={`tel:${address.phone}`} className="text-[var(--primary)] hover:underline">{address.phone}</a>
+            {address.phone && (
+              <a href={`tel:${address.phone}`} className="text-[var(--primary)] hover:underline">{address.phone}</a>
+            )}
           </address>
         </div>
 
@@ -33,10 +35,10 @@ export function OrderShipping({ address, shipping }: Props) {
               <span className="text-[var(--text-muted)]">Courier</span>
               <span className="font-medium text-[var(--text-primary)]">{shipping.courier}</span>
             </div>
-            {shipping.awb_number && (
+            {shipping.tracking_number && (
               <div className="flex justify-between text-xs">
-                <span className="text-[var(--text-muted)]">AWB</span>
-                <span className="font-mono text-[11px] text-[var(--text-secondary)]">{shipping.awb_number}</span>
+                <span className="text-[var(--text-muted)]">Tracking</span>
+                <span className="font-mono text-[11px] text-[var(--text-secondary)]">{shipping.tracking_number}</span>
               </div>
             )}
             {shipping.estimated_delivery && (
