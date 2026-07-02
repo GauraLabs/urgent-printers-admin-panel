@@ -58,7 +58,9 @@ export function MobileSidebar() {
         </div>
 
         {/* Nav */}
-        <SidebarNav onNavigate={() => setOpen(false)} />
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+          <SidebarNav onNavigate={() => setOpen(false)} />
+        </div>
 
         {/* User footer */}
         <div className="flex-shrink-0 border-t border-[var(--sidebar-border)] p-3">

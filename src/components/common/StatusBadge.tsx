@@ -5,7 +5,7 @@
  */
 
 import { cn } from '@/lib/utils/cn';
-import type { OrderStatus, ProductStatus, CustomerStatus, PaymentStatus, RefundStatus, CouponStatus, ArtworkStatus, TurnaroundType, ProductBadge, ProofStatus } from '@/types';
+import type { OrderStatus, ProductStatus, CustomerStatus, PaymentStatus, RefundStatus, CouponStatus, ArtworkStatus, ProductBadge, ProofStatus } from '@/types';
 import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/constants/orderStatuses';
 
 // ─── Core variant system ──────────────────────────────────────────────────────
@@ -75,21 +75,19 @@ export function StatusBadge({ status, className }: { status: OrderStatus; classN
   return <Badge label={ORDER_STATUS_LABELS[status]} variant={variant} dot className={className} />;
 }
 
-// ─── Turnaround type (Standard / Express / Rush) ──────────────────────────────
+// ─── Turnaround type ──────────────────────────────────────────────────────────
 
-const TURNAROUND_VARIANT: Record<TurnaroundType, BadgeVariant> = {
-  standard: 'default',
-  express:  'warning',
-  rush:     'danger',
-};
-const TURNAROUND_LABEL: Record<TurnaroundType, string> = {
-  standard: 'Standard',
-  express:  'Express',
-  rush:     'Rush',
-};
+function turnaroundVariant(label: string): BadgeVariant {
+  const l = label.toLowerCase();
+  if (l.includes('rush')) return 'danger';
+  if (l.includes('express') || l.includes('same day') || l.includes('next day')) return 'warning';
+  return 'default';
+}
 
-export function TurnaroundBadge({ type, className }: { type: TurnaroundType; className?: string }) {
-  return <Badge label={TURNAROUND_LABEL[type]} variant={TURNAROUND_VARIANT[type]} dot={false} className={className} />;
+export function TurnaroundBadge({ type, className }: { type: string | string[] | null; className?: string }) {
+  if (!type) return null;
+  const label = Array.isArray(type) ? type.join(', ') : type;
+  return <Badge label={label} variant={turnaroundVariant(label)} dot={false} className={className} />;
 }
 
 // ─── Product status (Active / Draft / Archived) ───────────────────────────────

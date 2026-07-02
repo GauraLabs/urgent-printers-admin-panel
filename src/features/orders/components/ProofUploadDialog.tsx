@@ -71,7 +71,7 @@ export function ProofUploadDialog({ open, onOpenChange, orderId, itemId, itemNam
 
     let presignData: { upload_url: string; file_key: string; proof_id: number };
     try {
-      presignData = await presignMutation.mutateAsync({ orderId, itemId, filename: file.name });
+      presignData = await presignMutation.mutateAsync({ orderId, itemId, filename: file.name, mimeType: file.type, fileSize: file.size });
     } catch (err: unknown) {
       const status = (err as { status?: number }).status;
       if (status === 409) {

@@ -48,7 +48,7 @@ export function useOrders(initialFilters: OrderFilters = {}) {
     setFilters((f) => ({ ...f, status, page: 1 }));
   }
 
-  function setTurnaround(turnaround: 'standard' | 'express' | 'rush' | undefined) {
+  function setTurnaround(turnaround: string | undefined) {
     setFilters((f) => ({ ...f, turnaround, page: 1 }));
   }
 
@@ -113,8 +113,8 @@ export function useOrderProofs(orderId: string) {
 
 export function usePresignProof() {
   return useMutation({
-    mutationFn: ({ orderId, itemId, filename }: { orderId: string; itemId: string; filename: string }) =>
-      presignProof(orderId, itemId, filename),
+    mutationFn: ({ orderId, itemId, filename, mimeType, fileSize }: { orderId: string; itemId: string; filename: string; mimeType: string; fileSize: number }) =>
+      presignProof(orderId, itemId, filename, mimeType, fileSize),
   });
 }
 

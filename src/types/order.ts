@@ -37,6 +37,7 @@ export interface OrderItem {
   product_name: string;
   product_slug: string;
   thumbnail_url: string | null;
+  category_name: string | null;
   size_label: string | null;
   paper_label: string | null;
   finish_label: string | null;
@@ -47,7 +48,9 @@ export interface OrderItem {
   total_price: number;
   artwork_status: ArtworkStatus;
   artwork_file_key: string | null;
-  template_data: Record<string, unknown> | null;
+  artwork_filename: string | null;
+  artwork_type: 'file' | 'template' | null;
+  template_data: Record<string, string> | null;
 }
 
 export interface OrderAddress {
@@ -100,15 +103,15 @@ export interface Order {
   id: string;
   order_number: string;
   status: OrderStatus;
-  customer_id: string;
-  customer_name: string;
-  customer_email: string;
+  customer_id: number | null;
+  customer_name: string | null;
+  customer_email: string | null;
   total_amount: number;
   currency: string;
   coupon_code: string | null;
   discount_amount: number;
   subtotal: number;
-  turnaround: TurnaroundType;
+  turnaround: string | string[] | null;
   created_at: string;
   updated_at: string;
 }
@@ -140,8 +143,8 @@ export interface OrdersListResponse {
 
 export interface OrderFilters {
   status?: OrderStatus;
-  turnaround?: TurnaroundType;
-  customer_id?: string;
+  turnaround?: string;
+  customer_id?: number;
   date_from?: string;
   date_to?: string;
   search?: string;

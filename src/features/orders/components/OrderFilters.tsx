@@ -27,7 +27,7 @@ interface OrderFiltersProps {
   turnaround?: string;
   onSearch: (v: string) => void;
   onStatus: (v: OrderStatus | undefined) => void;
-  onTurnaround: (v: 'standard' | 'express' | 'rush' | undefined) => void;
+  onTurnaround: (v: string | undefined) => void;
   onDateRange: (from?: string, to?: string) => void;
   onClear: () => void;
   hasActiveFilters: boolean;
@@ -73,9 +73,7 @@ export function OrderFilters({
 
       <Select
         value={turnaround ?? ''}
-        onValueChange={(v) =>
-          onTurnaround(v ? (v as 'standard' | 'express' | 'rush') : undefined)
-        }
+        onValueChange={(v) => onTurnaround(v || undefined)}
       >
         <SelectTrigger size="sm" className="w-36">
           <SelectValue placeholder="All types" />

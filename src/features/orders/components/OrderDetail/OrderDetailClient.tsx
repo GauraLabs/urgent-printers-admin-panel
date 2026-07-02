@@ -26,7 +26,7 @@ export function OrderDetailClient({ id }: { id: string }) {
   const apiError = error as ApiError | null;
   const isNotFound = apiError?.status === 404;
 
-  if (isNotFound || (!isLoading && !order)) {
+  if (isNotFound) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
         <PackageX className="h-12 w-12 text-[var(--text-muted)] mb-4" />
@@ -44,7 +44,7 @@ export function OrderDetailClient({ id }: { id: string }) {
     );
   }
 
-  if (error) {
+  if (error || !order) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
         <p className="text-sm text-[var(--danger)] mb-4">

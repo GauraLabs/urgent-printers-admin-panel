@@ -46,7 +46,9 @@ export function CustomerOrders({ customerId }: { customerId: string }) {
                   </Link>
                 </td>
                 <td className="px-4 py-2.5"><StatusBadge status={order.status as OrderStatus} /></td>
-                <td className="px-4 py-2.5 capitalize text-[var(--text-secondary)]">{order.turnaround}</td>
+                <td className="px-4 py-2.5 text-[var(--text-secondary)]">
+                  {order.turnaround ? (Array.isArray(order.turnaround) ? order.turnaround.join(', ') : order.turnaround) : '—'}
+                </td>
                 <td className="px-4 py-2.5 font-medium tabular-nums">{formatPrice(order.total_amount)}</td>
                 <td className="px-4 py-2.5 text-[var(--text-muted)]">{formatDate(order.created_at)}</td>
               </tr>

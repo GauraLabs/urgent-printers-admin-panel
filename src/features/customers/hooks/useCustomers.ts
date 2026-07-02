@@ -47,7 +47,7 @@ export function useCustomerActivity(id: string) {
 export function useCustomerOrders(customerId: string) {
   return useQuery({
     queryKey: ['customer-orders', customerId],
-    queryFn: () => getOrders({ customer_id: customerId, page: 1, page_size: 20 }),
+    queryFn: () => getOrders({ customer_id: Number(customerId), page: 1, page_size: 20 }),
     staleTime: 60_000,
     enabled: !!customerId,
   });

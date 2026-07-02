@@ -35,7 +35,7 @@ function makeOrder(i: number): Order {
     id: `ord-${3000 - i}`,
     order_number: `ORD-${3000 - i}`,
     status: STATUSES[i % STATUSES.length],
-    customer_id: `cust-${i % 50}`,
+    customer_id: i % 50,
     customer_name: c.name,
     customer_email: c.email,
     total_amount: Math.floor(2500 + (i * 1337) % 18000),
@@ -49,15 +49,48 @@ function makeOrder(i: number): Order {
   };
 }
 
+function normaliseListOrder(raw: Record<string, unknown>): Order {
+  return {
+    id: String(raw.id),
+    order_number: raw.order_number as string,
+    status: raw.status as OrderStatus,
+    customer_id: raw.customer_id != null ? Number(raw.customer_id) : null,
+    customer_name: (raw.customer_name as string | null) ?? null,
+    customer_email: (raw.customer_email as string | null) ?? null,
+    total_amount: Number(raw.total_amount) || 0,
+    currency: 'INR',
+    coupon_code: (raw.coupon_code as string | null) ?? null,
+    discount_amount: (raw.discount_amount as number) ?? 0,
+    subtotal: (raw.subtotal as number) ?? 0,
+    turnaround: (raw.turnaround as string | string[] | null) ?? null,
+    created_at: raw.created_at as string,
+    updated_at: (raw.updated_at as string) ?? '',
+  };
+}
+
 export async function getOrders(filters: OrderFilters = {}): Promise<OrdersListResponse> {
-  await delay();
-  const page = filters.page ?? 1;
-  const pageSize = filters.page_size ?? 20;
-  const total = 247;
-  const items = Array.from({ length: Math.min(pageSize, total - (page - 1) * pageSize) }, (_, i) =>
-    makeOrder((page - 1) * pageSize + i)
-  );
-  return { items, total, page, page_size: pageSize, total_pages: Math.ceil(total / pageSize) };
+  const params: Record<string, string | number | undefined> = {
+    page: filters.page,
+    page_size: filters.page_size,
+    ...(filters.status ? { status: filters.status } : {}),
+    ...(filters.search ? { search: filters.search } : {}),
+    ...(filters.customer_id ? { customer_id: filters.customer_id } : {}),
+  };
+  Object.keys(params).forEach((k) => params[k] === undefined && delete params[k]);
+  const raw = await get<{
+    items: Record<string, unknown>[];
+    total: number;
+    page: number;
+    page_size: number;
+    total_pages: number;
+  }>('/admin/orders', params);
+  return {
+    items: raw.items.map(normaliseListOrder),
+    total: raw.total,
+    page: raw.page,
+    page_size: raw.page_size,
+    total_pages: raw.total_pages,
+  };
 }
 
 export async function getOrder(id: string): Promise<OrderWithDetails> {
@@ -68,26 +101,29 @@ export async function getOrder(id: string): Promise<OrderWithDetails> {
 function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
   const normaliseId = (v: unknown): string => String(v);
 
-  const items = (raw.items as Record<string, unknown>[]).map((item) => ({
+  const items = ((raw.items as Record<string, unknown>[] | null) ?? []).map((item) => ({
     id: normaliseId(item.id),
     product_id: normaliseId(item.product_id),
-    product_name: item.product_name as string,
-    product_slug: item.product_slug as string,
+    product_name: (item.product_name as string) ?? '',
+    product_slug: (item.product_slug as string) ?? '',
     thumbnail_url: (item.thumbnail_url as string | null) ?? null,
+    category_name: (item.category_name as string | null) ?? null,
     size_label: (item.size_label as string | null) ?? null,
     paper_label: (item.paper_label as string | null) ?? null,
     finish_label: (item.finish_label as string | null) ?? null,
     sides: (item.sides as string | null) ?? null,
     turnaround_label: (item.turnaround_label as string | null) ?? null,
     quantity: item.quantity as number,
-    price_per_unit: item.price_per_unit as number,
-    total_price: item.total_price as number,
+    price_per_unit: Number(item.price_per_unit ?? 0),
+    total_price: Number(item.total_price ?? 0),
     artwork_status: (item.artwork_status as string) as import('@/types').ArtworkStatus,
     artwork_file_key: (item.artwork_file_key as string | null) ?? null,
-    template_data: (item.template_data as Record<string, unknown> | null) ?? null,
+    artwork_filename: (item.artwork_filename as string | null) ?? null,
+    artwork_type: (item.artwork_type as 'file' | 'template' | null) ?? null,
+    template_data: (item.template_data as Record<string, string> | null) ?? null,
   }));
 
-  const notes = (raw.notes as Record<string, unknown>[]).map((n) => ({
+  const notes = ((raw.notes as Record<string, unknown>[] | null) ?? []).map((n) => ({
     id: normaliseId(n.id),
     order_id: normaliseId(n.order_id),
     admin_user_id: normaliseId(n.admin_user_id),
@@ -96,63 +132,63 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
     created_at: n.created_at as string,
   }));
 
-  const statusHistory = (raw.status_history as Record<string, unknown>[]).map((h) => ({
+  const statusHistory = ((raw.status_history as Record<string, unknown>[] | null) ?? []).map((h) => ({
     status: h.status as import('@/types').OrderStatus,
     changed_at: h.changed_at as string,
     changed_by_name: (h.changed_by_name as string | null) ?? null,
     note: (h.note as string | null) ?? null,
   }));
 
-  const payment = raw.payment as Record<string, unknown>;
-  const shipping = raw.shipping as Record<string, unknown>;
-  const shippingAddress = raw.shipping_address as Record<string, unknown>;
-  const billingAddress = raw.billing_address as Record<string, unknown>;
+  const payment = (raw.payment as Record<string, unknown> | null) ?? {};
+  const shipping = (raw.shipping as Record<string, unknown> | null) ?? {};
+  const shippingAddress = (raw.shipping_address as Record<string, unknown> | null) ?? {};
+  const billingAddress = (raw.billing_address as Record<string, unknown> | null) ?? {};
 
   return {
     id: normaliseId(raw.id),
     order_number: raw.order_number as string,
     status: raw.status as import('@/types').OrderStatus,
-    customer_id: normaliseId(raw.customer_id),
+    customer_id: raw.customer_id != null ? Number(raw.customer_id) : null,
     customer_name: raw.customer_name as string,
     customer_email: raw.customer_email as string,
     customer_phone: (raw.customer_phone as string) ?? '',
     customer_total_orders: raw.customer_total_orders as number,
-    total_amount: raw.total_amount as number,
+    total_amount: Number(raw.total_amount ?? 0),
     currency: 'INR',
     coupon_code: (raw.coupon_code as string | null) ?? null,
-    discount_amount: raw.discount_amount as number,
-    subtotal: raw.subtotal as number,
-    gst_amount: raw.gst_amount as number,
-    shipping_cost: raw.shipping_cost as number,
+    discount_amount: Number(raw.discount_amount ?? 0),
+    subtotal: Number(raw.subtotal ?? 0),
+    gst_amount: Number(raw.gst_amount ?? 0),
+    shipping_cost: Number(raw.shipping_cost ?? 0),
     turnaround: raw.turnaround as string | string[],
     items,
     payment: {
       method: payment.method as string,
       provider: payment.provider as string,
       transaction_id: payment.transaction_id as string,
-      amount: payment.amount as number,
+      amount: Number(payment.amount ?? 0),
       currency: 'INR',
       status: payment.status as import('@/types').OrderPaymentInfo['status'],
       paid_at: (payment.paid_at as string | null) ?? null,
     },
     shipping_address: {
-      full_name: shippingAddress.full_name as string,
-      line1: shippingAddress.line1 as string,
+      full_name: (shippingAddress.full_name as string) ?? '',
+      line1: (shippingAddress.line1 as string) ?? '',
       line2: (shippingAddress.line2 as string | null) ?? null,
-      city: shippingAddress.city as string,
-      state: shippingAddress.state as string,
-      pincode: shippingAddress.pincode as string,
-      country: shippingAddress.country as string,
+      city: (shippingAddress.city as string) ?? '',
+      state: (shippingAddress.state as string) ?? '',
+      pincode: (shippingAddress.pincode as string) ?? '',
+      country: (shippingAddress.country as string) ?? '',
       phone: (shippingAddress.phone as string | null) ?? null,
     },
     billing_address: {
-      full_name: billingAddress.full_name as string,
-      line1: billingAddress.line1 as string,
+      full_name: (billingAddress.full_name as string) ?? '',
+      line1: (billingAddress.line1 as string) ?? '',
       line2: (billingAddress.line2 as string | null) ?? null,
-      city: billingAddress.city as string,
-      state: billingAddress.state as string,
-      pincode: billingAddress.pincode as string,
-      country: billingAddress.country as string,
+      city: (billingAddress.city as string) ?? '',
+      state: (billingAddress.state as string) ?? '',
+      pincode: (billingAddress.pincode as string) ?? '',
+      country: (billingAddress.country as string) ?? '',
       phone: (billingAddress.phone as string | null) ?? null,
     },
     shipping: {
@@ -198,8 +234,8 @@ export async function getPrintingQueue(status?: string) {
   return { items, total: 24 };
 }
 
-export async function presignProof(orderId: string, itemId: string, filename: string): Promise<PresignProofResponse> {
-  return post<PresignProofResponse>(`/admin/orders/${orderId}/items/${itemId}/proof/presign`, { filename });
+export async function presignProof(orderId: string, itemId: string, filename: string, mimeType: string, fileSize: number): Promise<PresignProofResponse> {
+  return post<PresignProofResponse>(`/admin/orders/${orderId}/items/${itemId}/proof/presign`, { filename, mime_type: mimeType, file_size: fileSize });
 }
 
 export async function getOrderProofs(orderId: string): Promise<OrderItemProof[]> {

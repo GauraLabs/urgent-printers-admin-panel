@@ -71,8 +71,8 @@ export function OrdersTable() {
       enableSorting: true,
       cell: ({ row }) => (
         <div>
-          <p className="text-xs font-medium text-[var(--text-primary)]">{row.original.customer_name}</p>
-          <p className="text-[11px] text-[var(--text-muted)]">{row.original.customer_email}</p>
+          <p className="text-xs font-medium text-[var(--text-primary)]">{row.original.customer_name ?? '—'}</p>
+          <p className="text-[11px] text-[var(--text-muted)]">{row.original.customer_email ?? '—'}</p>
         </div>
       ),
     },
