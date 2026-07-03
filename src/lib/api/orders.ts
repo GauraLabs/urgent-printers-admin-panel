@@ -239,7 +239,18 @@ export async function presignProof(orderId: string, itemId: string, filename: st
 }
 
 export async function getOrderProofs(orderId: string): Promise<OrderItemProof[]> {
-  return get<OrderItemProof[]>(`/admin/orders/${orderId}/proofs`);
+  const raw = await get<Record<string, unknown>[]>(`/admin/orders/${orderId}/proofs`);
+  return raw.map((p) => ({
+    id: Number(p.id),
+    order_item_id: String(p.order_item_id),
+    file_key: p.file_key as string,
+    original_filename: p.original_filename as string,
+    file_url: p.file_url as string,
+    status: p.status as import('@/types').ProofStatus,
+    version: Number(p.version),
+    created_at: p.created_at as string,
+    updated_at: p.updated_at as string,
+  }));
 }
 
 export async function sendProofForApproval(orderId: string, itemId: string): Promise<void> {

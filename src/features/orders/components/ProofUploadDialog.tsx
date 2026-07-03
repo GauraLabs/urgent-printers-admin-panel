@@ -75,7 +75,7 @@ export function ProofUploadDialog({ open, onOpenChange, orderId, itemId, itemNam
     } catch (err: unknown) {
       const status = (err as { status?: number }).status;
       if (status === 409) {
-        setUploadError('A proof is already pending review for this item. Wait for customer response or rejection before re-uploading.');
+        setUploadError('This proof has already been sent to the customer. Wait for their response or rejection before uploading a new version.');
       } else {
         setUploadError('Failed to start upload. Please try again.');
       }

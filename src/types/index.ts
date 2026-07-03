@@ -72,6 +72,34 @@ export interface NotificationTemplate {
   updated_at: string;
 }
 
+export interface WhatsAppTemplateButton {
+  type: 'QUICK_REPLY' | 'URL' | 'PHONE_NUMBER';
+  text: string;
+  url?: string;
+  phone_number?: string;
+}
+
+export interface WhatsAppTemplateComponent {
+  type: 'HEADER' | 'BODY' | 'FOOTER' | 'BUTTONS';
+  format?: 'TEXT' | 'IMAGE' | 'VIDEO' | 'DOCUMENT';
+  text?: string;
+  buttons?: WhatsAppTemplateButton[];
+}
+
+export interface WhatsAppTemplate {
+  id: string;
+  name: string;
+  category: 'utility' | 'marketing' | 'authentication';
+  language_code: string;
+  meta_template_status: 'pending' | 'approved' | 'rejected';
+  variable_schema: string[];
+  version: number;
+  is_active: boolean;
+  components: WhatsAppTemplateComponent[];
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Banner {
   id: string;
   title: string;

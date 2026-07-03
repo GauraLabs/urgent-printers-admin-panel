@@ -19,6 +19,7 @@ export interface OrderItemProof {
   order_item_id: string;
   file_key: string;
   original_filename: string;
+  file_url: string;
   status: ProofStatus;
   version: number;
   created_at: string;

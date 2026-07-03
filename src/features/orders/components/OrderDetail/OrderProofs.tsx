@@ -11,8 +11,6 @@ import { useOrderProofs, useSendProof } from '../../hooks/useOrders';
 import { useAuthStore } from '@/store/authStore';
 import type { OrderWithDetails, OrderItemProof } from '@/types';
 
-const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? '';
-
 interface OrderProofsProps {
   order: OrderWithDetails;
 }
@@ -36,7 +34,7 @@ export function OrderProofs({ order }: OrderProofsProps) {
 
   function canUploadForItem(proof: OrderItemProof | undefined): boolean {
     if (!proof) return true;
-    return proof.status === 'rejected';
+    return proof.status === 'rejected' || proof.status === 'pending_review';
   }
 
   function openUploadDialog(itemId: string, itemName: string, proof: OrderItemProof | undefined) {
@@ -70,7 +68,7 @@ export function OrderProofs({ order }: OrderProofsProps) {
           <ul className="divide-y divide-[var(--border-subtle)]">
             {order.items.map((item) => {
               const proof = getProofForItem(item.id);
-              const proofUrl = proof ? `${R2_PUBLIC_URL}/${proof.file_key}` : null;
+              const proofUrl = proof?.file_url ?? null;
               const canUpload = canUploadForItem(proof);
 
               return (
@@ -117,7 +115,7 @@ export function OrderProofs({ order }: OrderProofsProps) {
                       onClick={() => openUploadDialog(item.id, item.product_name, proof)}
                     >
                       <Upload className="h-3.5 w-3.5" />
-                      Upload Proof
+                      {proof?.status === 'pending_review' ? 'Replace Draft' : 'Upload Proof'}
                     </Button>
 
                     {proof?.status === 'pending_review' && (
