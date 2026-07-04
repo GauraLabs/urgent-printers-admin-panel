@@ -173,17 +173,25 @@ export interface Review {
   created_at: string;
 }
 
+export type ShipmentStatus =
+  | 'created'
+  | 'picked_up'
+  | 'in_transit'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'rto'
+  | 'cancelled';
+
 export interface Shipment {
-  id: string;
   order_id: string;
   order_number: string;
-  customer_name: string;
-  courier: string;
-  awb_number: string;
+  customer_name: string | null;
+  courier: string | null;
+  tracking_number: string | null;
   tracking_url: string | null;
-  status: 'created' | 'picked_up' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'failed';
-  dispatched_at: string;
-  estimated_delivery: string | null;
+  shipment_status: ShipmentStatus | null;
+  dispatched_at: string | null;
+  estimated_delivery_date: string | null;
   delivered_at: string | null;
 }
 

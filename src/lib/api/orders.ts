@@ -178,7 +178,8 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
       line2: (shippingAddress.line2 as string | null) ?? null,
       city: (shippingAddress.city as string) ?? '',
       state: (shippingAddress.state as string) ?? '',
-      pincode: (shippingAddress.pincode as string) ?? '',
+      // Backend field is `postal_code` (see app/models/address.py), not `pincode`.
+      pincode: (shippingAddress.postal_code as string) ?? '',
       country: (shippingAddress.country as string) ?? '',
       phone: (shippingAddress.phone as string | null) ?? null,
     },
@@ -188,7 +189,7 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
       line2: (billingAddress.line2 as string | null) ?? null,
       city: (billingAddress.city as string) ?? '',
       state: (billingAddress.state as string) ?? '',
-      pincode: (billingAddress.pincode as string) ?? '',
+      pincode: (billingAddress.postal_code as string) ?? '',
       country: (billingAddress.country as string) ?? '',
       phone: (billingAddress.phone as string | null) ?? null,
     },

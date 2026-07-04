@@ -6,6 +6,7 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   artwork_pending: 'Awaiting Artwork Approval',
   artwork_approved: 'Artwork Approved',
   printing: 'Printing',
+  ready_to_dispatch: 'Ready to Dispatch',
   shipped: 'Shipped',
   delivered: 'Delivered',
   cancelled: 'Cancelled',
@@ -22,6 +23,7 @@ export const ORDER_STATUS_COLORS: Record<
   artwork_pending: 'warning',
   artwork_approved: 'info',
   printing: 'info',
+  ready_to_dispatch: 'info',
   shipped: 'info',
   delivered: 'success',
   cancelled: 'danger',
@@ -34,5 +36,6 @@ export const ACTIVE_ORDER_STATUSES: OrderStatus[] = [
   'artwork_pending',
   'artwork_approved',
   'printing',
+  'ready_to_dispatch',
   'shipped',
 ];

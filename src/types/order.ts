@@ -4,6 +4,7 @@ export type OrderStatus =
   | 'artwork_pending'
   | 'artwork_approved'
   | 'printing'
+  | 'ready_to_dispatch'
   | 'shipped'
   | 'delivered'
   | 'cancelled'

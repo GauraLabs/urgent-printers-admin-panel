@@ -1,16 +1,20 @@
-import { addDays, format } from 'date-fns';
 import { getOrders, getOrder, updateOrderStatus } from './orders';
+import {
+  getServiceabilityBulk as getShipmentServiceabilityBulk,
+  createShipmentsBulk as createShipmentsBulkReal,
+  type CourierOption,
+  type BulkShipmentResult,
+} from './shipping';
 import type { ArtworkStatus } from '@/types';
 
+export type { CourierOption };
 export type QueueStatus = 'artwork_pending' | 'artwork_approved' | 'printing' | 'ready_to_dispatch';
 
-// The three tabs with a real backing OrderStatus. `ready_to_dispatch` has no
-// server-side status (OrderStatus goes straight from `printing` to `shipped`),
-// so it can't be sourced from GET /admin/orders?status=.
-const REAL_QUEUE_STATUSES: Exclude<QueueStatus, 'ready_to_dispatch'>[] = [
+const REAL_QUEUE_STATUSES: QueueStatus[] = [
   'artwork_pending',
   'artwork_approved',
   'printing',
+  'ready_to_dispatch',
 ];
 
 export interface PrintingQueueItem {
@@ -80,49 +84,8 @@ async function fetchRealQueueItems(): Promise<PrintingQueueItem[]> {
   );
 }
 
-// ── "Ready to Dispatch" mock bucket ─────────────────────────────────────────
-// No backend status exists for this tab, so it stays mock data until the
-// backend adds one. Kept isolated from the real fetch above so it's obvious
-// in the diff which part of the queue is fake.
-const CUSTOMERS = ['Rahul Sharma', 'Priya Singh', 'Amit Kumar', 'Sneha Patel', 'Vikram Rao'];
-const PRODUCTS = ['Business Cards Premium', 'Flyers A5 Gloss', 'Brochures A4 Trifold', 'Banners 4×2 ft', 'Stickers Round 50mm'];
-const CONFIGS = ['90×54mm · 350 GSM · Matte · DS', 'A5 · 130 GSM Gloss · Single', 'A4 · 170 GSM · Tri-fold · DS', '4×2 ft · Flex · Eyelets', '⌀50mm · PP · Waterproof'];
-const PINCODES = ['560034', '400001', '110001', '500032', '600001'];
-const TURNAROUNDS = ['Rush', 'Express', 'Standard'];
-
-function buildMockReadyToDispatch(): PrintingQueueItem[] {
-  const items: PrintingQueueItem[] = [];
-  for (let idx = 0; idx < 5; idx++) {
-    const turnaround = TURNAROUNDS[idx % TURNAROUNDS.length];
-    const dispatchDays = turnaround === 'Rush' ? 1 : turnaround === 'Express' ? 3 : 5;
-    items.push({
-      id: `qi-mock-${idx}`,
-      order_id: `ord-mock-${3100 - idx}`,
-      order_number: `ORD-${3100 - idx}`,
-      customer_name: CUSTOMERS[idx % CUSTOMERS.length],
-      customer_email: `${CUSTOMERS[idx % CUSTOMERS.length].toLowerCase().replace(' ', '.')}@example.com`,
-      product_name: PRODUCTS[idx % PRODUCTS.length],
-      config_summary: CONFIGS[idx % CONFIGS.length],
-      quantity: [100, 250, 500, 1000][idx % 4],
-      turnaround,
-      status: 'ready_to_dispatch',
-      artwork_status: 'approved',
-      artwork_file_url: null,
-      order_date: new Date(Date.now() - idx * 1000 * 60 * 60 * 8).toISOString(),
-      estimated_dispatch: format(addDays(new Date(), dispatchDays), 'yyyy-MM-dd'),
-      shipping_pincode: PINCODES[idx % PINCODES.length],
-      awb_number: idx % 3 === 0 ? `AWB${420000 + idx}` : null,
-    });
-  }
-  return items;
-}
-
-let _mockReadyToDispatch: PrintingQueueItem[] | null = null;
-
 export async function getPrintingQueueAll(): Promise<PrintingQueueItem[]> {
-  const realItems = await fetchRealQueueItems();
-  if (!_mockReadyToDispatch) _mockReadyToDispatch = buildMockReadyToDispatch();
-  return [...realItems, ..._mockReadyToDispatch];
+  return fetchRealQueueItems();
 }
 
 export async function approveArtwork(orderId: string): Promise<{ success: boolean }> {
@@ -148,39 +111,15 @@ export async function startPrinting(orderId: string): Promise<{ success: boolean
 }
 
 export async function markReadyToDispatch(orderId: string): Promise<{ success: boolean }> {
-  // OrderStatus has no `ready_to_dispatch` value — printing's only forward
-  // transition is straight to `shipped`, which needs courier/AWB data this
-  // panel doesn't collect (see getServiceabilityBulk/createShipmentsBulk below).
-  await delay();
-  return { success: true };
+  return updateOrderStatus(orderId, 'ready_to_dispatch');
 }
 
-export interface CourierOption {
-  name: string;
-  min_days: number;
-  max_days: number;
-  rate: number;
-}
-
-export async function getServiceabilityBulk(
-  orderIds: string[]
-): Promise<{ order_id: string; couriers: CourierOption[] }[]> {
-  // No courier/serviceability provider is wired up on the backend yet.
-  await delay();
-  return orderIds.map((order_id) => ({
-    order_id,
-    couriers: [
-      { name: 'Shiprocket', min_days: 3, max_days: 5, rate: 80 },
-      { name: 'Delhivery', min_days: 4, max_days: 6, rate: 70 },
-      { name: 'Ekart', min_days: 5, max_days: 7, rate: 55 },
-    ],
-  }));
+export async function getServiceabilityBulk(orderIds: string[]) {
+  return getShipmentServiceabilityBulk(orderIds);
 }
 
 export async function createShipmentsBulk(
   orders: { order_id: string; courier: string }[]
-): Promise<{ success: boolean; created: number }> {
-  // No bulk shipment/AWB-creation endpoint exists on the backend yet.
-  await delay(600);
-  return { success: true, created: orders.length };
+): Promise<BulkShipmentResult[]> {
+  return createShipmentsBulkReal(orders);
 }

@@ -9,21 +9,20 @@ import { ExportButton } from '@/components/common/ExportButton';
 import { useShipments } from '../hooks/useShipping';
 import { formatDate } from '@/lib/utils/formatDate';
 import { ROUTES } from '@/lib/constants/routes';
-import type { Shipment } from '@/types';
+import type { Shipment, ShipmentStatus } from '@/types';
 
-type ShipStatus = Shipment['status'];
-
-const STATUS_VARIANT: Record<ShipStatus, 'default' | 'info' | 'success' | 'warning' | 'danger'> = {
+const STATUS_VARIANT: Record<ShipmentStatus, 'default' | 'info' | 'success' | 'warning' | 'danger'> = {
   created: 'default',
   picked_up: 'info',
   in_transit: 'info',
   out_for_delivery: 'warning',
   delivered: 'success',
-  failed: 'danger',
+  rto: 'danger',
+  cancelled: 'danger',
 };
-const STATUS_LABEL: Record<ShipStatus, string> = {
+const STATUS_LABEL: Record<ShipmentStatus, string> = {
   created: 'Created', picked_up: 'Picked Up', in_transit: 'In Transit',
-  out_for_delivery: 'Out for Delivery', delivered: 'Delivered', failed: 'Failed',
+  out_for_delivery: 'Out for Delivery', delivered: 'Delivered', rto: 'RTO', cancelled: 'Cancelled',
 };
 
 export function ShipmentsTable() {
@@ -35,7 +34,7 @@ export function ShipmentsTable() {
       id: 'awb',
       header: 'AWB',
       cell: ({ row }) => (
-        <span className="font-mono text-[12px] font-semibold text-foreground">{row.original.awb_number}</span>
+        <span className="font-mono text-[12px] font-semibold text-foreground">{row.original.tracking_number ?? '—'}</span>
       ),
     },
     {
@@ -50,29 +49,35 @@ export function ShipmentsTable() {
     {
       id: 'customer',
       header: 'Customer',
-      cell: ({ row }) => <span className="text-[13px] text-foreground">{row.original.customer_name}</span>,
+      cell: ({ row }) => <span className="text-[13px] text-foreground">{row.original.customer_name ?? '—'}</span>,
     },
     {
       id: 'courier',
       header: 'Courier',
-      cell: ({ row }) => <span className="text-[13px] font-medium text-foreground">{row.original.courier}</span>,
+      cell: ({ row }) => <span className="text-[13px] font-medium text-foreground">{row.original.courier ?? '—'}</span>,
     },
     {
       id: 'status',
       header: 'Status',
-      cell: ({ row }) => <Badge label={STATUS_LABEL[row.original.status]} variant={STATUS_VARIANT[row.original.status]} dot />,
+      cell: ({ row }) => row.original.shipment_status ? (
+        <Badge label={STATUS_LABEL[row.original.shipment_status]} variant={STATUS_VARIANT[row.original.shipment_status]} dot />
+      ) : <span className="text-[13px] text-muted-foreground">—</span>,
     },
     {
       id: 'dispatched',
       header: 'Dispatched',
-      cell: ({ row }) => <span className="text-[13px] text-muted-foreground">{formatDate(row.original.dispatched_at)}</span>,
+      cell: ({ row }) => (
+        <span className="text-[13px] text-muted-foreground">
+          {row.original.dispatched_at ? formatDate(row.original.dispatched_at) : '—'}
+        </span>
+      ),
     },
     {
       id: 'eta',
       header: 'Est. Delivery',
       cell: ({ row }) => (
         <span className="text-[13px] text-muted-foreground">
-          {row.original.estimated_delivery ? formatDate(row.original.estimated_delivery) : '—'}
+          {row.original.estimated_delivery_date ? formatDate(row.original.estimated_delivery_date) : '—'}
         </span>
       ),
     },
@@ -99,19 +104,19 @@ export function ShipmentsTable() {
       total={query.data?.total}
       onPageChange={setPage}
       compact
-      getRowId={(r) => r.id}
+      getRowId={(r) => r.order_id}
       emptyMessage="No shipments found."
       toolbar={
         <ExportButton
           filename="shipments"
           getData={() => shipments.map((s) => ({
-            awb: s.awb_number,
+            awb: s.tracking_number ?? '',
             order: s.order_number,
-            customer: s.customer_name,
-            courier: s.courier,
-            status: s.status,
-            dispatched: s.dispatched_at,
-            eta: s.estimated_delivery ?? '',
+            customer: s.customer_name ?? '',
+            courier: s.courier ?? '',
+            status: s.shipment_status ?? '',
+            dispatched: s.dispatched_at ?? '',
+            eta: s.estimated_delivery_date ?? '',
           }))}
         />
       }
