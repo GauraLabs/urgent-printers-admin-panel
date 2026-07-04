@@ -77,6 +77,13 @@ export interface WhatsAppTemplateButton {
   text: string;
   url?: string;
   phone_number?: string;
+  example?: string[];
+}
+
+export interface WhatsAppTemplateComponentExample {
+  header_handle?: string[];
+  header_text?: string[];
+  body_text?: string[][];
 }
 
 export interface WhatsAppTemplateComponent {
@@ -84,6 +91,7 @@ export interface WhatsAppTemplateComponent {
   format?: 'TEXT' | 'IMAGE' | 'VIDEO' | 'DOCUMENT';
   text?: string;
   buttons?: WhatsAppTemplateButton[];
+  example?: WhatsAppTemplateComponentExample;
 }
 
 export interface WhatsAppTemplate {

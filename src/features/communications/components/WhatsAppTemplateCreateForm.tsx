@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useForm, useFieldArray, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -9,13 +8,14 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCreateWhatsAppTemplate } from '../hooks/useCommunications';
 import { WhatsAppMessagePreview } from './WhatsAppMessagePreview';
-import type { WhatsAppTemplateComponent } from '@/types';
+import type { WhatsAppTemplateComponent, WhatsAppTemplateButton } from '@/types';
 
 const buttonSchema = z.object({
   type: z.enum(['QUICK_REPLY', 'URL', 'PHONE_NUMBER']),
-  text: z.string().min(1, 'Button text is required'),
+  text: z.string().min(1, 'Button text is required').max(25, 'Max 25 characters'),
   url: z.string().optional(),
   phone_number: z.string().optional(),
+  urlExample: z.string().optional(),
 });
 
 const formSchema = z.object({
@@ -27,28 +27,60 @@ const formSchema = z.object({
   language_code: z.string().min(1, 'Language code is required'),
   hasHeader: z.boolean(),
   headerFormat: z.enum(['TEXT', 'IMAGE', 'VIDEO', 'DOCUMENT']),
-  headerText: z.string().optional(),
-  bodyText: z.string().min(1, 'Body text is required'),
+  headerText: z.string().max(60, 'Max 60 characters').optional(),
+  headerMediaExample: z.string().optional(),
+  bodyText: z.string().min(1, 'Body text is required').max(1024, 'Max 1024 characters'),
+  bodyExamples: z.array(z.string()),
   hasFooter: z.boolean(),
-  footerText: z.string().optional(),
+  footerText: z.string().max(60, 'Max 60 characters').optional(),
   hasButtons: z.boolean(),
   buttons: z.array(buttonSchema),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
+function detectVariables(text: string): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const m of text.match(/\{\{\d+\}\}/g) ?? []) {
+    if (!seen.has(m)) {
+      seen.add(m);
+      result.push(m);
+    }
+  }
+  return result.sort(
+    (a, b) => parseInt(a.replace(/\D/g, ''), 10) - parseInt(b.replace(/\D/g, ''), 10),
+  );
+}
+
 function buildComponents(values: FormValues): WhatsAppTemplateComponent[] {
   const comps: WhatsAppTemplateComponent[] = [];
 
   if (values.hasHeader) {
-    const comp: WhatsAppTemplateComponent = { type: 'HEADER', format: values.headerFormat };
     if (values.headerFormat === 'TEXT') {
-      comp.text = values.headerText ?? '';
+      comps.push({ type: 'HEADER', format: 'TEXT', text: values.headerText ?? '' });
+    } else {
+      comps.push({
+        type: 'HEADER',
+        format: values.headerFormat,
+        example: {
+          header_handle: [
+            values.headerMediaExample ||
+              'https://pub-cdbb44b55dd3441cbce165e75299a30d.r2.dev/sample-proof.jpg',
+          ],
+        },
+      });
     }
-    comps.push(comp);
   }
 
-  comps.push({ type: 'BODY', text: values.bodyText });
+  const vars = detectVariables(values.bodyText);
+  const bodyComp: WhatsAppTemplateComponent = { type: 'BODY', text: values.bodyText };
+  if (vars.length > 0) {
+    bodyComp.example = {
+      body_text: [values.bodyExamples.slice(0, vars.length)],
+    };
+  }
+  comps.push(bodyComp);
 
   if (values.hasFooter && values.footerText) {
     comps.push({ type: 'FOOTER', text: values.footerText });
@@ -57,12 +89,18 @@ function buildComponents(values: FormValues): WhatsAppTemplateComponent[] {
   if (values.hasButtons && values.buttons.length > 0) {
     comps.push({
       type: 'BUTTONS',
-      buttons: values.buttons.map((b) => ({
-        type: b.type,
-        text: b.text,
-        ...(b.type === 'URL' ? { url: b.url ?? '' } : {}),
-        ...(b.type === 'PHONE_NUMBER' ? { phone_number: b.phone_number ?? '' } : {}),
-      })),
+      buttons: values.buttons.map((b): WhatsAppTemplateButton => {
+        const btn: WhatsAppTemplateButton = {
+          type: b.type,
+          text: b.text,
+          ...(b.type === 'URL' ? { url: b.url ?? '' } : {}),
+          ...(b.type === 'PHONE_NUMBER' ? { phone_number: b.phone_number ?? '' } : {}),
+        };
+        if (b.type === 'URL' && (b.url ?? '').includes('{{1}}')) {
+          btn.example = [b.urlExample || 'sample'];
+        }
+        return btn;
+      }),
     });
   }
 
@@ -82,23 +120,31 @@ interface Props {
 export function WhatsAppTemplateCreateForm({ onClose }: Props) {
   const mutation = useCreateWhatsAppTemplate();
 
-  const { register, handleSubmit, control, watch, setValue, formState: { errors } } =
-    useForm<FormValues>({
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        name: '',
-        category: 'utility',
-        language_code: 'en_US',
-        hasHeader: false,
-        headerFormat: 'TEXT',
-        headerText: '',
-        bodyText: '',
-        hasFooter: false,
-        footerText: '',
-        hasButtons: false,
-        buttons: [],
-      },
-    });
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      category: 'utility',
+      language_code: 'en_US',
+      hasHeader: false,
+      headerFormat: 'TEXT',
+      headerText: '',
+      headerMediaExample: '',
+      bodyText: '',
+      bodyExamples: [],
+      hasFooter: false,
+      footerText: '',
+      hasButtons: false,
+      buttons: [],
+    },
+  });
 
   const { fields: buttonFields, append: appendButton, remove: removeButton } = useFieldArray({
     control,
@@ -112,6 +158,9 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
   const hasFooter = watch('hasFooter');
   const hasButtons = watch('hasButtons');
 
+  const bodyText = watchedValues.bodyText ?? '';
+  const detectedVars = detectVariables(bodyText);
+
   const liveComponents = buildComponents({
     name: watchedValues.name ?? '',
     category: watchedValues.category ?? 'utility',
@@ -119,7 +168,9 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
     hasHeader: watchedValues.hasHeader ?? false,
     headerFormat: watchedValues.headerFormat ?? 'TEXT',
     headerText: watchedValues.headerText ?? '',
-    bodyText: watchedValues.bodyText ?? '',
+    headerMediaExample: watchedValues.headerMediaExample ?? '',
+    bodyText: bodyText,
+    bodyExamples: (watchedValues.bodyExamples ?? []).map((e) => e ?? ''),
     hasFooter: watchedValues.hasFooter ?? false,
     footerText: watchedValues.footerText ?? '',
     hasButtons: watchedValues.hasButtons ?? false,
@@ -128,6 +179,7 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
       text: b?.text ?? '',
       url: b?.url ?? '',
       phone_number: b?.phone_number ?? '',
+      urlExample: b?.urlExample ?? '',
     })),
   });
 
@@ -141,8 +193,9 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
       });
       toast.success('Template submitted to Meta for approval');
       onClose();
-    } catch {
-      toast.error('Failed to create template');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to create template';
+      toast.error(message);
     }
   }
 
@@ -162,8 +215,12 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
                 className={inputCls}
                 placeholder="e.g. proof_ready_for_approval"
               />
-              <p className="mt-1 text-[11px] text-muted-foreground">Lowercase letters, numbers and underscores only</p>
-              {errors.name && <p className="mt-0.5 text-xs text-destructive">{errors.name.message}</p>}
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                Lowercase letters, numbers and underscores only
+              </p>
+              {errors.name && (
+                <p className="mt-0.5 text-xs text-destructive">{errors.name.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-semibold text-foreground mb-1.5">Category</label>
@@ -195,7 +252,9 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
             {hasHeader && (
               <div className="pl-6 space-y-2">
                 <div>
-                  <label className="block text-xs font-semibold text-foreground mb-1.5">Header Format</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1.5">
+                    Header Format
+                  </label>
                   <select {...register('headerFormat')} className={selectCls}>
                     <option value="TEXT">Text</option>
                     <option value="IMAGE">Image</option>
@@ -205,8 +264,32 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
                 </div>
                 {headerFormat === 'TEXT' && (
                   <div>
-                    <label className="block text-xs font-semibold text-foreground mb-1.5">Header Text</label>
-                    <input {...register('headerText')} className={inputCls} placeholder="Header text" />
+                    <label className="block text-xs font-semibold text-foreground mb-1.5">
+                      Header Text
+                    </label>
+                    <input
+                      {...register('headerText')}
+                      className={inputCls}
+                      placeholder="Header text"
+                    />
+                    {errors.headerText && (
+                      <p className="mt-0.5 text-xs text-destructive">{errors.headerText.message}</p>
+                    )}
+                  </div>
+                )}
+                {(headerFormat === 'IMAGE' ||
+                  headerFormat === 'VIDEO' ||
+                  headerFormat === 'DOCUMENT') && (
+                  <div>
+                    <label className="block text-xs font-semibold text-foreground mb-1.5">
+                      Sample media URL{' '}
+                      <span className="font-normal text-muted-foreground">(shown to Meta during review)</span>
+                    </label>
+                    <input
+                      {...register('headerMediaExample')}
+                      className={inputCls}
+                      placeholder="https://pub-cdbb44b55dd3441cbce165e75299a30d.r2.dev/sample-proof.jpg"
+                    />
                   </div>
                 )}
               </div>
@@ -223,13 +306,33 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
               className={inputCls}
               placeholder="Your message body text..."
             />
-            <p className="mt-1 text-[11px] text-muted-foreground">
-              Use <code className="bg-muted px-1 rounded text-[10px]">{'{{1}}'}</code>,{' '}
-              <code className="bg-muted px-1 rounded text-[10px]">{'{{2}}'}</code>,{' '}
-              <code className="bg-muted px-1 rounded text-[10px]">{'{{3}}'}</code> for variables
-            </p>
+            <div className="mt-1 flex items-start justify-between gap-2">
+              <p className="text-[11px] text-muted-foreground">
+                Use <code className="bg-muted px-1 rounded text-[10px]">{'{{1}}'}</code>,{' '}
+                <code className="bg-muted px-1 rounded text-[10px]">{'{{2}}'}</code>,{' '}
+                <code className="bg-muted px-1 rounded text-[10px]">{'{{3}}'}</code> for variables
+              </p>
+              <p className="text-[11px] text-muted-foreground shrink-0">{bodyText.length}/1024</p>
+            </div>
             {errors.bodyText && (
               <p className="mt-1 text-xs text-destructive">{errors.bodyText.message}</p>
+            )}
+            {detectedVars.length > 0 && (
+              <div className="mt-2 space-y-1.5">
+                {detectedVars.map((v, i) => (
+                  <div key={v} className="flex items-center gap-2">
+                    <label className="text-xs text-muted-foreground w-36 shrink-0">
+                      Example for {v}:
+                    </label>
+                    <input
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      {...register(`bodyExamples.${i}` as any)}
+                      className={inputCls}
+                      placeholder={`Sample value for ${v}`}
+                    />
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 
@@ -250,6 +353,9 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
                   className={inputCls}
                   placeholder="e.g. Urgent Printers"
                 />
+                {errors.footerText && (
+                  <p className="mt-0.5 text-xs text-destructive">{errors.footerText.message}</p>
+                )}
               </div>
             )}
           </div>
@@ -271,6 +377,7 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
               <div className="pl-6 space-y-3">
                 {buttonFields.map((field, index) => {
                   const btnType = watch(`buttons.${index}.type`);
+                  const btnUrl = watch(`buttons.${index}.url`) ?? '';
                   return (
                     <div key={field.id} className="border border-border rounded-lg p-3 space-y-2">
                       <div className="flex items-center justify-between">
@@ -287,15 +394,22 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div>
-                          <label className="block text-xs font-semibold text-foreground mb-1">Type</label>
-                          <select {...register(`buttons.${index}.type`)} className={selectCls}>
+                          <label className="block text-xs font-semibold text-foreground mb-1">
+                            Type
+                          </label>
+                          <select
+                            {...register(`buttons.${index}.type`)}
+                            className={selectCls}
+                          >
                             <option value="QUICK_REPLY">Quick Reply</option>
                             <option value="URL">URL</option>
                             <option value="PHONE_NUMBER">Phone Number</option>
                           </select>
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-foreground mb-1">Button Text</label>
+                          <label className="block text-xs font-semibold text-foreground mb-1">
+                            Button Text
+                          </label>
                           <input
                             {...register(`buttons.${index}.text`)}
                             className={inputCls}
@@ -309,18 +423,37 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
                         </div>
                       </div>
                       {btnType === 'URL' && (
-                        <div>
-                          <label className="block text-xs font-semibold text-foreground mb-1">URL</label>
-                          <input
-                            {...register(`buttons.${index}.url`)}
-                            className={inputCls}
-                            placeholder="https://example.com"
-                          />
-                        </div>
+                        <>
+                          <div>
+                            <label className="block text-xs font-semibold text-foreground mb-1">
+                              URL
+                            </label>
+                            <input
+                              {...register(`buttons.${index}.url`)}
+                              className={inputCls}
+                              placeholder="https://example.com"
+                            />
+                          </div>
+                          {btnUrl.includes('{{1}}') && (
+                            <div>
+                              <label className="block text-xs text-muted-foreground mb-1">
+                                Sample URL suffix{' '}
+                                <span className="text-muted-foreground/60">(shown to Meta during review)</span>
+                              </label>
+                              <input
+                                {...register(`buttons.${index}.urlExample`)}
+                                className={inputCls}
+                                placeholder="e.g. abc123token"
+                              />
+                            </div>
+                          )}
+                        </>
                       )}
                       {btnType === 'PHONE_NUMBER' && (
                         <div>
-                          <label className="block text-xs font-semibold text-foreground mb-1">Phone Number</label>
+                          <label className="block text-xs font-semibold text-foreground mb-1">
+                            Phone Number
+                          </label>
                           <input
                             {...register(`buttons.${index}.phone_number`)}
                             className={inputCls}
@@ -334,7 +467,7 @@ export function WhatsAppTemplateCreateForm({ onClose }: Props) {
                 {buttonFields.length < 3 && (
                   <button
                     type="button"
-                    onClick={() => appendButton({ type: 'QUICK_REPLY', text: '' })}
+                    onClick={() => appendButton({ type: 'QUICK_REPLY', text: '', urlExample: '' })}
                     className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors cursor-pointer"
                   >
                     <Plus className="h-3.5 w-3.5" />

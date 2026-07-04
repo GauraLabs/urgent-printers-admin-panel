@@ -8,7 +8,8 @@ Production admin panel for an online printing business. Standalone Next.js 16 ap
 All 15 UI build steps are complete. Currently in **Step 15 — wiring to real backend**.
 - Wired: auth, staff, activity log, permissions catalog, categories, products
 - Partially wired (orders): list page wired to real backend (getOrders); artwork proof workflow (Step 4A–4I) — ProofUploadDialog, OrderProofs panel, proof API functions, proof hooks; order item normaliser updated for AdminOrderItemDetail snake_case shape + new fields (category_name, artwork_type, artwork_filename, template_data); OrderItems.tsx rebuilt with category badge, spec pills, artwork section
-- Pending: orders (detail page full wiring), customers, payments, coupons, content, shipping, reviews, communications
+- Partially wired (communications): WhatsApp templates wired — list, create (via Meta API), sync from Meta, message preview; notification templates and comm log still mock
+- Pending: orders (detail page full wiring), customers, payments, coupons, content, shipping, reviews
 
 ## Stack
 - Next.js 16.2.4 · React 19 · TypeScript strict

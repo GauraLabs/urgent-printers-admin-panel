@@ -37,7 +37,7 @@ const editSchema = z.object({
   language_code:        z.string().min(1, 'Language code is required'),
   meta_template_status: z.enum(['pending', 'approved', 'rejected']),
   variable_schema_raw:  z.string(),
-  version:              z.coerce.number().int().min(1),
+  version:              z.number().int().min(1),
   is_active:            z.boolean(),
 });
 type EditFormValues = z.infer<typeof editSchema>;
@@ -122,7 +122,7 @@ function EditForm({
           </div>
           <div>
             <label className="block text-xs font-semibold text-foreground mb-1.5">Version</label>
-            <input {...register('version')} type="number" min={1} className={inputCls} />
+            <input {...register('version', { valueAsNumber: true })} type="number" min={1} className={inputCls} />
           </div>
         </div>
         <div>
