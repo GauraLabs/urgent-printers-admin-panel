@@ -46,6 +46,7 @@ export interface OrderItem {
   turnaround_label: string | null;
   quantity: number;
   price_per_unit: number;
+  turnaround_extra_cost: number;
   total_price: number;
   artwork_status: ArtworkStatus;
   artwork_file_key: string | null;

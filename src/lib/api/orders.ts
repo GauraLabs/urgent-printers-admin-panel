@@ -115,6 +115,7 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
     turnaround_label: (item.turnaround_label as string | null) ?? null,
     quantity: item.quantity as number,
     price_per_unit: Number(item.price_per_unit ?? 0),
+    turnaround_extra_cost: Number(item.turnaround_extra_cost ?? 0),
     total_price: Number(item.total_price ?? 0),
     artwork_status: (item.artwork_status as string) as import('@/types').ArtworkStatus,
     artwork_file_key: (item.artwork_file_key as string | null) ?? null,

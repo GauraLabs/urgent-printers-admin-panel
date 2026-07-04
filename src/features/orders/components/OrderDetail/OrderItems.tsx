@@ -111,6 +111,11 @@ export function OrderItems({ items }: { items: OrderItem[] }) {
                   <p className="text-[11px] text-[var(--text-muted)] tabular-nums">
                     {item.quantity} × {formatPrice(item.price_per_unit)}
                   </p>
+                  {item.turnaround_extra_cost > 0 && (
+                    <p className="text-[11px] text-[var(--text-muted)] tabular-nums">
+                      + {formatPrice(item.turnaround_extra_cost)} {item.turnaround_label ?? 'turnaround'} surcharge
+                    </p>
+                  )}
                 </div>
               </div>
 
