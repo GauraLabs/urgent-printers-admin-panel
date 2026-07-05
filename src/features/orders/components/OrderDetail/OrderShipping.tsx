@@ -1,13 +1,23 @@
-import { MapPin, Truck, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import { MapPin, Truck, ExternalLink, PackagePlus } from 'lucide-react';
 import { formatDate } from '@/lib/utils/formatDate';
-import type { OrderAddress, OrderShippingInfo } from '@/types';
+import { usePermissions } from '@/hooks/usePermissions';
+import { ManualShipmentDialog } from '@/features/shipping/components/ManualShipmentDialog';
+import type { OrderAddress, OrderShippingInfo, OrderStatus } from '@/types';
 
 interface Props {
   address: OrderAddress;
   shipping: OrderShippingInfo;
+  orderId: string;
+  orderNumber: string;
+  orderStatus: OrderStatus;
 }
 
-export function OrderShipping({ address, shipping }: Props) {
+export function OrderShipping({ address, shipping, orderId, orderNumber, orderStatus }: Props) {
+  const [manualOpen, setManualOpen] = useState(false);
+  const { canManageShipping } = usePermissions();
+  const canDispatchManually = canManageShipping && !shipping.courier && orderStatus === 'ready_to_dispatch';
+
   return (
     <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
       <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-3">Shipping</h3>
@@ -55,7 +65,29 @@ export function OrderShipping({ address, shipping }: Props) {
             )}
           </div>
         )}
+
+        {canDispatchManually && (
+          <div className="border-t border-[var(--border-subtle)] pt-3">
+            <button
+              type="button"
+              onClick={() => setManualOpen(true)}
+              className="flex items-center gap-1.5 text-xs font-medium text-[var(--primary)] hover:underline cursor-pointer"
+            >
+              <PackagePlus className="h-3.5 w-3.5" /> Enter shipment manually
+            </button>
+            <p className="mt-1 text-[11px] text-[var(--text-muted)]">
+              Use this if Shiprocket is down or doesn&apos;t serve this pincode.
+            </p>
+          </div>
+        )}
       </div>
+
+      <ManualShipmentDialog
+        open={manualOpen}
+        onOpenChange={setManualOpen}
+        orderId={orderId}
+        orderNumber={orderNumber}
+      />
     </div>
   );
 }

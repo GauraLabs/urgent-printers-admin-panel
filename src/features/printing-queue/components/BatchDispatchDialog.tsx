@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Truck, Loader2 } from 'lucide-react';
+import { Truck, Loader2, PackagePlus, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select';
 import { getServiceabilityBulk, type CourierOption } from '@/lib/api/printingQueue';
 import { useCreateShipmentsBulk } from '../hooks/usePrintingQueue';
+import { ManualShipmentDialog } from '@/features/shipping/components/ManualShipmentDialog';
 import type { PrintingQueueItem } from '@/lib/api/printingQueue';
 import { formatPrice } from '@/lib/utils/formatPrice';
 
@@ -32,10 +33,13 @@ export function BatchDispatchDialog({ open, onOpenChange, orders, onSuccess }: B
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [serviceability, setServiceability] = useState<Record<string, OrderServiceability>>({});
   const [loading, setLoading] = useState(false);
+  const [manualOrder, setManualOrder] = useState<PrintingQueueItem | null>(null);
+  const [manuallyDispatched, setManuallyDispatched] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!open || !orders.length) return;
     setLoading(true);
+    setManuallyDispatched(new Set());
     getServiceabilityBulk(orders.map((o) => o.order_id))
       .then((res) => {
         const byOrder: Record<string, OrderServiceability> = {};
@@ -50,8 +54,10 @@ export function BatchDispatchDialog({ open, onOpenChange, orders, onSuccess }: B
       .finally(() => setLoading(false));
   }, [open, orders]);
 
+  const pendingOrders = orders.filter((o) => !manuallyDispatched.has(o.order_id));
+
   async function handleDispatch() {
-    const payload = orders
+    const payload = pendingOrders
       .filter((o) => selected[o.order_id])
       .map((o) => ({ order_id: o.order_id, courier: selected[o.order_id] }));
 
@@ -78,8 +84,14 @@ export function BatchDispatchDialog({ open, onOpenChange, orders, onSuccess }: B
     }
   }
 
+  function handleOpenChange(v: boolean) {
+    if (!v && manuallyDispatched.size > 0) onSuccess();
+    onOpenChange(v);
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <div className="flex items-center gap-3">
@@ -101,16 +113,31 @@ export function BatchDispatchDialog({ open, onOpenChange, orders, onSuccess }: B
           <div className="max-h-72 overflow-y-auto space-y-2 py-2">
             {orders.map((order) => {
               const entry = serviceability[order.order_id];
+              const isManual = manuallyDispatched.has(order.order_id);
               return (
                 <div key={order.order_id} className="flex items-center gap-3 p-2.5 bg-[var(--surface-secondary)] rounded-lg">
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold text-[var(--text-primary)] font-mono">{order.order_number}</p>
                     <p className="text-[11px] text-[var(--text-muted)] truncate">{order.customer_name} · {order.product_name}</p>
-                    {entry?.error && (
+                    {!isManual && entry?.error && (
                       <p className="text-[11px] text-[var(--danger)] mt-0.5">{entry.error}</p>
                     )}
                   </div>
-                  {!entry?.error && (
+                  {isManual ? (
+                    <span className="flex items-center gap-1 text-[11px] font-medium text-[var(--success)] flex-shrink-0">
+                      <CheckCircle2 className="h-3.5 w-3.5" /> Dispatched manually
+                    </span>
+                  ) : entry?.error ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="flex-shrink-0"
+                      onClick={() => setManualOrder(order)}
+                    >
+                      <PackagePlus className="h-3.5 w-3.5" /> Enter manually
+                    </Button>
+                  ) : (
                     <Select
                       value={selected[order.order_id] ?? ''}
                       onValueChange={(v) => setSelected((prev) => ({ ...prev, [order.order_id]: v ?? '' }))}
@@ -134,18 +161,34 @@ export function BatchDispatchDialog({ open, onOpenChange, orders, onSuccess }: B
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={mutation.isPending}>
-            Cancel
+          <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={mutation.isPending}>
+            {pendingOrders.length === 0 && manuallyDispatched.size > 0 ? 'Close' : 'Cancel'}
           </Button>
-          <Button onClick={handleDispatch} disabled={loading || mutation.isPending || !orders.length}>
-            {mutation.isPending ? (
-              <><Loader2 className="h-4 w-4 animate-spin" /> Creating…</>
-            ) : (
-              <><Truck className="h-4 w-4" /> Create {orders.length} Shipment{orders.length !== 1 ? 's' : ''}</>
-            )}
-          </Button>
+          {pendingOrders.length > 0 && (
+            <Button onClick={handleDispatch} disabled={loading || mutation.isPending || !pendingOrders.length}>
+              {mutation.isPending ? (
+                <><Loader2 className="h-4 w-4 animate-spin" /> Creating…</>
+              ) : (
+                <><Truck className="h-4 w-4" /> Create {pendingOrders.length} Shipment{pendingOrders.length !== 1 ? 's' : ''}</>
+              )}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    {manualOrder && (
+      <ManualShipmentDialog
+        open={!!manualOrder}
+        onOpenChange={(v) => { if (!v) setManualOrder(null); }}
+        orderId={manualOrder.order_id}
+        orderNumber={manualOrder.order_number}
+        onSuccess={() => {
+          setManuallyDispatched((prev) => new Set(prev).add(manualOrder.order_id));
+          setManualOrder(null);
+        }}
+      />
+    )}
+    </>
   );
 }

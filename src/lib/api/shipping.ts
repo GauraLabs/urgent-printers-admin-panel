@@ -1,5 +1,5 @@
 import { get, post } from './client';
-import type { PaginatedResponse, Shipment, ShipmentStatus } from '@/types';
+import type { PaginatedResponse, Shipment, ShipmentStatus, ShipmentSource } from '@/types';
 
 export interface CourierOption {
   courier_id: string;
@@ -58,6 +58,7 @@ function normaliseShipment(raw: Record<string, unknown>): Shipment {
     tracking_number: (raw.tracking_number as string | null) ?? null,
     tracking_url: (raw.tracking_url as string | null) ?? null,
     shipment_status: (raw.shipment_status as ShipmentStatus | null) ?? null,
+    shipment_source: (raw.shipment_source as ShipmentSource | null) ?? null,
     dispatched_at: (raw.dispatched_at as string | null) ?? null,
     estimated_delivery_date: (raw.estimated_delivery_date as string | null) ?? null,
     delivered_at: (raw.delivered_at as string | null) ?? null,
@@ -147,4 +148,39 @@ export async function createShipmentsBulk(
     awb_number: (r.awb_number as string | null) ?? null,
     error: (r.error as string | null) ?? null,
   }));
+}
+
+export interface ManualShipmentPayload {
+  courier: string;
+  tracking_number: string;
+  tracking_url: string | null;
+  estimated_delivery_date: string | null;
+}
+
+export interface ManualShipmentResult {
+  success: boolean;
+  order_id: string;
+  courier: string;
+  tracking_number: string;
+  tracking_url: string | null;
+  estimated_delivery_date: string | null;
+  shipment_status: ShipmentStatus;
+  shipment_source: ShipmentSource;
+}
+
+export async function createManualShipment(
+  order_id: string,
+  payload: ManualShipmentPayload
+): Promise<ManualShipmentResult> {
+  const raw = await post<Record<string, unknown>>(`/admin/orders/${order_id}/shipment/manual`, payload);
+  return {
+    success: Boolean(raw.success),
+    order_id: String(raw.order_id),
+    courier: raw.courier as string,
+    tracking_number: raw.tracking_number as string,
+    tracking_url: (raw.tracking_url as string | null) ?? null,
+    estimated_delivery_date: (raw.estimated_delivery_date as string | null) ?? null,
+    shipment_status: raw.shipment_status as ShipmentStatus,
+    shipment_source: raw.shipment_source as ShipmentSource,
+  };
 }

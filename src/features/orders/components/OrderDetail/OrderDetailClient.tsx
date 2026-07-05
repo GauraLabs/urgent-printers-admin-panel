@@ -100,7 +100,13 @@ export function OrderDetailClient({ id }: { id: string }) {
             customer_total_orders={order.customer_total_orders}
           />
           <OrderPayment payment={order.payment} />
-          <OrderShipping address={order.shipping_address} shipping={order.shipping} />
+          <OrderShipping
+            address={order.shipping_address}
+            shipping={order.shipping}
+            orderId={order.id}
+            orderNumber={order.order_number}
+            orderStatus={order.status}
+          />
 
           {order.coupon_code && (
             <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">

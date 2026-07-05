@@ -182,6 +182,8 @@ export type ShipmentStatus =
   | 'rto'
   | 'cancelled';
 
+export type ShipmentSource = 'shiprocket' | 'manual';
+
 export interface Shipment {
   order_id: string;
   order_number: string;
@@ -190,6 +192,7 @@ export interface Shipment {
   tracking_number: string | null;
   tracking_url: string | null;
   shipment_status: ShipmentStatus | null;
+  shipment_source: ShipmentSource | null;
   dispatched_at: string | null;
   estimated_delivery_date: string | null;
   delivered_at: string | null;

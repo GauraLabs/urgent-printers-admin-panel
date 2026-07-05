@@ -54,7 +54,14 @@ export function ShipmentsTable() {
     {
       id: 'courier',
       header: 'Courier',
-      cell: ({ row }) => <span className="text-[13px] font-medium text-foreground">{row.original.courier ?? '—'}</span>,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-1.5">
+          <span className="text-[13px] font-medium text-foreground">{row.original.courier ?? '—'}</span>
+          {row.original.shipment_source === 'manual' && (
+            <Badge label="Manual" variant="warning" dot={false} />
+          )}
+        </div>
+      ),
     },
     {
       id: 'status',
@@ -114,6 +121,7 @@ export function ShipmentsTable() {
             order: s.order_number,
             customer: s.customer_name ?? '',
             courier: s.courier ?? '',
+            source: s.shipment_source ?? '',
             status: s.shipment_status ?? '',
             dispatched: s.dispatched_at ?? '',
             eta: s.estimated_delivery_date ?? '',
