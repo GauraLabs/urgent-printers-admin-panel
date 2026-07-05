@@ -30,6 +30,7 @@ export const ROUTES = {
   REPORTS_OPERATIONS: '/reports/operations',
   STAFF: '/staff',
   ACTIVITY_LOG: '/staff/activity-log',
+  STAFF_NOTIFICATIONS: '/staff/notifications',
   SETTINGS_GENERAL: '/settings/general',
   SETTINGS_OPERATIONS: '/settings/operations',
   SETTINGS_PAYMENTS: '/settings/payments',

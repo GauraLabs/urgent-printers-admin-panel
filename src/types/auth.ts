@@ -61,6 +61,7 @@ export interface AdminUser {
    */
   permissions: Permission[];
   avatar_url: string | null;
+  phone_number: string | null;
   last_login: string | null;
   is_active: boolean;
   created_at: string;

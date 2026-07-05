@@ -21,6 +21,7 @@ const baseSchema = {
   email: z.email('Enter a valid email'),
   role: z.enum(['super_admin', 'operations_manager', 'customer_support', 'catalogue_manager', 'finance', 'marketing']),
   is_active: z.boolean(),
+  phone_number: z.string().optional(),
 };
 
 const createSchema = z.object({ ...baseSchema, password: z.string().min(8, 'Min 8 characters') });
@@ -56,8 +57,8 @@ export function StaffForm({ member, onSuccess, onCancel }: StaffFormProps) {
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<CreateValues>({
     resolver: zodResolver(isEdit ? editSchema : createSchema) as never,
     defaultValues: member
-      ? { name: member.name, email: member.email, role: member.role, is_active: member.is_active, password: '' }
-      : { name: '', email: '', role: 'customer_support', is_active: true, password: '' },
+      ? { name: member.name, email: member.email, role: member.role, is_active: member.is_active, password: '', phone_number: member.phone_number ?? '' }
+      : { name: '', email: '', role: 'customer_support', is_active: true, password: '', phone_number: '' },
   });
 
   const role = watch('role') as CreateValues['role'];
@@ -79,6 +80,7 @@ export function StaffForm({ member, onSuccess, onCancel }: StaffFormProps) {
             name: values.name,
             role: values.role,
             is_active: values.is_active,
+            phone_number: values.phone_number || undefined,
             granted_permissions: grantedPermissions,
             revoked_permissions: revokedPermissions,
             // Only send password if a new one was typed
@@ -92,6 +94,7 @@ export function StaffForm({ member, onSuccess, onCancel }: StaffFormProps) {
           email: values.email,
           role: values.role,
           password: values.password!,
+          phone_number: values.phone_number || undefined,
           granted_permissions: grantedPermissions,
           revoked_permissions: revokedPermissions,
         });
@@ -153,6 +156,20 @@ export function StaffForm({ member, onSuccess, onCancel }: StaffFormProps) {
           />
           {errors.password && <p className={cls.err}>{errors.password.message}</p>}
         </div>
+      </div>
+
+      <div>
+        <label className={cls.label}>Phone Number</label>
+        <input
+          {...register('phone_number')}
+          type="tel"
+          className={cls.input}
+          placeholder="+91 98765 43210"
+        />
+        <p className="mt-1 text-[11px] text-muted-foreground">
+          Required to enable SMS or WhatsApp notification channels for this staff member.
+        </p>
+        {errors.phone_number && <p className={cls.err}>{errors.phone_number.message}</p>}
       </div>
 
       <label className="flex items-center gap-2.5 cursor-pointer">

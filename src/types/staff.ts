@@ -17,6 +17,7 @@ export interface CreateStaffRequest {
   name: string;
   role: Role;
   password: string;
+  phone_number?: string;
   granted_permissions?: Permission[];
   revoked_permissions?: Permission[];
 }
@@ -25,6 +26,7 @@ export interface UpdateStaffRequest {
   name?: string;
   role?: Role;
   is_active?: boolean;
+  phone_number?: string;
   granted_permissions?: Permission[];
   revoked_permissions?: Permission[];
 }
