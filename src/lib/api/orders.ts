@@ -1,9 +1,12 @@
+import { get, post, patch } from './client';
 import type {
   Order,
   OrderWithDetails,
   OrdersListResponse,
   OrderFilters,
   OrderStatus,
+  OrderItemProof,
+  PresignProofResponse,
 } from '@/types';
 
 function delay(ms = 400): Promise<void> {
@@ -11,8 +14,8 @@ function delay(ms = 400): Promise<void> {
 }
 
 const STATUSES: OrderStatus[] = [
-  'pending', 'confirmed', 'artwork_pending', 'artwork_approved',
-  'printing', 'ready_to_dispatch', 'dispatched', 'delivered', 'cancelled',
+  'placed', 'confirmed', 'artwork_pending', 'artwork_approved',
+  'printing', 'shipped', 'delivered', 'cancelled', 'refund_initiated', 'refunded',
 ];
 
 const CUSTOMERS = [
@@ -32,7 +35,7 @@ function makeOrder(i: number): Order {
     id: `ord-${3000 - i}`,
     order_number: `ORD-${3000 - i}`,
     status: STATUSES[i % STATUSES.length],
-    customer_id: `cust-${i % 50}`,
+    customer_id: i % 50,
     customer_name: c.name,
     customer_email: c.email,
     total_amount: Math.floor(2500 + (i * 1337) % 18000),
@@ -46,112 +49,184 @@ function makeOrder(i: number): Order {
   };
 }
 
+function normaliseListOrder(raw: Record<string, unknown>): Order {
+  return {
+    id: String(raw.id),
+    order_number: raw.order_number as string,
+    status: raw.status as OrderStatus,
+    customer_id: raw.customer_id != null ? Number(raw.customer_id) : null,
+    customer_name: (raw.customer_name as string | null) ?? null,
+    customer_email: (raw.customer_email as string | null) ?? null,
+    total_amount: Number(raw.total_amount) || 0,
+    currency: 'INR',
+    coupon_code: (raw.coupon_code as string | null) ?? null,
+    discount_amount: (raw.discount_amount as number) ?? 0,
+    subtotal: (raw.subtotal as number) ?? 0,
+    turnaround: (raw.turnaround as string | string[] | null) ?? null,
+    created_at: raw.created_at as string,
+    updated_at: (raw.updated_at as string) ?? '',
+  };
+}
+
 export async function getOrders(filters: OrderFilters = {}): Promise<OrdersListResponse> {
-  await delay();
-  const page = filters.page ?? 1;
-  const pageSize = filters.page_size ?? 20;
-  const total = 247;
-  const items = Array.from({ length: Math.min(pageSize, total - (page - 1) * pageSize) }, (_, i) =>
-    makeOrder((page - 1) * pageSize + i)
-  );
-  return { items, total, page, page_size: pageSize, total_pages: Math.ceil(total / pageSize) };
+  const params: Record<string, string | number | undefined> = {
+    page: filters.page,
+    page_size: filters.page_size,
+    ...(filters.status ? { status: filters.status } : {}),
+    ...(filters.search ? { search: filters.search } : {}),
+    ...(filters.customer_id ? { customer_id: filters.customer_id } : {}),
+  };
+  Object.keys(params).forEach((k) => params[k] === undefined && delete params[k]);
+  const raw = await get<{
+    items: Record<string, unknown>[];
+    total: number;
+    page: number;
+    page_size: number;
+    total_pages: number;
+  }>('/admin/orders', params);
+  return {
+    items: raw.items.map(normaliseListOrder),
+    total: raw.total,
+    page: raw.page,
+    page_size: raw.page_size,
+    total_pages: raw.total_pages,
+  };
 }
 
 export async function getOrder(id: string): Promise<OrderWithDetails> {
-  await delay();
-  const i = parseInt(id.replace('ord-', '') || '0') % 50;
-  const base = makeOrder(i);
+  const raw = await get<Record<string, unknown>>(`/admin/orders/${id}`);
+  return normaliseOrder(raw);
+}
+
+function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
+  const normaliseId = (v: unknown): string => String(v);
+
+  const items = ((raw.items as Record<string, unknown>[] | null) ?? []).map((item) => ({
+    id: normaliseId(item.id),
+    product_id: normaliseId(item.product_id),
+    product_name: (item.product_name as string) ?? '',
+    product_slug: (item.product_slug as string) ?? '',
+    thumbnail_url: (item.thumbnail_url as string | null) ?? null,
+    category_name: (item.category_name as string | null) ?? null,
+    size_label: (item.size_label as string | null) ?? null,
+    paper_label: (item.paper_label as string | null) ?? null,
+    finish_label: (item.finish_label as string | null) ?? null,
+    sides: (item.sides as string | null) ?? null,
+    turnaround_label: (item.turnaround_label as string | null) ?? null,
+    quantity: item.quantity as number,
+    price_per_unit: Number(item.price_per_unit ?? 0),
+    turnaround_extra_cost: Number(item.turnaround_extra_cost ?? 0),
+    total_price: Number(item.total_price ?? 0),
+    artwork_status: (item.artwork_status as string) as import('@/types').ArtworkStatus,
+    artwork_file_key: (item.artwork_file_key as string | null) ?? null,
+    artwork_filename: (item.artwork_filename as string | null) ?? null,
+    artwork_type: (item.artwork_type as 'file' | 'template' | null) ?? null,
+    template_data: (item.template_data as Record<string, string> | null) ?? null,
+  }));
+
+  const notes = ((raw.notes as Record<string, unknown>[] | null) ?? []).map((n) => ({
+    id: normaliseId(n.id),
+    order_id: normaliseId(n.order_id),
+    admin_user_id: normaliseId(n.admin_user_id),
+    admin_user_name: n.admin_user_name as string,
+    content: n.content as string,
+    created_at: n.created_at as string,
+  }));
+
+  const statusHistory = ((raw.status_history as Record<string, unknown>[] | null) ?? []).map((h) => ({
+    status: h.status as import('@/types').OrderStatus,
+    changed_at: h.changed_at as string,
+    changed_by_name: (h.changed_by_name as string | null) ?? null,
+    note: (h.note as string | null) ?? null,
+  }));
+
+  const payment = (raw.payment as Record<string, unknown> | null) ?? {};
+  const shipping = (raw.shipping as Record<string, unknown> | null) ?? {};
+  const shippingAddress = (raw.shipping_address as Record<string, unknown> | null) ?? {};
+  const billingAddress = (raw.billing_address as Record<string, unknown> | null) ?? {};
+
   return {
-    ...base,
-    customer_phone: '+91 98765 43210',
-    customer_total_orders: 12,
-    items: [
-      {
-        id: 'item-1',
-        product_id: 'p1',
-        product_name: 'Business Cards Premium',
-        product_slug: 'business-cards-premium',
-        size: '90mm x 54mm',
-        paper_type: '350 GSM Art Board',
-        finish: 'Matte Lamination',
-        sides: 'Double Sided',
-        quantity: 500,
-        unit_price: 3,
-        total_price: 1500,
-        turnaround: 'express',
-        artwork_status: 'approved',
-        artwork_file_url: 'https://example.com/artwork.pdf',
-        artwork_preview_url: null,
-        artwork_notes: null,
-        custom_notes: null,
-      },
-    ],
+    id: normaliseId(raw.id),
+    order_number: raw.order_number as string,
+    status: raw.status as import('@/types').OrderStatus,
+    customer_id: raw.customer_id != null ? Number(raw.customer_id) : null,
+    customer_name: raw.customer_name as string,
+    customer_email: raw.customer_email as string,
+    customer_phone: (raw.customer_phone as string) ?? '',
+    customer_total_orders: raw.customer_total_orders as number,
+    total_amount: Number(raw.total_amount ?? 0),
+    currency: 'INR',
+    coupon_code: (raw.coupon_code as string | null) ?? null,
+    discount_amount: Number(raw.discount_amount ?? 0),
+    subtotal: Number(raw.subtotal ?? 0),
+    gst_amount: Number(raw.gst_amount ?? 0),
+    shipping_cost: Number(raw.shipping_cost ?? 0),
+    turnaround: raw.turnaround as string | string[],
+    items,
     payment: {
-      method: 'UPI',
-      provider: 'Razorpay',
-      transaction_id: `rzp_${base.id}`,
-      amount: base.total_amount,
+      method: payment.method as string,
+      provider: payment.provider as string,
+      transaction_id: payment.transaction_id as string,
+      amount: Number(payment.amount ?? 0),
       currency: 'INR',
-      status: 'paid',
-      paid_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+      status: payment.status as import('@/types').OrderPaymentInfo['status'],
+      paid_at: (payment.paid_at as string | null) ?? null,
     },
     shipping_address: {
-      name: base.customer_name,
-      phone: '+91 98765 43210',
-      line1: '42, MG Road',
-      line2: 'Koramangala',
-      city: 'Bengaluru',
-      state: 'Karnataka',
-      pincode: '560034',
-      country: 'India',
+      full_name: (shippingAddress.full_name as string) ?? '',
+      line1: (shippingAddress.line1 as string) ?? '',
+      line2: (shippingAddress.line2 as string | null) ?? null,
+      city: (shippingAddress.city as string) ?? '',
+      state: (shippingAddress.state as string) ?? '',
+      // Backend field is `postal_code` (see app/models/address.py), not `pincode`.
+      pincode: (shippingAddress.postal_code as string) ?? '',
+      country: (shippingAddress.country as string) ?? '',
+      phone: (shippingAddress.phone as string | null) ?? null,
     },
     billing_address: {
-      name: base.customer_name,
-      phone: '+91 98765 43210',
-      line1: '42, MG Road',
-      line2: 'Koramangala',
-      city: 'Bengaluru',
-      state: 'Karnataka',
-      pincode: '560034',
-      country: 'India',
+      full_name: (billingAddress.full_name as string) ?? '',
+      line1: (billingAddress.line1 as string) ?? '',
+      line2: (billingAddress.line2 as string | null) ?? null,
+      city: (billingAddress.city as string) ?? '',
+      state: (billingAddress.state as string) ?? '',
+      pincode: (billingAddress.postal_code as string) ?? '',
+      country: (billingAddress.country as string) ?? '',
+      phone: (billingAddress.phone as string | null) ?? null,
     },
     shipping: {
-      courier: base.status === 'dispatched' ? 'Shiprocket' : null,
-      awb_number: base.status === 'dispatched' ? '42098374982' : null,
-      tracking_url: base.status === 'dispatched' ? 'https://shiprocket.co/track/42098374982' : null,
-      estimated_delivery: null,
-      dispatched_at: null,
-      delivered_at: null,
+      courier: (shipping.courier as string | null) ?? null,
+      tracking_number: (shipping.tracking_number as string | null) ?? null,
+      tracking_url: (shipping.tracking_url as string | null) ?? null,
+      estimated_delivery: (shipping.estimated_delivery as string | null) ?? null,
+      dispatched_at: (shipping.dispatched_at as string | null) ?? null,
+      delivered_at: (shipping.delivered_at as string | null) ?? null,
     },
-    coupon_discount_type: base.coupon_code ? 'percentage' : null,
-    coupon_discount_value: base.coupon_code ? 10 : null,
-    status_history: STATUSES.slice(0, STATUSES.indexOf(base.status) + 1).map((s, idx) => ({
-      status: s,
-      changed_at: new Date(Date.now() - (STATUSES.indexOf(base.status) - idx) * 1000 * 60 * 60).toISOString(),
-      changed_by_id: 'admin-1',
-      changed_by_name: 'Admin User',
-      note: null,
-    })),
-    notes: [],
+    status_history: statusHistory,
+    notes,
+    created_at: raw.created_at as string,
+    updated_at: raw.updated_at as string,
   };
 }
 
 export async function updateOrderStatus(
   id: string,
   status: OrderStatus,
-  note?: string
+  trackingNumber?: string
 ): Promise<{ success: boolean }> {
-  await delay();
+  await patch(`/admin/orders/${id}/status`, {
+    status,
+    ...(trackingNumber ? { tracking_number: trackingNumber } : {}),
+  });
   return { success: true };
 }
 
 export async function addOrderNote(id: string, content: string): Promise<{ success: boolean }> {
-  await delay(300);
+  await post(`/admin/orders/${id}/notes`, { content });
   return { success: true };
 }
 
 export async function cancelOrder(id: string, reason: string): Promise<{ success: boolean }> {
-  await delay();
+  await post(`/admin/orders/${id}/cancel`, { reason });
   return { success: true };
 }
 
@@ -159,4 +234,27 @@ export async function getPrintingQueue(status?: string) {
   await delay();
   const items = Array.from({ length: 24 }, (_, i) => makeOrder(i + 100));
   return { items, total: 24 };
+}
+
+export async function presignProof(orderId: string, itemId: string, filename: string, mimeType: string, fileSize: number): Promise<PresignProofResponse> {
+  return post<PresignProofResponse>(`/admin/orders/${orderId}/items/${itemId}/proof/presign`, { filename, mime_type: mimeType, file_size: fileSize });
+}
+
+export async function getOrderProofs(orderId: string): Promise<OrderItemProof[]> {
+  const raw = await get<Record<string, unknown>[]>(`/admin/orders/${orderId}/proofs`);
+  return raw.map((p) => ({
+    id: Number(p.id),
+    order_item_id: String(p.order_item_id),
+    file_key: p.file_key as string,
+    original_filename: p.original_filename as string,
+    file_url: p.file_url as string,
+    status: p.status as import('@/types').ProofStatus,
+    version: Number(p.version),
+    created_at: p.created_at as string,
+    updated_at: p.updated_at as string,
+  }));
+}
+
+export async function sendProofForApproval(orderId: string, itemId: string): Promise<void> {
+  await post<void>(`/admin/orders/${orderId}/items/${itemId}/proof/send`);
 }

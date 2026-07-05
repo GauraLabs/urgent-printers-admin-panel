@@ -11,7 +11,7 @@ export function OrderCustomer({ customer_id, customer_name, customer_email, cust
     <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">Customer</h3>
-        <Link href={ROUTES.CUSTOMER_DETAIL(customer_id)} className="text-[11px] text-[var(--primary)] hover:underline flex items-center gap-0.5">
+        <Link href={ROUTES.CUSTOMER_DETAIL(String(customer_id ?? ''))} className="text-[11px] text-[var(--primary)] hover:underline flex items-center gap-0.5">
           View profile <ExternalLink className="h-2.5 w-2.5" />
         </Link>
       </div>

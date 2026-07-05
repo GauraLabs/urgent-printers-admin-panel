@@ -11,6 +11,7 @@ export type Permission =
   | 'orders.edit'
   | 'orders.cancel'
   | 'orders.refund'
+  | 'orders.manage_proofs'
   | 'printing_queue.view'
   | 'printing_queue.manage'
   | 'products.view'
@@ -60,6 +61,7 @@ export interface AdminUser {
    */
   permissions: Permission[];
   avatar_url: string | null;
+  phone_number: string | null;
   last_login: string | null;
   is_active: boolean;
   created_at: string;

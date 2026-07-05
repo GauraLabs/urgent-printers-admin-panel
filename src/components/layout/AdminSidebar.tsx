@@ -1,6 +1,7 @@
 'use client';
 
-import { Printer, ChevronsLeft, ChevronsRight, LogOut } from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, LogOut } from 'lucide-react';
+import { Logo } from '@/components/common/Logo';
 import { useSidebarStore } from '@/store/sidebarStore';
 import { useAuthStore } from '@/store/authStore';
 import { logoutUser } from '@/lib/api/auth';
@@ -36,15 +37,12 @@ export function AdminSidebar() {
         className={cn('flex items-center h-14 flex-shrink-0', collapsed ? 'justify-center px-3' : 'px-4 gap-3')}
         style={{ borderBottom: '1px solid var(--sidebar-border)' }}
       >
-        <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-primary flex items-center justify-center shadow-sm">
-          <Printer className="h-3.5 w-3.5 text-white" />
-        </div>
-        {!collapsed && (
+        {collapsed ? (
+          <Logo variant="mark" style={{ height: 24, width: 24 }} />
+        ) : (
           <div className="min-w-0 flex-1">
-            <p className="text-[13px] font-semibold leading-tight truncate" style={{ color: 'var(--sidebar-text-active)' }}>
-              Urgent Printers
-            </p>
-            <p className="text-[10px] leading-tight truncate" style={{ color: 'var(--sidebar-text)' }}>
+            <Logo variant="color" style={{ height: 22 }} />
+            <p className="text-[10px] leading-tight mt-0.5" style={{ color: 'var(--sidebar-text)' }}>
               Admin Console
             </p>
           </div>

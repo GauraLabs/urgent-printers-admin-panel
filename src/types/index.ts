@@ -72,6 +72,42 @@ export interface NotificationTemplate {
   updated_at: string;
 }
 
+export interface WhatsAppTemplateButton {
+  type: 'QUICK_REPLY' | 'URL' | 'PHONE_NUMBER';
+  text: string;
+  url?: string;
+  phone_number?: string;
+  example?: string[];
+}
+
+export interface WhatsAppTemplateComponentExample {
+  header_handle?: string[];
+  header_text?: string[];
+  body_text?: string[][];
+}
+
+export interface WhatsAppTemplateComponent {
+  type: 'HEADER' | 'BODY' | 'FOOTER' | 'BUTTONS';
+  format?: 'TEXT' | 'IMAGE' | 'VIDEO' | 'DOCUMENT';
+  text?: string;
+  buttons?: WhatsAppTemplateButton[];
+  example?: WhatsAppTemplateComponentExample;
+}
+
+export interface WhatsAppTemplate {
+  id: string;
+  name: string;
+  category: 'utility' | 'marketing' | 'authentication';
+  language_code: string;
+  meta_template_status: 'pending' | 'approved' | 'rejected';
+  variable_schema: string[];
+  version: number;
+  is_active: boolean;
+  components: WhatsAppTemplateComponent[];
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Banner {
   id: string;
   title: string;
@@ -137,17 +173,28 @@ export interface Review {
   created_at: string;
 }
 
+export type ShipmentStatus =
+  | 'created'
+  | 'picked_up'
+  | 'in_transit'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'rto'
+  | 'cancelled';
+
+export type ShipmentSource = 'shiprocket' | 'manual';
+
 export interface Shipment {
-  id: string;
   order_id: string;
   order_number: string;
-  customer_name: string;
-  courier: string;
-  awb_number: string;
+  customer_name: string | null;
+  courier: string | null;
+  tracking_number: string | null;
   tracking_url: string | null;
-  status: 'created' | 'picked_up' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'failed';
-  dispatched_at: string;
-  estimated_delivery: string | null;
+  shipment_status: ShipmentStatus | null;
+  shipment_source: ShipmentSource | null;
+  dispatched_at: string | null;
+  estimated_delivery_date: string | null;
   delivered_at: string | null;
 }
 

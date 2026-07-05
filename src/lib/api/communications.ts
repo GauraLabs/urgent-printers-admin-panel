@@ -1,4 +1,5 @@
-import type { NotificationTemplate, PaginatedResponse } from '@/types';
+import { get, post, patch, del } from '@/lib/api/client';
+import type { NotificationTemplate, WhatsAppTemplate, WhatsAppTemplateComponent, PaginatedResponse } from '@/types';
 
 function delay(ms = 400): Promise<void> {
   return new Promise((r) => setTimeout(r, ms + Math.random() * 400));
@@ -50,4 +51,57 @@ export async function sendNotification(data: {
 }): Promise<{ success: boolean; sent_count: number }> {
   await delay();
   return { success: true, sent_count: typeof data.recipients === 'string' ? 1847 : data.recipients.length };
+}
+
+export interface WhatsAppTemplatesParams {
+  page?: number;
+  page_size?: number;
+  search?: string;
+}
+
+type RawWhatsAppTemplate = Omit<WhatsAppTemplate, 'id'> & { id: number };
+
+function normalizeWATemplate(raw: RawWhatsAppTemplate): WhatsAppTemplate {
+  return { ...raw, id: String(raw.id) };
+}
+
+export async function getWhatsAppTemplates(
+  params: WhatsAppTemplatesParams = {},
+): Promise<PaginatedResponse<WhatsAppTemplate>> {
+  const raw = await get<PaginatedResponse<RawWhatsAppTemplate>>('/admin/whatsapp-templates', {
+    page: params.page ?? 1,
+    page_size: params.page_size ?? 20,
+    search: params.search ?? '',
+  });
+  return { ...raw, items: raw.items.map(normalizeWATemplate) };
+}
+
+export interface CreateWhatsAppTemplatePayload {
+  name: string;
+  category: 'utility' | 'marketing' | 'authentication';
+  language_code: string;
+  components: WhatsAppTemplateComponent[];
+}
+
+export async function createWhatsAppTemplate(
+  data: CreateWhatsAppTemplatePayload,
+): Promise<WhatsAppTemplate> {
+  const raw = await post<RawWhatsAppTemplate>('/admin/whatsapp-templates', data);
+  return normalizeWATemplate(raw);
+}
+
+export async function syncWhatsAppTemplates(): Promise<{ synced: number; created: number; updated: number }> {
+  return post<{ synced: number; created: number; updated: number }>('/admin/whatsapp-templates/sync', {});
+}
+
+export async function updateWhatsAppTemplate(
+  id: string,
+  data: Partial<Omit<WhatsAppTemplate, 'id' | 'created_at' | 'updated_at'>>,
+): Promise<WhatsAppTemplate> {
+  const raw = await patch<RawWhatsAppTemplate>(`/admin/whatsapp-templates/${id}`, data);
+  return normalizeWATemplate(raw);
+}
+
+export async function deleteWhatsAppTemplate(id: string): Promise<void> {
+  await del<Record<string, never>>(`/admin/whatsapp-templates/${id}`);
 }

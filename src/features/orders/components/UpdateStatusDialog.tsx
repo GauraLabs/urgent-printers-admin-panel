@@ -17,16 +17,16 @@ import { ORDER_STATUS_LABELS } from '@/lib/constants/orderStatuses';
 import type { OrderStatus } from '@/types';
 
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
-  pending: ['confirmed', 'cancelled'],
+  placed: ['confirmed', 'cancelled'],
   confirmed: ['artwork_pending', 'cancelled'],
-  artwork_pending: ['artwork_approved', 'confirmed'],
-  artwork_approved: ['printing'],
-  printing: ['ready_to_dispatch'],
-  ready_to_dispatch: ['dispatched'],
-  dispatched: ['out_for_delivery', 'delivered'],
-  out_for_delivery: ['delivered'],
-  delivered: ['refunded'],
-  cancelled: [],
+  artwork_pending: ['artwork_approved', 'confirmed', 'cancelled'],
+  artwork_approved: ['printing', 'cancelled'],
+  printing: ['ready_to_dispatch', 'cancelled'],
+  ready_to_dispatch: ['shipped', 'cancelled'],
+  shipped: ['delivered', 'refund_initiated'],
+  delivered: ['refund_initiated'],
+  cancelled: ['refund_initiated'],
+  refund_initiated: ['refunded'],
   refunded: [],
 };
 
@@ -59,7 +59,7 @@ export function UpdateStatusDialog({
 
   async function onSubmit(values: FormValues) {
     try {
-      await mutation.mutateAsync({ id: orderId, status: values.status as OrderStatus, note: values.note });
+      await mutation.mutateAsync({ id: orderId, status: values.status as OrderStatus });
       toast.success(`${orderNumber} moved to ${ORDER_STATUS_LABELS[values.status as OrderStatus]}`);
       reset();
       onOpenChange(false);

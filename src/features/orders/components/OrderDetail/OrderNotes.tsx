@@ -37,7 +37,7 @@ export function OrderNotes({ orderId, notes }: { orderId: string; notes: OrderNo
             <li key={note.id} className="bg-[var(--surface-secondary)] rounded-lg px-3 py-2.5">
               <p className="text-xs text-[var(--text-primary)]">{note.content}</p>
               <p className="text-[11px] text-[var(--text-muted)] mt-1">
-                {note.admin_name} · {formatDateTime(note.created_at)}
+                {note.admin_user_name} · {formatDateTime(note.created_at)}
               </p>
             </li>
           ))}

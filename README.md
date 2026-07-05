@@ -25,7 +25,7 @@ Open [http://localhost:3001](http://localhost:3001).
 
 | Variable | Description |
 |---|---|
-| `NEXT_PUBLIC_API_URL` | Backend API base URL (e.g. `https://api.urgentprinters.in/api/v1`) |
+| `NEXT_PUBLIC_API_URL` | Backend API base URL (e.g. `https://api.urgentprinters.com/api/v1`) |
 
 ## Related
 

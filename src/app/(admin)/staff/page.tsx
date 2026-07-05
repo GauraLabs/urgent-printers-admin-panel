@@ -15,9 +15,14 @@ export default function StaffPage() {
           title="Staff"
           description="Manage admin accounts and access levels."
           actions={
-            <Link href={ROUTES.ACTIVITY_LOG} className="text-xs px-3 py-1.5 border border-border rounded-lg text-muted-foreground hover:bg-muted transition-colors">
-              Activity Log →
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href={ROUTES.STAFF_NOTIFICATIONS} className="text-xs px-3 py-1.5 border border-border rounded-lg text-muted-foreground hover:bg-muted transition-colors">
+                Notification Preferences →
+              </Link>
+              <Link href={ROUTES.ACTIVITY_LOG} className="text-xs px-3 py-1.5 border border-border rounded-lg text-muted-foreground hover:bg-muted transition-colors">
+                Activity Log →
+              </Link>
+            </div>
           }
         />
         <StaffTable />

@@ -64,7 +64,7 @@ export async function getRevenueChart(period: '7d' | '30d' | '3m' | '1y') {
 
 export async function getRecentOrders() {
   await delay(200);
-  const statuses = ['pending', 'confirmed', 'printing', 'dispatched', 'delivered'];
+  const statuses = ['placed', 'confirmed', 'printing', 'shipped', 'delivered'];
   return Array.from({ length: 10 }, (_, i) => ({
     id: `ord-${2900 - i}`,
     order_number: `ORD-${2900 - i}`,

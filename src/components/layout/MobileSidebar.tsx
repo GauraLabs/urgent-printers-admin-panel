@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Menu, Printer, X, LogOut } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
+import { Logo } from '@/components/common/Logo';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Sheet, SheetContent, SheetClose } from '@/components/ui/sheet';
@@ -47,14 +48,9 @@ export function MobileSidebar() {
       <SheetContent side="left" showCloseButton={false} className="w-64 p-0 bg-[var(--sidebar-bg)] border-[var(--sidebar-border)] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between h-14 px-4 border-b border-[var(--sidebar-border)] flex-shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[var(--primary)] flex items-center justify-center">
-              <Printer className="h-4 w-4 text-white" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-[var(--sidebar-text-active)]">Urgent Printers</p>
-              <p className="text-[10px] text-[var(--sidebar-text)]">Admin Panel</p>
-            </div>
+          <div className="flex flex-col">
+            <Logo variant="color" style={{ height: 22 }} />
+            <p className="text-[10px] mt-0.5" style={{ color: 'var(--sidebar-text)' }}>Admin Panel</p>
           </div>
           <SheetClose className="p-1.5 rounded-md text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] transition-colors">
             <X className="h-4 w-4" />
@@ -62,7 +58,9 @@ export function MobileSidebar() {
         </div>
 
         {/* Nav */}
-        <SidebarNav onNavigate={() => setOpen(false)} />
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+          <SidebarNav onNavigate={() => setOpen(false)} />
+        </div>
 
         {/* User footer */}
         <div className="flex-shrink-0 border-t border-[var(--sidebar-border)] p-3">

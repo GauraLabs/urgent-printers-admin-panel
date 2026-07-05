@@ -16,9 +16,9 @@ import { formatApiDate } from '@/lib/utils/formatDate';
 import type { OrderStatus, DateRange } from '@/types';
 
 const STATUSES: OrderStatus[] = [
-  'pending', 'confirmed', 'artwork_pending', 'artwork_approved',
-  'printing', 'ready_to_dispatch', 'dispatched', 'out_for_delivery',
-  'delivered', 'cancelled', 'refunded',
+  'placed', 'confirmed', 'artwork_pending', 'artwork_approved',
+  'printing', 'shipped', 'delivered', 'cancelled',
+  'refund_initiated', 'refunded',
 ];
 
 interface OrderFiltersProps {
@@ -27,7 +27,7 @@ interface OrderFiltersProps {
   turnaround?: string;
   onSearch: (v: string) => void;
   onStatus: (v: OrderStatus | undefined) => void;
-  onTurnaround: (v: 'standard' | 'express' | 'rush' | undefined) => void;
+  onTurnaround: (v: string | undefined) => void;
   onDateRange: (from?: string, to?: string) => void;
   onClear: () => void;
   hasActiveFilters: boolean;
@@ -73,9 +73,7 @@ export function OrderFilters({
 
       <Select
         value={turnaround ?? ''}
-        onValueChange={(v) =>
-          onTurnaround(v ? (v as 'standard' | 'express' | 'rush') : undefined)
-        }
+        onValueChange={(v) => onTurnaround(v || undefined)}
       >
         <SelectTrigger size="sm" className="w-36">
           <SelectValue placeholder="All types" />

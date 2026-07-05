@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Ticket } from 'lucide-react';
+import { ArrowLeft, PackageX, Ticket } from 'lucide-react';
 import { useOrderDetail } from '../../hooks/useOrderDetail';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { OrderActions } from './OrderActions';
 import { OrderTimeline } from './OrderTimeline';
+import { OrderProofs } from './OrderProofs';
 import { OrderItems } from './OrderItems';
 import { OrderCustomer } from './OrderCustomer';
 import { OrderPayment } from './OrderPayment';
@@ -15,23 +16,51 @@ import { StatusBadge } from '@/components/common/StatusBadge';
 import { PageSkeleton } from '@/components/common/LoadingSkeleton';
 import { formatPrice } from '@/lib/utils/formatPrice';
 import { ROUTES } from '@/lib/constants/routes';
-import type { OrderStatus } from '@/types';
+import type { ApiError, OrderStatus } from '@/types';
 
 export function OrderDetailClient({ id }: { id: string }) {
-  const { data: order, isLoading, isError } = useOrderDetail(id);
+  const { data: order, isLoading, error } = useOrderDetail(id);
 
   if (isLoading) return <PageSkeleton />;
 
-  if (isError || !order) {
+  const apiError = error as ApiError | null;
+  const isNotFound = apiError?.status === 404;
+
+  if (isNotFound) {
     return (
-      <div className="text-center py-16">
-        <p className="text-sm text-[var(--text-secondary)]">Order not found.</p>
-        <Link href={ROUTES.ORDERS} className="mt-3 inline-block text-sm text-[var(--primary)] hover:underline">
-          ← Back to orders
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <PackageX className="h-12 w-12 text-[var(--text-muted)] mb-4" />
+        <h2 className="text-base font-semibold text-[var(--text-primary)] mb-1">Order not found</h2>
+        <p className="text-sm text-[var(--text-secondary)] mb-6">
+          No order with ID <span className="font-mono">{id}</span> exists.
+        </p>
+        <Link
+          href={ROUTES.ORDERS}
+          className="inline-flex items-center gap-1.5 px-4 py-2 text-sm border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)] transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to orders
         </Link>
       </div>
     );
   }
+
+  if (error || !order) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <p className="text-sm text-[var(--danger)] mb-4">
+          {apiError?.message ?? 'Failed to load order. Please try again.'}
+        </p>
+        <Link
+          href={ROUTES.ORDERS}
+          className="inline-flex items-center gap-1.5 px-4 py-2 text-sm border border-[var(--border)] rounded-lg bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)] transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to orders
+        </Link>
+      </div>
+    );
+  }
+
+  if (!order) return null;
 
   return (
     <div>
@@ -51,18 +80,17 @@ export function OrderDetailClient({ id }: { id: string }) {
         }
       />
 
-      {/* Actions bar */}
       <OrderActions order={order} />
 
-      {/* Main grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        {/* Left — wider */}
         <div className="xl:col-span-2 space-y-4">
           <OrderTimeline history={order.status_history} />
+          {!['printing', 'shipped', 'delivered', 'cancelled', 'refund_initiated', 'refunded'].includes(order.status) && (
+            <OrderProofs order={order} />
+          )}
           <OrderItems items={order.items} />
         </div>
 
-        {/* Right — narrower */}
         <div className="space-y-4">
           <OrderCustomer
             customer_id={order.customer_id}
@@ -72,7 +100,13 @@ export function OrderDetailClient({ id }: { id: string }) {
             customer_total_orders={order.customer_total_orders}
           />
           <OrderPayment payment={order.payment} />
-          <OrderShipping address={order.shipping_address} shipping={order.shipping} />
+          <OrderShipping
+            address={order.shipping_address}
+            shipping={order.shipping}
+            orderId={order.id}
+            orderNumber={order.order_number}
+            orderStatus={order.status}
+          />
 
           {order.coupon_code && (
             <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
@@ -81,12 +115,9 @@ export function OrderDetailClient({ id }: { id: string }) {
                 <Ticket className="h-4 w-4 text-[var(--primary)]" />
                 <span className="font-mono text-sm font-semibold text-[var(--text-primary)]">{order.coupon_code}</span>
               </div>
-              {order.coupon_discount_type && (
+              {order.discount_amount > 0 && (
                 <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                  {order.coupon_discount_type === 'percentage'
-                    ? `${order.coupon_discount_value}% off`
-                    : `${formatPrice(order.coupon_discount_value ?? 0)} off`}
-                  {' · '}Saved {formatPrice(order.discount_amount)}
+                  Saved {formatPrice(order.discount_amount)}
                 </p>
               )}
             </div>
@@ -94,7 +125,6 @@ export function OrderDetailClient({ id }: { id: string }) {
         </div>
       </div>
 
-      {/* Notes */}
       <div className="mt-4">
         <OrderNotes orderId={order.id} notes={order.notes} />
       </div>

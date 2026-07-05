@@ -8,6 +8,9 @@ import {
   updateOrderStatus,
   addOrderNote,
   cancelOrder,
+  presignProof,
+  getOrderProofs,
+  sendProofForApproval,
 } from '@/lib/api/orders';
 import { createRefund } from '@/lib/api/payments';
 import type { OrderFilters, OrderStatus } from '@/types';
@@ -45,7 +48,7 @@ export function useOrders(initialFilters: OrderFilters = {}) {
     setFilters((f) => ({ ...f, status, page: 1 }));
   }
 
-  function setTurnaround(turnaround: 'standard' | 'express' | 'rush' | undefined) {
+  function setTurnaround(turnaround: string | undefined) {
     setFilters((f) => ({ ...f, turnaround, page: 1 }));
   }
 
@@ -59,8 +62,8 @@ export function useOrders(initialFilters: OrderFilters = {}) {
 export function useUpdateOrderStatus() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status, note }: { id: string; status: OrderStatus; note?: string }) =>
-      updateOrderStatus(id, status, note),
+    mutationFn: ({ id, status, trackingNumber }: { id: string; status: OrderStatus; trackingNumber?: string }) =>
+      updateOrderStatus(id, status, trackingNumber),
     onSuccess: (_, { id }) => {
       qc.invalidateQueries({ queryKey: ['orders'] });
       qc.invalidateQueries({ queryKey: ['order', id] });
@@ -96,6 +99,33 @@ export function useCreateRefund() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['orders'] });
       qc.invalidateQueries({ queryKey: ['payments'] });
+    },
+  });
+}
+
+export function useOrderProofs(orderId: string) {
+  return useQuery({
+    queryKey: ['order-proofs', orderId],
+    queryFn: () => getOrderProofs(orderId),
+    staleTime: 30_000,
+  });
+}
+
+export function usePresignProof() {
+  return useMutation({
+    mutationFn: ({ orderId, itemId, filename, mimeType, fileSize }: { orderId: string; itemId: string; filename: string; mimeType: string; fileSize: number }) =>
+      presignProof(orderId, itemId, filename, mimeType, fileSize),
+  });
+}
+
+export function useSendProof() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, itemId }: { orderId: string; itemId: string }) =>
+      sendProofForApproval(orderId, itemId),
+    onSuccess: (_, { orderId }) => {
+      qc.invalidateQueries({ queryKey: ['order', orderId] });
+      qc.invalidateQueries({ queryKey: ['order-proofs', orderId] });
     },
   });
 }

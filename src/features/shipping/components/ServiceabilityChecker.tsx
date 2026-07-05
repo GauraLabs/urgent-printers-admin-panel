@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Search, CheckCircle2, XCircle, Loader2, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useServiceability } from '../hooks/useShipping';
+import { formatPrice } from '@/lib/utils/formatPrice';
 
 export function ServiceabilityChecker() {
   const [pincode, setPincode] = useState('');
@@ -45,14 +46,14 @@ export function ServiceabilityChecker() {
             <div className="space-y-2 pt-1">
               <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">Available Couriers</p>
               {data.couriers.map((c) => (
-                <div key={c.name} className="flex items-center justify-between px-3 py-2 rounded-lg bg-muted/50">
+                <div key={c.courier_id} className="flex items-center justify-between px-3 py-2 rounded-lg bg-muted/50">
                   <div className="flex items-center gap-2">
                     <Truck className="h-4 w-4 text-muted-foreground" />
                     <span className="text-[13px] font-medium text-foreground">{c.name}</span>
                   </div>
                   <div className="flex items-center gap-4 text-[13px] text-muted-foreground">
                     <span>{c.min_days}–{c.max_days} days</span>
-                    <span className="font-semibold text-foreground">₹{c.rate}</span>
+                    <span className="font-semibold text-foreground">{formatPrice(c.rate)}</span>
                   </div>
                 </div>
               ))}

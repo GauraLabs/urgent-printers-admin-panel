@@ -12,11 +12,10 @@ import { ORDER_STATUS_LABELS } from '@/lib/constants/orderStatuses';
 import type { OrderWithDetails, OrderStatus } from '@/types';
 
 const QUICK_ACTIONS: Partial<Record<OrderStatus, { label: string; nextStatus: OrderStatus; icon: React.ReactNode; variant?: 'danger' }[]>> = {
-  artwork_pending: [{ label: 'Approve Artwork', nextStatus: 'artwork_approved', icon: <CheckCircle className="h-4 w-4" /> }],
+  artwork_pending: [{ label: 'Force Approve', nextStatus: 'artwork_approved', icon: <CheckCircle className="h-4 w-4" /> }],
   artwork_approved: [{ label: 'Start Printing', nextStatus: 'printing', icon: <RefreshCw className="h-4 w-4" /> }],
-  printing: [{ label: 'Mark Ready to Dispatch', nextStatus: 'ready_to_dispatch', icon: <CheckCircle className="h-4 w-4" /> }],
-  ready_to_dispatch: [{ label: 'Mark Dispatched', nextStatus: 'dispatched', icon: <Truck className="h-4 w-4" /> }],
-  dispatched: [{ label: 'Mark Delivered', nextStatus: 'delivered', icon: <CheckCircle className="h-4 w-4" /> }],
+  printing: [{ label: 'Mark Shipped', nextStatus: 'shipped', icon: <Truck className="h-4 w-4" /> }],
+  shipped: [{ label: 'Mark Delivered', nextStatus: 'delivered', icon: <CheckCircle className="h-4 w-4" /> }],
 };
 
 interface OrderActionsProps {
@@ -32,7 +31,7 @@ export function OrderActions({ order }: OrderActionsProps) {
 
   const quickActions = QUICK_ACTIONS[order.status] ?? [];
   const canCancel = !['cancelled', 'refunded', 'delivered'].includes(order.status);
-  const canRefund = order.status === 'delivered' || order.status === 'dispatched';
+  const canRefund = order.status === 'delivered' || order.status === 'shipped';
 
   async function applyQuickAction(nextStatus: OrderStatus) {
     try {
