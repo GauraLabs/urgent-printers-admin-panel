@@ -2,12 +2,11 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Bell, ChevronRight } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { ChevronRight } from 'lucide-react';
 import { MobileSidebar } from './MobileSidebar';
 import { ThemeToggle } from './ThemeToggle';
+import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import { useSidebarStore } from '@/store/sidebarStore';
-import { getDashboardStats } from '@/lib/api/dashboard';
 import { cn } from '@/lib/utils/cn';
 
 const SEGMENT_LABELS: Record<string, string> = {
@@ -35,15 +34,6 @@ function useBreadcrumbs() {
 export function AdminHeader() {
   const breadcrumbs = useBreadcrumbs();
   const collapsed = useSidebarStore((s) => s.collapsed);
-
-  const { data: stats } = useQuery({
-    queryKey: ['dashboard-stats'],
-    queryFn: getDashboardStats,
-    refetchInterval: 30_000,
-    staleTime: 20_000,
-  });
-
-  const alertCount = stats?.alerts?.length ?? 0;
 
   return (
     <header
@@ -74,17 +64,7 @@ export function AdminHeader() {
       {/* Right */}
       <div className="flex items-center gap-0.5 flex-shrink-0 ml-3">
         <ThemeToggle />
-        <button
-          className="relative p-2 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-          aria-label="Alerts"
-        >
-          <Bell className="h-4 w-4" />
-          {alertCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 min-w-[14px] h-3.5 px-0.5 rounded-full bg-destructive text-white text-[9px] font-bold flex items-center justify-center leading-none">
-              {alertCount > 9 ? '9+' : alertCount}
-            </span>
-          )}
-        </button>
+        <NotificationBell />
       </div>
     </header>
   );
