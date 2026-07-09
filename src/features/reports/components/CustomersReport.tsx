@@ -2,7 +2,7 @@
 
 import { useCustomersReport } from '../hooks/useReports';
 import { StatCards } from './StatCards';
-import { ChartCard, TrendChart, GroupBarChart, DonutChart, HBarChart } from './ReportChart';
+import { ChartCard, TrendChart, GroupBarChart, DonutChart, HBarChart, isHourlySeries, formatChartDate } from './ReportChart';
 import { formatPrice } from '@/lib/utils/formatPrice';
 
 interface Props { from: string; to: string }
@@ -17,7 +17,12 @@ export function CustomersReport({ from, to }: Props) {
     { label: 'Avg. Lifetime Value', value: formatPrice(data.summary.avg_lifetime_value) },
   ] : [];
 
-  const retVsNew = data?.returning_vs_new.map((d) => ({ name: d.date.slice(5), new: d.new, returning: d.returning })) ?? [];
+  const retVsNewHourly = isHourlySeries(data?.returning_vs_new.map((d) => d.date) ?? []);
+  const retVsNew = data?.returning_vs_new.map((d) => ({
+    name: formatChartDate(d.date, retVsNewHourly),
+    new: d.new,
+    returning: d.returning,
+  })) ?? [];
 
   return (
     <div className="space-y-5">

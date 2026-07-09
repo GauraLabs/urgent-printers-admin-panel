@@ -25,8 +25,20 @@ const tooltipStyle = {
 const axisStyle = { fontSize: 11, fill: 'var(--color-muted-foreground)' };
 const gridStyle = { stroke: 'var(--color-border)', strokeDasharray: '3 3' };
 
-function formatDate(str: string) {
-  try { return format(parseISO(str), 'd MMM'); } catch { return str; }
+// Backend buckets short ranges (<=2 days, e.g. "Today"/"Yesterday") hourly,
+// with full ISO timestamps rather than date-only strings — detect that from
+// the gap between the first two points so the axis shows time-of-day instead
+// of a repeated calendar date.
+export function isHourlySeries(dates: string[]): boolean {
+  if (dates.length < 2) return false;
+  const first = parseISO(dates[0]).getTime();
+  const second = parseISO(dates[1]).getTime();
+  if (Number.isNaN(first) || Number.isNaN(second)) return false;
+  return second - first < 86400000;
+}
+
+export function formatChartDate(str: string, hourly = false) {
+  try { return format(parseISO(str), hourly ? 'h a' : 'd MMM'); } catch { return str; }
 }
 
 interface ChartCardProps {
@@ -59,6 +71,8 @@ interface TrendChartProps {
 
 export function TrendChart({ data, color = COLORS[0], formatValue, type = 'area' }: TrendChartProps) {
   const id = `grad-${color.replace('#', '')}`;
+  const hourly = isHourlySeries(data.map((d) => d.date));
+  const fmt = (str: string) => formatChartDate(str, hourly);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
@@ -69,9 +83,9 @@ export function TrendChart({ data, color = COLORS[0], formatValue, type = 'area'
           </linearGradient>
         </defs>
         <CartesianGrid vertical={false} {...gridStyle} />
-        <XAxis dataKey="date" tickFormatter={formatDate} tick={axisStyle} tickLine={false} axisLine={false} interval="preserveStartEnd" />
+        <XAxis dataKey="date" tickFormatter={fmt} tick={axisStyle} tickLine={false} axisLine={false} interval="preserveStartEnd" />
         <YAxis tick={axisStyle} tickLine={false} axisLine={false} tickFormatter={formatValue} width={54} />
-        <Tooltip {...tooltipStyle} formatter={(v) => [formatValue ? formatValue(Number(v ?? 0)) : String(v ?? 0), '']} labelFormatter={(l) => formatDate(String(l ?? ""))} />
+        <Tooltip {...tooltipStyle} formatter={(v) => [formatValue ? formatValue(Number(v ?? 0)) : String(v ?? 0), '']} labelFormatter={(l) => fmt(String(l ?? ""))} />
         <Area type="monotone" dataKey="value" stroke={color} strokeWidth={2} fill={`url(#${id})`} dot={false} activeDot={{ r: 4 }} />
       </AreaChart>
     </ResponsiveContainer>

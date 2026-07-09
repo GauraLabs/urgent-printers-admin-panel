@@ -6,6 +6,8 @@ export * from './payment';
 export * from './coupon';
 export * from './report';
 
+import type { ShipmentStatus, ShipmentSource } from './order';
+
 export interface DashboardStats {
   revenue_today: number;
   revenue_today_change_pct: number;
@@ -172,17 +174,6 @@ export interface Review {
   admin_reply_at: string | null;
   created_at: string;
 }
-
-export type ShipmentStatus =
-  | 'created'
-  | 'picked_up'
-  | 'in_transit'
-  | 'out_for_delivery'
-  | 'delivered'
-  | 'rto'
-  | 'cancelled';
-
-export type ShipmentSource = 'shiprocket' | 'manual';
 
 export interface Shipment {
   order_id: string;

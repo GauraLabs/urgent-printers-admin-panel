@@ -15,6 +15,17 @@ export type TurnaroundType = 'standard' | 'express' | 'rush';
 export type ArtworkStatus = 'none' | 'sent_for_approval' | 'approved' | 'needs_revision';
 export type ProofStatus = 'pending_review' | 'sent' | 'approved' | 'rejected' | 'superseded';
 
+export type ShipmentStatus =
+  | 'created'
+  | 'picked_up'
+  | 'in_transit'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'rto'
+  | 'cancelled';
+
+export type ShipmentSource = 'shiprocket' | 'manual';
+
 export interface OrderItemProof {
   id: number;
   order_item_id: string;
@@ -84,6 +95,13 @@ export interface OrderShippingInfo {
   estimated_delivery: string | null;
   dispatched_at: string | null;
   delivered_at: string | null;
+  // Not yet returned by GET /admin/orders/{id} (AdminOrderShipping omits
+  // shipment_status/shipment_source even though the Order model has both —
+  // see urgent-printers-backend/app/schemas/order.py). Typed now so
+  // OrderShipping.tsx picks them up as soon as the backend adds them;
+  // normaliseOrder() defaults both to null until then.
+  shipment_status: ShipmentStatus | null;
+  shipment_source: ShipmentSource | null;
 }
 
 export interface OrderNote {

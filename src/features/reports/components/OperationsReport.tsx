@@ -2,7 +2,7 @@
 
 import { useOperationsReport } from '../hooks/useReports';
 import { StatCards } from './StatCards';
-import { ChartCard, TrendChart, HBarChart, DonutChart, GroupBarChart } from './ReportChart';
+import { ChartCard, TrendChart, HBarChart, DonutChart, GroupBarChart, isHourlySeries, formatChartDate } from './ReportChart';
 
 interface Props { from: string; to: string }
 
@@ -16,8 +16,9 @@ export function OperationsReport({ from, to }: Props) {
     { label: 'Artwork Reupload Rate', value: `${data.summary.artwork_reupload_rate.toFixed(1)}%` },
   ] : [];
 
+  const turnaroundHourly = isHourlySeries(data?.orders_by_turnaround_over_time.map((d) => d.date) ?? []);
   const turnaroundByTime = data?.orders_by_turnaround_over_time.map((d) => ({
-    name: d.date.slice(5),
+    name: formatChartDate(d.date, turnaroundHourly),
     Standard: d.standard,
     Express: d.express,
     Rush: d.rush,
