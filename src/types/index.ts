@@ -114,6 +114,7 @@ export interface Banner {
   id: string;
   title: string;
   subtitle: string | null;
+  badge_text: string | null;
   image_url: string;
   link_url: string | null;
   link_text: string | null;
@@ -146,6 +147,7 @@ export interface Announcement {
   is_active: boolean;
   valid_from: string | null;
   valid_until: string | null;
+  countdown_end_at: string | null;
 }
 
 export interface Faq {

@@ -5,7 +5,7 @@ import {
   getBanners, createBanner, updateBanner, deleteBanner, reorderBanners,
   getTestimonials, createTestimonial, updateTestimonial, deleteTestimonial,
   getAnnouncement, updateAnnouncement,
-  getFaqs, createFaq, updateFaq, deleteFaq,
+  getFaqs, createFaq, updateFaq, deleteFaq, reorderFaqs,
 } from '@/lib/api/content';
 import type { Banner, Testimonial, Announcement, Faq } from '@/types';
 
@@ -68,5 +68,6 @@ export function useFaqMutations() {
     create: useMutation({ mutationFn: (d: Partial<Faq>) => createFaq(d), onSuccess: inv }),
     update: useMutation({ mutationFn: ({ id, d }: { id: string; d: Partial<Faq> }) => updateFaq(id, d), onSuccess: inv }),
     remove: useMutation({ mutationFn: (id: string) => deleteFaq(id), onSuccess: inv }),
+    reorder: useMutation({ mutationFn: (ids: string[]) => reorderFaqs(ids), onSuccess: inv }),
   };
 }
