@@ -159,6 +159,19 @@ export interface Faq {
   is_active: boolean;
 }
 
+export interface NavLink {
+  id: string;
+  label: string;
+  category_id: string | null;
+  category_name: string | null;
+  category_slug: string | null;
+  custom_url: string | null;
+  placement: 'header' | 'footer';
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+}
+
 export interface Review {
   id: string;
   customer_id: string;

@@ -1,5 +1,5 @@
 import { get, post, patch, put, del } from './client';
-import type { Banner, Testimonial, Announcement, Faq } from '@/types';
+import type { Banner, Testimonial, Announcement, Faq, NavLink } from '@/types';
 
 interface PaginatedResponse<T> {
   items: T[];
@@ -143,5 +143,59 @@ export async function deleteFaq(id: string): Promise<{ success: boolean }> {
 
 export async function reorderFaqs(ids: string[]): Promise<{ success: boolean }> {
   await post<{ reordered: number }>('/admin/content/faqs/reorder', { ids: ids.map(Number) });
+  return { success: true };
+}
+
+// ── Nav Links ────────────────────────────────────────────────────────────────
+type RawNavLink = Omit<NavLink, 'id' | 'category_id'> & {
+  id: number | string;
+  category_id: number | string | null;
+};
+
+function normalizeNavLink(raw: RawNavLink): NavLink {
+  return {
+    ...raw,
+    id: String(raw.id),
+    category_id: raw.category_id === null ? null : String(raw.category_id),
+  };
+}
+
+// category_id/custom_url are sent as an explicit pair (one null, one set) by
+// NavLinkForm's target picker, so no ambiguity between "untouched" and
+// "cleared" — both keys are always present in the payload.
+function toNavLinkPayload(data: Partial<NavLink>): Record<string, unknown> {
+  const { category_name: _categoryName, category_slug: _categorySlug, id: _id, created_at: _createdAt, ...rest } = data;
+  return {
+    ...rest,
+    category_id: data.category_id == null ? null : Number(data.category_id),
+  };
+}
+
+export async function getNavLinks(placement: 'header' | 'footer'): Promise<NavLink[]> {
+  const res = await get<PaginatedResponse<RawNavLink>>('/admin/content/nav-links', {
+    placement,
+    page: 1,
+    page_size: LIST_PAGE_SIZE,
+  });
+  return res.items.map(normalizeNavLink);
+}
+
+export async function createNavLink(data: Partial<NavLink>): Promise<NavLink> {
+  const raw = await post<RawNavLink>('/admin/content/nav-links', toNavLinkPayload(data));
+  return normalizeNavLink(raw);
+}
+
+export async function updateNavLink(id: string, data: Partial<NavLink>): Promise<NavLink> {
+  const raw = await patch<RawNavLink>(`/admin/content/nav-links/${id}`, toNavLinkPayload(data));
+  return normalizeNavLink(raw);
+}
+
+export async function deleteNavLink(id: string): Promise<{ success: boolean }> {
+  await del<void>(`/admin/content/nav-links/${id}`);
+  return { success: true };
+}
+
+export async function reorderNavLinks(placement: 'header' | 'footer', ids: string[]): Promise<{ success: boolean }> {
+  await post<{ reordered: number }>('/admin/content/nav-links/reorder', { placement, ids: ids.map(Number) });
   return { success: true };
 }

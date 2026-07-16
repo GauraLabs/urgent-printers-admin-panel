@@ -6,8 +6,9 @@ import {
   getTestimonials, createTestimonial, updateTestimonial, deleteTestimonial,
   getAnnouncement, updateAnnouncement,
   getFaqs, createFaq, updateFaq, deleteFaq, reorderFaqs,
+  getNavLinks, createNavLink, updateNavLink, deleteNavLink, reorderNavLinks,
 } from '@/lib/api/content';
-import type { Banner, Testimonial, Announcement, Faq } from '@/types';
+import type { Banner, Testimonial, Announcement, Faq, NavLink } from '@/types';
 
 const invalidate = (qc: ReturnType<typeof useQueryClient>, key: string) =>
   () => qc.invalidateQueries({ queryKey: [key] });
@@ -69,5 +70,27 @@ export function useFaqMutations() {
     update: useMutation({ mutationFn: ({ id, d }: { id: string; d: Partial<Faq> }) => updateFaq(id, d), onSuccess: inv }),
     remove: useMutation({ mutationFn: (id: string) => deleteFaq(id), onSuccess: inv }),
     reorder: useMutation({ mutationFn: (ids: string[]) => reorderFaqs(ids), onSuccess: inv }),
+  };
+}
+
+// ── Nav Links ──────────────────────────────────────────────────
+// placement is part of the query key so header/footer lists cache
+// independently — never a single combined list.
+export function useNavLinks(placement: 'header' | 'footer') {
+  return useQuery({
+    queryKey: ['nav-links', placement],
+    queryFn: () => getNavLinks(placement),
+    staleTime: 60_000,
+  });
+}
+
+export function useNavLinkMutations(placement: 'header' | 'footer') {
+  const qc = useQueryClient();
+  const inv = () => qc.invalidateQueries({ queryKey: ['nav-links', placement] });
+  return {
+    create: useMutation({ mutationFn: (d: Partial<NavLink>) => createNavLink(d), onSuccess: inv }),
+    update: useMutation({ mutationFn: ({ id, d }: { id: string; d: Partial<NavLink> }) => updateNavLink(id, d), onSuccess: inv }),
+    remove: useMutation({ mutationFn: (id: string) => deleteNavLink(id), onSuccess: inv }),
+    reorder: useMutation({ mutationFn: (ids: string[]) => reorderNavLinks(placement, ids), onSuccess: inv }),
   };
 }

@@ -19,6 +19,7 @@ export const ROUTES = {
   CONTENT_TESTIMONIALS: '/content/testimonials',
   CONTENT_ANNOUNCEMENTS: '/content/announcements',
   CONTENT_FAQS: '/content/faqs',
+  CONTENT_NAVIGATION: '/content/navigation',
   REVIEWS: '/reviews',
   SHIPPING: '/shipping',
   SHIPPING_SERVICEABILITY: '/shipping/serviceability',
