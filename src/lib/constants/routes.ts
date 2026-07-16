@@ -4,6 +4,7 @@ export const ROUTES = {
   ORDERS: '/orders',
   ORDER_DETAIL: (id: string) => `/orders/${id}`,
   PRINTING_QUEUE: '/printing-queue',
+  PRINTING_QUEUE_DISPATCH: (orderId: string) => `/printing-queue/dispatch/${orderId}`,
   PRODUCTS: '/products',
   PRODUCT_NEW: '/products/new',
   PRODUCT_DETAIL: (id: string) => `/products/${id}`,

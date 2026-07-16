@@ -121,13 +121,44 @@ export async function getServiceabilityBulk(orderIds: string[]): Promise<BulkSer
   }));
 }
 
-export async function createShipment(order_id: string, courier: string): Promise<CreateShipmentResult> {
+export interface ShipmentAddressOverride {
+  name: string;
+  phone: string;
+  email: string;
+  address_line1: string;
+  address_line2?: string | null;
+  city: string;
+  state: string;
+  pincode: string;
+  country: string;
+}
+
+export interface CreateShipmentOverrides {
+  weight_kg?: number;
+  length_cm?: number;
+  breadth_cm?: number;
+  height_cm?: number;
+  address_override?: ShipmentAddressOverride;
+}
+
+export async function createShipment(
+  order_id: string,
+  courier: string,
+  overrides?: CreateShipmentOverrides
+): Promise<CreateShipmentResult> {
   const raw = await post<{
     success: boolean;
     awb_number?: string | null;
     courier?: string | null;
     tracking_url?: string | null;
-  }>(`/admin/orders/${order_id}/shipment`, { courier });
+  }>(`/admin/orders/${order_id}/shipment`, {
+    courier,
+    ...(overrides?.weight_kg !== undefined ? { weight_kg: overrides.weight_kg } : {}),
+    ...(overrides?.length_cm !== undefined ? { length_cm: overrides.length_cm } : {}),
+    ...(overrides?.breadth_cm !== undefined ? { breadth_cm: overrides.breadth_cm } : {}),
+    ...(overrides?.height_cm !== undefined ? { height_cm: overrides.height_cm } : {}),
+    ...(overrides?.address_override ? { address_override: overrides.address_override } : {}),
+  });
   return {
     success: raw.success,
     awb_number: raw.awb_number ?? null,
