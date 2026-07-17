@@ -33,7 +33,13 @@ export interface PrintingQueueItem {
   order_date: string;
   estimated_dispatch: string;
   shipping_pincode: string;
-  awb_number: string | null;
+  // "AWB" only means something for Shiprocket-booked shipments; manual ones
+  // use this same order.tracking_number column as a free-text field, so the
+  // generic name matches the backend's Order model instead of implying a
+  // real Shiprocket AWB. Always null in practice today since orders leave
+  // this queue's tracked statuses (see REAL_QUEUE_STATUSES) the moment a
+  // courier is assigned.
+  tracking_number: string | null;
 }
 
 function delay(ms = 300): Promise<void> {
@@ -79,7 +85,7 @@ async function fetchRealQueueItems(): Promise<PrintingQueueItem[]> {
       order_date: order.created_at,
       estimated_dispatch: order.shipping.estimated_delivery ?? '',
       shipping_pincode: order.shipping_address.pincode,
-      awb_number: order.shipping.tracking_number,
+      tracking_number: order.shipping.tracking_number,
     }))
   );
 }

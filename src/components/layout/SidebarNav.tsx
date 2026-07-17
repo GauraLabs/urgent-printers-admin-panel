@@ -21,6 +21,7 @@ import {
   MessageCircle,
   Megaphone,
   HelpCircle,
+  Link2,
   Users2,
   Activity,
   Settings,
@@ -90,6 +91,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Testimonials', href: '/content/testimonials', icon: MessageCircle, permission: 'content.view' },
       { label: 'Announcements', href: '/content/announcements', icon: Megaphone, permission: 'content.view' },
       { label: 'FAQs', href: '/content/faqs', icon: HelpCircle, permission: 'content.view' },
+      { label: 'Navigation', href: '/content/navigation', icon: Link2, permission: 'content.view' },
     ],
   },
   {

@@ -3,6 +3,8 @@ import { MapPin, Truck, ExternalLink, PackagePlus } from 'lucide-react';
 import { formatDate } from '@/lib/utils/formatDate';
 import { usePermissions } from '@/hooks/usePermissions';
 import { ManualShipmentDialog } from '@/features/shipping/components/ManualShipmentDialog';
+import { Badge } from '@/components/common/StatusBadge';
+import { SHIPMENT_STATUS_LABEL, SHIPMENT_STATUS_VARIANT } from '@/lib/constants/shipmentStatus';
 import type { OrderAddress, OrderShippingInfo, OrderStatus } from '@/types';
 
 interface Props {
@@ -43,8 +45,23 @@ export function OrderShipping({ address, shipping, orderId, orderNumber, orderSt
             </p>
             <div className="flex justify-between text-xs">
               <span className="text-[var(--text-muted)]">Courier</span>
-              <span className="font-medium text-[var(--text-primary)]">{shipping.courier}</span>
+              <span className="flex items-center gap-1.5">
+                <span className="font-medium text-[var(--text-primary)]">{shipping.courier}</span>
+                {shipping.shipment_source === 'manual' && (
+                  <Badge label="Manual" variant="warning" dot={false} />
+                )}
+              </span>
             </div>
+            {shipping.shipment_status && (
+              <div className="flex justify-between text-xs items-center">
+                <span className="text-[var(--text-muted)]">Status</span>
+                <Badge
+                  label={SHIPMENT_STATUS_LABEL[shipping.shipment_status]}
+                  variant={SHIPMENT_STATUS_VARIANT[shipping.shipment_status]}
+                  dot
+                />
+              </div>
+            )}
             {shipping.tracking_number && (
               <div className="flex justify-between text-xs">
                 <span className="text-[var(--text-muted)]">Tracking</span>
@@ -57,11 +74,15 @@ export function OrderShipping({ address, shipping, orderId, orderNumber, orderSt
                 <span className="text-[var(--text-secondary)]">{formatDate(shipping.estimated_delivery)}</span>
               </div>
             )}
-            {shipping.tracking_url && (
+            {shipping.tracking_url ? (
               <a href={shipping.tracking_url} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs text-[var(--primary)] hover:underline mt-1">
                 Track shipment <ExternalLink className="h-3 w-3" />
               </a>
+            ) : shipping.shipment_source === 'manual' && (
+              <p className="text-[11px] text-[var(--text-muted)] mt-1">
+                Manually entered — no live tracking available.
+              </p>
             )}
           </div>
         )}

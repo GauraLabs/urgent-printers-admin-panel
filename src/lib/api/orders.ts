@@ -7,6 +7,8 @@ import type {
   OrderStatus,
   OrderItemProof,
   PresignProofResponse,
+  ShipmentStatus,
+  ShipmentSource,
 } from '@/types';
 
 function delay(ms = 400): Promise<void> {
@@ -200,6 +202,11 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
       estimated_delivery: (shipping.estimated_delivery as string | null) ?? null,
       dispatched_at: (shipping.dispatched_at as string | null) ?? null,
       delivered_at: (shipping.delivered_at as string | null) ?? null,
+      // Backend doesn't return these on GET /admin/orders/{id} yet (see
+      // OrderShippingInfo comment in src/types/order.ts) — default null so
+      // OrderShipping.tsx just shows no source/status badge until it does.
+      shipment_status: (shipping.shipment_status as ShipmentStatus | null) ?? null,
+      shipment_source: (shipping.shipment_source as ShipmentSource | null) ?? null,
     },
     status_history: statusHistory,
     notes,

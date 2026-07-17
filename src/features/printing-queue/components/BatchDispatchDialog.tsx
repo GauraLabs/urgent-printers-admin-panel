@@ -127,32 +127,38 @@ export function BatchDispatchDialog({ open, onOpenChange, orders, onSuccess }: B
                     <span className="flex items-center gap-1 text-[11px] font-medium text-[var(--success)] flex-shrink-0">
                       <CheckCircle2 className="h-3.5 w-3.5" /> Dispatched manually
                     </span>
-                  ) : entry?.error ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="flex-shrink-0"
-                      onClick={() => setManualOrder(order)}
-                    >
-                      <PackagePlus className="h-3.5 w-3.5" /> Enter manually
-                    </Button>
                   ) : (
-                    <Select
-                      value={selected[order.order_id] ?? ''}
-                      onValueChange={(v) => setSelected((prev) => ({ ...prev, [order.order_id]: v ?? '' }))}
-                    >
-                      <SelectTrigger size="sm" className="w-36 flex-shrink-0">
-                        <SelectValue placeholder="Courier" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {(entry?.couriers ?? []).map((c) => (
-                          <SelectItem key={c.courier_id} value={c.courier_id}>
-                            {c.name} · {formatPrice(c.rate)} · {c.min_days}–{c.max_days}d
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                      {!entry?.error && (
+                        <Select
+                          value={selected[order.order_id] ?? ''}
+                          onValueChange={(v) => setSelected((prev) => ({ ...prev, [order.order_id]: v ?? '' }))}
+                        >
+                          <SelectTrigger size="sm" className="w-60">
+                            <SelectValue placeholder="Courier" />
+                          </SelectTrigger>
+                          <SelectContent className="min-w-72">
+                            {(entry?.couriers ?? []).map((c) => (
+                              <SelectItem key={c.courier_id} value={c.courier_id}>
+                                <div className="flex flex-col items-start py-0.5">
+                                  <span className="font-medium">{c.name}</span>
+                                  <span className="text-[11px] text-[var(--text-muted)]">
+                                    {formatPrice(c.rate)} · {c.min_days}–{c.max_days}d
+                                  </span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setManualOrder(order)}
+                        className="flex items-center gap-1 text-[11px] font-medium text-[var(--primary)] hover:underline cursor-pointer"
+                      >
+                        <PackagePlus className="h-3 w-3" /> Enter manually
+                      </button>
+                    </div>
                   )}
                 </div>
               );

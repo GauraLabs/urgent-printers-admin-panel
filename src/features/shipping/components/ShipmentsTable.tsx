@@ -9,21 +9,8 @@ import { ExportButton } from '@/components/common/ExportButton';
 import { useShipments } from '../hooks/useShipping';
 import { formatDate } from '@/lib/utils/formatDate';
 import { ROUTES } from '@/lib/constants/routes';
-import type { Shipment, ShipmentStatus } from '@/types';
-
-const STATUS_VARIANT: Record<ShipmentStatus, 'default' | 'info' | 'success' | 'warning' | 'danger'> = {
-  created: 'default',
-  picked_up: 'info',
-  in_transit: 'info',
-  out_for_delivery: 'warning',
-  delivered: 'success',
-  rto: 'danger',
-  cancelled: 'danger',
-};
-const STATUS_LABEL: Record<ShipmentStatus, string> = {
-  created: 'Created', picked_up: 'Picked Up', in_transit: 'In Transit',
-  out_for_delivery: 'Out for Delivery', delivered: 'Delivered', rto: 'RTO', cancelled: 'Cancelled',
-};
+import { SHIPMENT_STATUS_LABEL, SHIPMENT_STATUS_VARIANT } from '@/lib/constants/shipmentStatus';
+import type { Shipment } from '@/types';
 
 export function ShipmentsTable() {
   const { query, page, setPage } = useShipments();
@@ -31,8 +18,8 @@ export function ShipmentsTable() {
 
   const columns: ColumnDef<Shipment, unknown>[] = [
     {
-      id: 'awb',
-      header: 'AWB',
+      id: 'tracking',
+      header: 'Tracking #',
       cell: ({ row }) => (
         <span className="font-mono text-[12px] font-semibold text-foreground">{row.original.tracking_number ?? '—'}</span>
       ),
@@ -67,7 +54,11 @@ export function ShipmentsTable() {
       id: 'status',
       header: 'Status',
       cell: ({ row }) => row.original.shipment_status ? (
-        <Badge label={STATUS_LABEL[row.original.shipment_status]} variant={STATUS_VARIANT[row.original.shipment_status]} dot />
+        <Badge
+          label={SHIPMENT_STATUS_LABEL[row.original.shipment_status]}
+          variant={SHIPMENT_STATUS_VARIANT[row.original.shipment_status]}
+          dot
+        />
       ) : <span className="text-[13px] text-muted-foreground">—</span>,
     },
     {
@@ -117,7 +108,7 @@ export function ShipmentsTable() {
         <ExportButton
           filename="shipments"
           getData={() => shipments.map((s) => ({
-            awb: s.tracking_number ?? '',
+            tracking_number: s.tracking_number ?? '',
             order: s.order_number,
             customer: s.customer_name ?? '',
             courier: s.courier ?? '',

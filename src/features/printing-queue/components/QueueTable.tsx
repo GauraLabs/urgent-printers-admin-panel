@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { CheckCircle, RefreshCw, Truck, AlertCircle, FileImage } from 'lucide-react';
 import { toast } from 'sonner';
 import { DataTable } from '@/components/common/DataTable';
@@ -35,6 +36,7 @@ interface QueueTableProps {
 }
 
 export function QueueTable({ items, tabStatus, isLoading }: QueueTableProps) {
+  const router = useRouter();
   const [batchOrders, setBatchOrders] = useState<PrintingQueueItem[]>([]);
   const [batchOpen, setBatchOpen] = useState(false);
   const [reuploadItem, setReuploadItem] = useState<PrintingQueueItem | null>(null);
@@ -162,7 +164,7 @@ export function QueueTable({ items, tabStatus, isLoading }: QueueTableProps) {
             )}
             {item.status === 'ready_to_dispatch' && (
               <Button size="sm" className="h-7 text-xs px-2.5 bg-[var(--success)] hover:bg-green-600 text-white"
-                onClick={() => { setBatchOrders([item]); setBatchOpen(true); }}>
+                onClick={() => router.push(ROUTES.PRINTING_QUEUE_DISPATCH(item.order_id))}>
                 <Truck className="h-3.5 w-3.5" /> Create Shipment
               </Button>
             )}
@@ -200,6 +202,15 @@ export function QueueTable({ items, tabStatus, isLoading }: QueueTableProps) {
             );
           }
           if (tabStatus === 'ready_to_dispatch') {
+            if (rows.length === 1) {
+              return (
+                <Button size="sm" className="h-7 text-xs"
+                  onClick={() => router.push(ROUTES.PRINTING_QUEUE_DISPATCH(rows[0].order_id))}
+                >
+                  <Truck className="h-3.5 w-3.5" /> Dispatch order
+                </Button>
+              );
+            }
             return (
               <Button size="sm" className="h-7 text-xs"
                 onClick={() => { setBatchOrders(rows); setBatchOpen(true); }}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, ArrowUp, ArrowDown, Pencil, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Plus, ArrowUp, ArrowDown, Pencil, Trash2, Eye, EyeOff, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ActiveBadge } from '@/components/common/StatusBadge';
@@ -9,17 +9,19 @@ import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { LoadingSkeleton } from '@/components/common/LoadingSkeleton';
 import { BannerForm, type BannerFormValues } from './BannerForm';
 import { useBanners, useBannerMutations } from '../hooks/useContent';
+import { usePermissions } from '@/hooks/usePermissions';
 import { cn } from '@/lib/utils/cn';
 import type { Banner } from '@/types';
 
 export function BannersManager() {
+  const { canManageContent } = usePermissions();
   const { data: banners, isLoading } = useBanners();
   const { create, update, remove, reorder } = useBannerMutations();
   const [editing, setEditing] = useState<Banner | 'new' | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Banner | null>(null);
 
   async function move(id: string, dir: 'up' | 'down') {
-    if (!banners) return;
+    if (!canManageContent || !banners) return;
     const ids = banners.map((b) => b.id);
     const idx = ids.indexOf(id);
     if (dir === 'up' && idx === 0) return;
@@ -56,6 +58,13 @@ export function BannersManager() {
 
   return (
     <div className="space-y-4">
+      {!canManageContent && (
+        <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-[var(--surface-secondary)] border border-[var(--border)] text-[12px] text-[var(--text-muted)]">
+          <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+          <p>You have view-only access to Content. The &ldquo;Manage Content&rdquo; permission is required to add, edit, delete, or reorder banners.</p>
+        </div>
+      )}
+
       {/* Banner list */}
       {(!banners?.length && !editing) && (
         <div className="text-center py-10 text-sm text-[var(--text-muted)]">No banners yet. Create your first banner.</div>
@@ -64,7 +73,7 @@ export function BannersManager() {
       <ul className="space-y-3">
         {banners?.map((banner, idx) => (
           <li key={banner.id} className="bg-[var(--surface)] border border-[var(--border)] rounded-xl overflow-hidden">
-            {editing && editing !== 'new' && editing.id === banner.id ? (
+            {editing && editing !== 'new' && editing.id === banner.id && canManageContent ? (
               <div className="p-4">
                 <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Editing: {banner.title}</h3>
                 <BannerForm banner={banner} onSubmit={handleSubmit} onCancel={() => setEditing(null)} isLoading={update.isPending} />
@@ -72,14 +81,16 @@ export function BannersManager() {
             ) : (
               <div className="flex items-center gap-4 p-3">
                 {/* Reorder */}
-                <div className="flex flex-col gap-0.5 flex-shrink-0">
-                  <button onClick={() => move(banner.id, 'up')} className="p-1 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] transition-colors">
-                    <ArrowUp className="h-3.5 w-3.5" />
-                  </button>
-                  <button onClick={() => move(banner.id, 'down')} className="p-1 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] transition-colors">
-                    <ArrowDown className="h-3.5 w-3.5" />
-                  </button>
-                </div>
+                {canManageContent && (
+                  <div className="flex flex-col gap-0.5 flex-shrink-0">
+                    <button onClick={() => move(banner.id, 'up')} className="p-1 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] transition-colors">
+                      <ArrowUp className="h-3.5 w-3.5" />
+                    </button>
+                    <button onClick={() => move(banner.id, 'down')} className="p-1 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] transition-colors">
+                      <ArrowDown className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
 
                 {/* Image preview */}
                 <div className="w-24 h-14 flex-shrink-0 rounded-lg overflow-hidden bg-[var(--surface-secondary)] border border-[var(--border)]">
@@ -97,14 +108,16 @@ export function BannersManager() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-1 flex-shrink-0">
-                  <button onClick={() => setEditing(banner)} className="p-1.5 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] hover:text-[var(--text-primary)] transition-colors">
-                    <Pencil className="h-4 w-4" />
-                  </button>
-                  <button onClick={() => setDeleteTarget(banner)} className="p-1.5 rounded text-[var(--text-muted)] hover:bg-[var(--danger-bg)] hover:text-[var(--danger)] transition-colors">
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
+                {canManageContent && (
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button onClick={() => setEditing(banner)} className="p-1.5 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] hover:text-[var(--text-primary)] transition-colors">
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button onClick={() => setDeleteTarget(banner)} className="p-1.5 rounded text-[var(--text-muted)] hover:bg-[var(--danger-bg)] hover:text-[var(--danger)] transition-colors">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </li>
@@ -112,14 +125,14 @@ export function BannersManager() {
       </ul>
 
       {/* New banner form */}
-      {editing === 'new' && (
+      {editing === 'new' && canManageContent && (
         <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
           <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-4">New Banner</h3>
           <BannerForm onSubmit={handleSubmit} onCancel={() => setEditing(null)} isLoading={create.isPending} />
         </div>
       )}
 
-      {editing !== 'new' && (
+      {editing !== 'new' && canManageContent && (
         <Button variant="outline" size="sm" onClick={() => setEditing('new')}>
           <Plus className="h-4 w-4" /> Add Banner
         </Button>

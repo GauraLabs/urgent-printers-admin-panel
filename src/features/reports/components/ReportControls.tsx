@@ -21,13 +21,13 @@ export function ReportControls({ period, onPeriod, custom, onCustom, exportFilen
   return (
     <div className="flex flex-wrap items-center gap-2">
       {/* Period quick-select */}
-      <div className="flex items-center gap-0.5 bg-muted rounded-lg p-1">
+      <div className="flex flex-wrap items-center gap-0.5 bg-muted rounded-lg p-1">
         {PERIODS.map(([p, label]) => (
           <button
             key={p}
             onClick={() => { onPeriod(p); onCustom(undefined); }}
             className={cn(
-              'px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-150',
+              'px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-150 whitespace-nowrap',
               !custom && period === p
                 ? 'bg-background text-foreground shadow-sm dark:bg-card'
                 : 'text-muted-foreground hover:text-foreground'

@@ -6,6 +6,8 @@ export * from './payment';
 export * from './coupon';
 export * from './report';
 
+import type { ShipmentStatus, ShipmentSource } from './order';
+
 export interface DashboardStats {
   revenue_today: number;
   revenue_today_change_pct: number;
@@ -112,6 +114,7 @@ export interface Banner {
   id: string;
   title: string;
   subtitle: string | null;
+  badge_text: string | null;
   image_url: string;
   link_url: string | null;
   link_text: string | null;
@@ -144,6 +147,7 @@ export interface Announcement {
   is_active: boolean;
   valid_from: string | null;
   valid_until: string | null;
+  countdown_end_at: string | null;
 }
 
 export interface Faq {
@@ -153,6 +157,19 @@ export interface Faq {
   category: string | null;
   sort_order: number;
   is_active: boolean;
+}
+
+export interface NavLink {
+  id: string;
+  label: string;
+  category_id: string | null;
+  category_name: string | null;
+  category_slug: string | null;
+  custom_url: string | null;
+  placement: 'header' | 'footer';
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
 }
 
 export interface Review {
@@ -172,17 +189,6 @@ export interface Review {
   admin_reply_at: string | null;
   created_at: string;
 }
-
-export type ShipmentStatus =
-  | 'created'
-  | 'picked_up'
-  | 'in_transit'
-  | 'out_for_delivery'
-  | 'delivered'
-  | 'rto'
-  | 'cancelled';
-
-export type ShipmentSource = 'shiprocket' | 'manual';
 
 export interface Shipment {
   order_id: string;
