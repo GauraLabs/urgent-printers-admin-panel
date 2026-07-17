@@ -1,37 +1,71 @@
-import type { Payment, Refund, PaymentsListResponse, RefundsListResponse, PaymentFilters, CreateRefundRequest } from '@/types';
+import { get } from './client';
+import type { Payment, PaymentStatus, Refund, PaymentsListResponse, RefundsListResponse, PaymentFilters, CreateRefundRequest } from '@/types';
 
 function delay(ms = 400): Promise<void> {
   return new Promise((r) => setTimeout(r, ms + Math.random() * 400));
 }
 
-function makePayment(i: number): Payment {
+// Backend's PaymentStatus enum (app/models/order.py) has two values the
+// frontend's narrower Payment.status union doesn't: `awaiting_payment` (still
+// mid-checkout, shown as pending here) and `partially_refunded` (spelled
+// `partial_refund` on the frontend). Everything else passes through as-is.
+const STATUS_MAP: Record<string, PaymentStatus> = {
+  pending: 'pending',
+  awaiting_payment: 'pending',
+  paid: 'paid',
+  failed: 'failed',
+  refunded: 'refunded',
+  partially_refunded: 'partial_refund',
+};
+
+function normalisePaymentStatus(status: unknown): PaymentStatus {
+  return STATUS_MAP[status as string] ?? 'pending';
+}
+
+function normalisePayment(raw: Record<string, unknown>): Payment {
   return {
-    id: `pay-${i + 1}`,
-    order_id: `ord-${3000 - i}`,
-    order_number: `ORD-${3000 - i}`,
-    customer_id: `cust-${i % 50}`,
-    customer_name: ['Rahul Sharma', 'Priya Singh', 'Amit Kumar'][i % 3],
-    customer_email: ['rahul@example.com', 'priya@example.com', 'amit@example.com'][i % 3],
-    method: ['UPI', 'Credit Card', 'Net Banking', 'Debit Card'][i % 4],
-    provider: ['Razorpay', 'Razorpay', 'Paytm'][i % 3],
-    transaction_id: `txn_${Math.random().toString(36).substr(2, 12)}`,
-    amount: Math.floor(1500 + (i * 1337) % 15000),
+    id: String(raw.id),
+    order_id: String(raw.order_id),
+    order_number: raw.order_number as string,
+    customer_id: String(raw.customer_id),
+    customer_name: (raw.customer_name as string | null) ?? '',
+    customer_email: (raw.customer_email as string | null) ?? '',
+    method: (raw.method as string | null) ?? '',
+    provider: (raw.provider as string | null) ?? 'razorpay',
+    transaction_id: (raw.transaction_id as string | null) ?? '',
+    amount: Number(raw.amount) || 0,
     currency: 'INR',
-    status: (['paid', 'paid', 'paid', 'paid', 'failed', 'refunded'] as const)[i % 6],
-    paid_at: new Date(Date.now() - i * 1000 * 60 * 90).toISOString(),
-    created_at: new Date(Date.now() - i * 1000 * 60 * 95).toISOString(),
+    status: normalisePaymentStatus(raw.status),
+    paid_at: (raw.paid_at as string | null) ?? null,
+    created_at: (raw.created_at as string | null) ?? '',
   };
 }
 
 export async function getPayments(filters: PaymentFilters = {}): Promise<PaymentsListResponse> {
-  await delay();
-  const page = filters.page ?? 1;
-  const pageSize = filters.page_size ?? 20;
-  const total = 312;
-  const items = Array.from({ length: Math.min(pageSize, total - (page - 1) * pageSize) }, (_, i) =>
-    makePayment((page - 1) * pageSize + i)
-  );
-  return { items, total, page, page_size: pageSize, total_pages: Math.ceil(total / pageSize) };
+  const params: Record<string, string | number | undefined> = {
+    page: filters.page,
+    page_size: filters.page_size,
+    ...(filters.status ? { status: filters.status } : {}),
+    ...(filters.method ? { method: filters.method } : {}),
+    ...(filters.date_from ? { date_from: filters.date_from } : {}),
+    ...(filters.date_to ? { date_to: filters.date_to } : {}),
+    ...(filters.search ? { search: filters.search } : {}),
+  };
+  Object.keys(params).forEach((k) => params[k] === undefined && delete params[k]);
+  const raw = await get<{
+    items: Record<string, unknown>[];
+    total: number;
+    page: number;
+    page_size: number;
+    total_pages: number;
+  }>('/admin/payments', params);
+  return {
+    items: raw.items.map(normalisePayment),
+    total: raw.total,
+    page: raw.page,
+    page_size: raw.page_size,
+    total_pages: raw.total_pages,
+  };
 }
 
 export async function getRefunds(filters: PaymentFilters = {}): Promise<RefundsListResponse> {
