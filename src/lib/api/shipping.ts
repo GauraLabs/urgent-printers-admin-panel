@@ -1,4 +1,4 @@
-import { get, post } from './client';
+import { get, post, patch } from './client';
 import type { PaginatedResponse, Shipment, ShipmentStatus, ShipmentSource } from '@/types';
 
 export interface CourierOption {
@@ -213,5 +213,29 @@ export async function createManualShipment(
     estimated_delivery_date: (raw.estimated_delivery_date as string | null) ?? null,
     shipment_status: raw.shipment_status as ShipmentStatus,
     shipment_source: raw.shipment_source as ShipmentSource,
+  };
+}
+
+// 'created' is set automatically at shipment creation and is never a valid
+// target for a manual status update — see ShipmentStatusControl.tsx.
+export type ManualShipmentStatusTarget = Exclude<ShipmentStatus, 'created'>;
+
+export interface UpdateShipmentStatusResult {
+  order_id: string;
+  shipment_status: ShipmentStatus;
+  shipment_source: ShipmentSource;
+}
+
+export async function updateShipmentStatus(
+  order_id: string,
+  shipment_status: ManualShipmentStatusTarget
+): Promise<UpdateShipmentStatusResult> {
+  const raw = await patch<Record<string, unknown>>(`/admin/orders/${order_id}/shipment/status`, {
+    shipment_status,
+  });
+  return {
+    order_id: String(raw.order_id ?? order_id),
+    shipment_status: (raw.shipment_status as ShipmentStatus) ?? shipment_status,
+    shipment_source: (raw.shipment_source as ShipmentSource) ?? 'manual',
   };
 }

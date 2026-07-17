@@ -3,6 +3,7 @@ import { MapPin, Truck, ExternalLink, PackagePlus } from 'lucide-react';
 import { formatDate } from '@/lib/utils/formatDate';
 import { usePermissions } from '@/hooks/usePermissions';
 import { ManualShipmentDialog } from '@/features/shipping/components/ManualShipmentDialog';
+import { ShipmentStatusControl } from '@/features/shipping/components/ShipmentStatusControl';
 import { Badge } from '@/components/common/StatusBadge';
 import { SHIPMENT_STATUS_LABEL, SHIPMENT_STATUS_VARIANT } from '@/lib/constants/shipmentStatus';
 import type { OrderAddress, OrderShippingInfo, OrderStatus } from '@/types';
@@ -60,6 +61,12 @@ export function OrderShipping({ address, shipping, orderId, orderNumber, orderSt
                   variant={SHIPMENT_STATUS_VARIANT[shipping.shipment_status]}
                   dot
                 />
+              </div>
+            )}
+            {shipping.shipment_status && shipping.shipment_source === 'manual' && canManageShipping && (
+              <div className="flex justify-between text-xs items-center gap-2">
+                <span className="text-[var(--text-muted)]">Update status</span>
+                <ShipmentStatusControl orderId={orderId} currentStatus={shipping.shipment_status} size="sm" />
               </div>
             )}
             {shipping.tracking_number && (

@@ -2,8 +2,10 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { getShipments, checkServiceability, createManualShipment, createShipment } from '@/lib/api/shipping';
-import type { ManualShipmentPayload, CreateShipmentOverrides } from '@/lib/api/shipping';
+import {
+  getShipments, checkServiceability, createManualShipment, createShipment, updateShipmentStatus,
+} from '@/lib/api/shipping';
+import type { ManualShipmentPayload, CreateShipmentOverrides, ManualShipmentStatusTarget } from '@/lib/api/shipping';
 
 export function useShipments() {
   const [page, setPage] = useState(1);
@@ -50,6 +52,20 @@ export function useCreateManualShipment() {
   return useMutation({
     mutationFn: ({ orderId, payload }: { orderId: string; payload: ManualShipmentPayload }) =>
       createManualShipment(orderId, payload),
+    onSuccess: (_, { orderId }) => {
+      qc.invalidateQueries({ queryKey: ['shipments'] });
+      qc.invalidateQueries({ queryKey: ['order', orderId] });
+      qc.invalidateQueries({ queryKey: ['orders'] });
+      qc.invalidateQueries({ queryKey: ['printing-queue'] });
+    },
+  });
+}
+
+export function useUpdateShipmentStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ orderId, status }: { orderId: string; status: ManualShipmentStatusTarget }) =>
+      updateShipmentStatus(orderId, status),
     onSuccess: (_, { orderId }) => {
       qc.invalidateQueries({ queryKey: ['shipments'] });
       qc.invalidateQueries({ queryKey: ['order', orderId] });
