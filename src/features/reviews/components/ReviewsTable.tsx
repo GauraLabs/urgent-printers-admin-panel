@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
-import { CheckCircle, XCircle, MessageSquare, Star } from 'lucide-react';
+import { CheckCircle, XCircle, MessageSquare, Star, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { DataTable } from '@/components/common/DataTable';
 import { Badge } from '@/components/common/StatusBadge';
@@ -12,13 +12,14 @@ import {
 } from '@/components/ui/select';
 import { ReplyDialog } from './ReplyDialog';
 import { useReviews, useUpdateReviewStatus } from '../hooks/useReviews';
+import { usePermissions } from '@/hooks/usePermissions';
 import { formatDate } from '@/lib/utils/formatDate';
 import { ROUTES } from '@/lib/constants/routes';
 import Link from 'next/link';
 import type { Review } from '@/types';
 
 const STATUS_VARIANT: Record<string, 'warning' | 'success' | 'danger'> = {
-  pending: 'warning', published: 'success', rejected: 'danger',
+  pending: 'warning', approved: 'success', rejected: 'danger',
 };
 
 function StarRow({ rating }: { rating: number }) {
@@ -34,9 +35,10 @@ function StarRow({ rating }: { rating: number }) {
 export function ReviewsTable() {
   const { query, filters, setPage, setStatus } = useReviews();
   const statusMutation = useUpdateReviewStatus();
+  const { canModerateReviews } = usePermissions();
   const [replyReview, setReplyReview] = useState<Review | null>(null);
 
-  async function moderate(id: string, status: 'published' | 'rejected', label: string) {
+  async function moderate(id: string, status: 'approved' | 'rejected', label: string) {
     try {
       await statusMutation.mutateAsync({ id, status });
       toast.success(`Review ${label}`);
@@ -72,7 +74,7 @@ export function ReviewsTable() {
       id: 'review',
       header: 'Review',
       cell: ({ row }) => (
-        <p className="text-[13px] text-muted-foreground line-clamp-2 max-w-xs">{row.original.content}</p>
+        <p className="text-[13px] text-muted-foreground line-clamp-2 max-w-xs">{row.original.body}</p>
       ),
     },
     {
@@ -106,13 +108,14 @@ export function ReviewsTable() {
       size: 130,
       cell: ({ row }) => {
         const r = row.original;
+        if (!canModerateReviews) return null;
         return (
           <div className="flex items-center gap-1 justify-end">
             <Button size="sm" variant="ghost" className="h-7 px-2 text-muted-foreground" onClick={() => setReplyReview(r)}>
               <MessageSquare className="h-3.5 w-3.5" />
             </Button>
-            {r.status !== 'published' && (
-              <Button size="sm" variant="ghost" className="h-7 px-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30" onClick={() => moderate(r.id, 'published', 'published')} disabled={statusMutation.isPending}>
+            {r.status !== 'approved' && (
+              <Button size="sm" variant="ghost" className="h-7 px-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30" onClick={() => moderate(r.id, 'approved', 'approved')} disabled={statusMutation.isPending}>
                 <CheckCircle className="h-3.5 w-3.5" />
               </Button>
             )}
@@ -129,6 +132,12 @@ export function ReviewsTable() {
 
   return (
     <>
+      {!canModerateReviews && (
+        <div className="flex items-start gap-2 px-3 py-2 mb-4 rounded-lg bg-[var(--surface-secondary)] border border-[var(--border)] text-[12px] text-[var(--text-muted)]">
+          <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+          <p>You have view-only access to Reviews. The &ldquo;Moderate Reviews&rdquo; permission is required to approve, reject, or reply to reviews.</p>
+        </div>
+      )}
       <DataTable
         columns={columns}
         data={query.data?.items ?? []}
@@ -146,13 +155,13 @@ export function ReviewsTable() {
             <SelectContent>
               <SelectItem value="">All statuses</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="published">Published</SelectItem>
+              <SelectItem value="approved">Approved</SelectItem>
               <SelectItem value="rejected">Rejected</SelectItem>
             </SelectContent>
           </Select>
         }
       />
-      {replyReview && (
+      {replyReview && canModerateReviews && (
         <ReplyDialog open={!!replyReview} onOpenChange={(v) => !v && setReplyReview(null)} review={replyReview} />
       )}
     </>

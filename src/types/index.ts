@@ -174,7 +174,7 @@ export interface NavLink {
 
 export interface Review {
   id: string;
-  customer_id: string;
+  user_id: string;
   customer_name: string;
   product_id: string;
   product_name: string;
@@ -182,9 +182,11 @@ export interface Review {
   order_number: string;
   rating: number;
   title: string | null;
-  content: string;
+  body: string | null;
   images: string[];
-  status: 'pending' | 'published' | 'rejected';
+  is_verified_purchase: boolean;
+  helpful_count: number;
+  status: 'pending' | 'approved' | 'rejected';
   admin_reply: string | null;
   admin_reply_at: string | null;
   created_at: string;
