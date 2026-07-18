@@ -7,6 +7,8 @@ import { DataTable } from '@/components/common/DataTable';
 import { Badge } from '@/components/common/StatusBadge';
 import { ExportButton } from '@/components/common/ExportButton';
 import { useShipments } from '../hooks/useShipping';
+import { ShipmentStatusControl } from './ShipmentStatusControl';
+import { usePermissions } from '@/hooks/usePermissions';
 import { formatDate } from '@/lib/utils/formatDate';
 import { ROUTES } from '@/lib/constants/routes';
 import { SHIPMENT_STATUS_LABEL, SHIPMENT_STATUS_VARIANT } from '@/lib/constants/shipmentStatus';
@@ -14,6 +16,7 @@ import type { Shipment } from '@/types';
 
 export function ShipmentsTable() {
   const { query, page, setPage } = useShipments();
+  const { canManageShipping } = usePermissions();
   const shipments = query.data?.items ?? [];
 
   const columns: ColumnDef<Shipment, unknown>[] = [
@@ -53,13 +56,20 @@ export function ShipmentsTable() {
     {
       id: 'status',
       header: 'Status',
-      cell: ({ row }) => row.original.shipment_status ? (
-        <Badge
-          label={SHIPMENT_STATUS_LABEL[row.original.shipment_status]}
-          variant={SHIPMENT_STATUS_VARIANT[row.original.shipment_status]}
-          dot
-        />
-      ) : <span className="text-[13px] text-muted-foreground">—</span>,
+      cell: ({ row }) => {
+        const { shipment_status, shipment_source, order_id } = row.original;
+        if (!shipment_status) return <span className="text-[13px] text-muted-foreground">—</span>;
+        if (shipment_source === 'manual' && canManageShipping) {
+          return <ShipmentStatusControl orderId={order_id} currentStatus={shipment_status} size="sm" />;
+        }
+        return (
+          <Badge
+            label={SHIPMENT_STATUS_LABEL[shipment_status]}
+            variant={SHIPMENT_STATUS_VARIANT[shipment_status]}
+            dot
+          />
+        );
+      },
     },
     {
       id: 'dispatched',

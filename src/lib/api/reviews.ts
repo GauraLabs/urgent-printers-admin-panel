@@ -1,37 +1,96 @@
+import { get, patch } from './client';
 import type { Review, PaginatedResponse } from '@/types';
 
-function delay(ms = 400): Promise<void> {
-  return new Promise((r) => setTimeout(r, ms + Math.random() * 400));
+interface RawReview {
+  id: number | string;
+  product_id: number | string;
+  product_name: string;
+  user_id: number | string;
+  customer_name: string;
+  order_id: number | string;
+  order_number: string;
+  rating: number;
+  title: string | null;
+  body: string | null;
+  images: unknown[] | null;
+  is_verified_purchase: boolean;
+  helpful_count: number;
+  status: string;
+  admin_reply: string | null;
+  admin_reply_at: string | null;
+  created_at: string;
 }
 
-export async function getReviews(filters: { status?: string; page?: number; page_size?: number } = {}): Promise<PaginatedResponse<Review>> {
-  await delay();
-  const items: Review[] = Array.from({ length: 15 }, (_, i) => ({
-    id: `rev-${i + 1}`,
-    customer_id: `cust-${i + 1}`,
-    customer_name: ['Rahul Sharma', 'Priya Singh', 'Amit Kumar', 'Sneha Patel'][i % 4],
-    product_id: `prod-${(i % 5) + 1}`,
-    product_name: ['Business Cards', 'Flyers A5', 'Brochures', 'Banners', 'Stickers'][i % 5],
-    order_id: `ord-${2900 - i}`,
-    order_number: `ORD-${2900 - i}`,
-    rating: Math.floor(3 + (i * 7) % 3),
-    title: i % 3 === 0 ? 'Great quality!' : null,
-    content: 'The prints came out beautifully. Will definitely order again.',
-    images: [],
-    status: (['pending', 'published', 'published', 'published', 'rejected'] as const)[i % 5],
-    admin_reply: i % 4 === 0 ? 'Thank you for your feedback!' : null,
-    admin_reply_at: i % 4 === 0 ? new Date().toISOString() : null,
-    created_at: new Date(Date.now() - i * 1000 * 60 * 60 * 24).toISOString(),
-  }));
-  return { items, total: 47, page: filters.page ?? 1, page_size: filters.page_size ?? 20, total_pages: 3 };
+function normaliseReview(raw: RawReview): Review {
+  return {
+    id: String(raw.id),
+    user_id: String(raw.user_id),
+    customer_name: raw.customer_name,
+    product_id: String(raw.product_id),
+    product_name: raw.product_name,
+    order_id: String(raw.order_id),
+    order_number: raw.order_number,
+    rating: raw.rating,
+    title: raw.title,
+    body: raw.body,
+    images: (raw.images ?? []).map((v) => String(v)),
+    is_verified_purchase: raw.is_verified_purchase,
+    helpful_count: raw.helpful_count,
+    status: raw.status as Review['status'],
+    admin_reply: raw.admin_reply,
+    admin_reply_at: raw.admin_reply_at,
+    created_at: raw.created_at,
+  };
 }
 
-export async function updateReviewStatus(id: string, status: 'published' | 'rejected'): Promise<{ success: boolean }> {
-  await delay();
-  return { success: true };
+export async function getReviews(filters: {
+  status?: string;
+  product_id?: string;
+  search?: string;
+  page?: number;
+  page_size?: number;
+} = {}): Promise<PaginatedResponse<Review>> {
+  const params: Record<string, string | number | undefined> = {
+    page: filters.page,
+    page_size: filters.page_size,
+    ...(filters.status ? { status: filters.status } : {}),
+    ...(filters.product_id ? { product_id: filters.product_id } : {}),
+    ...(filters.search ? { search: filters.search } : {}),
+  };
+  Object.keys(params).forEach((k) => params[k] === undefined && delete params[k]);
+
+  const raw = await get<{
+    items: RawReview[];
+    total: number;
+    page: number;
+    page_size: number;
+    total_pages: number;
+  }>('/admin/reviews', params);
+
+  return {
+    items: raw.items.map(normaliseReview),
+    total: raw.total,
+    page: raw.page,
+    page_size: raw.page_size,
+    total_pages: raw.total_pages,
+  };
 }
 
-export async function replyToReview(id: string, reply: string): Promise<{ success: boolean }> {
-  await delay();
-  return { success: true };
+export async function updateReviewStatus(
+  id: string,
+  status: 'approved' | 'rejected'
+): Promise<{ id: string; status: string }> {
+  const data = await patch<{ id: number | string; status: string }>(`/admin/reviews/${id}/status`, { status });
+  return { id: String(data.id), status: data.status };
+}
+
+export async function replyToReview(
+  id: string,
+  reply: string
+): Promise<{ id: string; admin_reply: string | null; admin_reply_at: string | null }> {
+  const data = await patch<{ id: number | string; admin_reply: string | null; admin_reply_at: string | null }>(
+    `/admin/reviews/${id}/reply`,
+    { admin_reply: reply }
+  );
+  return { id: String(data.id), admin_reply: data.admin_reply, admin_reply_at: data.admin_reply_at };
 }

@@ -24,7 +24,7 @@ export function useReviews() {
 export function useUpdateReviewStatus() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: 'published' | 'rejected' }) =>
+    mutationFn: ({ id, status }: { id: string; status: 'approved' | 'rejected' }) =>
       updateReviewStatus(id, status),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['reviews'] }),
   });

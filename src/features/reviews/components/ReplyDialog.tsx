@@ -50,7 +50,7 @@ export function ReplyDialog({ open, onOpenChange, review }: ReplyDialogProps) {
             <DialogTitle>Reply to Review</DialogTitle>
           </div>
           <DialogDescription>
-            Replying to {review.customer_name}'s review of "{review.product_name}"
+            Replying to {review.customer_name}&apos;s review of &ldquo;{review.product_name}&rdquo;
           </DialogDescription>
         </DialogHeader>
 
@@ -61,7 +61,7 @@ export function ReplyDialog({ open, onOpenChange, review }: ReplyDialogProps) {
               <span key={i} className={i < review.rating ? 'text-amber-400' : 'text-border'}>★</span>
             ))}
           </div>
-          "{review.content}"
+          &ldquo;{review.body}&rdquo;
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
