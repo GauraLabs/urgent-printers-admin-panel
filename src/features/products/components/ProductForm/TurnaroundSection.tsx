@@ -12,6 +12,29 @@ const TYPES = [
   { key: 2, label: 'Rush',     color: 'text-red-600 dark:text-red-400',    required: false },
 ] as const;
 
+// Fixed 3-slot shape the section always renders (Standard/Express/Rush at
+// indices 0/1/2). Used to normalise `product.turnaround_options` into a
+// complete, well-typed tuple before the form mounts — some real seeded
+// products only have 1-2 entries (e.g. no Rush option ever configured), and
+// this component has no add/remove affordance, so without normalising first
+// the register()'d days/extra_cost inputs for a missing slot would seed
+// themselves from an empty, untyped DOM value instead of a real default.
+export const TURNAROUND_DEFAULTS = [
+  { type: 'standard', days: 5, extra_cost: 0,   is_active: true  },
+  { type: 'express',  days: 3, extra_cost: 200, is_active: false },
+  { type: 'rush',     days: 1, extra_cost: 500, is_active: false },
+] as const;
+
+export function normaliseTurnaroundOptions(
+  options: readonly { type: string; days: number; extra_cost: number; is_active: boolean }[] | undefined
+): { type: string; days: number; extra_cost: number; is_active: boolean }[] {
+  return TURNAROUND_DEFAULTS.map((def) => {
+    const existing = options?.find((o) => o.type === def.type);
+    if (!existing) return { ...def };
+    return def.type === 'standard' ? { ...existing, is_active: true } : existing;
+  });
+}
+
 const inputCls = 'px-2.5 py-1.5 text-xs bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 tabular-nums disabled:opacity-40';
 
 export function TurnaroundSection({ form }: Props) {

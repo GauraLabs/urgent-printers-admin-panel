@@ -15,12 +15,12 @@ import { InventorySection } from './InventorySection';
 import { BasicInfoSection } from './BasicInfoSection';
 import { PrintSpecsSection } from './PrintSpecsSection';
 import { PricingSection } from './PricingSection';
-import { TurnaroundSection } from './TurnaroundSection';
+import { TurnaroundSection, normaliseTurnaroundOptions } from './TurnaroundSection';
 import { SeoSection } from './SeoSection';
 import { useSaveProduct, useDeleteProduct } from '../../hooks/useProducts';
 import { ROUTES } from '@/lib/constants/routes';
 import { cn } from '@/lib/utils/cn';
-import type { Product, ProductStatus } from '@/types';
+import type { ApiError, Product, ProductStatus } from '@/types';
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -101,7 +101,7 @@ export function ProductForm({ product }: ProductFormProps) {
       sides_options: product.sides_options,
       quantity_steps: product.quantity_steps,
       pricing_tiers: product.pricing_tiers,
-      turnaround_options: product.turnaround_options,
+      turnaround_options: normaliseTurnaroundOptions(product.turnaround_options),
       seo: product.seo,
       track_inventory: product.track_inventory,
       stock_quantity: product.stock_quantity,
@@ -165,6 +165,21 @@ export function ProductForm({ product }: ProductFormProps) {
 
   async function save(status: ProductStatus) {
     const v = form.getValues();
+
+    // Submit buttons call save() directly (not form.handleSubmit), so the Zod
+    // schema's validation never runs here — these two fields need an explicit
+    // check. The backend now rejects an empty list for both with a 422 (was
+    // previously silently accepted), so catch it client-side with a message
+    // an admin can act on instead of a raw API failure.
+    if ((v.pricing_tiers ?? []).length === 0) {
+      toast.error('At least one pricing tier is required');
+      return;
+    }
+    if ((v.turnaround_options ?? []).length === 0) {
+      toast.error('At least one turnaround option is required');
+      return;
+    }
+
     const payload = {
       name: v.name,
       slug: v.slug,
@@ -195,8 +210,9 @@ export function ProductForm({ product }: ProductFormProps) {
       await saveMutation.mutateAsync({ id: product?.id, data: payload });
       toast.success(product ? 'Product updated' : 'Product created');
       if (!product) router.push(ROUTES.PRODUCTS);
-    } catch {
-      toast.error('Failed to save product');
+    } catch (err) {
+      const apiErr = err as ApiError;
+      toast.error(apiErr.status === 422 ? apiErr.message : 'Failed to save product');
     }
   }
 
