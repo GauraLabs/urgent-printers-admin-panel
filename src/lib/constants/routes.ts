@@ -21,6 +21,7 @@ export const ROUTES = {
   CONTENT_ANNOUNCEMENTS: '/content/announcements',
   CONTENT_FAQS: '/content/faqs',
   CONTENT_NAVIGATION: '/content/navigation',
+  CONTENT_THEME: '/content/theme',
   REVIEWS: '/reviews',
   SHIPPING: '/shipping',
   SHIPPING_SERVICEABILITY: '/shipping/serviceability',

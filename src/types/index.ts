@@ -172,6 +172,16 @@ export interface NavLink {
   created_at: string;
 }
 
+export type ThemePresetId = 'roseGold' | 'gold' | 'emerald' | 'slate' | 'pink' | 'plum';
+
+export interface SiteTheme {
+  id: string;
+  preset_id: ThemePresetId;
+  updated_by_admin_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Review {
   id: string;
   user_id: string;

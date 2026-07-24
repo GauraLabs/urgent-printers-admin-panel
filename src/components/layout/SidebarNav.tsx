@@ -22,6 +22,7 @@ import {
   Megaphone,
   HelpCircle,
   Link2,
+  Palette,
   Users2,
   Activity,
   Settings,
@@ -92,6 +93,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Announcements', href: '/content/announcements', icon: Megaphone, permission: 'content.view' },
       { label: 'FAQs', href: '/content/faqs', icon: HelpCircle, permission: 'content.view' },
       { label: 'Navigation', href: '/content/navigation', icon: Link2, permission: 'content.view' },
+      { label: 'Theme', href: '/content/theme', icon: Palette, permission: 'content.view' },
     ],
   },
   {

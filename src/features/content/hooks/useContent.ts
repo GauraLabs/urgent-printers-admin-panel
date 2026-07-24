@@ -8,7 +8,8 @@ import {
   getFaqs, createFaq, updateFaq, deleteFaq, reorderFaqs,
   getNavLinks, createNavLink, updateNavLink, deleteNavLink, reorderNavLinks,
 } from '@/lib/api/content';
-import type { Banner, Testimonial, Announcement, Faq, NavLink } from '@/types';
+import { getSiteTheme, updateSiteTheme } from '@/lib/api/theme';
+import type { Banner, Testimonial, Announcement, Faq, NavLink, ThemePresetId } from '@/types';
 
 const invalidate = (qc: ReturnType<typeof useQueryClient>, key: string) =>
   () => qc.invalidateQueries({ queryKey: [key] });
@@ -93,4 +94,17 @@ export function useNavLinkMutations(placement: 'header' | 'footer') {
     remove: useMutation({ mutationFn: (id: string) => deleteNavLink(id), onSuccess: inv }),
     reorder: useMutation({ mutationFn: (ids: string[]) => reorderNavLinks(placement, ids), onSuccess: inv }),
   };
+}
+
+// ── Site Theme (single-row) ──────────────────────────────────
+export function useSiteTheme() {
+  return useQuery({ queryKey: ['site-theme'], queryFn: getSiteTheme, staleTime: 60_000 });
+}
+
+export function useSiteThemeMutation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (presetId: ThemePresetId) => updateSiteTheme(presetId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['site-theme'] }),
+  });
 }
