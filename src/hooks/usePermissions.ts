@@ -41,6 +41,7 @@ export function usePermissions() {
     canManageStaff: can('staff.manage'),
     canManageSettings: can('settings.manage'),
     canViewSystem: can('system.view'),
+    canManageSystem: can('system.manage'),
     isSuperAdmin: role === 'super_admin',
   };
 }

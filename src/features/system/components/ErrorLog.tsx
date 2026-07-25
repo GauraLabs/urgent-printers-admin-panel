@@ -49,8 +49,11 @@ function ErrorEntry({ entry, index }: { entry: ErrorLogEntry; index: number }) {
         <div className="flex flex-wrap items-center gap-3 mt-1">
           {entry.endpoint && (
             <code className="text-[11px] font-mono text-muted-foreground bg-muted/60 px-1.5 py-0.5 rounded">
-              {entry.endpoint}
+              {entry.http_method && `${entry.http_method} `}{entry.endpoint}
             </code>
+          )}
+          {entry.actor_type && (
+            <span className="text-[11px] text-muted-foreground capitalize">{entry.actor_type}</span>
           )}
           {entry.user_id && (
             <span className="text-[11px] text-muted-foreground">
