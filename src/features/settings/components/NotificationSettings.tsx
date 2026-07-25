@@ -43,7 +43,7 @@ export function NotificationSettings() {
   });
 
   const { handleSubmit, watch, setValue, formState: { isDirty, isSubmitting } } = form;
-  const w = (k: keyof T) => watch(k) as boolean;
+  const w = (k: keyof T) => (watch(k) as boolean | undefined) ?? false;
   const sv = (k: keyof T, v: boolean, opts?: { shouldDirty: boolean }) => setValue(k, v as never, opts);
 
   if (query.isLoading) return <LoadingSkeleton rows={6} className="max-w-2xl" />;

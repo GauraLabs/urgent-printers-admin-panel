@@ -39,6 +39,7 @@ export function usePermissions() {
     canSendCommunications: can('communications.send'),
     canViewSalesReports: can('reports.sales'),
     canManageStaff: can('staff.manage'),
+    canViewSettings: can('settings.view'),
     canManageSettings: can('settings.manage'),
     canViewSystem: can('system.view'),
     canManageSystem: can('system.manage'),

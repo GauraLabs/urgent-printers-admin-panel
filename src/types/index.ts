@@ -196,6 +196,16 @@ export interface SiteTheme {
   updated_at: string;
 }
 
+export interface OrderHaltSetting {
+  id: string;
+  is_halted: boolean;
+  customer_message: string | null;
+  internal_reason: string | null;
+  updated_by_admin_id: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
 export interface Review {
   id: string;
   user_id: string;

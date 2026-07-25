@@ -22,7 +22,7 @@ export function PaymentSettings() {
     <form onSubmit={handleSubmit(handleSave)} className="space-y-4 max-w-2xl">
       <SettingsSection title="Payment Gateways" description="Enable or disable payment methods.">
         <FieldRow label="Razorpay" description="Credit/debit cards, UPI, net banking.">
-          <Switch checked={watch('razorpay_enabled')} onCheckedChange={(v) => setValue('razorpay_enabled', v, { shouldDirty: true })} size="sm" />
+          <Switch checked={watch('razorpay_enabled') ?? false} onCheckedChange={(v) => setValue('razorpay_enabled', v, { shouldDirty: true })} size="sm" />
         </FieldRow>
         {watch('razorpay_enabled') && (
           <FieldRow label="Razorpay Key ID">
@@ -30,13 +30,13 @@ export function PaymentSettings() {
           </FieldRow>
         )}
         <FieldRow label="Paytm">
-          <Switch checked={watch('paytm_enabled')} onCheckedChange={(v) => setValue('paytm_enabled', v, { shouldDirty: true })} size="sm" />
+          <Switch checked={watch('paytm_enabled') ?? false} onCheckedChange={(v) => setValue('paytm_enabled', v, { shouldDirty: true })} size="sm" />
         </FieldRow>
       </SettingsSection>
 
       <SettingsSection title="Cash on Delivery" description="COD availability and limits.">
         <FieldRow label="Enable COD">
-          <Switch checked={watch('cod_enabled')} onCheckedChange={(v) => setValue('cod_enabled', v, { shouldDirty: true })} size="sm" />
+          <Switch checked={watch('cod_enabled') ?? false} onCheckedChange={(v) => setValue('cod_enabled', v, { shouldDirty: true })} size="sm" />
         </FieldRow>
         {watch('cod_enabled') && (
           <FieldRow label="Minimum Order for COD" description="Orders below this cannot use COD.">

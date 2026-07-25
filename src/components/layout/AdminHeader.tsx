@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react';
 import { MobileSidebar } from './MobileSidebar';
 import { ThemeToggle } from './ThemeToggle';
 import { NotificationBell } from '@/features/notifications/components/NotificationBell';
+import { OrderHaltIndicator } from '@/features/settings/components/OrderHaltIndicator';
 import { useSidebarStore } from '@/store/sidebarStore';
 import { cn } from '@/lib/utils/cn';
 
@@ -62,9 +63,12 @@ export function AdminHeader() {
       </nav>
 
       {/* Right */}
-      <div className="flex items-center gap-0.5 flex-shrink-0 ml-3">
-        <ThemeToggle />
-        <NotificationBell />
+      <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+        <OrderHaltIndicator />
+        <div className="flex items-center gap-0.5">
+          <ThemeToggle />
+          <NotificationBell />
+        </div>
       </div>
     </header>
   );
