@@ -1,7 +1,8 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { getSystemHealth, getJobQueue, getErrorLog } from '@/lib/api/system';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getSystemHealth, getJobQueue, getErrorLog, forceCheckService } from '@/lib/api/system';
+import type { ForceCheckableService } from '@/lib/api/system';
 
 export function useSystemHealth() {
   return useQuery({
@@ -27,5 +28,15 @@ export function useErrorLog() {
     queryFn: getErrorLog,
     refetchInterval: 60_000,
     staleTime: 30_000,
+  });
+}
+
+export function useForceCheckService() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (service: ForceCheckableService) => forceCheckService(service),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['system-health'] });
+    },
   });
 }

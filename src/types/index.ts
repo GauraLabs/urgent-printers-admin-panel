@@ -39,17 +39,31 @@ export interface SystemHealth {
   checked_at: string;
 }
 
+export type ServiceHealthCategory = 'infrastructure' | 'external';
+
+// 'unknown' only ever appears for `category: 'external'` services that have
+// never had a success or failure passively recorded yet.
+export type ServiceHealthStatus = 'healthy' | 'degraded' | 'down' | 'unknown';
+
 export interface ServiceStatus {
   name: string;
-  status: 'healthy' | 'degraded' | 'down';
-  last_check: string;
-  response_time_ms: number | null;
-  error_rate: number;
+  display_name: string;
+  category: ServiceHealthCategory;
+  status: ServiceHealthStatus;
   message: string | null;
+  // infrastructure services (postgresql/redis/celery) are live-polled and set these
+  last_check?: string | null;
+  response_time_ms?: number | null;
+  // external services (razorpay/shiprocket/resend/r2) are passively tracked from
+  // real traffic, never polled — they set these instead
+  last_success_at?: string | null;
+  last_failure_at?: string | null;
+  last_error?: string | null;
 }
 
 export interface JobStatus {
   id: string;
+  task_id: string;
   queue_name: string;
   job_type: string;
   status: 'queued' | 'processing' | 'completed' | 'failed' | 'retrying';
@@ -180,6 +194,16 @@ export interface SiteTheme {
   updated_by_admin_id: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface OrderHaltSetting {
+  id: string;
+  is_halted: boolean;
+  customer_message: string | null;
+  internal_reason: string | null;
+  updated_by_admin_id: string | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 export interface Review {

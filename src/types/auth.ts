@@ -43,7 +43,8 @@ export type Permission =
   | 'staff.manage'
   | 'settings.view'
   | 'settings.manage'
-  | 'system.view';
+  | 'system.view'
+  | 'system.manage';
 
 export interface AdminUser {
   id: string;

@@ -1,14 +1,25 @@
 'use client';
 
-import { CheckCircle2, AlertTriangle, XCircle, RefreshCw, Clock, Activity } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, XCircle, HelpCircle, RefreshCw, Clock, Activity } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useSystemHealth } from '../hooks/useSystemHealth';
+import { toast } from 'sonner';
+import { useSystemHealth, useForceCheckService } from '../hooks/useSystemHealth';
+import { usePermissions } from '@/hooks/usePermissions';
 import { formatTimeAgo } from '@/lib/utils/formatDate';
 import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { ServiceStatus } from '@/types';
+import type { ApiError } from '@/types';
+import type { ServiceStatus, ServiceHealthStatus } from '@/types';
+import type { ForceCheckableService } from '@/lib/api/system';
+import type { UseMutationResult } from '@tanstack/react-query';
 
-const STATUS_CONFIG = {
+const STATUS_CONFIG: Record<ServiceHealthStatus, {
+  icon: typeof CheckCircle2;
+  dot: string;
+  badge: string;
+  border: string;
+  label: string;
+}> = {
   healthy: {
     icon: CheckCircle2,
     dot: 'bg-emerald-500',
@@ -30,11 +41,45 @@ const STATUS_CONFIG = {
     border: 'border-red-200 dark:border-red-800/60',
     label: 'Down',
   },
-} as const;
+  unknown: {
+    icon: HelpCircle,
+    dot: 'bg-gray-400',
+    badge: 'bg-gray-100 text-gray-600 dark:bg-gray-800/50 dark:text-gray-400',
+    border: 'border-gray-200 dark:border-gray-700/60',
+    label: 'Unknown',
+  },
+};
 
-function ServiceCard({ service, index }: { service: ServiceStatus; index: number }) {
+type ForceCheckMutation = UseMutationResult<ServiceStatus, unknown, ForceCheckableService, unknown>;
+
+function ServiceCard({
+  service,
+  index,
+  canForceCheck,
+  forceCheckMutation,
+}: {
+  service: ServiceStatus;
+  index: number;
+  canForceCheck: boolean;
+  forceCheckMutation: ForceCheckMutation;
+}) {
   const cfg = STATUS_CONFIG[service.status];
   const Icon = cfg.icon;
+  const isChecking = forceCheckMutation.isPending && forceCheckMutation.variables === service.name;
+
+  function handleForceCheck() {
+    forceCheckMutation.mutate(service.name as ForceCheckableService, {
+      onSuccess: () => toast.success(`${service.display_name} re-checked`),
+      onError: (err) => {
+        const apiErr = err as ApiError;
+        if (apiErr.status === 429) {
+          toast.error(apiErr.message || `${service.display_name} was checked recently — try again shortly.`);
+        } else {
+          toast.error(`Failed to check ${service.display_name}.`);
+        }
+      },
+    });
+  }
 
   return (
     <motion.div
@@ -52,15 +97,28 @@ function ServiceCard({ service, index }: { service: ServiceStatus; index: number
               <span className={cn('absolute inset-0 rounded-full animate-ping opacity-50', cfg.dot)} />
             )}
           </span>
-          <p className="text-[13px] font-semibold text-foreground truncate">{service.name}</p>
+          <p className="text-[13px] font-semibold text-foreground truncate">{service.display_name}</p>
         </div>
-        <span className={cn('text-[11px] font-medium px-2 py-0.5 rounded-full flex-shrink-0', cfg.badge)}>
-          {cfg.label}
-        </span>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          <span className={cn('inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full', cfg.badge)}>
+            <Icon className="h-3 w-3" />
+            {cfg.label}
+          </span>
+          {canForceCheck && (
+            <button
+              onClick={handleForceCheck}
+              disabled={isChecking}
+              title={`Re-check ${service.display_name}`}
+              className="text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors"
+            >
+              <RefreshCw className={cn('h-3 w-3', isChecking && 'animate-spin')} />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-1.5 text-[12px]">
-        {service.response_time_ms !== null && (
+        {service.response_time_ms != null && (
           <div className="flex items-center justify-between text-muted-foreground">
             <span className="flex items-center gap-1.5"><Activity className="h-3 w-3" /> Response</span>
             <span className={cn('font-medium tabular-nums', service.response_time_ms > 500 ? 'text-amber-600 dark:text-amber-400' : 'text-foreground')}>
@@ -68,19 +126,39 @@ function ServiceCard({ service, index }: { service: ServiceStatus; index: number
             </span>
           </div>
         )}
-        <div className="flex items-center justify-between text-muted-foreground">
-          <span className="flex items-center gap-1.5"><AlertTriangle className="h-3 w-3" /> Error rate</span>
-          <span className={cn('font-medium tabular-nums', service.error_rate > 1 ? 'text-red-600 dark:text-red-400' : 'text-foreground')}>
-            {service.error_rate.toFixed(1)}%
-          </span>
-        </div>
-        <div className="flex items-center justify-between text-muted-foreground">
-          <span className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> Checked</span>
-          <span className="text-foreground">{formatTimeAgo(service.last_check)}</span>
-        </div>
+        {service.last_check && (
+          <div className="flex items-center justify-between text-muted-foreground">
+            <span className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> Checked</span>
+            <span className="text-foreground">{formatTimeAgo(service.last_check)}</span>
+          </div>
+        )}
+        {service.category === 'external' && (
+          <>
+            {service.last_success_at && (
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> Last success</span>
+                <span className="text-foreground">{formatTimeAgo(service.last_success_at)}</span>
+              </div>
+            )}
+            {service.last_failure_at && (
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> Last failure</span>
+                <span className="text-red-600 dark:text-red-400">{formatTimeAgo(service.last_failure_at)}</span>
+              </div>
+            )}
+            {!service.last_success_at && !service.last_failure_at && (
+              <p className="text-muted-foreground text-[11px]">No traffic recorded yet</p>
+            )}
+          </>
+        )}
         {service.message && (
           <p className="mt-2 text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded px-2 py-1">
             {service.message}
+          </p>
+        )}
+        {service.last_error && (
+          <p className="mt-2 text-[11px] text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 rounded px-2 py-1">
+            {service.last_error}
           </p>
         )}
       </div>
@@ -90,6 +168,8 @@ function ServiceCard({ service, index }: { service: ServiceStatus; index: number
 
 export function ServiceHealthCards({ onRefresh, isFetching }: { onRefresh: () => void; isFetching: boolean }) {
   const { data, isLoading } = useSystemHealth();
+  const { canManageSystem } = usePermissions();
+  const forceCheckMutation = useForceCheckService();
 
   const healthy = data?.services.filter((s) => s.status === 'healthy').length ?? 0;
   const total = data?.services.length ?? 0;
@@ -124,7 +204,13 @@ export function ServiceHealthCards({ onRefresh, isFetching }: { onRefresh: () =>
               <Skeleton key={i} className="h-36 rounded-xl" style={{ animationDelay: `${i * 0.04}s` }} />
             ))
           : data?.services.map((service, i) => (
-              <ServiceCard key={service.name} service={service} index={i} />
+              <ServiceCard
+                key={service.name}
+                service={service}
+                index={i}
+                canForceCheck={canManageSystem}
+                forceCheckMutation={forceCheckMutation}
+              />
             ))}
       </div>
     </div>
