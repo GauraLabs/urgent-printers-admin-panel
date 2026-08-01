@@ -65,6 +65,7 @@ export interface MediaSectionHandle {
 interface MediaSectionProps {
   context?: string;
   maxImages?: number;
+  minImages?: number;
   videoLabel?: string;
   initialImages?: ProductImageURLSet[];
   initialVideoKey?: string | null;
@@ -74,9 +75,12 @@ interface MediaSectionProps {
   onVideoChange?: (key: string | null) => void;
 }
 
+const MIN_PHOTO_DIMENSION_PX = 800;
+
 export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(function MediaSection({
   context = 'product',
   maxImages = 8,
+  minImages = 0,
   videoLabel = 'Product Video',
   initialImages = [],
   initialVideoKey = null,
@@ -93,6 +97,8 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
       ? fromExistingVideo(initialVideoKey, initialVideoUrl, initialVideoThumbnailUrl)
       : null
   );
+  // Non-blocking, client-only nicety — keyed by tempId, never sent to the backend.
+  const [dimensionWarnings, setDimensionWarnings] = useState<Record<string, string>>({});
 
   // Expose cleanup handle — deletes only media uploaded in this session.
   useImperativeHandle(ref, () => ({
@@ -148,6 +154,12 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
     }
     URL.revokeObjectURL(item.blobUrl);
     setImages((prev) => prev.filter((_, i) => i !== idx));
+    setDimensionWarnings((prev) => {
+      if (!(item.tempId in prev)) return prev;
+      const next = { ...prev };
+      delete next[item.tempId];
+      return next;
+    });
   }
 
   const onImageDrop = useCallback((files: File[]) => {
@@ -159,6 +171,18 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
         ...prev,
         { status: 'uploading', tempId, blobUrl, progress: 0 },
       ]);
+
+      const probe = new Image();
+      probe.onload = () => {
+        const shortSide = Math.min(probe.naturalWidth, probe.naturalHeight);
+        if (shortSide > 0 && shortSide < MIN_PHOTO_DIMENSION_PX) {
+          setDimensionWarnings((prev) => ({
+            ...prev,
+            [tempId]: `Low resolution (${probe.naturalWidth}×${probe.naturalHeight}px) — aim for at least ${MIN_PHOTO_DIMENSION_PX}px on the short side.`,
+          }));
+        }
+      };
+      probe.src = blobUrl;
 
       uploadMedia(file, context, (pct) => {
         setImages((prev) =>
@@ -244,8 +268,24 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
   });
 
   // ── Render ───────────────────────────────────────────────────────────────────
+  const doneImageCount = images.filter((i) => i.status === 'done').length;
+  const belowMinImages = minImages > 0 && doneImageCount < minImages;
+
   return (
     <div className="space-y-5">
+      {/* Minimum-photo requirement + live status */}
+      {minImages > 0 && (
+        <p className={cn(
+          'flex items-center gap-1.5 text-xs',
+          belowMinImages ? 'text-destructive' : 'text-muted-foreground'
+        )}>
+          {belowMinImages && <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />}
+          {belowMinImages
+            ? `${minImages - doneImageCount} more photo${minImages - doneImageCount === 1 ? '' : 's'} required — minimum ${minImages}.`
+            : `Minimum of ${minImages} photo${minImages === 1 ? '' : 's'} met (${doneImageCount}/${maxImages}).`}
+        </p>
+      )}
+
       {/* Image grid */}
       {images.length > 0 && (
         <div className="flex flex-wrap gap-3">
@@ -321,6 +361,16 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
                   {i + 1}
                 </span>
               )}
+
+              {/* Low-resolution warning (non-blocking) */}
+              {item.status === 'done' && dimensionWarnings[item.tempId] && (
+                <span
+                  title={dimensionWarnings[item.tempId]}
+                  className="absolute top-1 right-1 flex items-center justify-center w-4 h-4 bg-amber-500 rounded-full"
+                >
+                  <AlertTriangle className="h-2.5 w-2.5 text-white" />
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -344,7 +394,9 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
             {imgDrag ? 'Drop images here' : 'Drag & drop or click to upload images'}
           </p>
           <p className="text-[11px] text-muted-foreground/70 mt-0.5">
-            JPG, PNG, WebP · Up to {maxImages - images.length} more · Variants generated automatically
+            {minImages > 0
+              ? `Upload at least ${minImages} photo${minImages === 1 ? '' : 's'} (up to ${maxImages}). JPG, PNG, or WebP, max 10MB each.`
+              : `JPG, PNG, WebP, max 10MB each · Up to ${maxImages - images.length} more · Variants generated automatically`}
           </p>
         </div>
       )}

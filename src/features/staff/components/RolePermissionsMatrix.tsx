@@ -1,5 +1,6 @@
 'use client';
 
+import { Fragment } from 'react';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { useRoleCatalogue } from '@/hooks/useRoleCatalogue';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -56,8 +57,8 @@ export function RolePermissionsMatrix() {
             const perms = permsByGroup.get(group.key) ?? [];
             if (perms.length === 0) return null;
             return (
-              <>
-                <tr key={`group-${group.key}`} className="border-b border-border bg-muted/20">
+              <Fragment key={`group-${group.key}`}>
+                <tr className="border-b border-border bg-muted/20">
                   <td colSpan={catalogue.roles.length + 1} className="px-4 py-1.5">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       {group.label}
@@ -79,7 +80,7 @@ export function RolePermissionsMatrix() {
                     ))}
                   </tr>
                 ))}
-              </>
+              </Fragment>
             );
           })}
         </tbody>

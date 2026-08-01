@@ -20,7 +20,7 @@ const schema = z.object({
   is_active: z.boolean(),
   meta_title: z.string().optional(),
   meta_description: z.string().optional(),
-  image_keys: z.array(z.string()).optional(),
+  image_keys: z.array(z.string()).min(1, 'At least 1 photo is required'),
   video_key: z.string().nullable().optional(),
 });
 type FormValues = z.infer<typeof schema>;
@@ -132,19 +132,21 @@ export function CategoryForm({ category }: { category?: Category }) {
 
       {/* Images & Video */}
       <div className="pt-2 border-t border-border space-y-3">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Images & Video — optional</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Images & Video</p>
         <MediaSection
           ref={mediaRef}
           context="category"
+          minImages={1}
           maxImages={4}
           videoLabel="Category Video"
           initialImages={category?.images}
           initialVideoKey={category?.video_key}
           initialVideoUrl={category?.video_url}
           initialVideoThumbnailUrl={category?.video_thumbnail_url}
-          onImagesChange={(keys) => setValue('image_keys', keys, { shouldDirty: true })}
+          onImagesChange={(keys) => setValue('image_keys', keys, { shouldDirty: true, shouldValidate: true })}
           onVideoChange={(key) => setValue('video_key', key, { shouldDirty: true })}
         />
+        {errors.image_keys && <p className={errorCls}>{errors.image_keys.message}</p>}
       </div>
 
       <label className="flex items-center gap-3 cursor-pointer">

@@ -58,7 +58,7 @@ export function AuthGuard({ children, requiredPermission }: AuthGuardProps) {
     );
   }
 
-  if (requiredPermission && !hasPermission(user.role, requiredPermission)) {
+  if (requiredPermission && !hasPermission(user, requiredPermission)) {
     return null;
   }
 

@@ -38,6 +38,18 @@ interface NavItem {
   href: string;
   icon: LucideIcon;
   permission?: Permission;
+  /**
+   * Any-of gate for items that front more than one permission-scoped page
+   * (e.g. Reports: reports.sales/orders/customers/operations each unlock a
+   * different sub-report). Visible if the user holds ANY of these — a single
+   * `permission` would wrongly hide the whole item for a role that only has
+   * some of the underlying permissions.
+   */
+  permissions?: Permission[];
+  /** Paired with `permissions` — routes to whichever sub-page the user's
+   * first-held permission (in array order) actually unlocks, instead of
+   * always linking to `href` (which may 403 for that role). */
+  hrefByPermission?: Partial<Record<Permission, string>>;
   matchPrefix?: string;
 }
 
@@ -75,7 +87,16 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: 'Payments', href: '/payments', icon: CreditCard, permission: 'payments.view' },
       { label: 'Coupons', href: '/coupons', icon: Ticket, permission: 'coupons.view' },
-      { label: 'Reports', href: '/reports/sales', icon: BarChart2, permission: 'reports.sales', matchPrefix: '/reports' },
+      {
+        label: 'Reports', href: '/reports/sales', icon: BarChart2, matchPrefix: '/reports',
+        permissions: ['reports.sales', 'reports.orders', 'reports.customers', 'reports.operations'],
+        hrefByPermission: {
+          'reports.sales': '/reports/sales',
+          'reports.orders': '/reports/orders',
+          'reports.customers': '/reports/customers',
+          'reports.operations': '/reports/operations',
+        },
+      },
     ],
   },
   {
@@ -123,12 +144,24 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
     return pathname.startsWith(item.href);
   }
 
+  function isVisible(item: NavItem): boolean {
+    if (isSuperAdmin) return true;
+    if (item.permissions) return item.permissions.some(can);
+    return !item.permission || can(item.permission);
+  }
+
+  function resolveHref(item: NavItem): string {
+    if (item.permissions && item.hrefByPermission && !isSuperAdmin) {
+      const granted = item.permissions.find(can);
+      if (granted) return item.hrefByPermission[granted] ?? item.href;
+    }
+    return item.href;
+  }
+
   return (
     <nav className="py-2 px-2 space-y-4">
       {NAV_GROUPS.map((group) => {
-        const visibleItems = group.items.filter(
-          (item) => !item.permission || isSuperAdmin || can(item.permission)
-        );
+        const visibleItems = group.items.filter(isVisible);
         if (!visibleItems.length) return null;
 
         return (
@@ -142,11 +175,12 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
               {visibleItems.map((item) => {
                 const active = isActive(item);
                 const Icon = item.icon;
+                const href = resolveHref(item);
                 return (
                   <li key={item.href}>
                     <motion.div whileHover={{ x: collapsed ? 0 : 2 }} transition={{ duration: 0.12 }}>
                       <Link
-                        href={item.href}
+                        href={href}
                         onClick={onNavigate}
                         title={collapsed ? item.label : undefined}
                         className={cn(

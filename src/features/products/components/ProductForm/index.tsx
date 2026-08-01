@@ -59,6 +59,9 @@ const schema = z.object({
 
 export type ProductFormValues = z.infer<typeof schema>;
 
+const PRODUCT_MIN_IMAGES = 3;
+const PRODUCT_MAX_IMAGES = 8;
+
 function Section({ title, children, defaultOpen = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
@@ -179,6 +182,10 @@ export function ProductForm({ product }: ProductFormProps) {
       toast.error('At least one turnaround option is required');
       return;
     }
+    if ((v.image_keys ?? []).length < PRODUCT_MIN_IMAGES) {
+      toast.error(`At least ${PRODUCT_MIN_IMAGES} photos are required`);
+      return;
+    }
 
     const payload = {
       name: v.name,
@@ -241,6 +248,8 @@ export function ProductForm({ product }: ProductFormProps) {
           <MediaSection
             ref={mediaRef}
             context="product"
+            minImages={PRODUCT_MIN_IMAGES}
+            maxImages={PRODUCT_MAX_IMAGES}
             initialImages={product?.images}
             initialVideoKey={product?.video_key}
             initialVideoUrl={product?.video_url}
