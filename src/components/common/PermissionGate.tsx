@@ -10,6 +10,6 @@ interface PermissionGateProps {
 
 export function PermissionGate({ permission, children, fallback = null }: PermissionGateProps) {
   const user = useAuthStore((s) => s.user);
-  if (!user || !hasPermission(user.role, permission)) return <>{fallback}</>;
+  if (!user || !hasPermission(user, permission)) return <>{fallback}</>;
   return <>{children}</>;
 }
