@@ -1,0 +1,73 @@
+{
+  "project_name": "Urgent Printers — Admin Panel",
+  "repo_root": ".",
+  "tech_stack": {
+    "frontend": "Next.js 16.2.4 App Router, React 19, TypeScript strict, Tailwind v4, shadcn 4.x on Base UI (not Radix), TanStack Query + Table, Zustand (access token in-memory only, user/isAuthenticated persisted), react-hook-form + zod",
+    "backend": "FastAPI, sibling repo ../urgent-printers-backend (async SQLModel + PostgreSQL). Not driven through the browser — read app/api/v1/routes/admin/ and app/schemas/ for request/response contracts, and app/core/permissions.py for the RBAC strings a plan's alternate/error paths may depend on.",
+    "test_framework": "playwright"
+  },
+  "urls": {
+    "staging": "http://localhost:3001",
+    "production": "__FILL_ME__"
+  },
+  "dev_command": "npm run dev",
+  "brand": {
+    "logo_path": "public/logo.png",
+    "primary_color": "oklch(0.56 0.22 263)",
+    "accent_color": "oklch(0.62 0.20 263)",
+    "font_family": "'Inter', ui-sans-serif, system-ui, sans-serif",
+    "voice_persona": "clear, efficient, plain-spoken — a colleague walking a new staff member through a workflow, not a sales pitch"
+  },
+  "video_defaults": {
+    "resolutions": ["1080p60", "1440p60", "4K60"],
+    "max_duration_seconds": 90,
+    "cursor_style": "vector-arrow",
+    "field_style": {
+      "background": "#ffffff",
+      "text": "#0f172a"
+    }
+  },
+  "output_dirs": {
+    "tests": "qa-pipeline/playwright/specs",
+    "docs": "qa-pipeline/artifacts/docs",
+    "video": "qa-pipeline/artifacts/video"
+  },
+  "artifact_dirs": {
+    "plans": "qa-pipeline/artifacts/plans",
+    "runs": "qa-pipeline/artifacts/runs",
+    "analyses": "qa-pipeline/artifacts/analyses",
+    "docs_blocks": "qa-pipeline/artifacts/docs",
+    "shot_lists": "qa-pipeline/artifacts/shot-lists",
+    "screenshots": "qa-pipeline/artifacts/screenshots",
+    "traces": "qa-pipeline/artifacts/traces",
+    "narration": "qa-pipeline/artifacts/narration",
+    "release_notes": "qa-pipeline/artifacts/release-notes",
+    "schemas": "qa-pipeline/schemas",
+    "prompts": "../.claude/commands/qa"
+  },
+  "history_dir": "qa-pipeline/history",
+  "tts": {
+    "provider": "elevenlabs",
+    "api_key_env": "ELEVENLABS_API_KEY",
+    "voice_id": "__FILL_ME__",
+    "voice_name": null,
+    "model_id": "eleven_multilingual_v2",
+    "output_format": "mp3_44100_128",
+    "language": "en",
+    "lead_in_ms": 220,
+    "tail_ms": 320,
+    "providers": {
+      "elevenlabs": { "base_url": "https://api.elevenlabs.io/v1" }
+    }
+  },
+  "llm": null,
+  "_notes": {
+    "_generated": "Set up as part of the QA/docs/demo-video pipeline. See ../pipeline/README.md for the module map and ../.claude/commands/qa/*.md for the prompts that read this file.",
+    "brand": "primary_color/accent_color are src/app/globals.css's real --color-primary / --color-primary-hover tokens. No logo.png exists yet in public/ — the renderer falls back to a text-only brand card until one is added.",
+    "auth": "The access token lives only in memory (never localStorage), so capture.js's seedDefaultContextStorage() can restore user/isAuthenticated for a Lighthouse checkpoint but not a live token. A post-login final_state checkpoint may get redirected — see ../pipeline/README.md's 'Known per-app wrinkles'.",
+    "field_style": "White background / dark text matches the default admin theme. If a demo is captured in dark mode, override this per-run.",
+    "tts": "voice_id is unfilled — pick a voice from the ElevenLabs dashboard before the first /qa:narrate-feature run.",
+    "llm": "null routes every AI module to Claude, which needs no local infrastructure. See ../pipeline/README.md's 'AI models' section before changing this.",
+    "urls": "production is unset — this app has no public production URL yet (staff-only, internal). Fill in once one exists; nothing downstream requires it before then."
+  }
+}
