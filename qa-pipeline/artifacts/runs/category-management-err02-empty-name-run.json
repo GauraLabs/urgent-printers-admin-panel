@@ -1,0 +1,66 @@
+{
+  "feature_name": "Category Management Err02 Empty Name",
+  "plan_path": "qa-pipeline/artifacts/plans/category-management-plan.json",
+  "run_timestamp": "2026-08-09T20:11:51.731Z",
+  "trace_path": "qa-pipeline/artifacts/traces/category-management-err02-empty-name-trace.zip",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Log in as the seeded super admin",
+      "selector": null,
+      "route": "/dashboard",
+      "bounding_box": null,
+      "timestamp_ms": 1633,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-err02-empty-name/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "set-02",
+      "action": "Open the new-category form and upload an image, leaving Name blank",
+      "selector": null,
+      "route": "/categories/new",
+      "bounding_box": null,
+      "timestamp_ms": 5343,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-err02-empty-name/set-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-02",
+      "action": "Submit with an empty Name field",
+      "selector": "getByRole('button', { name: 'Create Category' })",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 664,
+        "width": 137,
+        "height": 32
+      },
+      "timestamp_ms": 5624,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-err02-empty-name/err-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    }
+  ],
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  }
+}

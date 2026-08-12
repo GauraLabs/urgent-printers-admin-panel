@@ -149,7 +149,10 @@ export function DataTable<TData, TValue>({
         <div className="flex items-center gap-2">
           <div className="flex-1">{toolbar}</div>
           <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs border border-border rounded-lg bg-card hover:bg-muted transition-colors text-muted-foreground hover:text-foreground font-medium">
+            <DropdownMenuTrigger
+              aria-label="Columns"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs border border-border rounded-lg bg-card hover:bg-muted transition-colors text-muted-foreground hover:text-foreground font-medium"
+            >
               <Settings2 className="h-3.5 w-3.5" />
               Columns
             </DropdownMenuTrigger>

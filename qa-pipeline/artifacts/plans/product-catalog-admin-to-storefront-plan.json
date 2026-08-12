@@ -1,0 +1,145 @@
+{
+  "feature_found": true,
+  "feature_name": "Product Catalog (Admin to Storefront)",
+  "source_files": [
+    "urgent-printers-admin-panel/project.config.json",
+    "urgent-printers-admin-panel/src/app/(admin)/products/page.tsx",
+    "urgent-printers-admin-panel/src/app/(admin)/products/new/page.tsx",
+    "urgent-printers-admin-panel/src/app/(admin)/products/[id]/page.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductsTable.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductEditClient.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/index.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/BasicInfoSection.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/MediaSection.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/PricingSection.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/PrintSpecsSection.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/TurnaroundSection.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/InventorySection.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/SeoSection.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/CustomizationSection.tsx",
+    "urgent-printers-admin-panel/src/features/products/hooks/useProducts.ts",
+    "urgent-printers-admin-panel/src/lib/api/products.ts",
+    "urgent-printers-admin-panel/src/lib/api/client.ts",
+    "urgent-printers-admin-panel/src/types/product.ts",
+    "urgent-printers-admin-panel/src/components/common/DataTable.tsx",
+    "urgent-printers-admin-panel/src/components/common/SearchInput.tsx",
+    "urgent-printers-admin-panel/src/components/common/ConfirmDialog.tsx",
+    "urgent-printers-backend/app/api/v1/routes/admin/products.py",
+    "urgent-printers-backend/app/api/v1/routes/admin/media.py",
+    "urgent-printers-backend/app/schemas/admin.py",
+    "urgent-printers-backend/app/schemas/product.py",
+    "urgent-printers-backend/app/services/media_service.py",
+    "urgent-printers-backend/app/core/permissions.py"
+  ],
+  "user_goal": "A staff member wants to add, edit, find, and retire the printing products customers browse and order on the storefront.",
+  "business_goal": "The admin product catalogue is the single source of truth for everything the storefront sells, so a mis-saved or mis-validated product is a directly revenue-affecting defect.",
+  "user_journey": [
+    { "step": "Sign in to the admin panel", "route_or_state": "/login" },
+    { "step": "Open the product catalogue list", "route_or_state": "/products" },
+    { "step": "Narrow the list by status, category, page", "route_or_state": "/products (client filter state in useProducts)" },
+    { "step": "Open the create form", "route_or_state": "/products/new" },
+    { "step": "Fill basic info, media, print specs, pricing tiers, turnaround, inventory, SEO", "route_or_state": "/products/new (react-hook-form state)" },
+    { "step": "Publish (status=active) or Save as Draft (status=draft)", "route_or_state": "POST /admin/products" },
+    { "step": "Find the saved product back in the list", "route_or_state": "/products" },
+    { "step": "Open it for editing and change fields / reassign its category", "route_or_state": "/products/{id} -> PATCH /admin/products/{id}" },
+    { "step": "Archive it from the list row menu or the edit form's Delete Product", "route_or_state": "DELETE /admin/products/{id}" }
+  ],
+  "happy_path": [
+    { "step_id": "hp-01", "action": "Open the product catalogue list", "selector": "route /products", "expected_result": "PageHeader shows 'Products' and 'Manage your product catalogue.'; an 'Add Product' link is visible; the DataTable renders Product / Status / From / Created columns." },
+    { "step_id": "hp-02", "action": "Click 'Add Product'", "selector": "link 'Add Product'", "expected_result": "Navigates to /products/new; page title 'New Product'; the form's Publish Product / Save as Draft / Cancel buttons are visible in the sticky sidebar." },
+    { "step_id": "hp-03", "action": "Type the product name into Product Name *", "selector": "label:text-is('Product Name *') + input (register('name'))", "expected_result": "The Slug * input is auto-populated by BasicInfoSection's slugify(name) effect." },
+    { "step_id": "hp-04", "action": "Enter the short description", "selector": "label:text-is('Short Description *') + input (register('short_description'))", "expected_result": "Field accepts the value; no inline error." },
+    { "step_id": "hp-05", "action": "Select a category from the Category * dropdown", "selector": "select register('category_id') under label 'Category *'", "expected_result": "Option list is the real /admin/categories list; the chosen category is selected." },
+    { "step_id": "hp-06", "action": "Upload three product photos into the Images & Video dropzone", "selector": "input[type=file][accept*=image] in MediaSection", "expected_result": "Status line flips from 'N more photos required — minimum 3.' to 'Minimum of 3 photos met (3/8).'" },
+    { "step_id": "hp-07", "action": "Review the default pricing tiers", "selector": "PricingSection table rows (register('pricing_tiers.N.quantity' / '.price_per_unit'))", "expected_result": "Five default tiers (100/250/500/1000/2500) are present with a Total column computed as quantity x price_per_unit." },
+    { "step_id": "hp-08", "action": "Mark a pricing tier as Best Value", "selector": "PricingSection row star button title='Mark as best value'", "expected_result": "Only the clicked row's star is filled (setValue clears is_best_value on every other row)." },
+    { "step_id": "hp-09", "action": "Turn on 'Track inventory for this product' and enter stock and low-stock threshold", "selector": "InventorySection Switch + register('stock_quantity') / register('low_stock_threshold')", "expected_result": "Stock inputs appear and a live status pill renders ('N units in stock.' / 'Low stock — only N units remaining.')." },
+    { "step_id": "hp-10", "action": "Click 'Publish Product'", "selector": "button 'Publish Product'", "expected_result": "POST /admin/products returns 201; toast 'Product created'; router pushes back to /products." },
+    { "step_id": "hp-11", "action": "Locate the new product row in the list", "selector": "tr containing the product name", "expected_result": "Row shows the product name, its category name underneath, an 'Active' status badge, and a 'From' price." },
+    { "step_id": "hp-12", "action": "Open the product for editing via the row menu's Edit item", "selector": "row DropdownMenuTrigger -> menuitem 'Edit'", "expected_result": "Navigates to /products/{id}; page title 'Edit Product'; the form is pre-filled with the saved values and the sidebar button reads 'Save Changes'." },
+    { "step_id": "hp-13", "action": "Change the short description and click 'Save Changes'", "selector": "label:text-is('Short Description *') + input, then button 'Save Changes'", "expected_result": "PATCH /admin/products/{id} returns 200; toast 'Product updated'; the form stays on the edit page." },
+    { "step_id": "hp-14", "action": "Reassign the product to a different category and save", "selector": "select register('category_id'), then button 'Save Changes'", "expected_result": "Toast 'Product updated'; back on /products the row's sub-label shows the new category name." },
+    { "step_id": "hp-15", "action": "Archive the product from the list row menu", "selector": "row DropdownMenuTrigger -> menuitem 'Delete' -> dialog button 'Archive Product'", "expected_result": "ConfirmDialog titled 'Archive \"<name>\"?' with description 'The product will be archived and hidden from the storefront. It can be restored by changing its status back to Active.'; on confirm, toast '\"<name>\" archived'." }
+  ],
+  "alternate_paths": [
+    {
+      "path_name": "Save as Draft instead of publishing",
+      "steps": [
+        { "step_id": "alt-01", "action": "Fill the minimum required fields and click 'Save as Draft'", "selector": "button 'Save as Draft'", "expected_result": "save('draft') posts status='draft'; toast 'Product created'; the list row shows a 'Draft' status badge, not 'Active'." },
+        { "step_id": "alt-02", "action": "Re-open the draft and click 'Save Changes'", "selector": "button 'Save Changes'", "expected_result": "save('active') patches status='active'; toast 'Product updated'; the row's badge flips to 'Active' (this is also the only route back from archived)." }
+      ]
+    },
+    {
+      "path_name": "Filter the catalogue list",
+      "steps": [
+        { "step_id": "alt-03", "action": "Choose 'Active' in the status Select", "selector": "SelectTrigger with placeholder 'All statuses'", "expected_result": "getProducts sends is_active=true; only active products are listed." },
+        { "step_id": "alt-04", "action": "Choose 'Draft' in the status Select", "selector": "SelectTrigger with placeholder 'All statuses'", "expected_result": "getProducts sends is_active=false — draft AND archived products are both returned, because products.ts maps both to the same query param." },
+        { "step_id": "alt-05", "action": "Choose a specific category in the category Select", "selector": "SelectTrigger with placeholder 'All categories'", "expected_result": "getProducts sends category_id=<numeric id>; only that category's products are listed and page resets to 1." },
+        { "step_id": "alt-06", "action": "Clear the filters back to 'All statuses' / 'All categories'", "selector": "SelectItem 'All statuses' / 'All categories'", "expected_result": "Filters are removed from the query and the full first page returns." }
+      ]
+    },
+    {
+      "path_name": "Paginate the catalogue list",
+      "steps": [
+        { "step_id": "alt-07", "action": "Click 'Next' in the pagination footer", "selector": "button 'Next'", "expected_result": "setPage(page+1) refetches with page=2; the 'Showing X–Y of N results' line advances; 'Previous' becomes enabled." },
+        { "step_id": "alt-08", "action": "Click 'Previous'", "selector": "button 'Previous'", "expected_result": "Returns to page 1 and 'Previous' is disabled again." }
+      ]
+    },
+    {
+      "path_name": "Cancel out of the create form",
+      "steps": [
+        { "step_id": "alt-09", "action": "Click 'Cancel' after uploading photos", "selector": "button 'Cancel'", "expected_result": "MediaSectionHandle.cleanupNewUploads() deletes the just-uploaded media, then routes back to /products with no product created." }
+      ]
+    },
+    {
+      "path_name": "Storefront preview link from the edit form",
+      "steps": [
+        { "step_id": "alt-10", "action": "Inspect the 'Preview ↗' link on an existing product's edit page", "selector": "a[target=_blank] with text 'Preview ↗'", "expected_result": "href is `/${product.slug}` — a same-origin admin-panel path, not a storefront URL; grounded in ProductForm/index.tsx and expected to be verified, not assumed correct." }
+      ]
+    },
+    {
+      "path_name": "Customization mode and template fields",
+      "steps": [
+        { "step_id": "alt-11", "action": "Pick the 'Fill template' customization mode and add a template field", "selector": "CustomizationSection mode card 'Fill template', then button 'Add field'", "expected_result": "A template-field row appears with a label input, a type select (text/email/phone/multiline/url), placeholder, max-length and a Required checkbox; the field's id is derived from the label." }
+      ]
+    }
+  ],
+  "error_paths": [
+    { "step_id": "err-01", "trigger": "Click 'Publish Product' on a fresh create form with zero photos uploaded", "expected_ui_response": "sonner error toast reading exactly 'At least 3 photos are required'; no network request is made (guard sits before saveMutation).", "selector": "toast text 'At least 3 photos are required'" },
+    { "step_id": "err-02", "trigger": "Delete every pricing-tier row (trash icon per row) and click 'Publish Product'", "expected_ui_response": "sonner error toast reading exactly 'At least one pricing tier is required'; request aborted.", "selector": "toast text 'At least one pricing tier is required'" },
+    { "step_id": "err-03", "trigger": "Submit with Product Name left empty (after satisfying the 3-photo guard)", "expected_ui_response": "The Zod message 'Name is required' should render under the field, but save() calls form.getValues() directly instead of form.handleSubmit(), so the resolver never runs and formState.errors stays empty. The request goes out and the backend answers 422; client.ts's formatValidationDetail flattens it to a toast reading 'name: Field required'.", "selector": "toast text /name: Field required/ ; absence of inline text 'Name is required'" },
+    { "step_id": "err-04", "trigger": "Submit with Short Description left empty", "expected_ui_response": "Same class as err-03: inline 'Short description is required' never renders; the backend accepts short_description=null (Optional[str]) so the product saves with no short description at all.", "selector": "absence of inline text 'Short description is required'" },
+    { "step_id": "err-05", "trigger": "Submit with no category chosen ('Select category' left selected)", "expected_ui_response": "Inline 'Category is required' never renders (same bypass); category_id is coerced to null and the backend accepts it, creating an uncategorised product.", "selector": "absence of inline text 'Category is required'; product row's category sub-label renders '—'" },
+    { "step_id": "err-06", "trigger": "Create a product whose slug collides with an existing product's slug", "expected_ui_response": "Backend raises ConflictError 409 with detail \"Slug '<slug>' is already in use\", but ProductForm's catch only surfaces apiErr.message when status === 422 — so the toast reads the generic 'Failed to save product' and the real reason is hidden from the admin.", "selector": "toast text 'Failed to save product'" },
+    { "step_id": "err-07", "trigger": "Attach a video larger than 150 MB to the video dropzone", "expected_ui_response": "Client-side size guard renders an inline message 'Video is too large (<N> MB). Maximum is 150 MB.' and no upload is attempted.", "selector": "text /Video is too large \\(\\d+ MB\\)\\. Maximum is 150 MB\\./" },
+    { "step_id": "err-08", "trigger": "Upload an image whose short side is under 800 px", "expected_ui_response": "The upload still succeeds, but the thumbnail gets an advisory amber AlertTriangle badge whose title reads 'Low resolution (WxHpx) — aim for at least 800px on the short side.'", "selector": "img thumbnail sibling [title^='Low resolution']" },
+    { "step_id": "err-09", "trigger": "Upload an image larger than the backend's 10 MB cap", "expected_ui_response": "The per-image tile flips to its error state and overlays the API's message, 'Image exceeds 10 MB limit' (MediaService.upload_image -> ProviderError -> HTTPException).", "selector": "image tile error overlay text /Image exceeds 10 MB limit/" },
+    { "step_id": "err-10", "trigger": "Open /products/<an id that does not exist>", "expected_ui_response": "useProductDetail's query fails; ProductEditClient only branches on isLoading, so it renders <ProductForm product={undefined}> — an empty create-shaped form under the 'Edit Product' heading, with no not-found state and a sidebar that reads 'Publish Product'.", "selector": "heading 'Edit Product' together with button 'Publish Product'" },
+    { "step_id": "err-11", "trigger": "Empty turnaround_options and submit", "expected_ui_response": "Guard toast 'At least one turnaround option is required' exists in save(), but TurnaroundSection renders a fixed Standard/Express/Rush trio with no remove control, so this path is unreachable through the UI.", "selector": null },
+    { "step_id": "err-12", "trigger": "Archive request fails at the API", "expected_ui_response": "toast 'Failed to archive product' (identical copy in both ProductsTable.handleDelete and ProductForm.handleDelete).", "selector": "toast text 'Failed to archive product'" }
+  ],
+  "edge_cases": [
+    { "case": "Opening ANY existing product for editing silently rewrites its slug: BasicInfoSection's useEffect fires on mount with the loaded name and calls setValue('slug', slugify(name)), so a product whose stored slug differs from slugify(name) (e.g. 'wedding-invitations' for 'Wedding Invitations & Save the Dates') has its slug replaced before the admin touches anything — and any later Save Changes persists it, changing the public storefront URL.", "existing_validation": "none — the effect has no 'only when the name actually changed' guard and shouldDirty is false, so the 'Unsaved changes' warning does not even appear", "risk_note": "Silent live-URL breakage and SEO loss on an unrelated edit; the highest-impact finding in this plan." },
+    { "case": "The 'Search products…' box on the catalogue list does nothing at all — useProducts.setSearch is an empty function ('backend search not yet implemented').", "existing_validation": "none", "risk_note": "A fully-rendered, debounced, clearable search control that silently discards every keystroke; staff cannot tell it is unimplemented." },
+    { "case": "The Product / From / Created column headers render as sort buttons (enableSorting: true) but ProductsTable passes no sorting/onSortingChange to DataTable, which is in manualSorting mode.", "existing_validation": "none", "risk_note": "Clicking a header is a no-op and the chevron indicator never changes — the control looks broken rather than absent." },
+    { "case": "Status filter cannot distinguish Draft from Archived: products.ts maps both to is_active=false.", "existing_validation": "the mapping itself, documented in products.ts as 'Backend adds a status filter in a future sprint'", "risk_note": "Selecting 'Archived' lists drafts too, so archived stock is indistinguishable from work-in-progress." },
+    { "case": "A negative price_per_unit or a zero/negative quantity can be typed into a pricing tier and saved.", "existing_validation": "none — no min on the inputs, no Zod bound (and Zod never runs anyway), and backend PricingTier is a bare int/float with no ge constraint", "risk_note": "A negative unit price flows straight to the storefront's 'From' price and the order total." },
+    { "case": "A negative stock_quantity or low_stock_threshold can be saved.", "existing_validation": "min={0} on the number inputs only — the form is never natively submitted, so HTML constraint validation never runs; backend is Optional[int] with no bound", "risk_note": "Nonsense inventory state; also affects the 'Out of stock — product will be hidden on the storefront.' rule." },
+    { "case": "Setting stock to 0 with tracking on shows 'Out of stock — product will be hidden on the storefront.'", "existing_validation": "InventorySection's live status pill", "risk_note": "The claim is admin-side copy; whether the storefront actually hides it is a cross-app assertion this admin plan can only note, not prove." },
+    { "case": "SEO Meta Title over 60 chars / Meta Description over 160 chars turn the character counter red but do not block saving.", "existing_validation": "CharCount colouring only", "risk_note": "Advisory-only by design; worth confirming it stays advisory rather than silently truncating." },
+    { "case": "The image dropzone caps at 8 images (disabled at maxImages, extra files sliced off silently).", "existing_validation": "files.slice(0, maxImages - images.length) and disabled: images.length >= maxImages", "risk_note": "Dropping 10 files at once silently keeps 8 with no message explaining the two that vanished." },
+    { "case": "The edit form's Delete Product dialog says 'This will permanently delete the product. This cannot be undone.' while the backend's DELETE only archives (status=archived, is_active=False) — and the list's own dialog says the opposite ('can be restored by changing its status back to Active').", "existing_validation": "none — two contradictory copies of the same action", "risk_note": "Worse than cosmetic: deactivate_product also deletes every image_key and the video from storage first, so a product 'restored' per the list dialog's promise comes back with no images and can no longer satisfy the 3-photo minimum." },
+    { "case": "The admin list's 'From' price is Math.min(pricing_tiers.price_per_unit) (products.ts normalize) while the storefront's 'From' is schemas/product.py's _display_price (the is_best_value tier when one is set).", "existing_validation": "none — two independent definitions of the same displayed number", "risk_note": "Same family as the pricing-tier sort mismatch already fixed on the frontend run; admin and storefront can advertise different 'From' prices for the same product." },
+    { "case": "Slug derivation differs between client and server: BasicInfoSection's slugify replaces every non-alphanumeric run with '-', while the backend's _auto_slug strips non-word characters first and only then hyphenates whitespace (so 'A&B Cards' -> 'a-b-cards' client-side vs 'ab-cards' server-side).", "existing_validation": "client always sends an explicit slug, so the server fallback rarely runs", "risk_note": "Divergence only surfaces if the slug field is ever cleared, but it means two different 'canonical' slugs exist in the codebase." },
+    { "case": "An admin can save a product with no category at all (see err-05), which is exactly the null-category_id leak already fixed backend-side for the public catalog on the frontend run.", "existing_validation": "the (dead) Zod 'Category is required' rule", "risk_note": "The backend fix stops it reaching the storefront; the admin panel still happily creates the bad row." },
+    { "case": "Access token lives in memory only (Zustand, not localStorage), so a capture step that reloads the page mid-run loses the session.", "existing_validation": "AuthGuard waits on _hasHydrated", "risk_note": "Capture-harness constraint, not a product defect: keep Lighthouse off and never hard-reload mid-spec." }
+  ],
+  "gaps": [
+    "No bulk actions exist on the product list: ProductsTable does not pass enableRowSelection or bulkActions to DataTable, so there are no checkboxes and no multi-select toolbar. The user's request to cover 'bulk actions if any exist' resolves to: none exist.",
+    "No server-side product search endpoint: GET /admin/products accepts only is_active, category_id, page, page_size — there is no q/search param, which is why useProducts.setSearch is a no-op stub.",
+    "No server-side sorting: the same endpoint accepts no sort/order param, so the list's sort headers have nothing to call even if the client were wired up.",
+    "No status query param: the backend exposes is_active (bool) only, so draft and archived are not separable server-side.",
+    "There is no 'archived' choice anywhere in the product form — status is driven entirely by which button is clicked (Publish -> active, Save as Draft -> draft) plus the Active switch in Basic Information; archiving is only reachable via the delete/archive action.",
+    "RBAC: products.view/create/edit/delete exist in app/core/permissions.py and gate the API, but ProductsTable and ProductForm render every mutating control unconditionally — there is no usePermissions() gate in the products feature at all (unlike content/, staff/, shipping/). A products.view-only role sees fully enabled Add Product / Edit / Delete controls that will 403 on submit. Verifying the 403 path needs a second seeded staff account, which this run does not create."
+  ]
+}

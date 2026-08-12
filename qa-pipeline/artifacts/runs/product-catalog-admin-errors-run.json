@@ -1,0 +1,562 @@
+{
+  "feature_name": "Product Catalog Admin Errors",
+  "plan_path": "qa-pipeline/artifacts/plans/product-catalog-admin-to-storefront-plan.json",
+  "run_timestamp": "2026-08-11T19:45:45.617Z",
+  "trace_path": null,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Open the admin login page",
+      "selector": null,
+      "route": "/login",
+      "bounding_box": null,
+      "timestamp_ms": 672,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": 5
+        }
+      ],
+      "console_errors": [
+        "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>\n      <LoadingBoundary name=\"login/\" loading={null}>\n        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>\n          <RedirectBoundary>\n            <RedirectErrorBoundary router={{...}}>\n              <InnerLayoutRouter url=\"/login\" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>\n                <SegmentViewNode type=\"page\" pagePath=\"(auth)/log...\">\n                  <SegmentTrieNode>\n                  <ClientPageRoot Component={function LoginPage} serverProvidedParams={{...}}>\n                    <LoginPage params={Promise} searchParams={Promise}>\n                      <div className=\"w-full max...\">\n                        <div>\n                        <div className=\"bg-[var(--...\">\n                          <h2>\n                          <form onSubmit={function} noValidate={true} className=\"space-y-4\">\n                            <div>\n                              <label>\n                              <input\n                                id=\"email\"\n                                type=\"email\"\n                                autoComplete=\"email\"\n                                autoFocus={true}\n                                name=\"email\"\n                                onChange={function onChange}\n                                onBlur={function onChange}\n                                ref={function ref}\n                                className=\"w-full px-3 py-2 text-sm bg-[var(--surface)] border rounded-lg text-[var(--...\"\n                                placeholder=\"admin@urgentprinters.com\"\n-                               style={{caret-color:\"transparent\"}}\n                              >\n                            <div>\n                              <label>\n                              <div className=\"relative\">\n                                <input\n                                  id=\"password\"\n                                  type=\"password\"\n                                  autoComplete=\"current-password\"\n                                  name=\"password\"\n                                  onChange={function onChange}\n                                  onBlur={function onChange}\n                                  ref={function ref}\n                                  className=\"w-full pl-3 pr-10 py-2 text-sm bg-[var(--surface)] border rounded-lg text...\"\n                                  placeholder=\"Enter your password\"\n-                                 style={{caret-color:\"transparent\"}}\n                                >\n                                ...\n                            ...\n                ...\n              ...\n"
+      ]
+    },
+    {
+      "step_id": "auth-02",
+      "action": "Enter the admin email",
+      "selector": "locator('#email')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 358,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 827,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/auth-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "admin@urgentprinters.com",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-03",
+      "action": "Enter the admin password",
+      "selector": "locator('#password')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 438,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 947,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/auth-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "SuperAdmin@123",
+      "typed_masked": true,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-04",
+      "action": "Submit the login form",
+      "selector": "getByRole('button', { name: 'Sign in' })",
+      "route": "/dashboard",
+      "bounding_box": {
+        "x": 481,
+        "y": 500,
+        "width": 318,
+        "height": 36
+      },
+      "timestamp_ms": 2412,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/auth-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-01",
+      "action": "Publish with every text field filled but no photos uploaded",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 3919,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-02",
+      "action": "Remove every pricing tier, then publish",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 591,
+        "y": 1025,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 12267,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-11",
+      "action": "Confirm the turnaround-options guard is unreachable from the UI",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 12415,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-11.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "clean-01",
+      "action": "Cancel out, cleaning up the uploaded media",
+      "selector": "getByRole('button', { name: 'Cancel' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 294,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 15967,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/clean-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 7
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-03",
+      "action": "Publish with Name, Short Description and Category all empty",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 24424,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "clean-02",
+      "action": "Cancel out again",
+      "selector": "getByRole('button', { name: 'Cancel' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 348,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 27967,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/clean-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-07",
+      "action": "Attach a 151 MB video to the video dropzone",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 29047,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-08",
+      "action": "Upload a 640x420 photo (short side under 800px)",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 591,
+        "y": 1025,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 31698,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-09",
+      "action": "Upload a 12.7 MB photo, over the backend 10 MB cap",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 591,
+        "y": 1194,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 32154,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": [
+        "Failed to load resource: the server responded with a status of 413 (Request Entity Too Large)"
+      ]
+    },
+    {
+      "step_id": "clean-03",
+      "action": "Cancel out, cleaning up the uploaded media",
+      "selector": "getByRole('button', { name: 'Cancel' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 348,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 33861,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/clean-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "setup-01",
+      "action": "Create the product whose slug will be collided with",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 42842,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/setup-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-06",
+      "action": "Publish a second product reusing that slug",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 51620,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": [
+        "Failed to load resource: the server responded with a status of 409 (Conflict)"
+      ]
+    },
+    {
+      "step_id": "err-10",
+      "action": "Open /products/99999999",
+      "selector": null,
+      "route": "/products/99999999",
+      "bounding_box": null,
+      "timestamp_ms": 77509,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    }
+  ],
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  }
+}

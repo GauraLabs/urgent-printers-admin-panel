@@ -37,7 +37,11 @@ const schema = z.object({
   finishes: z.array(z.object({ label: z.string(), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
   sides_options: z.array(z.object({ label: z.string(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
   quantity_steps: z.array(z.number()).optional(),
-  pricing_tiers: z.array(z.object({ quantity: z.number(), price_per_unit: z.number(), is_best_value: z.boolean() })).optional(),
+  pricing_tiers: z.array(z.object({
+    quantity: z.number().min(1, 'Quantity must be at least 1'),
+    price_per_unit: z.number().min(0, 'Price cannot be negative'),
+    is_best_value: z.boolean(),
+  })).optional(),
   turnaround_options: z.array(z.object({ type: z.string(), days: z.number(), extra_cost: z.number(), is_active: z.boolean() })).optional(),
   seo: z.object({ title: z.string().nullable().optional(), description: z.string().nullable().optional(), canonical_url: z.string().nullable().optional() }).optional(),
   track_inventory: z.boolean().optional(),
@@ -55,6 +59,14 @@ const schema = z.object({
     required: z.boolean(),
     max_length: z.number().optional(),
   })).optional(),
+}).superRefine((data, ctx) => {
+  if (!data.track_inventory) return;
+  if (data.stock_quantity != null && data.stock_quantity < 0) {
+    ctx.addIssue({ code: 'custom', message: 'Stock cannot be negative', path: ['stock_quantity'] });
+  }
+  if (data.low_stock_threshold != null && data.low_stock_threshold < 0) {
+    ctx.addIssue({ code: 'custom', message: 'Threshold cannot be negative', path: ['low_stock_threshold'] });
+  }
 });
 
 export type ProductFormValues = z.infer<typeof schema>;
@@ -166,14 +178,14 @@ export function ProductForm({ product }: ProductFormProps) {
   const { watch, setValue, formState: { isDirty, isSubmitting } } = form;
   const currentStatus = watch('status') as ProductStatus;
 
-  async function save(status: ProductStatus) {
-    const v = form.getValues();
-
-    // Submit buttons call save() directly (not form.handleSubmit), so the Zod
-    // schema's validation never runs here — these two fields need an explicit
-    // check. The backend now rejects an empty list for both with a 422 (was
-    // previously silently accepted), so catch it client-side with a message
-    // an admin can act on instead of a raw API failure.
+  async function save(status: ProductStatus, v: ProductFormValues) {
+    // pricing_tiers/turnaround_options/image_keys are `.optional()` arrays in
+    // the Zod schema (per-element bounds are validated, but an empty array is
+    // still schema-valid), so the resolver alone won't catch a zero-length
+    // list — these three need an explicit check after validation passes. The
+    // backend rejects an empty list for the first two with a 422, so this
+    // catches it client-side with a message an admin can act on instead of a
+    // raw API failure.
     if ((v.pricing_tiers ?? []).length === 0) {
       toast.error('At least one pricing tier is required');
       return;
@@ -219,7 +231,12 @@ export function ProductForm({ product }: ProductFormProps) {
       if (!product) router.push(ROUTES.PRODUCTS);
     } catch (err) {
       const apiErr = err as ApiError;
-      toast.error(apiErr.status === 422 ? apiErr.message : 'Failed to save product');
+      // 422 (Zod-mirroring pydantic validation) and 409 (e.g. duplicate slug
+      // ConflictError) both carry a specific, actionable detail string —
+      // surface it. Anything else (5xx, network errors) falls back to a
+      // generic message rather than leaking a raw server string.
+      const showDetail = apiErr.status === 422 || apiErr.status === 409;
+      toast.error(showDetail ? apiErr.message : 'Failed to save product');
     }
   }
 
@@ -239,7 +256,7 @@ export function ProductForm({ product }: ProductFormProps) {
       {/* Main sections */}
       <div className="xl:col-span-2 space-y-4">
         <Section title="Basic Information">
-          <BasicInfoSection form={form} />
+          <BasicInfoSection form={form} mode={product ? 'edit' : 'create'} />
         </Section>
         <Section title="Customization">
           <CustomizationSection form={form} />
@@ -299,7 +316,7 @@ export function ProductForm({ product }: ProductFormProps) {
               type="button"
               className="w-full"
               disabled={isSubmitting || saveMutation.isPending}
-              onClick={() => save('active')}
+              onClick={form.handleSubmit((v) => save('active', v))}
             >
               {product ? 'Save Changes' : 'Publish Product'}
             </Button>
@@ -308,7 +325,7 @@ export function ProductForm({ product }: ProductFormProps) {
               variant="outline"
               className="w-full"
               disabled={isSubmitting || saveMutation.isPending}
-              onClick={() => save('draft')}
+              onClick={form.handleSubmit((v) => save('draft', v))}
             >
               Save as Draft
             </Button>
@@ -350,7 +367,7 @@ export function ProductForm({ product }: ProductFormProps) {
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
         title={`Delete "${product?.name}"?`}
-        description="This will permanently delete the product. This cannot be undone."
+        description="The product will be archived and hidden from the storefront. It can be restored by changing its status back to Active."
         confirmLabel="Delete Product"
         onConfirm={handleDelete}
         isLoading={deleteMutation.isPending}

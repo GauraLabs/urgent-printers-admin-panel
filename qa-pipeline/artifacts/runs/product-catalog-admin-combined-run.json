@@ -1,0 +1,2493 @@
+{
+  "feature_name": "Product Catalog (Admin to Storefront)",
+  "plan_path": "qa-pipeline/artifacts/plans/product-catalog-admin-to-storefront-plan.json",
+  "run_timestamp": "2026-08-11T19:19:03.363Z",
+  "trace_path": "qa-pipeline/artifacts/traces/product-catalog-admin-required-field-unselect-trace.zip",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Open the admin login page",
+      "selector": null,
+      "route": "/login",
+      "bounding_box": null,
+      "timestamp_ms": 612,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": 5
+        }
+      ],
+      "console_errors": [
+        "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>\n      <LoadingBoundary name=\"login/\" loading={null}>\n        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>\n          <RedirectBoundary>\n            <RedirectErrorBoundary router={{...}}>\n              <InnerLayoutRouter url=\"/login\" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>\n                <SegmentViewNode type=\"page\" pagePath=\"(auth)/log...\">\n                  <SegmentTrieNode>\n                  <ClientPageRoot Component={function LoginPage} serverProvidedParams={{...}}>\n                    <LoginPage params={Promise} searchParams={Promise}>\n                      <div className=\"w-full max...\">\n                        <div>\n                        <div className=\"bg-[var(--...\">\n                          <h2>\n                          <form onSubmit={function} noValidate={true} className=\"space-y-4\">\n                            <div>\n                              <label>\n                              <input\n                                id=\"email\"\n                                type=\"email\"\n                                autoComplete=\"email\"\n                                autoFocus={true}\n                                name=\"email\"\n                                onChange={function onChange}\n                                onBlur={function onChange}\n                                ref={function ref}\n                                className=\"w-full px-3 py-2 text-sm bg-[var(--surface)] border rounded-lg text-[var(--...\"\n                                placeholder=\"admin@urgentprinters.com\"\n-                               style={{caret-color:\"transparent\"}}\n                              >\n                            <div>\n                              <label>\n                              <div className=\"relative\">\n                                <input\n                                  id=\"password\"\n                                  type=\"password\"\n                                  autoComplete=\"current-password\"\n                                  name=\"password\"\n                                  onChange={function onChange}\n                                  onBlur={function onChange}\n                                  ref={function ref}\n                                  className=\"w-full pl-3 pr-10 py-2 text-sm bg-[var(--surface)] border rounded-lg text...\"\n                                  placeholder=\"Enter your password\"\n-                                 style={{caret-color:\"transparent\"}}\n                                >\n                                ...\n                            ...\n                ...\n              ...\n"
+      ]
+    },
+    {
+      "step_id": "auth-02",
+      "action": "Enter the admin email",
+      "selector": "locator('#email')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 358,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 759,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/auth-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "admin@urgentprinters.com",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-03",
+      "action": "Enter the admin password",
+      "selector": "locator('#password')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 438,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 879,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/auth-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "SuperAdmin@123",
+      "typed_masked": true,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-04",
+      "action": "Submit the login form",
+      "selector": "getByRole('button', { name: 'Sign in' })",
+      "route": "/dashboard",
+      "bounding_box": {
+        "x": 481,
+        "y": 500,
+        "width": 318,
+        "height": 36
+      },
+      "timestamp_ms": 2290,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/auth-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-01",
+      "action": "Open the product catalogue list",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 3312,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-02",
+      "action": "Click 'Add Product'",
+      "selector": "getByRole('link', { name: 'Add Product' }).first()",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 1127,
+        "y": 80,
+        "width": 129,
+        "height": 32
+      },
+      "timestamp_ms": 4195,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-03",
+      "action": "Enter the product name",
+      "selector": "locator('label:text-is(\"Product Name *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 213,
+        "width": 298,
+        "height": 38
+      },
+      "timestamp_ms": 4421,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "QA Pipeline Test Product 1786475943364",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-04",
+      "action": "Observe the auto-derived Slug",
+      "selector": "locator('label:text-is(\"Slug *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 599,
+        "y": 213,
+        "width": 298,
+        "height": 38
+      },
+      "timestamp_ms": 4578,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-05",
+      "action": "Enter the short description",
+      "selector": "locator('label:text-is(\"Short Description *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 289,
+        "width": 611,
+        "height": 38
+      },
+      "timestamp_ms": 4800,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "Premium 350 GSM cards printed and dispatched within 24 hours.",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-06",
+      "action": "Select a category",
+      "selector": "locator('label:text-is(\"Category *\")').locator('xpath=following-sibling::select[1]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 586,
+        "width": 193,
+        "height": 37
+      },
+      "timestamp_ms": 5058,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-07",
+      "action": "Upload three product photos",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 591,
+        "y": 1025,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 12462,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-08",
+      "action": "Review the default pricing tiers",
+      "selector": "locator('input[name=\"pricing_tiers.0.quantity\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 2460,
+        "width": 96,
+        "height": 30
+      },
+      "timestamp_ms": 12664,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-09",
+      "action": "Mark the 1,000-unit tier as 'Best Value'",
+      "selector": "locator('button[title=\"Mark as best value\"]').nth(3)",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 741,
+        "y": 2606,
+        "width": 16,
+        "height": 16
+      },
+      "timestamp_ms": 12967,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-10",
+      "action": "Turn on inventory tracking and set stock levels",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 13432,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-11",
+      "action": "Click 'Publish Product'",
+      "selector": "getByRole('button', { name: 'Publish Product' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 214,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 14223,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-11.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 7
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-12",
+      "action": "Locate the new product row",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Product 1786475943364' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 265,
+        "y": 240,
+        "width": 990,
+        "height": 53
+      },
+      "timestamp_ms": 14485,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-12.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-13",
+      "action": "Open the row menu and click 'Edit'",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Product 1786475943364' }).locator('button').last()",
+      "route": "/products/11775",
+      "bounding_box": {
+        "x": 1213,
+        "y": 252,
+        "width": 28,
+        "height": 28
+      },
+      "timestamp_ms": 15479,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-13.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-14",
+      "action": "Change the short description and save",
+      "selector": "locator('label:text-is(\"Short Description *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/products/11775",
+      "bounding_box": {
+        "x": 285,
+        "y": 289,
+        "width": 611,
+        "height": 38
+      },
+      "timestamp_ms": 16012,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-14.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-15",
+      "action": "Reassign the product to another category and save",
+      "selector": "locator('label:text-is(\"Category *\")').locator('xpath=following-sibling::select[1]')",
+      "route": "/products",
+      "bounding_box": {
+        "x": 285,
+        "y": 586,
+        "width": 193,
+        "height": 37
+      },
+      "timestamp_ms": 17158,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-15.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-16",
+      "action": "Archive the product from the row menu",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Product 1786475943364' }).locator('button').last()",
+      "route": "/products",
+      "bounding_box": {
+        "x": 1213,
+        "y": 252,
+        "width": 28,
+        "height": 28
+      },
+      "timestamp_ms": 18302,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-16.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-17",
+      "action": "Confirm the archived product no longer shows as Active",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 19195,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-17.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-01",
+      "action": "Open the admin login page",
+      "selector": null,
+      "route": "/login",
+      "bounding_box": null,
+      "timestamp_ms": 20883,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": 5
+        }
+      ],
+      "console_errors": [
+        "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>\n      <LoadingBoundary name=\"login/\" loading={null}>\n        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>\n          <RedirectBoundary>\n            <RedirectErrorBoundary router={{...}}>\n              <InnerLayoutRouter url=\"/login\" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>\n                <SegmentViewNode type=\"page\" pagePath=\"(auth)/log...\">\n                  <SegmentTrieNode>\n                  <ClientPageRoot Component={function LoginPage} serverProvidedParams={{...}}>\n                    <LoginPage params={Promise} searchParams={Promise}>\n                      <div className=\"w-full max...\">\n                        <div>\n                        <div className=\"bg-[var(--...\">\n                          <h2>\n                          <form onSubmit={function} noValidate={true} className=\"space-y-4\">\n                            <div>\n                              <label>\n                              <input\n                                id=\"email\"\n                                type=\"email\"\n                                autoComplete=\"email\"\n                                autoFocus={true}\n                                name=\"email\"\n                                onChange={function onChange}\n                                onBlur={function onChange}\n                                ref={function ref}\n                                className=\"w-full px-3 py-2 text-sm bg-[var(--surface)] border rounded-lg text-[var(--...\"\n                                placeholder=\"admin@urgentprinters.com\"\n-                               style={{caret-color:\"transparent\"}}\n                              >\n                            <div>\n                              <label>\n                              <div className=\"relative\">\n                                <input\n                                  id=\"password\"\n                                  type=\"password\"\n                                  autoComplete=\"current-password\"\n                                  name=\"password\"\n                                  onChange={function onChange}\n                                  onBlur={function onChange}\n                                  ref={function ref}\n                                  className=\"w-full pl-3 pr-10 py-2 text-sm bg-[var(--surface)] border rounded-lg text...\"\n                                  placeholder=\"Enter your password\"\n-                                 style={{caret-color:\"transparent\"}}\n                                >\n                                ...\n                            ...\n                ...\n              ...\n"
+      ]
+    },
+    {
+      "step_id": "auth-02",
+      "action": "Enter the admin email",
+      "selector": "locator('#email')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 358,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 21041,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/auth-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "admin@urgentprinters.com",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-03",
+      "action": "Enter the admin password",
+      "selector": "locator('#password')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 438,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 21180,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/auth-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "SuperAdmin@123",
+      "typed_masked": true,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-04",
+      "action": "Submit the login form",
+      "selector": "getByRole('button', { name: 'Sign in' })",
+      "route": "/dashboard",
+      "bounding_box": {
+        "x": 481,
+        "y": 500,
+        "width": 318,
+        "height": 36
+      },
+      "timestamp_ms": 22303,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/auth-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-01",
+      "action": "Publish with every text field filled but no photos uploaded",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 23956,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 27
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-02",
+      "action": "Remove every pricing tier, then publish",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 591,
+        "y": 1025,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 32092,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-11",
+      "action": "Confirm the turnaround-options guard is unreachable from the UI",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 32286,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-11.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "clean-01",
+      "action": "Cancel out, cleaning up the uploaded media",
+      "selector": "getByRole('button', { name: 'Cancel' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 294,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 35904,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/clean-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 7
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-03",
+      "action": "Publish with Name, Short Description and Category all empty",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 44245,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "clean-02",
+      "action": "Cancel out again",
+      "selector": "getByRole('button', { name: 'Cancel' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 348,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 48001,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/clean-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-07",
+      "action": "Attach a 151 MB video to the video dropzone",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 49099,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-08",
+      "action": "Upload a 640x420 photo (short side under 800px)",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 591,
+        "y": 1025,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 51816,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-09",
+      "action": "Upload a 12.7 MB photo, over the backend 10 MB cap",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 591,
+        "y": 1194,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 52349,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": [
+        "Failed to load resource: the server responded with a status of 413 (Request Entity Too Large)"
+      ]
+    },
+    {
+      "step_id": "clean-03",
+      "action": "Cancel out, cleaning up the uploaded media",
+      "selector": "getByRole('button', { name: 'Cancel' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 348,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 53983,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/clean-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "setup-01",
+      "action": "Create the product whose slug will be collided with",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 63191,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/setup-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-06",
+      "action": "Publish a second product reusing that slug",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 72342,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": [
+        "Failed to load resource: the server responded with a status of 409 (Conflict)"
+      ]
+    },
+    {
+      "step_id": "err-10",
+      "action": "Open /products/99999999",
+      "selector": null,
+      "route": "/products/99999999",
+      "bounding_box": null,
+      "timestamp_ms": 98207,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-errors/err-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "step_id": "auth-01",
+      "action": "Open the admin login page",
+      "selector": null,
+      "route": "/login",
+      "bounding_box": null,
+      "timestamp_ms": 100202,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": 5
+        }
+      ],
+      "console_errors": [
+        "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>\n      <LoadingBoundary name=\"login/\" loading={null}>\n        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>\n          <RedirectBoundary>\n            <RedirectErrorBoundary router={{...}}>\n              <InnerLayoutRouter url=\"/login\" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>\n                <SegmentViewNode type=\"page\" pagePath=\"(auth)/log...\">\n                  <SegmentTrieNode>\n                  <ClientPageRoot Component={function LoginPage} serverProvidedParams={{...}}>\n                    <LoginPage params={Promise} searchParams={Promise}>\n                      <div className=\"w-full max...\">\n                        <div>\n                        <div className=\"bg-[var(--...\">\n                          <h2>\n                          <form onSubmit={function} noValidate={true} className=\"space-y-4\">\n                            <div>\n                              <label>\n                              <input\n                                id=\"email\"\n                                type=\"email\"\n                                autoComplete=\"email\"\n                                autoFocus={true}\n                                name=\"email\"\n                                onChange={function onChange}\n                                onBlur={function onChange}\n                                ref={function ref}\n                                className=\"w-full px-3 py-2 text-sm bg-[var(--surface)] border rounded-lg text-[var(--...\"\n                                placeholder=\"admin@urgentprinters.com\"\n-                               style={{caret-color:\"transparent\"}}\n                              >\n                            <div>\n                              <label>\n                              <div className=\"relative\">\n                                <input\n                                  id=\"password\"\n                                  type=\"password\"\n                                  autoComplete=\"current-password\"\n                                  name=\"password\"\n                                  onChange={function onChange}\n                                  onBlur={function onChange}\n                                  ref={function ref}\n                                  className=\"w-full pl-3 pr-10 py-2 text-sm bg-[var(--surface)] border rounded-lg text...\"\n                                  placeholder=\"Enter your password\"\n-                                 style={{caret-color:\"transparent\"}}\n                                >\n                                ...\n                            ...\n                ...\n              ...\n"
+      ]
+    },
+    {
+      "step_id": "auth-02",
+      "action": "Enter the admin email",
+      "selector": "locator('#email')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 358,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 100365,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/auth-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "admin@urgentprinters.com",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-03",
+      "action": "Enter the admin password",
+      "selector": "locator('#password')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 438,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 100474,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/auth-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "SuperAdmin@123",
+      "typed_masked": true,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-04",
+      "action": "Submit the login form",
+      "selector": "getByRole('button', { name: 'Sign in' })",
+      "route": "/dashboard",
+      "bounding_box": {
+        "x": 481,
+        "y": 500,
+        "width": 318,
+        "height": 36
+      },
+      "timestamp_ms": 101831,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/auth-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-01",
+      "action": "Open the catalogue list and record the unfiltered rows",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 102842,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/edge-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-02",
+      "action": "Type a product name into the search box",
+      "selector": "getByPlaceholder('Search products\u2026')",
+      "route": "/products",
+      "bounding_box": {
+        "x": 264,
+        "y": 153,
+        "width": 208,
+        "height": 34
+      },
+      "timestamp_ms": 104234,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/edge-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-03",
+      "action": "Click the 'Product' column header to sort",
+      "selector": "getByRole('columnheader', { name: 'Product' }).getByRole('button')",
+      "route": "/products",
+      "bounding_box": {
+        "x": 279,
+        "y": 210,
+        "width": 72,
+        "height": 19
+      },
+      "timestamp_ms": 106767,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/edge-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-05",
+      "action": "Compare status 'Draft' against status 'Archived'",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 109374,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/edge-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-06",
+      "action": "Filter by a single category",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 112041,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/edge-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-07",
+      "action": "Check the pagination footer against the row count",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 113762,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/edge-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-08",
+      "action": "Hide the Created column via the Columns menu",
+      "selector": "getByRole('button', { name: 'Columns' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 1162,
+        "y": 155,
+        "width": 94,
+        "height": 30
+      },
+      "timestamp_ms": 114245,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/edge-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-04",
+      "action": "Filter the list to status 'Active'",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 116447,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-list-controls/edge-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-01",
+      "action": "Open the admin login page",
+      "selector": null,
+      "route": "/login",
+      "bounding_box": null,
+      "timestamp_ms": 118165,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": 5
+        }
+      ],
+      "console_errors": [
+        "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>\n      <LoadingBoundary name=\"login/\" loading={null}>\n        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>\n          <RedirectBoundary>\n            <RedirectErrorBoundary router={{...}}>\n              <InnerLayoutRouter url=\"/login\" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>\n                <SegmentViewNode type=\"page\" pagePath=\"(auth)/log...\">\n                  <SegmentTrieNode>\n                  <ClientPageRoot Component={function LoginPage} serverProvidedParams={{...}}>\n                    <LoginPage params={Promise} searchParams={Promise}>\n                      <div className=\"w-full max...\">\n                        <div>\n                        <div className=\"bg-[var(--...\">\n                          <h2>\n                          <form onSubmit={function} noValidate={true} className=\"space-y-4\">\n                            <div>\n                              <label>\n                              <input\n                                id=\"email\"\n                                type=\"email\"\n                                autoComplete=\"email\"\n                                autoFocus={true}\n                                name=\"email\"\n                                onChange={function onChange}\n                                onBlur={function onChange}\n                                ref={function ref}\n                                className=\"w-full px-3 py-2 text-sm bg-[var(--surface)] border rounded-lg text-[var(--...\"\n                                placeholder=\"admin@urgentprinters.com\"\n-                               style={{caret-color:\"transparent\"}}\n                              >\n                            <div>\n                              <label>\n                              <div className=\"relative\">\n                                <input\n                                  id=\"password\"\n                                  type=\"password\"\n                                  autoComplete=\"current-password\"\n                                  name=\"password\"\n                                  onChange={function onChange}\n                                  onBlur={function onChange}\n                                  ref={function ref}\n                                  className=\"w-full pl-3 pr-10 py-2 text-sm bg-[var(--surface)] border rounded-lg text...\"\n                                  placeholder=\"Enter your password\"\n-                                 style={{caret-color:\"transparent\"}}\n                                >\n                                ...\n                            ...\n                ...\n              ...\n"
+      ]
+    },
+    {
+      "step_id": "auth-02",
+      "action": "Enter the admin email",
+      "selector": "locator('#email')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 358,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 118314,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/auth-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "admin@urgentprinters.com",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-03",
+      "action": "Enter the admin password",
+      "selector": "locator('#password')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 438,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 118447,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/auth-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "SuperAdmin@123",
+      "typed_masked": true,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-04",
+      "action": "Submit the login form",
+      "selector": "getByRole('button', { name: 'Sign in' })",
+      "route": "/dashboard",
+      "bounding_box": {
+        "x": 481,
+        "y": 500,
+        "width": 318,
+        "height": 36
+      },
+      "timestamp_ms": 119937,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/auth-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "setup-01",
+      "action": "Create a product with a hand-written slug",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 129672,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/setup-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 7
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-09",
+      "action": "Re-open that product for editing and inspect the Slug field",
+      "selector": null,
+      "route": "/products/11772",
+      "bounding_box": null,
+      "timestamp_ms": 130568,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/edge-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-10",
+      "action": "Enter a negative unit price and a zero quantity",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 139212,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/edge-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-11",
+      "action": "Enter a negative stock quantity",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 139617,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/edge-11.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-12",
+      "action": "Publish the out-of-range product",
+      "selector": "getByRole('button', { name: 'Publish Product' })",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 958,
+        "y": 214,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 145006,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/edge-12.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-15",
+      "action": "Drop ten photos into an 8-image dropzone",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 591,
+        "y": -921,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 157155,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/edge-15.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-16",
+      "action": "Overflow the SEO Meta Title and Meta Description counters",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 157679,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/edge-16.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "clean-01",
+      "action": "Cancel out, cleaning up the uploaded media",
+      "selector": "getByRole('button', { name: 'Cancel' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 294,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 166525,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/clean-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "setup-02",
+      "action": "Create a product to delete from its edit page",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 176089,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/setup-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-13",
+      "action": "Open the product and click 'Delete Product'",
+      "selector": null,
+      "route": "/products/11773",
+      "bounding_box": null,
+      "timestamp_ms": 177161,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/edge-13.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-14",
+      "action": "Confirm, and observe what the action actually reports",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 177855,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-form-edges/edge-14.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 7
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-01",
+      "action": "Open the admin login page",
+      "selector": null,
+      "route": "/login",
+      "bounding_box": null,
+      "timestamp_ms": 179519,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": 5
+        }
+      ],
+      "console_errors": [
+        "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>\n      <LoadingBoundary name=\"login/\" loading={null}>\n        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>\n          <RedirectBoundary>\n            <RedirectErrorBoundary router={{...}}>\n              <InnerLayoutRouter url=\"/login\" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>\n                <SegmentViewNode type=\"page\" pagePath=\"(auth)/log...\">\n                  <SegmentTrieNode>\n                  <ClientPageRoot Component={function LoginPage} serverProvidedParams={{...}}>\n                    <LoginPage params={Promise} searchParams={Promise}>\n                      <div className=\"w-full max...\">\n                        <div>\n                        <div className=\"bg-[var(--...\">\n                          <h2>\n                          <form onSubmit={function} noValidate={true} className=\"space-y-4\">\n                            <div>\n                              <label>\n                              <input\n                                id=\"email\"\n                                type=\"email\"\n                                autoComplete=\"email\"\n                                autoFocus={true}\n                                name=\"email\"\n                                onChange={function onChange}\n                                onBlur={function onChange}\n                                ref={function ref}\n                                className=\"w-full px-3 py-2 text-sm bg-[var(--surface)] border rounded-lg text-[var(--...\"\n                                placeholder=\"admin@urgentprinters.com\"\n-                               style={{caret-color:\"transparent\"}}\n                              >\n                            <div>\n                              <label>\n                              <div className=\"relative\">\n                                <input\n                                  id=\"password\"\n                                  type=\"password\"\n                                  autoComplete=\"current-password\"\n                                  name=\"password\"\n                                  onChange={function onChange}\n                                  onBlur={function onChange}\n                                  ref={function ref}\n                                  className=\"w-full pl-3 pr-10 py-2 text-sm bg-[var(--surface)] border rounded-lg text...\"\n                                  placeholder=\"Enter your password\"\n-                                 style={{caret-color:\"transparent\"}}\n                                >\n                                ...\n                            ...\n                ...\n              ...\n"
+      ]
+    },
+    {
+      "step_id": "auth-02",
+      "action": "Enter the admin email",
+      "selector": "locator('#email')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 358,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 179682,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/auth-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "admin@urgentprinters.com",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-03",
+      "action": "Enter the admin password",
+      "selector": "locator('#password')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 438,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 179804,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/auth-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "SuperAdmin@123",
+      "typed_masked": true,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-04",
+      "action": "Submit the login form",
+      "selector": "getByRole('button', { name: 'Sign in' })",
+      "route": "/dashboard",
+      "bounding_box": {
+        "x": 481,
+        "y": 500,
+        "width": 318,
+        "height": 36
+      },
+      "timestamp_ms": 181246,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/auth-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-01",
+      "action": "Fill a valid create-mode baseline (name, short description, category, 3 photos)",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 190256,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-02",
+      "action": "Create+Publish: clear Name, click Publish Product",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 190734,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-03",
+      "action": "Create+Publish: clear Category, click Publish Product",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 191030,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-04",
+      "action": "Create+Publish: clear Short Description, click Publish Product",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 191305,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-05",
+      "action": "Create+Draft: clear Name, click Save as Draft",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 191799,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-06",
+      "action": "Create+Draft: clear Category, click Save as Draft",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 192123,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-07",
+      "action": "Create+Draft: clear Short Description, click Save as Draft",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 192406,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-08",
+      "action": "Create+Draft: remove all 3 photos (still Zod-valid \u2014 an empty array \u2014 so this is save()'s own imperative guard, not the resolver), click Save as Draft",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 196172,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "clean-01",
+      "action": "Cancel out of the exhausted create form",
+      "selector": "getByRole('button', { name: 'Cancel' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 294,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 196784,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/clean-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 7
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-09",
+      "action": "Create+Draft: fresh form, remove every pricing tier, click Save as Draft \u2014 proving the guard applies to Draft, not just Publish (err-02 in the error suite only exercised Publish)",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 205826,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 27
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "clean-02",
+      "action": "Cancel out again",
+      "selector": "getByRole('button', { name: 'Cancel' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 294,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 209505,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/clean-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "description": "Ensure links have discernible text",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-10",
+      "action": "Create the real product used for every update-mode scenario below",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 219126,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-11",
+      "action": "Open it for editing",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 220001,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-11.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-12",
+      "action": "Update+Publish: clear Name, click Save Changes",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 220464,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-12.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-13",
+      "action": "Update+Publish: clear Category, click Save Changes",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 220780,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-13.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-14",
+      "action": "Update+Publish: clear Short Description, click Save Changes",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 221080,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-14.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-15",
+      "action": "Update+Draft: clear Name, click Save as Draft",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 221621,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-15.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-16",
+      "action": "Update+Draft: clear Category, click Save as Draft",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 221934,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-16.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-17",
+      "action": "Update+Draft: clear Short Description, click Save as Draft",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 222282,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-17.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-18",
+      "action": "Update+Draft: remove every pricing tier from the live product, click Save as Draft",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 223903,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-18.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-19",
+      "action": "Update+Draft: remove all 3 real photos from the live product \u2014 proves storage deletion happens on click, before any Save",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 227863,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-19.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "rfu-20",
+      "action": "Reload and confirm the record itself (name/category/description/pricing tiers) survived every blocked attempt intact",
+      "selector": null,
+      "route": "/products/11777",
+      "bounding_box": null,
+      "timestamp_ms": 230600,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin-required-field-unselect/rfu-20.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    }
+  ]
+}

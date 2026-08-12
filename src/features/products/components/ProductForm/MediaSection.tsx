@@ -147,11 +147,25 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
     });
   }
 
-  async function removeImage(idx: number) {
+  function removeImage(idx: number) {
     const item = images[idx];
-    if (item.status === 'done') {
-      await deleteMedia(item.result.key).catch(() => null);
-    }
+    // Do NOT eagerly delete from storage here — this removes the item from
+    // this form's local state only. If `item` is part of a saved product's
+    // `image_keys`, deleting the object now would destroy a live asset even
+    // if the admin never clicks Save (or the save is blocked/cancelled), or
+    // the guard just below rejects the submit for an unrelated reason (e.g.
+    // dropping below the 3-photo minimum). Once removed here, the key is no
+    // longer written back by the next successful save (see save()'s
+    // image_keys payload, sourced from this component's own state via
+    // onImagesChange) — so it naturally becomes unreferenced and is swept up
+    // by the nightly `cleanup_orphan_media_task` Celery job (see
+    // app/workers/media_tasks.py on the backend), which deletes any stored
+    // object no product/category/banner/testimonial/proof row still points
+    // at. That job is a full reconciliation against current DB state, not a
+    // narrow "session-only" cleanup, so this covers a photo removed from a
+    // months-old published product exactly the same as one added and
+    // removed a second later — neither ever gets deleted until the record
+    // that used to reference it is actually saved without it.
     URL.revokeObjectURL(item.blobUrl);
     setImages((prev) => prev.filter((_, i) => i !== idx));
     setDimensionWarnings((prev) => {
@@ -216,10 +230,8 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
   }, [context, images.length]);
 
   // ── Video actions ────────────────────────────────────────────────────────────
-  async function removeVideo() {
-    if (video?.status === 'done') {
-      await deleteMedia(video.result.key).catch(() => null);
-    }
+  function removeVideo() {
+    // Same reasoning as removeImage — no eager deleteMedia() call here.
     if (video) URL.revokeObjectURL(video.blobUrl);
     setVideo(null);
   }
@@ -333,14 +345,17 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
               {item.status === 'done' && (
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-1.5">
                   <button type="button" onClick={() => moveImage(i, 'up')} disabled={i === 0}
+                    aria-label={`Move image ${i + 1} up`}
                     className="p-1 bg-white/20 hover:bg-white/40 rounded disabled:opacity-25 transition-colors">
                     <ArrowUp className="h-3 w-3 text-white" />
                   </button>
                   <button type="button" onClick={() => moveImage(i, 'down')} disabled={i === images.length - 1}
+                    aria-label={`Move image ${i + 1} down`}
                     className="p-1 bg-white/20 hover:bg-white/40 rounded disabled:opacity-25 transition-colors">
                     <ArrowDown className="h-3 w-3 text-white" />
                   </button>
                   <button type="button" onClick={() => removeImage(i)}
+                    aria-label={`Remove image ${i + 1}`}
                     className="p-1 bg-red-500/90 hover:bg-red-600 rounded transition-colors">
                     <X className="h-3 w-3 text-white" />
                   </button>
@@ -350,6 +365,7 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
               {/* Remove button for error state */}
               {item.status === 'error' && (
                 <button type="button" onClick={() => removeImage(i)}
+                  aria-label={`Remove image ${i + 1}`}
                   className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-destructive rounded-full flex items-center justify-center">
                   <X className="h-3 w-3 text-white" />
                 </button>
@@ -438,6 +454,7 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
             )}
 
             <button type="button" onClick={removeVideo}
+              aria-label="Remove video"
               className="absolute top-2 right-2 p-1 bg-black/60 hover:bg-red-600 rounded-full transition-colors" title="Remove video">
               <X className="h-3.5 w-3.5 text-white" />
             </button>

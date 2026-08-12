@@ -23,12 +23,13 @@ function MultiplierLabel({ value }: { value: number }) {
   );
 }
 
-function DefaultToggle({ active, onClick }: { active: boolean; onClick: () => void }) {
+function DefaultToggle({ active, onClick, itemLabel }: { active: boolean; onClick: () => void; itemLabel: string }) {
   return (
     <button
       type="button"
       onClick={onClick}
       title={active ? 'Default' : 'Set as default'}
+      aria-label={`${active ? 'Default' : 'Set as default'}: ${itemLabel}`}
       className={cn(
         'shrink-0 w-4 h-4 rounded-full border-2 transition-colors',
         active
@@ -40,9 +41,11 @@ function DefaultToggle({ active, onClick }: { active: boolean; onClick: () => vo
 }
 
 function DynamicList({
-  label, items, onAdd, onRemove, addLabel = 'Add', children,
+  label, itemLabel, items, onAdd, onRemove, addLabel = 'Add', children,
 }: {
   label: string;
+  /** Singular noun for one row, used to build per-row accessible names, e.g. "size" for the "Sizes" group. */
+  itemLabel: string;
   items: unknown[];
   onAdd: () => void;
   onRemove: (i: number) => void;
@@ -61,7 +64,12 @@ function DynamicList({
         {items.map((_, i) => (
           <div key={i} className="flex items-center gap-2">
             {children(i)}
-            <button type="button" onClick={() => onRemove(i)} className="text-[var(--text-muted)] hover:text-[var(--danger)] transition-colors shrink-0">
+            <button
+              type="button"
+              onClick={() => onRemove(i)}
+              aria-label={`Remove ${itemLabel} ${i + 1}`}
+              className="text-[var(--text-muted)] hover:text-[var(--danger)] transition-colors shrink-0"
+            >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
           </div>
@@ -99,27 +107,28 @@ export function PrintSpecsSection({ form }: Props) {
       {/* Sizes */}
       <DynamicList
         label="Sizes"
+        itemLabel="size"
         items={sizes}
         onAdd={() => addSize({ label: '', width: 0, height: 0, unit: 'mm', is_active: true, is_default: false, price_multiplier: 1.0 })}
         onRemove={removeSize}
       >
         {(i) => (
           <div className="flex items-center gap-2 flex-1 flex-wrap">
-            <input {...register(`sizes.${i}.label`)} placeholder="e.g. A4 Portrait" className={`${inputCls} flex-1 min-w-28`} />
-            <input {...register(`sizes.${i}.width`,  { valueAsNumber: true })} placeholder="W" type="number" className={`${inputCls} w-16`} />
+            <input {...register(`sizes.${i}.label`)} placeholder="e.g. A4 Portrait" aria-label={`Label for size ${i + 1}`} className={`${inputCls} flex-1 min-w-28`} />
+            <input {...register(`sizes.${i}.width`,  { valueAsNumber: true })} placeholder="W" type="number" aria-label={`Width for size ${i + 1}`} className={`${inputCls} w-16`} />
             <span className="text-xs text-[var(--text-muted)] shrink-0">×</span>
-            <input {...register(`sizes.${i}.height`, { valueAsNumber: true })} placeholder="H" type="number" className={`${inputCls} w-16`} />
-            <select {...register(`sizes.${i}.unit`)} className={`${inputCls} w-16`}>
+            <input {...register(`sizes.${i}.height`, { valueAsNumber: true })} placeholder="H" type="number" aria-label={`Height for size ${i + 1}`} className={`${inputCls} w-16`} />
+            <select {...register(`sizes.${i}.unit`)} aria-label={`Unit for size ${i + 1}`} className={`${inputCls} w-16`}>
               <option value="mm">mm</option>
               <option value="cm">cm</option>
               <option value="in">in</option>
               <option value="ft">ft</option>
             </select>
             <span className="text-[10px] text-[var(--text-muted)] shrink-0">×</span>
-            <input {...register(`sizes.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" className={`${inputCls} w-16`} />
+            <input {...register(`sizes.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" aria-label={`Price multiplier for size ${i + 1}`} className={`${inputCls} w-16`} />
             <MultiplierLabel value={watchedSizes[i]?.price_multiplier ?? 1} />
-            <input type="checkbox" {...register(`sizes.${i}.is_active`)} title="Active" className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
-            <DefaultToggle active={!!watchedSizes[i]?.is_default} onClick={() => setDefault('sizes', i)} />
+            <input type="checkbox" {...register(`sizes.${i}.is_active`)} title="Active" aria-label={`Active for size ${i + 1}`} className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
+            <DefaultToggle active={!!watchedSizes[i]?.is_default} onClick={() => setDefault('sizes', i)} itemLabel={`size ${i + 1}`} />
           </div>
         )}
       </DynamicList>
@@ -127,19 +136,20 @@ export function PrintSpecsSection({ form }: Props) {
       {/* Paper types */}
       <DynamicList
         label="Paper Types"
+        itemLabel="paper type"
         items={papers}
         onAdd={() => addPaper({ label: '', gsm: null, is_active: true, is_default: false, price_multiplier: 1.0 })}
         onRemove={removePaper}
       >
         {(i) => (
           <div className="flex items-center gap-2 flex-1 flex-wrap">
-            <input {...register(`paper_types.${i}.label`)} placeholder="350 GSM Art Board" className={`${inputCls} flex-1`} />
-            <input {...register(`paper_types.${i}.gsm`, { valueAsNumber: true })} placeholder="GSM" type="number" className={`${inputCls} w-20`} />
+            <input {...register(`paper_types.${i}.label`)} placeholder="350 GSM Art Board" aria-label={`Label for paper type ${i + 1}`} className={`${inputCls} flex-1`} />
+            <input {...register(`paper_types.${i}.gsm`, { valueAsNumber: true })} placeholder="GSM" type="number" aria-label={`GSM for paper type ${i + 1}`} className={`${inputCls} w-20`} />
             <span className="text-[10px] text-[var(--text-muted)] shrink-0">×</span>
-            <input {...register(`paper_types.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" className={`${inputCls} w-16`} />
+            <input {...register(`paper_types.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" aria-label={`Price multiplier for paper type ${i + 1}`} className={`${inputCls} w-16`} />
             <MultiplierLabel value={watchedPapers[i]?.price_multiplier ?? 1} />
-            <input type="checkbox" {...register(`paper_types.${i}.is_active`)} title="Active" className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
-            <DefaultToggle active={!!watchedPapers[i]?.is_default} onClick={() => setDefault('paper_types', i)} />
+            <input type="checkbox" {...register(`paper_types.${i}.is_active`)} title="Active" aria-label={`Active for paper type ${i + 1}`} className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
+            <DefaultToggle active={!!watchedPapers[i]?.is_default} onClick={() => setDefault('paper_types', i)} itemLabel={`paper type ${i + 1}`} />
           </div>
         )}
       </DynamicList>
@@ -147,18 +157,19 @@ export function PrintSpecsSection({ form }: Props) {
       {/* Finishes */}
       <DynamicList
         label="Finishes"
+        itemLabel="finish"
         items={finishes}
         onAdd={() => addFinish({ label: '', is_active: true, is_default: false, price_multiplier: 1.0 })}
         onRemove={removeFinish}
       >
         {(i) => (
           <div className="flex items-center gap-2 flex-1 flex-wrap">
-            <input {...register(`finishes.${i}.label`)} placeholder="Matte Lamination" className={`${inputCls} flex-1`} />
+            <input {...register(`finishes.${i}.label`)} placeholder="Matte Lamination" aria-label={`Label for finish ${i + 1}`} className={`${inputCls} flex-1`} />
             <span className="text-[10px] text-[var(--text-muted)] shrink-0">×</span>
-            <input {...register(`finishes.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" className={`${inputCls} w-16`} />
+            <input {...register(`finishes.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" aria-label={`Price multiplier for finish ${i + 1}`} className={`${inputCls} w-16`} />
             <MultiplierLabel value={watchedFinishes[i]?.price_multiplier ?? 1} />
-            <input type="checkbox" {...register(`finishes.${i}.is_active`)} title="Active" className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
-            <DefaultToggle active={!!watchedFinishes[i]?.is_default} onClick={() => setDefault('finishes', i)} />
+            <input type="checkbox" {...register(`finishes.${i}.is_active`)} title="Active" aria-label={`Active for finish ${i + 1}`} className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
+            <DefaultToggle active={!!watchedFinishes[i]?.is_default} onClick={() => setDefault('finishes', i)} itemLabel={`finish ${i + 1}`} />
           </div>
         )}
       </DynamicList>
@@ -167,6 +178,7 @@ export function PrintSpecsSection({ form }: Props) {
       <div className="space-y-2">
         <DynamicList
           label="Sides Options"
+          itemLabel="sides option"
           items={sides}
           onAdd={() => addSide({ label: '', is_default: false, price_multiplier: 1.0 })}
           onRemove={removeSide}
@@ -174,11 +186,11 @@ export function PrintSpecsSection({ form }: Props) {
         >
           {(i) => (
             <div className="flex items-center gap-2 flex-1">
-              <input {...register(`sides_options.${i}.label`)} placeholder="e.g. Single Sided" className={`${inputCls} flex-1`} />
+              <input {...register(`sides_options.${i}.label`)} placeholder="e.g. Single Sided" aria-label={`Label for sides option ${i + 1}`} className={`${inputCls} flex-1`} />
               <span className="text-[10px] text-[var(--text-muted)] shrink-0">×</span>
-              <input {...register(`sides_options.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" className={`${inputCls} w-16`} />
+              <input {...register(`sides_options.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" aria-label={`Price multiplier for sides option ${i + 1}`} className={`${inputCls} w-16`} />
               <MultiplierLabel value={watchedSides[i]?.price_multiplier ?? 1} />
-              <DefaultToggle active={!!watchedSides[i]?.is_default} onClick={() => setDefault('sides_options', i)} />
+              <DefaultToggle active={!!watchedSides[i]?.is_default} onClick={() => setDefault('sides_options', i)} itemLabel={`sides option ${i + 1}`} />
             </div>
           )}
         </DynamicList>
@@ -202,13 +214,21 @@ export function PrintSpecsSection({ form }: Props) {
           {quantitySteps.map((q, i) => (
             <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--surface-secondary)] border border-[var(--border)] rounded text-xs">
               {q}
-              <button type="button" onClick={() => setValue('quantity_steps', quantitySteps.filter((_, j) => j !== i))} className="text-[var(--text-muted)] hover:text-[var(--danger)]">×</button>
+              <button
+                type="button"
+                onClick={() => setValue('quantity_steps', quantitySteps.filter((_, j) => j !== i))}
+                aria-label={`Remove quantity step ${q}`}
+                className="text-[var(--text-muted)] hover:text-[var(--danger)]"
+              >
+                ×
+              </button>
             </span>
           ))}
         </div>
         <input
           type="number"
           placeholder="Add qty (e.g. 250) and press Enter"
+          aria-label="Add quantity step"
           className={`${inputCls} w-56`}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {

@@ -1,0 +1,60 @@
+{
+  "feature_name": "Category Management",
+  "run_path": "qa-pipeline/artifacts/runs/category-management-run.json",
+  "plan_path": "qa-pipeline/artifacts/plans/category-management-plan.json",
+  "pass_count": 13,
+  "fail_count": 1,
+  "failures": [
+    {
+      "step_id": "hp-10",
+      "likely_root_cause": "Deleting a category succeeds immediately server-side (confirmed by a direct GET /admin/categories API check right after the failure: the category was already gone, and the total count matched pre-test state) and the success toast fires correctly. But the categories list UI did not remove the deleted row within 15 seconds in 2 of 3 live runs (the third run's shorter 5s window also failed once). useDeleteCategory's onSuccess (src/features/categories/hooks/useCategories.ts:49) calls the standard qc.invalidateQueries({ queryKey: ['categories'] }), which matches useCategories' own queryKey exactly — the wiring looks correct by static reading, so this reads as a real, intermittent client-side refresh reliability issue rather than a wrong query key or missing invalidation call. Not determined from static code alone: whether this is React Query re-render timing, a stale closure over the previous data array, or something route-navigation-related (the row was reached via an edit-then-return-to-list navigation earlier in the same test, which remounts the list).",
+      "confidence": "medium",
+      "verdict": "real_regression"
+    }
+  ],
+  "accessibility_summary": {
+    "critical": [
+      "button-name (icon-only buttons with no accessible name): up to 27-30 nodes on the categories list itself (hp-01, hp-06) — this is a lot for one page, and directly corroborates a gap found during test authoring: the reorder Up/Down arrows (CategoriesTable.tsx) and the row's '...' actions-menu trigger render bare <button> elements with only a lucide icon inside, no aria-label or visible text. A screen-reader user cannot tell these buttons apart at all, on the page whose entire job is reordering and managing rows.",
+      "label (form elements without a programmatic label): 3 nodes on the category create form (hp-02) — CategoryForm.tsx's Name/Slug/Description fields use a bare <label> as a visual sibling of the <input>, with no htmlFor/id pairing and no aria-label. Confirmed directly while writing this spec: getByLabel() does not work against these fields at all; the plan's happy-path selectors had to fall back to an XPath sibling lookup off the label's exact text, which is itself a sign of how fragile these fields are for any assistive technology, not just this test."
+    ],
+    "serious": [
+      "color-contrast: recurring on every step of this flow (6-12 nodes per page: login, categories list, and the create form) — likely a small set of shared components/tokens rather than 4 unrelated bugs, worth auditing the shared button/badge/muted-text color tokens once rather than page by page."
+    ],
+    "moderate": [
+      "landmark-unique: flagged on every page in this flow (login, list, create form) — same likely shared-layout cause as color-contrast.",
+      "landmark-one-main / page-has-heading-one / region: flagged on the login page specifically — it may be missing a <main> landmark and a level-one heading entirely.",
+      "heading-order: flagged once, on the post-login page.",
+      "empty-table-header (minor, folded in here since the schema has no separate minor bucket): 1 node on the categories list — likely the blank actions-column header (CategoriesTable.tsx's `header: ''` for the actions column)."
+    ],
+    "coverage_caveat": "automated scan only — manual/screen-reader review still needed"
+  },
+  "performance_summary": {
+    "initial_load": null,
+    "final_state": null,
+    "concerns": [
+      "Lighthouse was deliberately left off for this run (captureOptions.lighthouse: 'off') to keep the pass CPU-light on a resource-constrained environment — no performance numbers were collected. If performance becomes a concern for this flow, re-run with lighthouse: 'on' and exactly two checkpoints per the pipeline's own convention."
+    ]
+  },
+  "ux_gaps": [
+    {
+      "issue": "Reorder Up/Down arrows and the row actions-menu trigger are icon-only with zero accessible name — a sighted mouse user can infer them from position/icon shape, but there is no text/aria-label fallback for anyone else, and no title tooltip either.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "Name/Slug/Description labels are not programmatically associated with their inputs (no htmlFor/id), so a screen reader announces these as unlabeled text fields rather than 'Name', 'Slug', 'Description'.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "A login-page-only React hydration mismatch was logged as a console error (not a visible failure): the email/password inputs render with a server/client-mismatched style, specifically a caret-color: transparent inline style present on the client render but not the server-rendered HTML. This did not block login and may be specific to the headless test browser rather than a real user-facing issue, but it is worth a quick manual check since 'won't be patched up' hydration mismatches on a login form are exactly the kind of thing that silently drifts into a real bug later.",
+      "related_edge_case": null
+    }
+  ],
+  "recommendations": [
+    { "priority": "high", "action": "Investigate the categories-list refresh-after-delete reliability issue (hp-10). Reproduce with React Query devtools open to see whether the invalidated query actually re-fetches promptly; if it does, the gap may be in how DataTable/react-table re-renders once fresh data arrives." },
+    { "priority": "high", "action": "Add aria-label to the reorder Up/Down buttons (e.g. 'Move up', 'Move down') and the row actions-menu trigger (e.g. 'Category actions') in CategoriesTable.tsx — critical WCAG button-name violations on the page whose entire purpose is managing these rows." },
+    { "priority": "medium", "action": "Associate CategoryForm.tsx's Name/Slug/Description <label> elements with their inputs via htmlFor/id (or wrap the input inside the label) — critical WCAG label violations, and this codebase's own admin CLAUDE.md documents fixing exactly this class of gap elsewhere (e.g. Reviews, Content managers)." },
+    { "priority": "medium", "action": "Audit the shared color-contrast tokens once (button/badge/muted-text) rather than treating each page's flagged nodes as separate issues — the same violation recurred on every page in this flow." },
+    { "priority": "low", "action": "Add a <main> landmark and a level-one heading to the login page specifically (landmark-one-main, page-has-heading-one, region all fired there and nowhere else in this flow)." },
+    { "priority": "low", "action": "Manually verify the login page's caret-color hydration mismatch in a real browser (not just this automated run) to rule out a genuine bug before dismissing it as test-environment noise." }
+  ]
+}

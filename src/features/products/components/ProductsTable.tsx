@@ -26,7 +26,7 @@ import { ROUTES } from '@/lib/constants/routes';
 import type { ProductSummary, ProductStatus, ProductBadge } from '@/types';
 
 export function ProductsTable() {
-  const { query, filters, setPage, setSearch, setStatus, setCategory } = useProducts();
+  const { query, filters, sorting, setSorting, setPage, setSearch, setStatus, setCategory } = useProducts();
   const { data: categories } = useCategories();
   const deleteMutation = useDeleteProduct();
   const [deleteProduct, setDeleteProduct] = useState<ProductSummary | null>(null);
@@ -108,13 +108,16 @@ export function ProductsTable() {
     },
     {
       id: 'actions',
-      header: '',
+      header: () => <span className="sr-only">Actions</span>,
       size: 48,
       cell: ({ row }) => {
         const p = row.original;
         return (
           <DropdownMenu>
-            <DropdownMenuTrigger className="p-1.5 rounded-md hover:bg-[var(--surface-secondary)] transition-colors">
+            <DropdownMenuTrigger
+              aria-label={`Actions for ${p.name}`}
+              className="p-1.5 rounded-md hover:bg-[var(--surface-secondary)] transition-colors"
+            >
               <MoreHorizontal className="h-4 w-4 text-[var(--text-muted)]" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -147,6 +150,8 @@ export function ProductsTable() {
         pageSize={filters.page_size}
         total={query.data?.total}
         onPageChange={setPage}
+        sorting={sorting}
+        onSortingChange={setSorting}
         compact
         getRowId={(row) => row.id}
         emptyMessage="No products found."

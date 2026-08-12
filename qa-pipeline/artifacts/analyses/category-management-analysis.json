@@ -1,0 +1,44 @@
+{
+  "feature_name": "Category Management",
+  "run_path": "qa-pipeline/artifacts/runs/category-management-run.json",
+  "plan_path": "qa-pipeline/artifacts/plans/category-management-plan.json",
+  "pass_count": 14,
+  "fail_count": 0,
+  "failures": [],
+  "accessibility_summary": {
+    "critical": [
+      "button-name (icon-only buttons with no accessible name): up to 27-30 nodes on the categories list (happy-path run) — the reorder Up/Down arrows (CategoriesTable.tsx) and each row's '...' actions-menu trigger render bare <button> elements with only a lucide icon inside, no aria-label or visible text. A screen-reader user cannot tell these buttons apart at all, on the page whose entire job is reordering and managing rows.",
+      "label (form elements without a programmatic label): 3 nodes on the category create form — Name/Slug/Description fields use a bare <label> as a visual sibling of the <input>, with no htmlFor/id pairing and no aria-label. Confirmed directly while writing every spec in this suite: getByLabel() never works against these fields; an XPath sibling lookup off the label's exact text was required everywhere, including for Meta Title/Description, which nest the label inside an extra wrapper div alongside their character counter — a second, distinct instance of the same missing-association pattern."
+    ],
+    "serious": [
+      "color-contrast: recurring on every step of the happy-path flow (6-12 nodes per page: login, categories list, and the create form) — likely a small set of shared components/tokens rather than unrelated per-page bugs."
+    ],
+    "moderate": [
+      "landmark-unique: flagged on every page in the happy-path flow.",
+      "landmark-one-main / page-has-heading-one / region: flagged on the login page specifically.",
+      "heading-order: flagged once, on the post-login page.",
+      "empty-table-header (minor, folded in here since the schema has no separate minor bucket): 1 node on the categories list — likely the blank actions-column header."
+    ],
+    "coverage_caveat": "automated scan only — manual/screen-reader review still needed"
+  },
+  "performance_summary": {
+    "initial_load": null,
+    "final_state": null,
+    "concerns": [
+      "Lighthouse was deliberately left off for every run in this suite to keep CPU usage down on a resource-constrained environment — no performance numbers were collected."
+    ]
+  },
+  "ux_gaps": [
+    { "issue": "Reorder Up/Down arrows and the row actions-menu trigger are icon-only with zero accessible name.", "related_edge_case": null },
+    { "issue": "Name/Slug/Description/Meta Title/Meta Description labels are not programmatically associated with their inputs anywhere in this form.", "related_edge_case": null },
+    { "issue": "A React hydration mismatch (server/client-mismatched inline style, specifically caret-color: transparent) is logged as a console error on the login page's email/password inputs in every run that visits it. Did not block login in any of the 7 runs that hit it. A parallel, structurally similar hydration mismatch was independently found on the storefront app's homepage and products page (see category-storefront-visibility-analysis.json) — two separate Next.js codebases showing the same class of warning raises the odds this is environment/headless-browser noise rather than two coincidentally-identical app bugs, but that is a hypothesis, not a conclusion; still worth a real-browser check.", "related_edge_case": null }
+  ],
+  "recommendations": [
+    { "priority": "high", "action": "Add aria-label to the reorder Up/Down buttons (e.g. 'Move up', 'Move down') and the row actions-menu trigger (e.g. 'Category actions') in CategoriesTable.tsx — critical WCAG button-name violations on the page whose entire purpose is managing these rows." },
+    { "priority": "medium", "action": "Associate CategoryForm.tsx's Name/Slug/Description/Meta Title/Meta Description <label> elements with their inputs via htmlFor/id (or wrap the input inside the label) — critical WCAG label violations, and this codebase's own admin CLAUDE.md documents fixing exactly this class of gap elsewhere (e.g. Reviews, Content managers)." },
+    { "priority": "medium", "action": "Audit the shared color-contrast tokens once rather than treating each page's flagged nodes as separate issues — the same violation recurred on every page in this flow." },
+    { "priority": "low", "action": "Add a <main> landmark and a level-one heading to the login page specifically." },
+    { "priority": "low", "action": "Manually verify the caret-color hydration mismatch in a real browser on both this app's login page and the storefront's homepage/products page before assuming it's test-environment noise." },
+    { "priority": "low", "action": "parent_id (category hierarchy) and icon_name exist on the backend Category model/schema but have no UI anywhere in this admin panel — confirmed gap, not a bug; worth a product decision on whether either is actually needed." }
+  ]
+}

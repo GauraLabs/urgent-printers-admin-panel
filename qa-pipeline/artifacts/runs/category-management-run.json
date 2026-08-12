@@ -1,0 +1,401 @@
+{
+  "feature_name": "Category Management",
+  "plan_path": "qa-pipeline/artifacts/plans/category-management-plan.json",
+  "run_timestamp": "2026-08-09T20:12:03.544Z",
+  "trace_path": "qa-pipeline/artifacts/traces/category-management-trace.zip",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Open the login page",
+      "selector": null,
+      "route": "/login",
+      "bounding_box": null,
+      "timestamp_ms": 587,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": 5
+        }
+      ],
+      "console_errors": [
+        "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>\n      <LoadingBoundary name=\"login/\" loading={null}>\n        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>\n          <RedirectBoundary>\n            <RedirectErrorBoundary router={{...}}>\n              <InnerLayoutRouter url=\"/login\" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>\n                <SegmentViewNode type=\"page\" pagePath=\"(auth)/log...\">\n                  <SegmentTrieNode>\n                  <ClientPageRoot Component={function LoginPage} serverProvidedParams={{...}}>\n                    <LoginPage params={Promise} searchParams={Promise}>\n                      <div className=\"w-full max...\">\n                        <div>\n                        <div className=\"bg-[var(--...\">\n                          <h2>\n                          <form onSubmit={function} noValidate={true} className=\"space-y-4\">\n                            <div>\n                              <label>\n                              <input\n                                id=\"email\"\n                                type=\"email\"\n                                autoComplete=\"email\"\n                                autoFocus={true}\n                                name=\"email\"\n                                onChange={function onChange}\n                                onBlur={function onChange}\n                                ref={function ref}\n                                className=\"w-full px-3 py-2 text-sm bg-[var(--surface)] border rounded-lg text-[var(--...\"\n                                placeholder=\"admin@urgentprinters.com\"\n-                               style={{caret-color:\"transparent\"}}\n                              >\n                            <div>\n                              <label>\n                              <div className=\"relative\">\n                                <input\n                                  id=\"password\"\n                                  type=\"password\"\n                                  autoComplete=\"current-password\"\n                                  name=\"password\"\n                                  onChange={function onChange}\n                                  onBlur={function onChange}\n                                  ref={function ref}\n                                  className=\"w-full pl-3 pr-10 py-2 text-sm bg-[var(--surface)] border rounded-lg text...\"\n                                  placeholder=\"Enter your password\"\n-                                 style={{caret-color:\"transparent\"}}\n                                >\n                                ...\n                            ...\n                ...\n              ...\n"
+      ]
+    },
+    {
+      "step_id": "auth-02",
+      "action": "Enter the admin email",
+      "selector": "locator('#email')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 358,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 727,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/auth-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "admin@urgentprinters.com",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-03",
+      "action": "Enter the admin password",
+      "selector": "locator('#password')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 438,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 834,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/auth-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "SuperAdmin@123",
+      "typed_masked": true,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-04",
+      "action": "Submit the login form",
+      "selector": "getByRole('button', { name: 'Sign in' })",
+      "route": "/dashboard",
+      "bounding_box": {
+        "x": 481,
+        "y": 500,
+        "width": 318,
+        "height": 36
+      },
+      "timestamp_ms": 2094,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/auth-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-01",
+      "action": "Open the categories list",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 2737,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 21
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-02",
+      "action": "Click \"Add Category\"",
+      "selector": "getByRole('link', { name: 'Add Category' })",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 1117,
+        "y": 80,
+        "width": 139,
+        "height": 32
+      },
+      "timestamp_ms": 3199,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 10
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 3
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-03",
+      "action": "Enter the category name",
+      "selector": "locator('label:text-is(\"Name *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 156,
+        "width": 576,
+        "height": 38
+      },
+      "timestamp_ms": 3342,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "QA Pipeline Test Category 1786306323545",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-04",
+      "action": "Observe the auto-derived Slug",
+      "selector": "locator('label:text-is(\"Slug *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 232,
+        "width": 576,
+        "height": 38
+      },
+      "timestamp_ms": 3494,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-05",
+      "action": "Upload one category image",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 552,
+        "y": 502,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 6514,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-06",
+      "action": "Submit the form",
+      "selector": "getByRole('button', { name: 'Create Category' })",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 264,
+        "y": 664,
+        "width": 137,
+        "height": 32
+      },
+      "timestamp_ms": 6874,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 24
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 7
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-07",
+      "action": "Locate the new category row",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Category 1786306323545' })",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 265,
+        "y": 551,
+        "width": 990,
+        "height": 45
+      },
+      "timestamp_ms": 6990,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-08",
+      "action": "Click the new row's Up arrow",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Category 1786306323545' }).locator('td').first().locator('button').first()",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 279,
+        "y": 562,
+        "width": 22,
+        "height": 22
+      },
+      "timestamp_ms": 7788,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-09",
+      "action": "Edit the category: change its Name only",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Category 1786306323545' }).locator('button').last()",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 1213,
+        "y": 514,
+        "width": 28,
+        "height": 28
+      },
+      "timestamp_ms": 8638,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-10",
+      "action": "Delete the category",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Category 1786306323545 (edited)' }).locator('button').last()",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 1213,
+        "y": 514,
+        "width": 28,
+        "height": 28
+      },
+      "timestamp_ms": 10750,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management/hp-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    }
+  ],
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "feature_name": "Category Management Edge Malformed Slug Meta Overflow",
+  "plan_path": "qa-pipeline/artifacts/plans/category-management-plan.json",
+  "run_timestamp": "2026-08-09T20:14:37.711Z",
+  "trace_path": "qa-pipeline/artifacts/traces/category-management-edge-malformed-slug-meta-overflow-trace.zip",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Log in as the seeded super admin",
+      "selector": null,
+      "route": "/dashboard",
+      "bounding_box": null,
+      "timestamp_ms": 1782,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-malformed-slug-meta-overflow/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "set-01",
+      "action": "Open the new-category form and fill Name",
+      "selector": null,
+      "route": "/categories/new",
+      "bounding_box": null,
+      "timestamp_ms": 2557,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-malformed-slug-meta-overflow/set-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edg-01",
+      "action": "Manually overwrite the auto-derived Slug with spaces/uppercase/symbols (plan edge-04)",
+      "selector": "locator('label:text-is(\"Slug *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 232,
+        "width": 576,
+        "height": 38
+      },
+      "timestamp_ms": 2724,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-malformed-slug-meta-overflow/edg-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edg-02",
+      "action": "Enter Meta Title/Description beyond their char-count thresholds (plan edge-05)",
+      "selector": null,
+      "route": "/categories/new",
+      "bounding_box": null,
+      "timestamp_ms": 2893,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-malformed-slug-meta-overflow/edg-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "set-02",
+      "action": "Upload one image (required to submit)",
+      "selector": null,
+      "route": "/categories/new",
+      "bounding_box": null,
+      "timestamp_ms": 5395,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-malformed-slug-meta-overflow/set-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "sub-01",
+      "action": "Submit with the malformed slug and over-length meta fields still in place",
+      "selector": "getByRole('button', { name: 'Create Category' })",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 264,
+        "y": 664,
+        "width": 137,
+        "height": 32
+      },
+      "timestamp_ms": 5854,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-malformed-slug-meta-overflow/sub-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "chk-01",
+      "action": "Confirm the saved category round-trips the exact values entered, unmodified",
+      "selector": null,
+      "route": "/categories/11450",
+      "bounding_box": null,
+      "timestamp_ms": 6531,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-malformed-slug-meta-overflow/chk-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "del-01",
+      "action": "Delete the test category created for this edge-case check",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 9097,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-malformed-slug-meta-overflow/del-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    }
+  ],
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "feature_name": "Category Lifecycle (Admin to Storefront)",
+  "language": "en",
+  "voice_persona": "clear, efficient, plain-spoken — a colleague walking a new staff member through a workflow, not a sales pitch",
+  "synthesized_at": null,
+  "tts": null,
+  "lines": [
+    { "step_id": "intro", "text": "From the admin panel to the storefront — here's the full life of a product category.", "audio_path": null, "duration_ms": null, "alignment": null },
+    { "step_id": "hp-01", "text": "Every category, ordered and organized.", "audio_path": null, "duration_ms": null, "alignment": null },
+    { "step_id": "hp-03", "text": "Wedding Invitations — a new category, named in one step.", "audio_path": null, "duration_ms": null, "alignment": null },
+    { "step_id": "hp-05", "text": "A short description tells customers what makes it special — premium cardstock, foil, letterpress.", "audio_path": null, "duration_ms": null, "alignment": null },
+    { "step_id": "hp-06", "text": "One photo is all it takes to publish.", "audio_path": null, "duration_ms": null, "alignment": null },
+    { "step_id": "hp-09", "text": "Renaming it later never breaks its storefront link — the slug stays exactly as it was.", "audio_path": null, "duration_ms": null, "alignment": null },
+    { "step_id": "sf-02", "text": "And within moments, it's live on the storefront.", "audio_path": null, "duration_ms": null, "alignment": null },
+    { "step_id": "sf-03", "text": "Same name, same description — exactly what was just created in the admin panel.", "audio_path": null, "duration_ms": null, "alignment": null },
+    { "step_id": "outro", "text": "One workflow, from the back office to the storefront customers see.", "audio_path": null, "duration_ms": null, "alignment": null }
+  ]
+}

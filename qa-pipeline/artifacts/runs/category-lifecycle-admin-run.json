@@ -1,0 +1,309 @@
+{
+  "feature_name": "Category Lifecycle Admin",
+  "plan_path": "qa-pipeline/artifacts/plans/category-management-plan.json",
+  "run_timestamp": "2026-08-09T21:46:25.996Z",
+  "trace_path": "qa-pipeline/artifacts/traces/category-lifecycle-admin-trace.zip",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Log in as the seeded super admin",
+      "selector": null,
+      "route": "/dashboard",
+      "bounding_box": null,
+      "timestamp_ms": 1664,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-01",
+      "action": "Open the categories list",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 2340,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 21
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-02",
+      "action": "Click \"Add Category\"",
+      "selector": "getByRole('link', { name: 'Add Category' })",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 1117,
+        "y": 80,
+        "width": 139,
+        "height": 32
+      },
+      "timestamp_ms": 2834,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 10
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 3
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-03",
+      "action": "Enter the category name",
+      "selector": "locator('label:text-is(\"Name *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 156,
+        "width": 576,
+        "height": 38
+      },
+      "timestamp_ms": 3009,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "Wedding Invitations",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-04",
+      "action": "Observe the auto-derived Slug",
+      "selector": "locator('label:text-is(\"Slug *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 232,
+        "width": 576,
+        "height": 38
+      },
+      "timestamp_ms": 3155,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-05",
+      "action": "Enter a description",
+      "selector": "locator('label:text-is(\"Description\")').locator('xpath=following-sibling::textarea[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 308,
+        "width": 576,
+        "height": 78
+      },
+      "timestamp_ms": 3280,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "Premium wedding invitations on luxe cardstock, with foil and letterpress finishes available.",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-06",
+      "action": "Upload one category image",
+      "selector": null,
+      "route": "/categories/new",
+      "bounding_box": null,
+      "timestamp_ms": 6344,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-07",
+      "action": "Submit the form",
+      "selector": "getByRole('button', { name: 'Create Category' })",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 264,
+        "y": 664,
+        "width": 137,
+        "height": 32
+      },
+      "timestamp_ms": 6745,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 24
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-08",
+      "action": "Locate the new category row",
+      "selector": "locator('tr').filter({ hasText: 'Wedding Invitations' })",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 265,
+        "y": 551,
+        "width": 990,
+        "height": 48
+      },
+      "timestamp_ms": 6900,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-09",
+      "action": "Rename the category — the URL slug stays put",
+      "selector": "locator('tr').filter({ hasText: 'Wedding Invitations' }).locator('button').last()",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 1213,
+        "y": 561,
+        "width": 28,
+        "height": 28
+      },
+      "timestamp_ms": 7717,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-10",
+      "action": "Confirm the renamed category is live in the list",
+      "selector": "locator('tr').filter({ hasText: 'Wedding Invitations & Save the Dates' })",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 265,
+        "y": 551,
+        "width": 990,
+        "height": 48
+      },
+      "timestamp_ms": 7833,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-lifecycle-admin/hp-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    }
+  ],
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  }
+}

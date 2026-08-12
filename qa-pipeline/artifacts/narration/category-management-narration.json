@@ -1,0 +1,72 @@
+{
+  "feature_name": "Category Management",
+  "language": "en",
+  "voice_persona": "clear, efficient, plain-spoken — a colleague walking a new staff member through a workflow, not a sales pitch",
+  "synthesized_at": null,
+  "tts": null,
+  "lines": [
+    {
+      "step_id": "intro",
+      "text": "Here's how staff create, organize, and manage product categories from the admin panel.",
+      "audio_path": null,
+      "duration_ms": null,
+      "alignment": null
+    },
+    {
+      "step_id": "hp-01",
+      "text": "Every category, ordered and organized.",
+      "audio_path": null,
+      "duration_ms": null,
+      "alignment": null
+    },
+    {
+      "step_id": "hp-03",
+      "text": "Give it a name management will recognize.",
+      "audio_path": null,
+      "duration_ms": null,
+      "alignment": null
+    },
+    {
+      "step_id": "hp-04",
+      "text": "Automatic URL slug.",
+      "audio_path": null,
+      "duration_ms": null,
+      "alignment": null
+    },
+    {
+      "step_id": "hp-05",
+      "text": "Add at least one photo, and the category's ready to publish.",
+      "audio_path": null,
+      "duration_ms": null,
+      "alignment": null
+    },
+    {
+      "step_id": "hp-06",
+      "text": "Saved instantly.",
+      "audio_path": null,
+      "duration_ms": null,
+      "alignment": null
+    },
+    {
+      "step_id": "hp-09",
+      "text": "Renaming a category never breaks its storefront link — the slug stays put.",
+      "audio_path": null,
+      "duration_ms": null,
+      "alignment": null
+    },
+    {
+      "step_id": "hp-10",
+      "text": "Deleting a category never deletes its products — they simply become uncategorized.",
+      "audio_path": null,
+      "duration_ms": null,
+      "alignment": null
+    },
+    {
+      "step_id": "outro",
+      "text": "That's category management — simple to use, and safe by design.",
+      "audio_path": null,
+      "duration_ms": null,
+      "alignment": null
+    }
+  ]
+}
