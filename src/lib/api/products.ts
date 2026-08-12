@@ -45,9 +45,9 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
     page_size: filters.page_size ?? 20,
   };
   if (filters.category_id) params.category_id = Number(filters.category_id);
-  // Map status → is_active. Backend adds a status filter in a future sprint.
-  if (filters.status === 'active') params.is_active = true;
-  else if (filters.status === 'draft' || filters.status === 'archived') params.is_active = false;
+  if (filters.status) params.status = filters.status;
+  if (filters.q) params.q = filters.q;
+  if (filters.sort) params.sort = filters.sort;
 
   const res = await get<RawListResponse>('/admin/products', params);
   return { ...res, items: res.items.map(normalize) };

@@ -1,0 +1,119 @@
+{
+  "feature_found": true,
+  "feature_name": "Category Management",
+  "source_files": [
+    "src/app/(admin)/categories/page.tsx",
+    "src/app/(admin)/categories/[id]/page.tsx",
+    "src/features/categories/components/CategoryForm.tsx",
+    "src/features/categories/components/CategoryEditClient.tsx",
+    "src/features/categories/components/CategoriesTable.tsx",
+    "src/features/categories/hooks/useCategories.ts",
+    "src/lib/api/categories.ts",
+    "src/features/products/components/ProductForm/MediaSection.tsx",
+    "src/components/common/ConfirmDialog.tsx",
+    "src/components/common/DataTable.tsx",
+    "src/hooks/usePermissions.ts",
+    "src/lib/utils/permissions.ts",
+    "src/components/layout/SidebarNav.tsx",
+    "urgent-printers-backend/app/api/v1/routes/admin/categories.py",
+    "urgent-printers-backend/app/schemas/category.py",
+    "urgent-printers-backend/app/repositories/category_repository.py",
+    "urgent-printers-backend/tests/api/test_admin_categories.py"
+  ],
+  "user_goal": "Create, edit, reorder, and delete product categories — with photos/video and SEO fields — so the catalog stays organized and ready to publish to the storefront.",
+  "business_goal": "An accurate, well-merchandised category structure is what makes the storefront's browsing/filtering usable and drives product discovery.",
+  "user_journey": [
+    { "step": "View all categories, ordered", "route_or_state": "/categories" },
+    { "step": "Create a new category with images and SEO fields", "route_or_state": "/categories/new" },
+    { "step": "Edit an existing category", "route_or_state": "/categories/{id}" },
+    { "step": "Reorder categories via up/down arrows", "route_or_state": "/categories (inline action)" },
+    { "step": "Delete a category", "route_or_state": "/categories (row action + confirm dialog)" }
+  ],
+  "happy_path": [
+    { "step_id": "hp-01", "action": "Open the categories list", "selector": null, "expected_result": "Table renders with columns Order, Category, Slug, Products, Status; \"Add Category\" link visible top-right (CategoriesTable.tsx)" },
+    { "step_id": "hp-02", "action": "Click \"Add Category\"", "selector": "link text \"Add Category\" -> /categories/new", "expected_result": "Navigates to /categories/new; page renders titled \"New Category\" with an empty CategoryForm" },
+    { "step_id": "hp-03", "action": "Type a name into the Name field", "selector": "input for label \"Name *\", placeholder \"e.g. Business Stationery\" (CategoryForm.tsx)", "expected_result": "Value accepted; in create mode this also drives hp-04's auto-slug" },
+    { "step_id": "hp-04", "action": "Observe the Slug field after typing Name", "selector": "input for label \"Slug *\"", "expected_result": "Slug auto-derives from Name via local slugify() (lowercase, non-alnum -> '-', trimmed) — create mode only, per CategoryForm.tsx" },
+    { "step_id": "hp-05", "action": "Upload one image via the media dropzone", "selector": "MediaSection dropzone, text \"Drag & drop or click to upload images\"", "expected_result": "Status line changes from the red \"1 more photo(s) required — minimum 1.\" to \"Minimum of 1 photo met (1/4).\"; uploaded image gets a \"Primary\" badge" },
+    { "step_id": "hp-06", "action": "Submit the form", "selector": "button text \"Create Category\" (shows \"Saving…\" while pending)", "expected_result": "Success toast \"Category created\"; POST /admin/categories returns 201" },
+    { "step_id": "hp-07", "action": "Return to the categories list and find the new row", "selector": null, "expected_result": "New category appears with the entered name/slug and an \"Active\" status badge" },
+    { "step_id": "hp-08", "action": "Use the row's Up arrow to move it earlier in order", "selector": "icon-only button (ArrowUp) in the Order column for that row", "expected_result": "PATCH /admin/categories/reorder fires with the full id list in new order; row visually moves" },
+    { "step_id": "hp-09", "action": "Edit the category: change its Name only", "selector": "\"Edit\" menu item (Pencil icon) inside the row's action dropdown -> /categories/{id}, then the Name input", "expected_result": "Save button reads \"Save Changes\"; on submit, toast \"Category updated\"; Slug does NOT change (auto-slug only runs in create mode)" },
+    { "step_id": "hp-10", "action": "Delete the category", "selector": "\"Delete\" menu item (Trash2 icon, red) -> ConfirmDialog, then \"Delete Category\" button", "expected_result": "Dialog text: Delete \"{name}\"? / \"This will remove the category. The N product(s) in it will become uncategorized.\"; on confirm, toast \"\\\"{name}\\\" deleted\" and the row disappears from the list" }
+  ],
+  "alternate_paths": [
+    {
+      "path_name": "Optional fields: video and SEO metadata",
+      "steps": [
+        { "step_id": "alt-01", "action": "Upload an optional category video during create", "selector": "video dropzone, text \"Drag & drop or click to upload video\"", "expected_result": "Accepted up to 150MB (.mp4/.mov/.webm); thumbnail extracted automatically per the helper text" },
+        { "step_id": "alt-02", "action": "Fill Meta Title and Meta Description under \"SEO — optional\"", "selector": "labels \"Meta Title\" and \"Meta Description\", each with a live char counter", "expected_result": "Values save; counters are advisory only (see edge-05 — no hard max enforced)" }
+      ]
+    },
+    {
+      "path_name": "Cancel discards unsaved uploads",
+      "steps": [
+        { "step_id": "alt-03", "action": "Start creating a category, upload an image, then click \"Cancel\" without submitting", "selector": "button text \"Cancel\"", "expected_result": "Navigates back to /categories; mediaRef.current?.cleanupNewUploads() deletes the orphaned upload from storage (best-effort, not assertable from the UI alone — see gaps)" }
+      ]
+    }
+  ],
+  "error_paths": [
+    {
+      "trigger": "Submit \"Create Category\" with zero images",
+      "expected_ui_response": "Zod error rendered near the media section: \"At least 1 photo is required\" (errors.image_keys.message, CategoryForm.tsx); form does not submit",
+      "selector": null
+    },
+    {
+      "trigger": "Submit \"Create Category\" with an empty Name",
+      "expected_ui_response": "Zod error \"Name is required\" (schema: name: z.string().min(1, 'Name is required'), CategoryForm.tsx:16-25) — exact rendered location not directly confirmed, see gaps",
+      "selector": "input for label \"Name *\""
+    },
+    {
+      "trigger": "Submit \"Create Category\" with a slug that already belongs to another category",
+      "expected_ui_response": "Backend returns 409 (slug_exists check, category_repository.py); frontend's catch block is a bare generic handler that shows the SAME toast — \"Failed to save category\" — for this and every other failure type (network error, 422, 500). This is a real UX gap: the user gets no indication the problem was specifically a duplicate slug.",
+      "selector": null
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "A staff user with categories.view but not categories.manage (e.g. the customer_support or marketing role) navigates directly to /categories or /categories/new by URL",
+      "existing_validation": null,
+      "risk_note": "Confirmed gap: usePermissions.ts exposes canManageCategories but it is referenced nowhere in the category UI — a view-only role sees fully-enabled Add/Edit/Delete/Reorder controls with no disabling and no read-only notice (unlike the pattern used for Reviews/Content elsewhere in this app). Any mutation attempt will 403 from the backend with no client forewarning. Reachable today via the customer_support or marketing roles per permissions.ts."
+    },
+    {
+      "case": "Delete a category that has products in it",
+      "existing_validation": "Backend nullify_products() sets those products' category_id to NULL and unlinks any nav links pointing at the category, rather than blocking the delete or cascading. Confirm dialog copy discloses this: \"...The N product(s) in it will become uncategorized.\"",
+      "risk_note": "Assert the products still exist afterward with no category (not that they vanish) — a naive test might wrongly expect a block or a cascade delete."
+    },
+    {
+      "case": "Slug typed manually with uppercase letters, spaces, or symbols",
+      "existing_validation": "None — the Zod schema only checks .min(1); the backend Pydantic schema also has no regex/pattern constraint on slug.",
+      "risk_note": "A malformed slug (spaces/uppercase/symbols) will save as-is. slug_exists() does an exact case-sensitive string match, and the storefront's getCategoryBySlug() lookup is also exact-match — a non-URL-safe slug could produce a category the storefront can't cleanly route to. Worth asserting what actually happens to that category's storefront URL."
+    },
+    {
+      "case": "Meta Title / Meta Description entered beyond the 60 / 160 character counter thresholds",
+      "existing_validation": "The counter turns visually red past the limit, but there is no Zod max — the value is not blocked from submitting.",
+      "risk_note": "Confirm an over-limit value saves in full rather than being silently truncated somewhere in the pipeline."
+    },
+    {
+      "case": "Reorder using the boundary arrows — Up on the first row, Down on the last row",
+      "existing_validation": null,
+      "risk_note": "Not confirmed by static reading whether these are disabled at the boundary or simply no-ops; verify live rather than assuming either."
+    },
+    {
+      "case": "Upload a video file larger than 150MB",
+      "existing_validation": "Client-side size check in MediaSection.tsx (MAX_VIDEO_MB = 150) rejects before any upload request, with error text \"Video is too large (X MB). Maximum is 150 MB.\"",
+      "risk_note": "Confirm no network request is attempted once the client-side check fails."
+    },
+    {
+      "case": "Upload an image whose short side is under 800px",
+      "existing_validation": "Client-only, non-blocking advisory: an amber badge/tooltip appears on the thumbnail.",
+      "risk_note": "Confirm this never blocks save — it's advisory only, per MediaSection.tsx."
+    }
+  ],
+  "gaps": [
+    "The post-create and post-edit redirect target (does it return to /categories, or stay on the edit page?) was not confirmed by static reading — verify live during test execution and record the actual behavior in the run.",
+    "Whether Name/Slug field-level Zod errors actually render inline under those specific inputs (vs. only a toast) was not directly confirmed in the JSX — only the image_keys error's exact rendering was confirmed. Verify live.",
+    "No seeded admin login credentials were located during grounding. /qa:generate-tests needs real credentials (check urgent-printers-backend's seed scripts) before it can drive an authenticated flow — this blocks live execution until supplied.",
+    "Whether deleted category media (image_keys/video_key) is actually removed from R2 storage is asserted by the backend code path (_delete_category_media) but is not verifiable from the admin UI alone."
+  ]
+}

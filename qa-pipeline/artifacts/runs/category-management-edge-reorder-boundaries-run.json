@@ -1,0 +1,121 @@
+{
+  "feature_name": "Category Management Edge Reorder Boundaries",
+  "plan_path": "qa-pipeline/artifacts/plans/category-management-plan.json",
+  "run_timestamp": "2026-08-09T20:14:47.285Z",
+  "trace_path": "qa-pipeline/artifacts/traces/category-management-edge-reorder-boundaries-trace.zip",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Log in as the seeded super admin",
+      "selector": null,
+      "route": "/dashboard",
+      "bounding_box": null,
+      "timestamp_ms": 1703,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-reorder-boundaries/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "nav-01",
+      "action": "Open the categories list",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 2421,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-reorder-boundaries/nav-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "chk-01",
+      "action": "Record the current order",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 2588,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-reorder-boundaries/chk-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edg-01",
+      "action": "Click Up on the first row",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 3272,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-reorder-boundaries/edg-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "chk-02",
+      "action": "Confirm order is unchanged after Up on the first row",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 3367,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-reorder-boundaries/chk-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edg-02",
+      "action": "Click Down on the last row",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 4038,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-reorder-boundaries/edg-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "chk-03",
+      "action": "Confirm order is unchanged after Down on the last row",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 4136,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-edge-reorder-boundaries/chk-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    }
+  ],
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  }
+}

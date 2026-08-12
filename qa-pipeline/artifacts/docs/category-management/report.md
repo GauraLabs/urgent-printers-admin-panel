@@ -1,0 +1,66 @@
+# Category Management
+**Project:** Urgent Printers — Admin Panel  
+**Generated:** 2026-08-10T02:10:00Z  
+**Run:** 2026-08-09T20:12:03.544Z — 14 steps, viewport 1280×720  
+---
+## Overview & Objectives
+
+Staff need to create, edit, reorder, and delete the product categories that structure the storefront's catalog — each with photos, an optional video, and SEO fields. Getting this right matters beyond the admin panel itself: every category created or edited here is what a customer eventually browses on the storefront, so the accuracy and reliability of this screen is a direct input into product discoverability and, ultimately, conversion.
+
+
+## Feature Description & Business Logic
+
+A category has a name, an auto-derived slug (lowercase, hyphenated — only while creating; editing a category's name never touches its slug, since the slug is a stable URL), an optional description, at least one photo (up to four) and an optional video, an active/inactive toggle, and optional SEO meta title/description fields. Categories display in a manually controlled order via inline up/down arrows rather than alphabetically or by any computed ranking.
+
+Deleting a category does **not** delete its products or block the delete because products exist — it nullifies the `category_id` on every product that was in it (they become uncategorized, not gone) and unlinks any storefront navigation entries pointing at it. This is a deliberate, non-obvious design choice, and the delete confirmation dialog states it explicitly rather than leaving it as a surprise.
+
+
+## User Flow
+
+A staff member starts at the categories list (`/categories`), which shows every category's manual order, name, slug, live product count, and active/inactive status. From there they can click **Add Category** to reach a blank form (`/categories/new`), fill in a name (watching the slug fill itself in), upload at least one photo, and submit — landing back on the list with the new category appended.
+
+From the list, each row's **⋯** menu opens Edit or Delete. Edit reuses the same form, pre-filled, and — critically — no longer auto-updates the slug when the name changes, so a rename never breaks the category's existing storefront URL. Delete opens a confirmation dialog naming exactly what will happen to the category's products before anything is removed.
+
+
+## Annotated Screenshots
+
+See `screenshot_captions` below for what each captured moment shows.
+
+| Step | Screenshot | What it shows |
+| --- | --- | --- |
+| `hp-01` | ![hp-01](../../screenshots/category-management/hp-01.png) | The categories list — manual order, slug, live product count, and status per row. |
+| `hp-02` | ![hp-02](../../screenshots/category-management/hp-02.png) | The blank "New Category" form, reached via the list's Add Category button. |
+| `hp-05` | ![hp-05](../../screenshots/category-management/hp-05.png) | A real photo uploaded to the category. The advisory low-resolution badge (amber, top-right of the thumbnail) confirms edge-08 non-blocking behavior — this fixture image is 64x64px, well under the 800px threshold. |
+| `hp-06` | ![hp-06](../../screenshots/category-management/hp-06.png) | The category created successfully, confirmed by the success toast. |
+| `hp-07` | ![hp-07](../../screenshots/category-management/hp-07.png) | The new category listed, Active, with the name just entered. |
+| `hp-09` | ![hp-09](../../screenshots/category-management/hp-09.png) | The category renamed and saved — its slug is unchanged from before the edit. |
+| `hp-10` | ![hp-10](../../screenshots/category-management/hp-10.png) | Delete completing cleanly after the fix — success toast shown, row removed, no stale row lingering (contrast with the bug this same step originally caught, described in Test Results). |
+
+
+## Test Results & Coverage
+
+**7 test runs, 39 steps, all green.** Happy path (create → reorder → edit → delete, 14 steps), 3 error paths (empty name, zero photos, duplicate slug), and 3 edge cases (a manually-entered malformed slug, meta title/description beyond their character-count thresholds, and reorder-boundary clicks at the top and bottom of the list) — every one against the real, running app and backend, not mocked. A fourth edge case (a low-resolution upload triggering the advisory warning badge) was confirmed directly from the happy-path run's own screenshot, since the test fixture image used throughout (64×64px) is itself below the 800px advisory threshold.
+
+**A real bug was found and fixed during this pass, not just reported.** The first live run of the happy path caught deleting a category showing its success toast correctly, with the deletion genuinely completing on the backend immediately — but the on-screen list did not remove the row for 15+ seconds in 2 of 3 attempts. Root-caused (not just patched around) to `urgent-printers-backend`'s session-commit timing: the database transaction was committing *after* the HTTP response had already been sent to the browser, so an immediate refetch could read stale data. Fixed at the source with a single-line change (`scope="function"` on the shared session dependency, covering every mutating admin endpoint, not just this one) and verified with a purpose-built timing harness proving the race is structurally closed — plus the full backend test suite (573 tests) still passing. The categories list was also hardened on the frontend side independently (direct cache update instead of a refetch race). Re-running the happy-path spec afterward: 14/14 steps green, delete completing in ~2 seconds with no stall.
+
+Every form-validation path tested behaved exactly as the code predicted: zero photos and an empty name both correctly blocked submission with the right inline error text; a duplicate slug was correctly rejected server-side (though see Recommendations below on its unhelpfully generic error message); a malformed slug and over-length SEO fields were both correctly *accepted* (no validation exists for either, confirmed intentional by design, not a gap in this pass); and the reorder arrows safely no-op at both ends of the list rather than erroring.
+
+
+## Accessibility
+
+automated scan only — manual/screen-reader review still needed. Two **critical** WCAG violations recurred across this flow: icon-only buttons with no accessible name (up to 27-30 nodes on the categories list alone — the reorder arrows and each row's actions-menu trigger have no `aria-label` or text fallback at all), and form fields with no programmatic label (Name/Slug/Description, *and* — discovered while building the edge-case spec — Meta Title/Meta Description too, which nest their `<label>` inside an extra wrapper alongside the character counter, a second instance of the same gap). A **serious** color-contrast violation and several **moderate** landmark/heading issues recurred on every page in this flow, suggesting a shared component or token is the common cause rather than unrelated per-page bugs.
+
+
+## Performance
+
+Not measured — Lighthouse was deliberately left off across every run in this suite to keep things light on a resource-constrained test environment. No performance claims are made here.
+
+
+## Recommendations & Future Improvements
+
+**High priority:** Add accessible names to the icon-only reorder and row-action buttons — this page cannot currently be operated by a screen-reader user at all. *(The delete-refresh reliability issue that was originally the top recommendation here has since been fixed and re-verified — see Test Results above.)*
+
+**Medium priority:** Associate every form field's `<label>` with its input across the whole form, not just Name/Slug (Meta Title/Description have the same gap). Audit the shared color-contrast tokens once, rather than per page. Consider giving the duplicate-slug save failure its own specific error message instead of the same generic "Failed to save category" shown for any failure — the underlying 409 already distinguishes it server-side, the UI currently throws that information away.
+
+**Low priority:** Give the login page a `<main>` landmark and a level-one heading. Manually verify a hydration-mismatch console warning seen on the login page's email/password fields (also independently seen on the storefront app in an unrelated codebase — see the Category Storefront Visibility report — which makes environment noise a plausible explanation, though not a confirmed one).
+

@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 import type { ProductFormValues } from './index';
 
@@ -19,26 +20,30 @@ export function SeoSection({ form }: Props) {
   const { register, watch } = form;
   const title = watch('seo.title') ?? '';
   const description = watch('seo.description') ?? '';
+  const uid = useId();
+  const titleId = `${uid}-title`;
+  const descriptionId = `${uid}-description`;
+  const canonicalUrlId = `${uid}-canonical-url`;
 
   return (
     <div className="space-y-4">
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label className={labelCls.replace('mb-1.5', '')}>Meta Title</label>
+          <label htmlFor={titleId} className={labelCls.replace('mb-1.5', '')}>Meta Title</label>
           <CharCount value={title} max={60} />
         </div>
-        <input {...register('seo.title')} className={inputCls} placeholder="Leave blank to use product name" />
+        <input id={titleId} {...register('seo.title')} className={inputCls} placeholder="Leave blank to use product name" />
       </div>
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label className={labelCls.replace('mb-1.5', '')}>Meta Description</label>
+          <label htmlFor={descriptionId} className={labelCls.replace('mb-1.5', '')}>Meta Description</label>
           <CharCount value={description} max={160} />
         </div>
-        <textarea {...register('seo.description')} rows={3} className={inputCls} placeholder="Leave blank to use short description" />
+        <textarea id={descriptionId} {...register('seo.description')} rows={3} className={inputCls} placeholder="Leave blank to use short description" />
       </div>
       <div>
-        <label className={labelCls}>Canonical URL Override</label>
-        <input {...register('seo.canonical_url')} className={inputCls} placeholder="https://…" />
+        <label htmlFor={canonicalUrlId} className={labelCls}>Canonical URL Override</label>
+        <input id={canonicalUrlId} {...register('seo.canonical_url')} className={inputCls} placeholder="https://…" />
       </div>
     </div>
   );

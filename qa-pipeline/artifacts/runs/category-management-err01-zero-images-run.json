@@ -1,0 +1,66 @@
+{
+  "feature_name": "Category Management Err01 Zero Images",
+  "plan_path": "qa-pipeline/artifacts/plans/category-management-plan.json",
+  "run_timestamp": "2026-08-09T20:11:48.787Z",
+  "trace_path": "qa-pipeline/artifacts/traces/category-management-err01-zero-images-trace.zip",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Log in as the seeded super admin",
+      "selector": null,
+      "route": "/dashboard",
+      "bounding_box": null,
+      "timestamp_ms": 1656,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-err01-zero-images/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "set-01",
+      "action": "Open the new-category form and fill only the name",
+      "selector": null,
+      "route": "/categories/new",
+      "bounding_box": null,
+      "timestamp_ms": 2424,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-err01-zero-images/set-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-01",
+      "action": "Submit with zero images uploaded",
+      "selector": "getByRole('button', { name: 'Create Category' })",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 664,
+        "width": 137,
+        "height": 32
+      },
+      "timestamp_ms": 2712,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/category-management-err01-zero-images/err-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    }
+  ],
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  }
+}

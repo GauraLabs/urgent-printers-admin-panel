@@ -86,6 +86,7 @@ export function CustomizationSection({ form }: Props) {
                         },
                       })}
                       placeholder="Field label (e.g. Full Name)"
+                      aria-label={`Label for template field ${i + 1}`}
                       className={`${inputCls} flex-1`}
                     />
                     <span className="text-[10px] text-[var(--text-muted)] shrink-0">
@@ -94,7 +95,7 @@ export function CustomizationSection({ form }: Props) {
                   </div>
 
                   {/* Type */}
-                  <select {...register(`template_fields.${i}.type`)} className={inputCls}>
+                  <select {...register(`template_fields.${i}.type`)} aria-label={`Type for template field ${i + 1}`} className={inputCls}>
                     {FIELD_TYPES.map((t) => (
                       <option key={t} value={t}>{t}</option>
                     ))}
@@ -104,6 +105,7 @@ export function CustomizationSection({ form }: Props) {
                   <input
                     {...register(`template_fields.${i}.placeholder`)}
                     placeholder="Placeholder (optional)"
+                    aria-label={`Placeholder for template field ${i + 1}`}
                     className={inputCls}
                   />
 
@@ -112,6 +114,7 @@ export function CustomizationSection({ form }: Props) {
                     {...register(`template_fields.${i}.max_length`, { valueAsNumber: true })}
                     type="number"
                     placeholder="Max length (optional)"
+                    aria-label={`Max length for template field ${i + 1}`}
                     className={inputCls}
                   />
 
@@ -129,6 +132,7 @@ export function CustomizationSection({ form }: Props) {
                 <button
                   type="button"
                   onClick={() => remove(i)}
+                  aria-label={`Remove template field ${i + 1}`}
                   className="text-[var(--text-muted)] hover:text-[var(--danger)] transition-colors mt-0.5 shrink-0"
                 >
                   <Trash2 className="h-3.5 w-3.5" />

@@ -1,0 +1,112 @@
+{
+  "feature_name": "Product Catalog (Admin to Storefront)",
+  "run_path": "qa-pipeline/artifacts/runs/product-catalog-admin-combined-run.json",
+  "plan_path": "qa-pipeline/artifacts/plans/product-catalog-admin-to-storefront-plan.json",
+  "pass_count": 91,
+  "fail_count": 0,
+  "failures": [],
+  "accessibility_summary": {
+    "critical": [
+      "RESOLVED (previous run) — label (form elements without a programmatic label): 21 nodes on /products/new and /products/{id} before the fix, 2 after. Every text input in the product form was a visual sibling of a bare <label> with no htmlFor/id pairing. Now paired via useId(), with aria-label naming both column and row for the dense field-array tables ('Quantity for pricing tier 3'). Re-confirmed clean this run: the required-field-unselect suite alone exercised BasicInfoSection's inputs across all 20 clear/restore cycles with axe running per-navigation and raised nothing new here.",
+      "RESOLVED (previous run) — select-name: 5 nodes, gone. The Category and Badge selects, the size-unit select and the template-field type select had no accessible name at all.",
+      "button-name: 27 nodes before the original fix, 2 after, unchanged this run. The 2 remaining nodes are on /login and /products and sit outside this feature's components — deliberately left, tracked with the login page's own separate findings."
+    ],
+    "serious": [
+      "RESOLVED (previous run) — label-title-only (11 nodes) and aria-toggle-field-name (3 nodes), both zero. The print-spec 'Active' checkboxes were labelled only through a title attribute, and the Base UI Switches had no accessible name.",
+      "color-contrast: 12-27 nodes on every admin route including /dashboard and /products, unchanged and still deliberately out of scope for this run — a design-token decision spanning the whole admin theme, not a product-catalogue bug.",
+      "RESOLVED THIS RUN — link-name (1 node on /products, previously the product-name <Link> of an empty-name row). That row existed only because the required-field guard was dead code; err-03/04/05 (now fixed) and this run's rfu-02 through rfu-17 confirm an empty-name/category/description product can no longer be created or saved via either Publish or Save as Draft, in either create or update mode. No nameless row was produced anywhere in this run, so this finding should stay clear going forward rather than needing a manual re-check each time."
+    ],
+    "moderate": [
+      "landmark-unique: flagged on every admin route (/dashboard, /products, /products/new, /products/{id}), unchanged.",
+      "heading-order: flagged on /dashboard, /products/new and /products/{id} — the product form's collapsible <h3> section headers sit under the page <h1> with no <h2> between them, unchanged.",
+      "landmark-one-main / page-has-heading-one / region: flagged on /login only, out of scope here.",
+      "empty-table-header: resolved (previous run) — the products table's actions column now carries an sr-only 'Actions'."
+    ],
+    "coverage_caveat": "automated scan only — manual/screen-reader review still needed"
+  },
+  "performance_summary": {
+    "initial_load": "Not measured. Lighthouse is off for every spec in this suite: the admin panel's access token lives only in memory (Zustand, never localStorage), so capture.js's seedDefaultContextStorage() cannot restore a live session for the audit context and a post-login checkpoint gets bounced to /login — the url_mismatch failure mode described in project.config.json's _notes.auth.",
+    "final_state": "Not measured, same reason.",
+    "concerns": [
+      "Unmeasured but observed repeatedly this run: the required-field-unselect suite's rfu-18/rfu-19/rfu-20 steps each do a hard page.reload() on /products/{id} and visibly re-run the PageSkeleton before settling — consistent with the earlier-flagged 'opens on a skeleton for several seconds' concern, still not formally measured.",
+      "The catalogue list still refetches from scratch on every filter/search/sort change (the TanStack query key includes filters and sorting), so each change drops the table to skeleton rows before repainting — now more consequential than before since search and sort are real, backend-backed operations an admin will actually use routinely, not dead controls.",
+      "Any future measurement here must come from a production build. These would be Next.js dev-server numbers, whose only legitimate use is a run-over-run baseline."
+    ]
+  },
+  "ux_gaps": [
+    {
+      "issue": "RESOLVED THIS RUN — the 'Search products…' box now actually filters. useProducts.setSearch sends a real q parameter, GET /admin/products accepts it (case-insensitive partial match on name/slug/short_description), and edge-02 confirms live: searching a product's own full name returns only rows containing it. Previously this control silently discarded every keystroke.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "RESOLVED THIS RUN — the Product/From/Created column headers now sort for real. ProductsTable passes sorting/onSortingChange to DataTable (which already had manualSorting wired but unused) and useProducts.ts maps the clicked column to a backend sort parameter. edge-03 confirms a first click on 'Product' returns the current page's rows in ascending, case-insensitive name order, where previously the click was a complete no-op.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "RESOLVED THIS RUN — the status filter now separates Draft from Archived. products.ts sends the real, canonical status parameter instead of collapsing both to is_active=false. edge-05 confirms the two filters now return disjoint result sets (zero-overlap check, not a hardcoded count, so it stays valid as catalogue data changes).",
+      "related_edge_case": null
+    },
+    {
+      "issue": "RESOLVED THIS RUN — the two delete/archive dialogs no longer contradict each other or the actual backend behaviour. The edit form's dialog previously claimed permanent deletion ('This will permanently delete the product. This cannot be undone.') while the list's dialog claimed the opposite and the backend used to delete a product's media from storage before archiving it either way — none of the three agreed. Now: both dialogs read identically ('The product will be archived and hidden from the storefront. It can be restored by changing its status back to Active.') and the backend no longer deletes media on archive, so the shared promise is actually true. edge-13 (edit-form dialog copy) and hp-16 (list dialog copy) both assert the corrected text verbatim.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "save()'s three imperative, non-Zod guards (pricing_tiers/turnaround_options/image_keys must be non-empty) fire identically for Save as Draft and Publish — confirmed directly this run (rfu-08, rfu-09, rfu-18, rfu-19 all exercise the Draft path specifically, which the pre-existing error suite had only ever exercised via Publish). This means a genuinely incomplete work-in-progress cannot be saved as a draft at all; an admin who wants to save partial progress (e.g. photos not shot yet) gets the same hard block as trying to publish. Recorded as a finding, not a defect: this suite takes no position on whether a 'draft' should be allowed to be incomplete — that's a product decision about what 'draft' means on this platform, and it should be made deliberately rather than inherited from guard code that was written with Publish as the only case in mind.",
+      "related_edge_case": "A negative price_per_unit or a zero/negative quantity can be typed into a pricing tier and saved."
+    },
+    {
+      "issue": "NEW, HIGH-SEVERITY FINDING — removing a photo from an existing (already-saved) product deletes it from storage (DELETE /admin/media) the instant the hover 'Remove image' button is clicked, with no distinction between a freshly-uploaded-this-session image and one that was already persisted. save()'s 'At least 3 photos are required' guard does correctly block the record-level PATCH afterward (confirmed: rfu-19 shows the DB's image_keys were never touched, verified via a direct read-only GET /admin/products against the running backend during triage), but that protection is cosmetic once the underlying files are already gone — an admin who removes photos while editing a live product, then either hits this guard or simply navigates away without saving, is left with a product whose DB record still references image keys that no longer resolve to anything in storage. Proven this run via 3 intercepted, successful DELETE /admin/media responses (rfu-19), captured specifically to avoid a false negative from a CDN cache serving a stale 200 on a follow-up GET. This is exactly the 'silently corrupting an already-published product' shape this spec was written to look for.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "NEW FINDING — the Category select can render blank ('Select category') after a hard page reload on /products/{id} even though the product's category_id is correctly persisted server-side (confirmed via curl during triage: category_id stayed 8 throughout the entire required-field-unselect run despite the select showing empty at rfu-18/rfu-20). Root cause: useCategories() is only triggered once BasicInfoSection mounts, which itself only mounts once useProductDetail's product query resolves (ProductEditClient's loading gate) — so a cold/hard reload runs the two queries as a waterfall rather than in parallel. RHF's register() sets a native <select>'s value once, at ref-attach time; if the matching <option> for the real category_id doesn't exist yet (categories still loading), the browser silently falls back to the blank placeholder option, and because React never re-invokes RHF's ref callback just because new <option> children arrived later, nothing ever corrects it for the rest of that page's lifetime. A normal in-app navigation (list → Edit) doesn't hit this, because useCategories()'s cache is already warm from the list page — rfu-20 confirms the same product's category displays correctly when reached that way. No data loss; a real, reproducible display bug that could make an admin distrust or second-guess a correctly-set category on a slow network or direct URL load.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "The admin list's 'From' price and the storefront's 'From' price are computed by two independent rules — Math.min(pricing_tiers.price_per_unit) in products.ts's normalize() versus schemas/product.py's _display_price(), which prefers the is_best_value tier. The same product can therefore advertise different prices in the two UIs. Not exercised end to end by this run (the storefront half was a separate capture), so it is flagged from source rather than measured.",
+      "related_edge_case": "The admin list's 'From' price is Math.min(pricing_tiers.price_per_unit) (products.ts normalize) while the storefront's 'From' is schemas/product.py's _display_price (the is_best_value tier when one is set)."
+    },
+    {
+      "issue": "RBAC is entirely unexercised. products.view/create/edit/delete exist in app/core/permissions.py and gate the API, but the products feature calls usePermissions() nowhere — a view-only role sees fully enabled Add Product, Edit and Delete controls that will 403 on submit. Proving it needs a second seeded staff account, which this run deliberately did not create.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "No bulk actions exist to test. ProductsTable passes neither enableRowSelection nor bulkActions to DataTable, so there are no row checkboxes and no multi-select toolbar, even though DataTable supports both.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "Dropping more than 8 photos silently discards the excess with no message explaining it, unchanged from the previous run.",
+      "related_edge_case": "The image dropzone caps at 8 images (disabled at maxImages, extra files sliced off silently)."
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "Stop MediaSection.removeImage() from deleting an existing, already-persisted image from storage immediately on click. Either defer the actual deleteMedia() call until the surrounding form save genuinely succeeds (tracking removed-but-unsaved keys the way cleanupNewUploads() already tracks added-but-unsaved ones), or add an explicit 'this takes effect immediately, even if you don't save' warning before the delete fires. Right now save()'s guards create a false sense of safety: they correctly block the DB record from losing its image_keys, but do nothing to stop the images themselves from already being gone."
+    },
+    {
+      "priority": "medium",
+      "action": "Decide, deliberately, whether Save as Draft is allowed to save an incomplete product (no photos / no pricing tiers) or not. Right now it is blocked identically to Publish, which may be exactly right or may be blocking a legitimate 'save my partial progress' workflow — this run only confirmed the current behaviour is consistent, not that it's the intended one."
+    },
+    {
+      "priority": "medium",
+      "action": "Fix the Category select's post-reload blank-render bug. Either lift useCategories() to fire in parallel with useProductDetail (e.g. at ProductEditClient or a shared layout level) instead of waiting for BasicInfoSection to mount, or make the <select> a controlled component (value={watch('category_id')}) so a later options-arrival re-render can actually re-apply the correct selection instead of relying on RHF's one-time ref-attach value."
+    },
+    {
+      "priority": "medium",
+      "action": "Finish the accessibility pass on the two routes not yet fully clear: heading-order on the product form (the collapsible <h3> section headers jump a level from the page <h1>) and the residual 2 button-name nodes outside this feature's own components."
+    },
+    {
+      "priority": "medium",
+      "action": "Give the image dropzone a message when it silently discards files over the 8-image cap, matching the clarity of the minimum-photo counter it sits next to."
+    },
+    {
+      "priority": "low",
+      "action": "Cover the RBAC paths with a seeded view-only staff account, and add usePermissions() gating to the products feature so a role without products.edit does not see enabled controls that will 403. The content, staff and shipping features already establish the pattern."
+    },
+    {
+      "priority": "low",
+      "action": "Reconcile the two 'From' price rules (admin list vs. storefront), or document which one is canonical."
+    }
+  ]
+}

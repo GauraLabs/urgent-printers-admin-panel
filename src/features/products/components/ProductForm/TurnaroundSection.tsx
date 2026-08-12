@@ -44,6 +44,7 @@ export function TurnaroundSection({ form }: Props) {
     <div className="space-y-2">
       {TYPES.map(({ key, label, color, required }) => {
         const isActive = watch(`turnaround_options.${key}.is_active`);
+        const labelId = `turnaround-${key}-label`;
         return (
           <div
             key={key}
@@ -57,9 +58,10 @@ export function TurnaroundSection({ form }: Props) {
               onCheckedChange={(v) => setValue(`turnaround_options.${key}.is_active`, v, { shouldDirty: true })}
               size="sm"
               disabled={required}
+              aria-labelledby={labelId}
             />
 
-            <span className={`text-xs font-semibold w-16 flex-shrink-0 ${color}`}>{label}</span>
+            <span id={labelId} className={`text-xs font-semibold w-16 flex-shrink-0 ${color}`}>{label}</span>
 
             <div className="flex items-center gap-2">
               <input
@@ -67,6 +69,7 @@ export function TurnaroundSection({ form }: Props) {
                 type="number"
                 min={1}
                 disabled={!isActive}
+                aria-label={`${label} turnaround days`}
                 className={`${inputCls} w-16`}
               />
               <span className="text-xs text-muted-foreground">days</span>
@@ -79,6 +82,7 @@ export function TurnaroundSection({ form }: Props) {
                 type="number"
                 min={0}
                 disabled={!isActive}
+                aria-label={`${label} turnaround extra cost`}
                 className={`${inputCls} w-20`}
               />
             </div>

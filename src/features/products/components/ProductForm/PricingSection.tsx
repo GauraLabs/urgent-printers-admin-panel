@@ -9,11 +9,12 @@ import type { ProductFormValues } from './index';
 interface Props { form: UseFormReturn<ProductFormValues> }
 
 export function PricingSection({ form }: Props) {
-  const { register, watch, setValue } = form;
+  const { register, watch, setValue, formState: { errors } } = form;
   const { fields, append, remove } = useFieldArray({ control: form.control, name: 'pricing_tiers' });
 
   const tiers = watch('pricing_tiers') ?? [];
   const inputCls = 'px-2.5 py-1.5 text-xs bg-[var(--surface)] border border-[var(--border)] rounded-md text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] tabular-nums';
+  const errorCls = 'mt-1 text-[11px] text-[var(--danger)]';
 
   return (
     <div>
@@ -35,22 +36,30 @@ export function PricingSection({ form }: Props) {
               const total = qty * price;
               return (
                 <tr key={field.id}>
-                  <td className="py-2 pr-3">
+                  <td className="py-2 pr-3 align-top">
                     <input
                       {...register(`pricing_tiers.${i}.quantity`, { valueAsNumber: true })}
                       type="number"
                       placeholder="500"
+                      aria-label={`Quantity for pricing tier ${i + 1}`}
                       className={`${inputCls} w-24`}
                     />
+                    {errors.pricing_tiers?.[i]?.quantity && (
+                      <p className={errorCls}>{errors.pricing_tiers[i]?.quantity?.message}</p>
+                    )}
                   </td>
-                  <td className="py-2 pr-3">
+                  <td className="py-2 pr-3 align-top">
                     <input
                       {...register(`pricing_tiers.${i}.price_per_unit`, { valueAsNumber: true })}
                       type="number"
                       step="0.01"
                       placeholder="5.00"
+                      aria-label={`Price per unit for pricing tier ${i + 1}`}
                       className={`${inputCls} w-24`}
                     />
+                    {errors.pricing_tiers?.[i]?.price_per_unit && (
+                      <p className={errorCls}>{errors.pricing_tiers[i]?.price_per_unit?.message}</p>
+                    )}
                   </td>
                   <td className="py-2 pr-3">
                     <span className="text-[var(--text-secondary)] tabular-nums">
@@ -65,12 +74,18 @@ export function PricingSection({ form }: Props) {
                       }}
                       className={tiers[i]?.is_best_value ? 'text-yellow-500' : 'text-[var(--text-muted)] hover:text-yellow-400'}
                       title="Mark as best value"
+                      aria-label={`Mark pricing tier ${i + 1} as best value`}
                     >
                       <Star className={`h-4 w-4 ${tiers[i]?.is_best_value ? 'fill-yellow-500' : ''}`} />
                     </button>
                   </td>
                   <td className="py-2">
-                    <button type="button" onClick={() => remove(i)} className="text-[var(--text-muted)] hover:text-[var(--danger)]">
+                    <button
+                      type="button"
+                      onClick={() => remove(i)}
+                      className="text-[var(--text-muted)] hover:text-[var(--danger)]"
+                      aria-label={`Remove pricing tier ${i + 1}`}
+                    >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </td>

@@ -154,12 +154,11 @@ export interface ProductsListResponse {
   total_pages: number;
 }
 
-// Backend list accepts is_active (bool) not status.
-// status='active' → is_active=true, else is_active=false.
-// status filter is limited until backend adds a status query param.
 export interface ProductFilters {
   status?: ProductStatus;
   category_id?: string;
+  q?: string;
+  sort?: string;
   page?: number;
   page_size?: number;
 }

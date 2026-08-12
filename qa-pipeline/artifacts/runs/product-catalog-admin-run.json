@@ -1,0 +1,581 @@
+{
+  "feature_name": "Product Catalog Admin",
+  "plan_path": "qa-pipeline/artifacts/plans/product-catalog-admin-to-storefront-plan.json",
+  "run_timestamp": "2026-08-11T19:47:25.149Z",
+  "trace_path": null,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Open the admin login page",
+      "selector": null,
+      "route": "/login",
+      "bounding_box": null,
+      "timestamp_ms": 674,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": 5
+        }
+      ],
+      "console_errors": [
+        "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>\n      <LoadingBoundary name=\"login/\" loading={null}>\n        <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>\n          <RedirectBoundary>\n            <RedirectErrorBoundary router={{...}}>\n              <InnerLayoutRouter url=\"/login\" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>\n                <SegmentViewNode type=\"page\" pagePath=\"(auth)/log...\">\n                  <SegmentTrieNode>\n                  <ClientPageRoot Component={function LoginPage} serverProvidedParams={{...}}>\n                    <LoginPage params={Promise} searchParams={Promise}>\n                      <div className=\"w-full max...\">\n                        <div>\n                        <div className=\"bg-[var(--...\">\n                          <h2>\n                          <form onSubmit={function} noValidate={true} className=\"space-y-4\">\n                            <div>\n                              <label>\n                              <input\n                                id=\"email\"\n                                type=\"email\"\n                                autoComplete=\"email\"\n                                autoFocus={true}\n                                name=\"email\"\n                                onChange={function onChange}\n                                onBlur={function onChange}\n                                ref={function ref}\n                                className=\"w-full px-3 py-2 text-sm bg-[var(--surface)] border rounded-lg text-[var(--...\"\n                                placeholder=\"admin@urgentprinters.com\"\n-                               style={{caret-color:\"transparent\"}}\n                              >\n                            <div>\n                              <label>\n                              <div className=\"relative\">\n                                <input\n                                  id=\"password\"\n                                  type=\"password\"\n                                  autoComplete=\"current-password\"\n                                  name=\"password\"\n                                  onChange={function onChange}\n                                  onBlur={function onChange}\n                                  ref={function ref}\n                                  className=\"w-full pl-3 pr-10 py-2 text-sm bg-[var(--surface)] border rounded-lg text...\"\n                                  placeholder=\"Enter your password\"\n-                                 style={{caret-color:\"transparent\"}}\n                                >\n                                ...\n                            ...\n                ...\n              ...\n"
+      ]
+    },
+    {
+      "step_id": "auth-02",
+      "action": "Enter the admin email",
+      "selector": "locator('#email')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 358,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 825,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/auth-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "admin@urgentprinters.com",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-03",
+      "action": "Enter the admin password",
+      "selector": "locator('#password')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 438,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 941,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/auth-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "SuperAdmin@123",
+      "typed_masked": true,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-04",
+      "action": "Submit the login form",
+      "selector": "getByRole('button', { name: 'Sign in' })",
+      "route": "/dashboard",
+      "bounding_box": {
+        "x": 481,
+        "y": 500,
+        "width": 318,
+        "height": 36
+      },
+      "timestamp_ms": 2389,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/auth-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-01",
+      "action": "Open the product catalogue list",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 3354,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-02",
+      "action": "Click 'Add Product'",
+      "selector": "getByRole('link', { name: 'Add Product' }).first()",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 1127,
+        "y": 80,
+        "width": 129,
+        "height": 32
+      },
+      "timestamp_ms": 4159,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-03",
+      "action": "Enter the product name",
+      "selector": "locator('label:text-is(\"Product Name *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 213,
+        "width": 298,
+        "height": 38
+      },
+      "timestamp_ms": 4373,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "QA Pipeline Test Product 1786477645150",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-04",
+      "action": "Observe the auto-derived Slug",
+      "selector": "locator('label:text-is(\"Slug *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 599,
+        "y": 213,
+        "width": 298,
+        "height": 38
+      },
+      "timestamp_ms": 4546,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-05",
+      "action": "Enter the short description",
+      "selector": "locator('label:text-is(\"Short Description *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 289,
+        "width": 611,
+        "height": 38
+      },
+      "timestamp_ms": 4753,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "Premium 350 GSM cards printed and dispatched within 24 hours.",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-06",
+      "action": "Select a category",
+      "selector": "locator('label:text-is(\"Category *\")').locator('xpath=following-sibling::select[1]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 586,
+        "width": 193,
+        "height": 37
+      },
+      "timestamp_ms": 4993,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-07",
+      "action": "Upload three product photos",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 591,
+        "y": 1025,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 12882,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-08",
+      "action": "Review the default pricing tiers",
+      "selector": "locator('input[name=\"pricing_tiers.0.quantity\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 2460,
+        "width": 96,
+        "height": 30
+      },
+      "timestamp_ms": 13077,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-09",
+      "action": "Mark the 1,000-unit tier as 'Best Value'",
+      "selector": "locator('button[title=\"Mark as best value\"]').nth(3)",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 741,
+        "y": 2606,
+        "width": 16,
+        "height": 16
+      },
+      "timestamp_ms": 13406,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-10",
+      "action": "Turn on inventory tracking and set stock levels",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 13840,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-11",
+      "action": "Click 'Publish Product'",
+      "selector": "getByRole('button', { name: 'Publish Product' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 958,
+        "y": 214,
+        "width": 281,
+        "height": 32
+      },
+      "timestamp_ms": 14624,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-11.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 7
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-12",
+      "action": "Locate the new product row",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Product 1786477645150' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 265,
+        "y": 240,
+        "width": 990,
+        "height": 53
+      },
+      "timestamp_ms": 14835,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-12.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-13",
+      "action": "Open the row menu and click 'Edit'",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Product 1786477645150' }).locator('button').last()",
+      "route": "/products/11781",
+      "bounding_box": {
+        "x": 1213,
+        "y": 252,
+        "width": 28,
+        "height": 28
+      },
+      "timestamp_ms": 15723,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-13.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "description": "Ensure every form element has a label",
+          "nodes": 2
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-14",
+      "action": "Change the short description and save",
+      "selector": "locator('label:text-is(\"Short Description *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/products/11781",
+      "bounding_box": {
+        "x": 285,
+        "y": 289,
+        "width": 611,
+        "height": 38
+      },
+      "timestamp_ms": 16249,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-14.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-15",
+      "action": "Reassign the product to another category and save",
+      "selector": "locator('label:text-is(\"Category *\")').locator('xpath=following-sibling::select[1]')",
+      "route": "/products",
+      "bounding_box": {
+        "x": 285,
+        "y": 586,
+        "width": 193,
+        "height": 37
+      },
+      "timestamp_ms": 17427,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-15.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 2
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-16",
+      "action": "Archive the product from the row menu",
+      "selector": "locator('tr').filter({ hasText: 'QA Pipeline Test Product 1786477645150' }).locator('button').last()",
+      "route": "/products",
+      "bounding_box": {
+        "x": 1213,
+        "y": 252,
+        "width": 28,
+        "height": 28
+      },
+      "timestamp_ms": 18474,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-16.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-17",
+      "action": "Confirm the archived product no longer shows as Active",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 19345,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/product-catalog-admin/hp-17.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    }
+  ],
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  }
+}
