@@ -35,6 +35,7 @@ export function usePermissions() {
     canManageCoupons: can('coupons.manage'),
     canManageContent: can('content.manage'),
     canModerateReviews: can('reviews.moderate'),
+    canViewShipping: can('shipping.view'),
     canManageShipping: can('shipping.manage'),
     canSendCommunications: can('communications.send'),
     canViewSalesReports: can('reports.sales'),

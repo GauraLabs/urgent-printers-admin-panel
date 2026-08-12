@@ -1,4 +1,4 @@
-import { get, post, patch } from './client';
+import { apiClient, get, post, patch } from './client';
 import type { PaginatedResponse, Shipment, ShipmentStatus, ShipmentSource } from '@/types';
 
 export interface CourierOption {
@@ -224,6 +224,17 @@ export interface UpdateShipmentStatusResult {
   order_id: string;
   shipment_status: ShipmentStatus;
   shipment_source: ShipmentSource;
+}
+
+// Binary PDF response, not the { data, message } JSON envelope — call apiClient
+// directly with responseType: 'blob' (same reason uploadMedia bypasses the get/post
+// helpers). client.ts's response interceptor's isWrapped() check only matches plain
+// objects with 'data'/'message' keys, so a Blob passes through untouched.
+export async function getOrderInvoicePdf(order_id: string): Promise<Blob> {
+  const res = await apiClient.get<Blob>(`/admin/orders/${order_id}/invoice`, {
+    responseType: 'blob',
+  });
+  return res.data;
 }
 
 export async function updateShipmentStatus(
