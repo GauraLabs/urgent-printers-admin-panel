@@ -16,6 +16,9 @@ import { useTestimonials, useTestimonialMutations } from '../hooks/useContent';
 import { usePermissions } from '@/hooks/usePermissions';
 import { uploadMedia } from '@/lib/api/media';
 import { cn } from '@/lib/utils/cn';
+import { ImageQualityBadge } from '@/components/common/ImageQualityBadge';
+import { useImageDimensionCheck } from '@/hooks/useImageDimensionCheck';
+import { IMAGE_GUIDANCE } from '@/lib/utils/imageQuality';
 import type { Testimonial } from '@/types';
 
 const schema = z.object({
@@ -60,12 +63,15 @@ function TestimonialFormInline({ testimonial, onSave, onCancel, isLoading }: {
   const avatarUrl = watch('avatar_url');
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [droppedFile, setDroppedFile] = useState<File | null>(null);
+  const dimensionCheck = useImageDimensionCheck(droppedFile ?? avatarUrl, IMAGE_GUIDANCE.avatar.thresholds);
 
   const onAvatarDrop = useCallback((files: File[]) => {
     const file = files[0];
     if (!file) return;
     setUploadError(null);
     setUploadProgress(0);
+    setDroppedFile(file);
     uploadMedia(file, 'testimonial', setUploadProgress)
       .then((result) => {
         if (result.type === 'image') {
@@ -97,6 +103,7 @@ function TestimonialFormInline({ testimonial, onSave, onCancel, isLoading }: {
       </div>
       <div>
         <label className={cls.label}>Avatar (optional)</label>
+        <p className="text-[11px] text-[var(--text-muted)] mb-1.5">{IMAGE_GUIDANCE.avatar.hint}</p>
         <div className="flex items-start gap-3">
           <div
             {...getRootProps()}
@@ -118,6 +125,14 @@ function TestimonialFormInline({ testimonial, onSave, onCancel, isLoading }: {
             <input {...register('avatar_url')} className={cls.input} placeholder="https://… (or drop image)" />
             {uploadError && <p className={cls.err}>{uploadError}</p>}
             {errors.avatar_url && <p className={cls.err}>{errors.avatar_url.message}</p>}
+            {avatarUrl && (
+              <ImageQualityBadge
+                dims={dimensionCheck.dims}
+                tier={dimensionCheck.tier}
+                loading={dimensionCheck.loading}
+                className="mt-1"
+              />
+            )}
           </div>
         </div>
       </div>

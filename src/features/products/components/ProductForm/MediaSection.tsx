@@ -5,6 +5,8 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, X, ArrowUp, ArrowDown, Film, AlertCircle, Loader2, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { uploadMedia, deleteMedia } from '@/lib/api/media';
+import { ImageQualityBadge } from '@/components/common/ImageQualityBadge';
+import { probeImageDimensions, getImageQualityTier, IMAGE_GUIDANCE, type ImageDimensions, type ImageQualityTier } from '@/lib/utils/imageQuality';
 import type { ProductImageURLSet, MediaUploadImageResult, MediaUploadVideoResult } from '@/types/product';
 
 const MAX_VIDEO_MB = 150;
@@ -75,8 +77,6 @@ interface MediaSectionProps {
   onVideoChange?: (key: string | null) => void;
 }
 
-const MIN_PHOTO_DIMENSION_PX = 800;
-
 export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(function MediaSection({
   context = 'product',
   maxImages = 8,
@@ -98,7 +98,7 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
       : null
   );
   // Non-blocking, client-only nicety — keyed by tempId, never sent to the backend.
-  const [dimensionWarnings, setDimensionWarnings] = useState<Record<string, string>>({});
+  const [dimensionInfo, setDimensionInfo] = useState<Record<string, { dims: ImageDimensions; tier: ImageQualityTier }>>({});
 
   // Expose cleanup handle — deletes only media uploaded in this session.
   useImperativeHandle(ref, () => ({
@@ -168,7 +168,7 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
     // that used to reference it is actually saved without it.
     URL.revokeObjectURL(item.blobUrl);
     setImages((prev) => prev.filter((_, i) => i !== idx));
-    setDimensionWarnings((prev) => {
+    setDimensionInfo((prev) => {
       if (!(item.tempId in prev)) return prev;
       const next = { ...prev };
       delete next[item.tempId];
@@ -186,17 +186,14 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
         { status: 'uploading', tempId, blobUrl, progress: 0 },
       ]);
 
-      const probe = new Image();
-      probe.onload = () => {
-        const shortSide = Math.min(probe.naturalWidth, probe.naturalHeight);
-        if (shortSide > 0 && shortSide < MIN_PHOTO_DIMENSION_PX) {
-          setDimensionWarnings((prev) => ({
-            ...prev,
-            [tempId]: `Low resolution (${probe.naturalWidth}×${probe.naturalHeight}px) — aim for at least ${MIN_PHOTO_DIMENSION_PX}px on the short side.`,
-          }));
-        }
-      };
-      probe.src = blobUrl;
+      probeImageDimensions(file)
+        .then((dims) => {
+          const { tier } = getImageQualityTier(dims, IMAGE_GUIDANCE.square.thresholds);
+          setDimensionInfo((prev) => ({ ...prev, [tempId]: { dims, tier } }));
+        })
+        .catch(() => {
+          // Advisory only — if the browser can't read dimensions, just skip the badge.
+        });
 
       uploadMedia(file, context, (pct) => {
         setImages((prev) =>
@@ -301,8 +298,11 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
       {/* Image grid */}
       {images.length > 0 && (
         <div className="flex flex-wrap gap-3">
-          {images.map((item, i) => (
-            <div key={item.tempId} className="relative group w-24 h-24 flex-shrink-0">
+          {images.map((item, i) => {
+            const info = item.status === 'done' ? dimensionInfo[item.tempId] : undefined;
+            return (
+            <div key={item.tempId} className="flex flex-col items-center gap-1 w-24 flex-shrink-0">
+              <div className="relative group w-24 h-24">
               <img
                 src={item.blobUrl}
                 alt={`Image ${i + 1}`}
@@ -378,17 +378,27 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
                 </span>
               )}
 
-              {/* Low-resolution warning (non-blocking) */}
-              {item.status === 'done' && dimensionWarnings[item.tempId] && (
+              {/* Quality-tier corner flag (non-blocking) — only surfaced when below the recommended size */}
+              {info && info.tier !== 'good' && (
                 <span
-                  title={dimensionWarnings[item.tempId]}
-                  className="absolute top-1 right-1 flex items-center justify-center w-4 h-4 bg-amber-500 rounded-full"
+                  title={`${info.dims.width}×${info.dims.height}px — ${info.tier === 'poor' ? 'too small, will look blurry' : 'usable, not ideal'}`}
+                  className={cn(
+                    'absolute top-1 right-1 flex items-center justify-center w-4 h-4 rounded-full',
+                    info.tier === 'poor' ? 'bg-destructive' : 'bg-amber-500'
+                  )}
                 >
                   <AlertTriangle className="h-2.5 w-2.5 text-white" />
                 </span>
               )}
+              </div>
+
+              {/* Detected dimensions + quality tier, always shown once known */}
+              {info && (
+                <ImageQualityBadge dims={info.dims} tier={info.tier} compact className="text-[9px] gap-1" />
+              )}
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -400,20 +410,23 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
 
       {/* Image dropzone */}
       {images.length < maxImages && (
-        <div {...imgRootProps()} className={cn(
-          'border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-colors',
-          imgDrag ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-muted/30'
-        )}>
-          <input {...imgInputProps()} />
-          <Upload className="h-6 w-6 mx-auto mb-1.5 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">
-            {imgDrag ? 'Drop images here' : 'Drag & drop or click to upload images'}
-          </p>
-          <p className="text-[11px] text-muted-foreground/70 mt-0.5">
-            {minImages > 0
-              ? `Upload at least ${minImages} photo${minImages === 1 ? '' : 's'} (up to ${maxImages}). JPG, PNG, or WebP, max 10MB each.`
-              : `JPG, PNG, WebP, max 10MB each · Up to ${maxImages - images.length} more · Variants generated automatically`}
-          </p>
+        <div className="space-y-1.5">
+          <p className="text-[11px] text-muted-foreground">{IMAGE_GUIDANCE.square.hint}</p>
+          <div {...imgRootProps()} className={cn(
+            'border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-colors',
+            imgDrag ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-muted/30'
+          )}>
+            <input {...imgInputProps()} />
+            <Upload className="h-6 w-6 mx-auto mb-1.5 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              {imgDrag ? 'Drop images here' : 'Drag & drop or click to upload images'}
+            </p>
+            <p className="text-[11px] text-muted-foreground/70 mt-0.5">
+              {minImages > 0
+                ? `Upload at least ${minImages} photo${minImages === 1 ? '' : 's'} (up to ${maxImages}). JPG, PNG, or WebP, max 10MB each.`
+                : `JPG, PNG, WebP, max 10MB each · Up to ${maxImages - images.length} more · Variants generated automatically`}
+            </p>
+          </div>
         </div>
       )}
 

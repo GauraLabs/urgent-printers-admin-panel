@@ -1,12 +1,81 @@
 import { useState } from 'react';
-import { MapPin, Truck, ExternalLink, PackagePlus } from 'lucide-react';
+import { toast } from 'sonner';
+import { MapPin, Truck, ExternalLink, PackagePlus, Printer, Download } from 'lucide-react';
 import { formatDate } from '@/lib/utils/formatDate';
 import { usePermissions } from '@/hooks/usePermissions';
 import { ManualShipmentDialog } from '@/features/shipping/components/ManualShipmentDialog';
 import { ShipmentStatusControl } from '@/features/shipping/components/ShipmentStatusControl';
+import { useOrderInvoice } from '@/features/shipping/hooks/useShipping';
 import { Badge } from '@/components/common/StatusBadge';
 import { SHIPMENT_STATUS_LABEL, SHIPMENT_STATUS_VARIANT } from '@/lib/constants/shipmentStatus';
 import type { OrderAddress, OrderShippingInfo, OrderStatus } from '@/types';
+
+function InvoiceActions({ orderId, orderNumber }: { orderId: string; orderNumber: string }) {
+  const invoiceMutation = useOrderInvoice();
+  const [pendingAction, setPendingAction] = useState<'print' | 'download' | null>(null);
+
+  async function handlePrintInvoice() {
+    // Open the tab synchronously (inside the click handler) so browsers don't
+    // treat it as an unsolicited pop-up once the async fetch below resolves.
+    const invoiceWindow = window.open('', '_blank', 'noopener,noreferrer');
+    setPendingAction('print');
+    try {
+      const blob = await invoiceMutation.mutateAsync(orderId);
+      const url = URL.createObjectURL(blob);
+      if (invoiceWindow) {
+        invoiceWindow.location.href = url;
+      } else {
+        toast.error('Pop-up blocked — allow pop-ups for this site to print the invoice.');
+      }
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    } catch {
+      invoiceWindow?.close();
+      toast.error('Failed to open invoice. Please try again.');
+    } finally {
+      setPendingAction(null);
+    }
+  }
+
+  async function handleDownloadInvoice() {
+    setPendingAction('download');
+    try {
+      const blob = await invoiceMutation.mutateAsync(orderId);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `invoice-${orderNumber}.pdf`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      toast.error('Failed to download invoice. Please try again.');
+    } finally {
+      setPendingAction(null);
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <button
+        type="button"
+        onClick={handlePrintInvoice}
+        disabled={invoiceMutation.isPending}
+        className="flex items-center gap-1.5 text-xs font-medium text-[var(--primary)] hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
+      >
+        <Printer className="h-3.5 w-3.5" />
+        {pendingAction === 'print' ? 'Opening…' : 'Print Invoice'}
+      </button>
+      <button
+        type="button"
+        onClick={handleDownloadInvoice}
+        disabled={invoiceMutation.isPending}
+        className="flex items-center gap-1.5 text-xs font-medium text-[var(--primary)] hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
+      >
+        <Download className="h-3.5 w-3.5" />
+        {pendingAction === 'download' ? 'Downloading…' : 'Download Invoice'}
+      </button>
+    </div>
+  );
+}
 
 interface Props {
   address: OrderAddress;
@@ -18,7 +87,7 @@ interface Props {
 
 export function OrderShipping({ address, shipping, orderId, orderNumber, orderStatus }: Props) {
   const [manualOpen, setManualOpen] = useState(false);
-  const { canManageShipping } = usePermissions();
+  const { canViewShipping, canManageShipping } = usePermissions();
   const canDispatchManually = canManageShipping && !shipping.courier && orderStatus === 'ready_to_dispatch';
 
   return (
@@ -39,11 +108,23 @@ export function OrderShipping({ address, shipping, orderId, orderNumber, orderSt
           </address>
         </div>
 
+        {!shipping.courier && canViewShipping && (
+          <div className="border-t border-[var(--border-subtle)] pt-3">
+            <InvoiceActions orderId={orderId} orderNumber={orderNumber} />
+            <p className="mt-1 text-[11px] text-[var(--text-muted)]">
+              The tax invoice is available as soon as the order is confirmed.
+            </p>
+          </div>
+        )}
+
         {shipping.courier && (
           <div className="border-t border-[var(--border-subtle)] pt-3 space-y-1.5">
-            <p className="text-[11px] font-medium text-[var(--text-muted)] flex items-center gap-1">
-              <Truck className="h-3 w-3" /> Shipment
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-medium text-[var(--text-muted)] flex items-center gap-1">
+                <Truck className="h-3 w-3" /> Shipment
+              </p>
+              {canViewShipping && <InvoiceActions orderId={orderId} orderNumber={orderNumber} />}
+            </div>
             <div className="flex justify-between text-xs">
               <span className="text-[var(--text-muted)]">Courier</span>
               <span className="flex items-center gap-1.5">

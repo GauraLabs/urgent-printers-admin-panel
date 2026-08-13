@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import {
   getShipments, checkServiceability, createManualShipment, createShipment, updateShipmentStatus,
+  getOrderInvoicePdf,
 } from '@/lib/api/shipping';
 import type { ManualShipmentPayload, CreateShipmentOverrides, ManualShipmentStatusTarget } from '@/lib/api/shipping';
 
@@ -58,6 +59,14 @@ export function useCreateManualShipment() {
       qc.invalidateQueries({ queryKey: ['orders'] });
       qc.invalidateQueries({ queryKey: ['printing-queue'] });
     },
+  });
+}
+
+// Read-only fetch, no cache invalidation needed — modelled as a mutation
+// (not a query) since it's triggered on demand by a button click, not rendered.
+export function useOrderInvoice() {
+  return useMutation({
+    mutationFn: (orderId: string) => getOrderInvoicePdf(orderId),
   });
 }
 
