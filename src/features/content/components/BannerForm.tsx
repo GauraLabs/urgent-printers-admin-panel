@@ -10,6 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { uploadMedia } from '@/lib/api/media';
 import { cn } from '@/lib/utils/cn';
+import { ImageQualityBadge } from '@/components/common/ImageQualityBadge';
+import { useImageDimensionCheck } from '@/hooks/useImageDimensionCheck';
+import { IMAGE_GUIDANCE } from '@/lib/utils/imageQuality';
 import { LinkUrlPicker, LINK_URL_PATTERN, LINK_URL_INVALID_MESSAGE } from './LinkUrlPicker';
 import type { Banner } from '@/types';
 
@@ -58,12 +61,15 @@ export function BannerForm({ banner, onSubmit, onCancel, isLoading }: BannerForm
   const imageUrl = watch('image_url');
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [droppedFile, setDroppedFile] = useState<File | null>(null);
+  const dimensionCheck = useImageDimensionCheck(droppedFile ?? imageUrl, IMAGE_GUIDANCE.banner.thresholds);
 
   const onImageDrop = useCallback((files: File[]) => {
     const file = files[0];
     if (!file) return;
     setUploadError(null);
     setUploadProgress(0);
+    setDroppedFile(file);
     uploadMedia(file, 'banner', setUploadProgress)
       .then((result) => {
         if (result.type === 'image') {
@@ -103,7 +109,7 @@ export function BannerForm({ banner, onSubmit, onCancel, isLoading }: BannerForm
       <div>
         <label className={cls.label}>Image *</label>
         <p className="text-[11px] text-[var(--text-muted)] mb-2">
-          Recommended 1600×500px or larger (~3.2:1 wide) — the storefront hero renders full-bleed up to 520px tall, so smaller or lower-res images will upscale and look soft. JPG, PNG, or WebP. Keep files under ~500KB for fast loading (10MB hard limit).
+          {IMAGE_GUIDANCE.banner.hint} JPG, PNG, or WebP. Keep files under ~500KB for fast loading (10MB hard limit).
         </p>
         <div
           {...getRootProps()}
@@ -127,7 +133,15 @@ export function BannerForm({ banner, onSubmit, onCancel, isLoading }: BannerForm
         <input {...register('image_url')} className={cls.input} placeholder="https://… (or upload above)" />
         {errors.image_url && <p className={cls.err}>{errors.image_url.message}</p>}
         {imageUrl && (
-          <img src={imageUrl} alt="Preview" className="mt-2 h-24 w-full object-cover rounded-lg border border-[var(--border)]" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          <>
+            <img src={imageUrl} alt="Preview" className="mt-2 h-24 w-full object-cover rounded-lg border border-[var(--border)]" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+            <ImageQualityBadge
+              dims={dimensionCheck.dims}
+              tier={dimensionCheck.tier}
+              loading={dimensionCheck.loading}
+              className="mt-1.5"
+            />
+          </>
         )}
       </div>
 
