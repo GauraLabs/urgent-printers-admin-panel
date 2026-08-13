@@ -75,7 +75,7 @@ function TestimonialFormInline({ testimonial, onSave, onCancel, isLoading }: {
     uploadMedia(file, 'testimonial', setUploadProgress)
       .then((result) => {
         if (result.type === 'image') {
-          setValue('avatar_url', result.variants.lg.url, { shouldValidate: true });
+          setValue('avatar_url', result.variants.thumb.url, { shouldValidate: true });
         }
       })
       .catch((err: Error) => setUploadError(err.message ?? 'Upload failed'))

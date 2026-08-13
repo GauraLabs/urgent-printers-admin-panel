@@ -68,16 +68,16 @@ export const IMAGE_GUIDANCE = {
   /** Category/product photos and avatars — hard-cropped to a 300×300 square thumb. */
   square: {
     thresholds: { measure: 'shortSide', minPx: 800, recommendedPx: 1600 } satisfies QualityThresholds,
-    hint: 'Recommended: 1600×1600px or larger, square-ish. Minimum 800×800px. The same source image is cropped to a square thumbnail and scaled up to 1600px wide for larger displays, so low-res sources look blurry once enlarged.',
+    hint: 'Looks best at 1600×1600px or larger, square-ish — you can upload any size, but smaller images may look soft once enlarged for display.',
   },
   /** Hero/content banners — aspect-preserving, scaled up to 1600px wide. */
   banner: {
     thresholds: { measure: 'width', minPx: 800, recommendedPx: 1600 } satisfies QualityThresholds,
-    hint: 'Recommended: 1600×500px or larger (~3.2:1 wide) — the storefront hero renders full-bleed up to 520px tall, so smaller or lower-res images will upscale and look soft. Minimum 800px wide.',
+    hint: 'Looks best at 1600×500px or larger (~3.2:1 wide) — the storefront hero renders full-bleed up to 520px tall. Any size works; smaller or lower-res images may look soft once scaled up.',
   },
   /** Small circular avatars (testimonials) — square-cropped but displayed tiny, so a lower bar. */
   avatar: {
     thresholds: { measure: 'shortSide', minPx: 300, recommendedPx: 800 } satisfies QualityThresholds,
-    hint: 'Recommended: 800×800px or larger, square-ish. Minimum 300×300px.',
+    hint: 'Looks best at 800×800px or larger, square-ish — any size works fine for this small a display.',
   },
 } as const;

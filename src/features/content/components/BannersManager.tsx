@@ -94,7 +94,7 @@ export function BannersManager() {
 
                 {/* Image preview */}
                 <div className="w-24 h-14 flex-shrink-0 rounded-lg overflow-hidden bg-[var(--surface-secondary)] border border-[var(--border)]">
-                  <img src={banner.image_url} alt={banner.title} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>'; }} />
+                  <img src={banner.thumb_url ?? banner.image_url} alt={banner.title} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>'; }} />
                 </div>
 
                 {/* Info */}

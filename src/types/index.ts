@@ -130,6 +130,7 @@ export interface Banner {
   subtitle: string | null;
   badge_text: string | null;
   image_url: string;
+  thumb_url: string | null;
   link_url: string | null;
   link_text: string | null;
   is_active: boolean;

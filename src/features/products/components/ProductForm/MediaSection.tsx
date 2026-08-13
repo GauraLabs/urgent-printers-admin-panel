@@ -381,7 +381,7 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
               {/* Quality-tier corner flag (non-blocking) — only surfaced when below the recommended size */}
               {info && info.tier !== 'good' && (
                 <span
-                  title={`${info.dims.width}×${info.dims.height}px — ${info.tier === 'poor' ? 'too small, will look blurry' : 'usable, not ideal'}`}
+                  title={`${info.dims.width}×${info.dims.height}px — ${info.tier === 'poor' ? 'below recommended size, may look blurry' : 'usable, not ideal'}`}
                   className={cn(
                     'absolute top-1 right-1 flex items-center justify-center w-4 h-4 rounded-full',
                     info.tier === 'poor' ? 'bg-destructive' : 'bg-amber-500'
