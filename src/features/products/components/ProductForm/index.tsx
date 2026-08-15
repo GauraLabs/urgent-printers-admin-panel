@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
@@ -18,6 +18,7 @@ import { PricingSection } from './PricingSection';
 import { TurnaroundSection, normaliseTurnaroundOptions } from './TurnaroundSection';
 import { SeoSection } from './SeoSection';
 import { useSaveProduct, useDeleteProduct } from '../../hooks/useProducts';
+import { useCategories } from '@/features/categories/hooks/useCategories';
 import { ROUTES } from '@/lib/constants/routes';
 import { cn } from '@/lib/utils/cn';
 import type { ApiError, Product, ProductStatus } from '@/types';
@@ -41,7 +42,7 @@ const schema = z.object({
     quantity: z.number().min(1, 'Quantity must be at least 1'),
     price_per_unit: z.number().min(0, 'Price cannot be negative'),
     is_best_value: z.boolean(),
-  })).optional(),
+  })).min(1, 'At least one pricing tier is required'),
   turnaround_options: z.array(z.object({ type: z.string(), days: z.number(), extra_cost: z.number(), is_active: z.boolean() })).optional(),
   seo: z.object({ title: z.string().nullable().optional(), description: z.string().nullable().optional(), canonical_url: z.string().nullable().optional() }).optional(),
   track_inventory: z.boolean().optional(),
@@ -74,18 +75,29 @@ export type ProductFormValues = z.infer<typeof schema>;
 const PRODUCT_MIN_IMAGES = 3;
 const PRODUCT_MAX_IMAGES = 8;
 
-function Section({ title, children, defaultOpen = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl overflow-hidden">
-      <button type="button" onClick={() => setOpen((v) => !v)} className="w-full flex items-center justify-between px-5 py-4 hover:bg-[var(--surface-secondary)] transition-colors">
-        <h3 className="text-sm font-semibold text-[var(--text-primary)]">{title}</h3>
-        {open ? <ChevronUp className="h-4 w-4 text-[var(--text-muted)]" /> : <ChevronDown className="h-4 w-4 text-[var(--text-muted)]" />}
-      </button>
-      {open && <div className="px-5 pb-5 pt-1">{children}</div>}
-    </div>
-  );
+// Imperative `open()` lets a collapsed-by-default section (Inventory, SEO)
+// be forced open from outside when a validation error lands inside it — see
+// ProductForm's onInvalid handler. Sections that default open (everything
+// else) never need this; forcing them is a harmless no-op.
+export interface SectionHandle {
+  open: () => void;
 }
+
+const Section = forwardRef<SectionHandle, { title: string; children: React.ReactNode; defaultOpen?: boolean }>(
+  function Section({ title, children, defaultOpen = true }, ref) {
+    const [open, setOpen] = useState(defaultOpen);
+    useImperativeHandle(ref, () => ({ open: () => setOpen(true) }));
+    return (
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl overflow-hidden">
+        <button type="button" onClick={() => setOpen((v) => !v)} className="w-full flex items-center justify-between px-5 py-4 hover:bg-[var(--surface-secondary)] transition-colors">
+          <h3 className="text-sm font-semibold text-[var(--text-primary)]">{title}</h3>
+          {open ? <ChevronUp className="h-4 w-4 text-[var(--text-muted)]" /> : <ChevronDown className="h-4 w-4 text-[var(--text-muted)]" />}
+        </button>
+        {open && <div className="px-5 pb-5 pt-1">{children}</div>}
+      </div>
+    );
+  }
+);
 
 interface ProductFormProps {
   product?: Product;
@@ -96,7 +108,16 @@ export function ProductForm({ product }: ProductFormProps) {
   const saveMutation = useSaveProduct();
   const deleteMutation = useDeleteProduct();
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const mediaRef = useRef<MediaSectionHandle>(null);
+  const { data: categories } = useCategories();
+
+  // Maps a top-level Zod error key to the collapsed-by-default Section it
+  // lives in, so onInvalid can force that section open before scrolling to
+  // it — otherwise `[data-field]` would resolve to an element inside a
+  // `{open && ...}` subtree that was never rendered. Sections that default
+  // open don't need an entry here.
+  const sectionRefs = useRef<Record<string, SectionHandle | null>>({});
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(schema),
@@ -178,18 +199,60 @@ export function ProductForm({ product }: ProductFormProps) {
   const { watch, setValue, formState: { isDirty, isSubmitting } } = form;
   const currentStatus = watch('status') as ProductStatus;
 
+  // Storefront product URLs are /products/{categorySlug}/{productSlug} — the
+  // preview link needs the *saved* category's slug (not the form's live,
+  // possibly-unsaved category_id selection), same as it uses product.slug
+  // rather than the form's live slug field.
+  const previewCategorySlug = product
+    ? categories?.find((c) => c.id === product.category_id)?.slug
+    : undefined;
+  const storefrontBaseUrl = process.env.NEXT_PUBLIC_STOREFRONT_URL ?? 'http://localhost:3000';
+  const previewHref = product && previewCategorySlug
+    ? `${storefrontBaseUrl}/products/${previewCategorySlug}/${product.slug}`
+    : null;
+
+  const FIELD_SECTION: Partial<Record<keyof ProductFormValues, string>> = {
+    stock_quantity: 'inventory',
+    low_stock_threshold: 'inventory',
+  };
+
+  function onInvalid(errors: FieldErrors<ProductFormValues>) {
+    const firstKey = Object.keys(errors)[0] as keyof ProductFormValues | undefined;
+    if (!firstKey) return;
+
+    const sectionId = FIELD_SECTION[firstKey];
+    if (sectionId) sectionRefs.current[sectionId]?.open();
+
+    // Double rAF: the section-open state update above needs to commit and
+    // paint before the target field exists in the DOM to scroll to.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = document.querySelector<HTMLElement>(`[data-field="${firstKey}"]`);
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const focusTarget = el.matches('input, select, textarea') ? el : el.querySelector<HTMLElement>('input, select, textarea');
+        focusTarget?.focus({ preventScroll: true });
+      });
+    });
+  }
+
+  function submitAs(status: ProductStatus) {
+    return (e: React.MouseEvent<HTMLButtonElement>) => {
+      setHasAttemptedSubmit(true);
+      return form.handleSubmit((v) => save(status, v), onInvalid)(e);
+    };
+  }
+
   async function save(status: ProductStatus, v: ProductFormValues) {
-    // pricing_tiers/turnaround_options/image_keys are `.optional()` arrays in
-    // the Zod schema (per-element bounds are validated, but an empty array is
-    // still schema-valid), so the resolver alone won't catch a zero-length
-    // list — these three need an explicit check after validation passes. The
-    // backend rejects an empty list for the first two with a 422, so this
-    // catches it client-side with a message an admin can act on instead of a
-    // raw API failure.
-    if ((v.pricing_tiers ?? []).length === 0) {
-      toast.error('At least one pricing tier is required');
-      return;
-    }
+    // turnaround_options/image_keys are `.optional()` arrays in the Zod
+    // schema (per-element bounds are validated, but an empty array is still
+    // schema-valid), so the resolver alone won't catch a zero-length list —
+    // these two need an explicit check after validation passes. The backend
+    // rejects an empty turnaround_options list with a 422, so this catches it
+    // client-side with a message an admin can act on instead of a raw API
+    // failure. pricing_tiers has its own `.min(1, ...)` on the schema now
+    // (see item 3 of the recent field-fix pass), so it's caught by the
+    // resolver before `save()` (an onValid callback) is ever invoked.
     if ((v.turnaround_options ?? []).length === 0) {
       toast.error('At least one turnaround option is required');
       return;
@@ -214,7 +277,7 @@ export function ProductForm({ product }: ProductFormProps) {
       finishes: v.finishes ?? [],
       sides_options: v.sides_options ?? [],
       quantity_steps: v.quantity_steps ?? [],
-      pricing_tiers: v.pricing_tiers ?? [],
+      pricing_tiers: v.pricing_tiers,
       turnaround_options: v.turnaround_options ?? [],
       seo: v.seo ?? { title: null, description: null, canonical_url: null },
       image_keys: v.image_keys ?? [],
@@ -267,6 +330,7 @@ export function ProductForm({ product }: ProductFormProps) {
             context="product"
             minImages={PRODUCT_MIN_IMAGES}
             maxImages={PRODUCT_MAX_IMAGES}
+            hasAttemptedSubmit={hasAttemptedSubmit}
             initialImages={product?.images}
             initialVideoKey={product?.video_key}
             initialVideoUrl={product?.video_url}
@@ -278,13 +342,13 @@ export function ProductForm({ product }: ProductFormProps) {
         <Section title="Print Specifications">
           <PrintSpecsSection form={form} />
         </Section>
-        <Section title="Pricing Tiers">
+        <Section title="Pricing Tiers *">
           <PricingSection form={form} />
         </Section>
         <Section title="Turnaround Options">
           <TurnaroundSection form={form} />
         </Section>
-        <Section title="Inventory" defaultOpen={false}>
+        <Section title="Inventory" defaultOpen={false} ref={(el) => { sectionRefs.current.inventory = el; }}>
           <InventorySection form={form} />
         </Section>
         <Section title="SEO Settings" defaultOpen={false}>
@@ -316,7 +380,7 @@ export function ProductForm({ product }: ProductFormProps) {
               type="button"
               className="w-full"
               disabled={isSubmitting || saveMutation.isPending}
-              onClick={form.handleSubmit((v) => save('active', v))}
+              onClick={submitAs('active')}
             >
               {product ? 'Save Changes' : 'Publish Product'}
             </Button>
@@ -325,7 +389,7 @@ export function ProductForm({ product }: ProductFormProps) {
               variant="outline"
               className="w-full"
               disabled={isSubmitting || saveMutation.isPending}
-              onClick={form.handleSubmit((v) => save('draft', v))}
+              onClick={submitAs('draft')}
             >
               Save as Draft
             </Button>
@@ -342,14 +406,23 @@ export function ProductForm({ product }: ProductFormProps) {
             </Button>
             {product && (
               <>
-                <a
-                  href={`/${product.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-full px-3 py-1.5 text-xs border border-[var(--border)] rounded-md text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)] transition-colors"
-                >
-                  Preview ↗
-                </a>
+                {previewHref ? (
+                  <a
+                    href={previewHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-full px-3 py-1.5 text-xs border border-[var(--border)] rounded-md text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)] transition-colors"
+                  >
+                    Preview ↗
+                  </a>
+                ) : (
+                  <p
+                    className="text-center text-[11px] text-[var(--text-muted)] px-3 py-1.5"
+                    title="This product has no category assigned, so it has no storefront URL to preview."
+                  >
+                    Preview unavailable — no category assigned
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={() => setDeleteOpen(true)}

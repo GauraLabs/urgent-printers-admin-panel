@@ -14,7 +14,7 @@ interface ImageQualityBadgeProps {
 const TIER_SUFFIX: Record<ImageQualityTier, string> = {
   good: ' · good quality',
   ok: ' · usable, not ideal',
-  poor: ' · too small, will look blurry',
+  poor: ' · below recommended size, may look blurry',
 };
 
 /** Advisory-only dimensions + quality tier readout. Never blocks anything by itself. */

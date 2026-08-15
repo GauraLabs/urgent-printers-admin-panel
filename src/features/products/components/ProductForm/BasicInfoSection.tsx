@@ -57,12 +57,12 @@ export function BasicInfoSection({ form, mode }: Props) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
+        <div data-field="name">
           <label htmlFor={nameId} className={labelClass}>Product Name *</label>
           <input id={nameId} {...register('name')} className={fieldClass} placeholder="e.g. Business Cards Premium" />
           {errors.name && <p className={errorClass}>{errors.name.message}</p>}
         </div>
-        <div>
+        <div data-field="slug">
           <label htmlFor={slugId} className={labelClass}>Slug *</label>
           <input
             id={slugId}
@@ -83,7 +83,7 @@ export function BasicInfoSection({ form, mode }: Props) {
         </div>
       </div>
 
-      <div>
+      <div data-field="short_description">
         <label htmlFor={shortDescriptionId} className={labelClass}>Short Description *</label>
         <input id={shortDescriptionId} {...register('short_description')} className={fieldClass} placeholder="Brief one-line description" />
         {errors.short_description && <p className={errorClass}>{errors.short_description.message}</p>}
@@ -98,7 +98,7 @@ export function BasicInfoSection({ form, mode }: Props) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
+        <div data-field="category_id">
           <label htmlFor={categoryId} className={labelClass}>Category *</label>
           {/* Controlled (not register()'d) on purpose: register() applies a
               native <select>'s value once, at ref-attach time. On a cold

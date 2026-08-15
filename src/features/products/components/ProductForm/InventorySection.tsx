@@ -49,7 +49,7 @@ export function InventorySection({ form }: Props) {
       {tracking && (
         <div className="pl-9 space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div>
+            <div data-field="stock_quantity">
               <label htmlFor={stockId} className="block text-xs font-medium text-foreground mb-1.5">
                 Current Stock (units)
               </label>
@@ -63,7 +63,7 @@ export function InventorySection({ form }: Props) {
               />
               {errors.stock_quantity && <p className="mt-1 text-[11px] text-[var(--danger)]">{errors.stock_quantity.message}</p>}
             </div>
-            <div>
+            <div data-field="low_stock_threshold">
               <label htmlFor={thresholdId} className="block text-xs font-medium text-foreground mb-1.5">
                 Low Stock Alert at
               </label>

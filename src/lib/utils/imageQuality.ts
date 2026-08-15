@@ -54,7 +54,7 @@ export function getImageQualityTier(dims: ImageDimensions, thresholds: QualityTh
   const value = thresholds.measure === 'shortSide' ? Math.min(dims.width, dims.height) : dims.width;
   if (value >= thresholds.recommendedPx) return { tier: 'good', label: 'Good quality' };
   if (value >= thresholds.minPx) return { tier: 'ok', label: 'Usable, not ideal' };
-  return { tier: 'poor', label: 'Too small — will look blurry' };
+  return { tier: 'poor', label: 'Below recommended size — may look blurry' };
 }
 
 export const QUALITY_TIER_STYLES: Record<ImageQualityTier, { dot: string; text: string }> = {

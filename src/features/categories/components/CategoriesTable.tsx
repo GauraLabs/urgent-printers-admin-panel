@@ -66,12 +66,27 @@ export function CategoriesTable() {
       id: 'name',
       accessorKey: 'name',
       header: 'Category',
-      cell: ({ row }) => (
-        <div>
-          <p className="text-xs font-semibold text-[var(--text-primary)]">{row.original.name}</p>
-          {row.original.description && <p className="text-[11px] text-[var(--text-muted)] truncate max-w-xs">{row.original.description}</p>}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const c = row.original;
+        const thumbUrl = c.images?.[0]?.thumb;
+        return (
+          <div className="flex items-center gap-3 min-w-[180px]">
+            <div className="w-9 h-9 rounded-md bg-[var(--surface-secondary)] border border-[var(--border)] flex items-center justify-center flex-shrink-0 text-[var(--text-muted)] overflow-hidden">
+              {thumbUrl ? (
+                <img src={thumbUrl} alt={c.name} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-xs">📁</span>
+              )}
+            </div>
+            <div className="min-w-0">
+              <Link href={ROUTES.CATEGORY_DETAIL(c.id)} className="block text-xs font-semibold text-[var(--text-primary)] hover:underline truncate">
+                {c.name}
+              </Link>
+              {c.description && <p className="text-[11px] text-[var(--text-muted)] truncate max-w-xs">{c.description}</p>}
+            </div>
+          </div>
+        );
+      },
     },
     {
       id: 'slug',

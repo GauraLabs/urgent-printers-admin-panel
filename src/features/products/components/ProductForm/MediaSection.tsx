@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, X, ArrowUp, ArrowDown, Film, AlertCircle, Loader2, AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils/cn';
 import { uploadMedia, deleteMedia } from '@/lib/api/media';
 import { ImageQualityBadge } from '@/components/common/ImageQualityBadge';
@@ -10,6 +11,7 @@ import { probeImageDimensions, getImageQualityTier, IMAGE_GUIDANCE, type ImageDi
 import type { ProductImageURLSet, MediaUploadImageResult, MediaUploadVideoResult } from '@/types/product';
 
 const MAX_VIDEO_MB = 150;
+const RECOMMENDED_MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
 // ── Image item state machine ───────────────────────────────────────────────────
 type ImageItem =
@@ -73,6 +75,7 @@ interface MediaSectionProps {
   initialVideoKey?: string | null;
   initialVideoUrl?: string | null;
   initialVideoThumbnailUrl?: string | null;
+  hasAttemptedSubmit?: boolean;
   onImagesChange?: (keys: string[]) => void;
   onVideoChange?: (key: string | null) => void;
 }
@@ -86,6 +89,7 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
   initialVideoKey = null,
   initialVideoUrl = null,
   initialVideoThumbnailUrl = null,
+  hasAttemptedSubmit = false,
   onImagesChange,
   onVideoChange,
 }: MediaSectionProps, ref: React.Ref<MediaSectionHandle>) {
@@ -178,6 +182,27 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
 
   const onImageDrop = useCallback((files: File[]) => {
     files.slice(0, maxImages - images.length).forEach((file) => {
+      if (file.size > RECOMMENDED_MAX_IMAGE_BYTES) {
+        // Explicit inline style, not just `toast.warning`'s default richColors
+        // styling — sonner's own amber tokens for the `warning` type live in
+        // an unlayered stylesheet it injects itself, while this app's
+        // `--warning*` tokens are emitted inside Tailwind v4's `@layer theme`,
+        // so a shared/global override attempt (e.g. via toastOptions.classNames)
+        // would silently lose that cascade-layer fight. An inline style always
+        // wins, so this guarantees the app's own amber (not sonner's slightly
+        // different default amber) regardless of that layering.
+        toast.warning(
+          `This image is ${(file.size / 1024 / 1024).toFixed(1)}MB — files under 10MB are recommended for faster load times.`,
+          {
+            style: {
+              background: 'var(--warning-bg)',
+              borderColor: 'var(--warning-border)',
+              color: 'var(--warning)',
+            },
+          }
+        );
+      }
+
       const blobUrl = URL.createObjectURL(file);
       const tempId = crypto.randomUUID();
 
@@ -279,6 +304,10 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
   // ── Render ───────────────────────────────────────────────────────────────────
   const doneImageCount = images.filter((i) => i.status === 'done').length;
   const belowMinImages = minImages > 0 && doneImageCount < minImages;
+  // Only style this as a warning once the admin has actually tried to submit —
+  // showing red "N more required" on a blank new-product form before anyone
+  // has touched it reads as an error for something that hasn't happened yet.
+  const showAsWarning = belowMinImages && hasAttemptedSubmit;
 
   return (
     <div className="space-y-5">
@@ -286,12 +315,14 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
       {minImages > 0 && (
         <p className={cn(
           'flex items-center gap-1.5 text-xs',
-          belowMinImages ? 'text-destructive' : 'text-muted-foreground'
+          showAsWarning ? 'text-destructive' : 'text-muted-foreground'
         )}>
-          {belowMinImages && <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />}
-          {belowMinImages
+          {showAsWarning && <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />}
+          {showAsWarning
             ? `${minImages - doneImageCount} more photo${minImages - doneImageCount === 1 ? '' : 's'} required — minimum ${minImages}.`
-            : `Minimum of ${minImages} photo${minImages === 1 ? '' : 's'} met (${doneImageCount}/${maxImages}).`}
+            : belowMinImages
+              ? `${doneImageCount}/${minImages} photos uploaded.`
+              : `Minimum of ${minImages} photo${minImages === 1 ? '' : 's'} met (${doneImageCount}/${maxImages}).`}
         </p>
       )}
 
@@ -423,8 +454,8 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
             </p>
             <p className="text-[11px] text-muted-foreground/70 mt-0.5">
               {minImages > 0
-                ? `Upload at least ${minImages} photo${minImages === 1 ? '' : 's'} (up to ${maxImages}). JPG, PNG, or WebP, max 10MB each.`
-                : `JPG, PNG, WebP, max 10MB each · Up to ${maxImages - images.length} more · Variants generated automatically`}
+                ? `Upload at least ${minImages} photo${minImages === 1 ? '' : 's'} (up to ${maxImages}). JPG, PNG, or WebP. Recommended: under 10MB per image.`
+                : `JPG, PNG, WebP · Recommended: under 10MB per image · Up to ${maxImages - images.length} more · Variants generated automatically`}
             </p>
           </div>
         </div>
