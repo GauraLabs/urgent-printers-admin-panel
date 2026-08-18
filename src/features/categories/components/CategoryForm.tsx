@@ -46,6 +46,7 @@ export function CategoryForm({ category }: { category?: Category }) {
   const router = useRouter();
   const mutation = useSaveCategory();
   const mediaRef = useRef<MediaSectionHandle>(null);
+  const hasUserChangedImagesRef = useRef(false);
 
   const { register, handleSubmit, watch, setValue, reset, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -143,7 +144,17 @@ export function CategoryForm({ category }: { category?: Category }) {
           initialVideoKey={category?.video_key}
           initialVideoUrl={category?.video_url}
           initialVideoThumbnailUrl={category?.video_thumbnail_url}
-          onImagesChange={(keys) => setValue('image_keys', keys, { shouldDirty: true, shouldValidate: true })}
+          onImagesChange={(keys) => {
+            // MediaSection's own effect fires once on mount with the initial
+            // image set (even if nothing changed), not just on real
+            // uploads/removals — validating/dirtying on that first call would
+            // show "At least 1 photo is required" immediately on a fresh
+            // create form, before the admin has done anything. Only the
+            // second-and-later calls (a real add/remove) should validate.
+            const isRealUserChange = hasUserChangedImagesRef.current;
+            hasUserChangedImagesRef.current = true;
+            setValue('image_keys', keys, { shouldDirty: isRealUserChange, shouldValidate: isRealUserChange });
+          }}
           onVideoChange={(key) => setValue('video_key', key, { shouldDirty: true })}
         />
         {errors.image_keys && <p className={errorCls}>{errors.image_keys.message}</p>}

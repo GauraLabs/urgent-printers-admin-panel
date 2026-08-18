@@ -21,6 +21,7 @@ const schema = z.object({
   subtitle: z.string().optional(),
   badge_text: z.string().max(40, 'Keep it under 40 characters').optional(),
   image_url: z.string().min(1, 'Image URL is required'),
+  thumb_url: z.string().nullable().optional(),
   link_url: z.string().optional().refine((v) => !v || LINK_URL_PATTERN.test(v), { message: LINK_URL_INVALID_MESSAGE }),
   link_text: z.string().optional(),
   valid_from: z.string().optional(),
@@ -50,6 +51,7 @@ export function BannerForm({ banner, onSubmit, onCancel, isLoading }: BannerForm
       subtitle: banner.subtitle ?? '',
       badge_text: banner.badge_text ?? '',
       image_url: banner.image_url,
+      thumb_url: banner.thumb_url,
       link_url: banner.link_url ?? '',
       link_text: banner.link_text ?? '',
       valid_from: banner.valid_from?.slice(0, 10) ?? '',
@@ -74,6 +76,7 @@ export function BannerForm({ banner, onSubmit, onCancel, isLoading }: BannerForm
       .then((result) => {
         if (result.type === 'image') {
           setValue('image_url', result.variants.lg.url, { shouldValidate: true });
+          setValue('thumb_url', result.variants.thumb.url, { shouldValidate: true });
         }
       })
       .catch((err: Error) => setUploadError(err.message ?? 'Upload failed'))

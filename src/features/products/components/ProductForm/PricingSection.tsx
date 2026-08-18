@@ -17,7 +17,7 @@ export function PricingSection({ form }: Props) {
   const errorCls = 'mt-1 text-[11px] text-[var(--danger)]';
 
   return (
-    <div>
+    <div data-field="pricing_tiers">
       <div className="overflow-x-auto">
         <table className="w-full text-xs">
           <thead>
@@ -96,6 +96,7 @@ export function PricingSection({ form }: Props) {
         </table>
       </div>
       {fields.length === 0 && <p className="text-xs text-[var(--text-muted)] py-3">No pricing tiers yet.</p>}
+      {errors.pricing_tiers?.message && <p className={errorCls}>{errors.pricing_tiers.message}</p>}
       <Button
         type="button"
         variant="outline"
