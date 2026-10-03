@@ -48,7 +48,19 @@ export interface ProductSideOption {
 export interface ProductPricingTier {
   quantity: number;
   price_per_unit: number;
+  // Always sent on save (null when blank): PATCH replaces the whole tier list, so a missing key would erase the discount.
+  mrp_per_unit: number | null;
+  // Computed server-side from the stored values, ignoring the window. Read-only.
+  discount_percent?: number | null;
+  discount_per_unit?: number | null;
   is_best_value: boolean;
+}
+
+export type ProductDiscountStatus = 'none' | 'scheduled' | 'active' | 'expired';
+
+export interface ProductDiscountSummary {
+  status: ProductDiscountStatus;
+  max_percent: number | null;
 }
 
 export interface ProductTurnaroundOption {
@@ -119,6 +131,9 @@ export interface Product {
   sides_options: ProductSideOption[];
   quantity_steps: number[];
   pricing_tiers: ProductPricingTier[];
+  discount_starts_at: string | null;   // UTC ISO; shown/entered in IST
+  discount_ends_at: string | null;
+  discount: ProductDiscountSummary;
   turnaround_options: ProductTurnaroundOption[];
   seo: ProductSeoMeta;
   // media

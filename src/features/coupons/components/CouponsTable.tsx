@@ -49,6 +49,14 @@ export function CouponsTable() {
           {row.original.description && (
             <p className="text-[11px] text-[var(--text-muted)] truncate max-w-xs">{row.original.description}</p>
           )}
+          {!row.original.applies_to_discounted_items && (
+            <span
+              className="mt-0.5 inline-flex rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-600 dark:bg-slate-800/50 dark:text-slate-400"
+              title="This coupon does not apply to items already on discount"
+            >
+              Excludes discounted items
+            </span>
+          )}
         </div>
       ),
     },

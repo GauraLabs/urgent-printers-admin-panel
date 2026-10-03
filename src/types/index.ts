@@ -5,6 +5,7 @@ export * from './customer';
 export * from './payment';
 export * from './coupon';
 export * from './report';
+export * from './productDiscount';
 
 import type { ShipmentStatus, ShipmentSource } from './order';
 

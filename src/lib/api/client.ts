@@ -134,6 +134,7 @@ function toApiError(error: AxiosError): ApiError {
       error.message ??
       'An unexpected error occurred',
     status: error.response?.status ?? 0,
+    code: data?.error,
   };
 }
 

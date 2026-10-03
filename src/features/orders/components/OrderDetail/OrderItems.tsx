@@ -109,8 +109,17 @@ export function OrderItems({ items }: { items: OrderItem[] }) {
                     {formatPrice(item.total_price)}
                   </p>
                   <p className="text-[11px] text-[var(--text-muted)] tabular-nums">
-                    {item.quantity} × {formatPrice(item.price_per_unit)}
+                    {item.quantity} ×{' '}
+                    {item.mrp_per_unit != null && item.mrp_per_unit > item.price_per_unit && (
+                      <s data-testid="line-mrp" className="mr-1">{formatPrice(item.mrp_per_unit)}</s>
+                    )}
+                    {formatPrice(item.price_per_unit)}
                   </p>
+                  {item.line_savings != null && item.line_savings > 0 && (
+                    <p data-testid="line-savings" className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 tabular-nums">
+                      Saved {formatPrice(item.line_savings)} on MRP
+                    </p>
+                  )}
                   {item.turnaround_extra_cost > 0 && (
                     <p className="text-[11px] text-[var(--text-muted)] tabular-nums">
                       + {formatPrice(item.turnaround_extra_cost)} {item.turnaround_label ?? 'turnaround'} surcharge

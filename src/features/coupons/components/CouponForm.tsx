@@ -32,6 +32,7 @@ const schema = z.object({
   trigger_n: z.number().int().positive().optional(),
   trigger_amount: z.number().positive().optional(),
   is_personal: z.boolean(),
+  applies_to_discounted_items: z.boolean(),
 });
 
 // Empty optional number inputs → undefined (not NaN) so the schema above accepts them
@@ -76,6 +77,7 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
       trigger_n: (coupon.trigger_config?.n as number | undefined),
       trigger_amount: (coupon.trigger_config?.amount as number | undefined),
       is_personal: coupon.is_personal,
+      applies_to_discounted_items: coupon.applies_to_discounted_items,
     } : {
       discount_type: 'percentage',
       discount_value: 10,
@@ -83,6 +85,7 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
       is_active: true,
       trigger: null,
       is_personal: false,
+      applies_to_discounted_items: true,
     },
   });
 
@@ -113,6 +116,7 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
           trigger: values.trigger,
           trigger_config,
           is_personal: values.is_personal,
+          applies_to_discounted_items: values.applies_to_discounted_items,
         },
       });
       toast.success(coupon ? 'Coupon updated' : 'Coupon created');
@@ -182,6 +186,21 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
             <input {...register('per_user_limit', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 1" />
           </div>
         </div>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <Switch
+            checked={watch('applies_to_discounted_items') ?? true}
+            onCheckedChange={(v) => setValue('applies_to_discounted_items', v, { shouldDirty: true })}
+            size="sm"
+          />
+          <span className="text-sm text-[var(--text-primary)]">
+            Applies to items already on discount
+            <span className="block text-[11px] text-[var(--text-muted)] font-normal">
+              {(watch('applies_to_discounted_items') ?? true)
+                ? 'The coupon applies to the whole order subtotal'
+                : 'Items sold below their MRP are excluded; the minimum order and the discount are calculated on the remaining items only'}
+            </span>
+          </span>
+        </label>
       </div>
 
       {/* Validity */}

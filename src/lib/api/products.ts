@@ -1,9 +1,15 @@
 import { get, post, patch, del } from './client';
-import type { Product, ProductSummary, ProductsListResponse, ProductFilters, ProductSideOption, CustomizationMode } from '@/types';
+import type { Product, ProductPricingTier, ProductDiscountSummary, ProductSummary, ProductsListResponse, ProductFilters, ProductSideOption, CustomizationMode } from '@/types';
 
 // ── Normalizer ────────────────────────────────────────────────────────────────
-type RawProduct = Omit<Product, 'id' | 'category_id' | 'sides_options'> & {
+type RawTier = Omit<ProductPricingTier, 'mrp_per_unit'> & { mrp_per_unit?: number | null };
+
+type RawProduct = Omit<Product, 'id' | 'category_id' | 'sides_options' | 'pricing_tiers' | 'discount' | 'discount_starts_at' | 'discount_ends_at'> & {
   id: number | string;
+  pricing_tiers: RawTier[];
+  discount_starts_at?: string | null;
+  discount_ends_at?: string | null;
+  discount?: ProductDiscountSummary;
   category_id: number | string | null;
   // Backend may return old string[] format during migration — normalise to object[]
   sides_options: Array<string | ProductSideOption>;
@@ -19,6 +25,10 @@ function normalize(raw: RawProduct): ProductSummary {
     id: String(raw.id),
     category_id: raw.category_id != null ? String(raw.category_id) : null,
     sides_options: (raw.sides_options ?? []).map(normalizeSide),
+    pricing_tiers: raw.pricing_tiers.map((t) => ({ ...t, mrp_per_unit: t.mrp_per_unit ?? null })),
+    discount_starts_at: raw.discount_starts_at ?? null,
+    discount_ends_at: raw.discount_ends_at ?? null,
+    discount: raw.discount ?? { status: 'none', max_percent: null },
   };
   return {
     ...product,
@@ -76,6 +86,8 @@ export interface ProductPayload {
   sides_options?: object[];
   quantity_steps?: number[];
   pricing_tiers?: object[];
+  discount_starts_at?: string | null;
+  discount_ends_at?: string | null;
   turnaround_options?: object[];
   seo?: object;
   image_keys?: string[];
