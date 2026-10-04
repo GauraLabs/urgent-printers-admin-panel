@@ -41,6 +41,7 @@ export interface ProductFinish {
 
 export interface ProductSideOption {
   label: string;
+  is_active: boolean;
   is_default: boolean;
   price_multiplier: number;
 }

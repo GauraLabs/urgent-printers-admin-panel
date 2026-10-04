@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -17,7 +17,8 @@ import { PricingSection } from './PricingSection';
 import { TurnaroundSection, normaliseTurnaroundOptions } from './TurnaroundSection';
 import { SeoSection } from './SeoSection';
 import { DiscountWindowSection } from './DiscountWindowSection';
-import { productSchema, buildProductPayload, getWindowEndInPastError, type ProductFormValues } from './schema';
+import { productSchema, buildProductPayload, getWindowEndInPastError, collectFieldErrors, sortTiersByQuantity, OUT_OF_RANGE, type ProductFormValues } from './schema';
+import { humanizePath, codedErrorMessage } from '@/lib/api/validationErrors';
 import { useSaveProduct, useDeleteProduct } from '../../hooks/useProducts';
 import { useCategories } from '@/features/categories/hooks/useCategories';
 import { ROUTES } from '@/lib/constants/routes';
@@ -90,7 +91,7 @@ export function ProductForm({ product }: ProductFormProps) {
       finishes: product.finishes,
       sides_options: product.sides_options,
       quantity_steps: product.quantity_steps,
-      pricing_tiers: product.pricing_tiers,
+      pricing_tiers: sortTiersByQuantity(product.pricing_tiers),
       discount_starts_at: product.discount_starts_at,
       discount_ends_at: product.discount_ends_at,
       turnaround_options: normaliseTurnaroundOptions(product.turnaround_options),
@@ -125,8 +126,8 @@ export function ProductForm({ product }: ProductFormProps) {
         { label: 'Spot UV',          is_active: true, is_default: false, price_multiplier: 1.3  },
       ],
       sides_options: [
-        { label: 'Single Sided', is_default: true,  price_multiplier: 1.0  },
-        { label: 'Double Sided', is_default: false, price_multiplier: 1.35 },
+        { label: 'Single Sided', is_active: true, is_default: true,  price_multiplier: 1.0  },
+        { label: 'Double Sided', is_active: true, is_default: false, price_multiplier: 1.35 },
       ],
       quantity_steps: [100, 250, 500, 1000, 2500, 5000],
       pricing_tiers: [
@@ -154,7 +155,20 @@ export function ProductForm({ product }: ProductFormProps) {
     },
   });
 
-  const { watch, setValue, formState: { isDirty, isSubmitting } } = form;
+  const { watch, setValue, formState: { isDirty, isSubmitting, errors: formErrors } } = form;
+
+  // Saved data that predates the backend's pricing bounds would otherwise only
+  // fail on save with a generic error; validate once on load so every
+  // offending field is flagged up front.
+  const [loadInvalid, setLoadInvalid] = useState(false);
+  useEffect(() => {
+    if (!product) return;
+    let cancelled = false;
+    form.trigger().then((ok) => { if (!cancelled) setLoadInvalid(!ok); });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.id]);
+  const outOfRangeFields = loadInvalid ? collectFieldErrors(formErrors) : [];
   const currentStatus = watch('status') as ProductStatus;
 
   // Storefront product URLs are /products/{categorySlug}/{productSlug} — the
@@ -253,10 +267,23 @@ export function ProductForm({ product }: ProductFormProps) {
         toast.error('Add an MRP to at least one pricing tier to use a sale window');
         return;
       }
-      if (apiErr.code === 'invalid_mrp') {
-        const msg = 'MRP must be greater than the selling price and have at most 2 decimal places';
+      if (apiErr.code === 'invalid_mrp' || apiErr.code === 'product_unpriceable') {
+        const msg = codedErrorMessage(apiErr.code) as string;
         form.setError('pricing_tiers', { type: 'server', message: msg });
         toast.error(msg);
+        return;
+      }
+      const coded = codedErrorMessage(apiErr.code);
+      if (coded) {
+        toast.error(coded);
+        return;
+      }
+      if (apiErr.status === 422 && apiErr.fields && apiErr.fields.length > 0) {
+        for (const f of apiErr.fields) {
+          if (!f.path) continue;
+          form.setError(f.path as Parameters<typeof form.setError>[0], { type: 'server', message: f.message });
+        }
+        toast.error(apiErr.message);
         return;
       }
       toast.error(showDetail ? apiErr.message : 'Failed to save product');
@@ -278,6 +305,16 @@ export function ProductForm({ product }: ProductFormProps) {
     <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-1 xl:grid-cols-3 gap-6">
       {/* Main sections */}
       <div className="xl:col-span-2 space-y-4">
+        {outOfRangeFields.length > 0 && (
+          <div role="alert" data-testid="out-of-range-banner" className="rounded-xl border border-[var(--danger)] bg-[var(--danger-bg)] p-4 text-xs text-[var(--danger)]">
+            <p className="font-semibold">{OUT_OF_RANGE}</p>
+            <ul className="mt-1.5 list-disc pl-4 space-y-0.5">
+              {outOfRangeFields.map((f) => (
+                <li key={f.path}>{humanizePath(f.path)}: {f.message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <Section title="Basic Information">
           <BasicInfoSection form={form} mode={product ? 'edit' : 'create'} />
         </Section>

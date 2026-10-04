@@ -45,6 +45,11 @@ export function priceForPercentOff(mrp: number, percent: number): number {
   return fromPaise(divHalfUp(mrpP * remaining, 10000));
 }
 
+export function hasAtMostDecimals(n: number, places: number): boolean {
+  const scaled = Number((n * 10 ** places).toPrecision(12));
+  return Number.isInteger(scaled);
+}
+
 export function hasAtMostTwoDecimals(n: number): boolean {
-  return Math.abs(n * 100 - Math.round(n * 100)) < 1e-7;
+  return hasAtMostDecimals(n, 2);
 }

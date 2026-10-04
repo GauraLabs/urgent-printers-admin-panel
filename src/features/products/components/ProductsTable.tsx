@@ -114,7 +114,11 @@ export function ProductsTable() {
     {
       id: 'min_price',
       accessorKey: 'min_price',
-      header: 'From',
+      header: () => (
+        <span title="Base tier price before size, paper and finish options. Customers see the price including the cheapest options.">
+          Lowest tier price
+        </span>
+      ),
       enableSorting: true,
       cell: ({ row }) => (
         <span className="text-xs font-medium tabular-nums">{formatPrice(row.original.min_price)}</span>

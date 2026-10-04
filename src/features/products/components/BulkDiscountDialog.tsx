@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/common/StatusBadge';
+import { codedErrorMessage } from '@/lib/api/validationErrors';
 import { formatPrice } from '@/lib/utils/formatPrice';
 import { formatIst } from '@/lib/utils/istDate';
 import {
@@ -51,7 +52,7 @@ function errorMessage(err: unknown, fallback: string): string {
   if (e?.code === BULK_DISCOUNT_ERROR.WINDOW_REQUIRES_MRP) return 'A sale window needs an MRP on at least one tier';
   if (e?.code === BULK_DISCOUNT_ERROR.SCOPE_TOO_LARGE) return 'Too many products in this scope. Narrow the selection or pick a smaller category (500 products maximum).';
   if (e?.code === BULK_DISCOUNT_ERROR.PRODUCTS_NOT_FOUND) return 'Some of the selected products no longer exist. Refresh the list and try again.';
-  return e?.message || fallback;
+  return codedErrorMessage(e?.code) ?? (e?.message || fallback);
 }
 
 function ProductRow({ p }: { p: BulkProductChange }) {

@@ -44,4 +44,10 @@ describe('products API normaliser', () => {
     await updateProduct('5', body);
     expect(mocked.patch).toHaveBeenCalledWith('/admin/products/5', body);
   });
+
+  it('defaults sides is_active to true for older payloads and preserves false', async () => {
+    mocked.get.mockResolvedValue({ ...RAW, sides_options: ['Single Sided', { label: 'Double', is_default: false, price_multiplier: 1.35 }, { label: 'Off', is_active: false, is_default: false, price_multiplier: 1 }] });
+    const p = await getProduct('5');
+    expect(p.sides_options.map((s) => s.is_active)).toEqual([true, true, false]);
+  });
 });

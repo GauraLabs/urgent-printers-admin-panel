@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { ServiceHealthCards } from '@/features/system/components/ServiceHealthCards';
 import { JobQueueMonitor } from '@/features/system/components/JobQueueMonitor';
+import { PriceMismatchTile } from '@/features/system/priceMismatches/PriceMismatchTile';
 import { ErrorLog } from '@/features/system/components/ErrorLog';
 import { useSystemHealth, useJobQueue, useErrorLog } from '@/features/system/hooks/useSystemHealth';
 
@@ -43,6 +44,14 @@ export default function SystemHealthPage() {
           description="External services polled every 30 seconds."
         />
         <ServiceHealthCards onRefresh={refresh} isFetching={healthFetching} />
+      </section>
+
+      <section>
+        <SectionHeader
+          title="Pricing Diagnostics"
+          description="Storefront prices that differed from the server calculation."
+        />
+        <PriceMismatchTile />
       </section>
 
       {/* Job Queue */}

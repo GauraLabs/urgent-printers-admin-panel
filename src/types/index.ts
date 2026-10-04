@@ -254,4 +254,6 @@ export interface ApiError {
   message: string;
   status: number;
   code?: string;
+  /** Per-field pydantic errors (422 `detail` array); empty for coded/other errors. */
+  fields?: Array<{ path: string; message: string }>;
 }

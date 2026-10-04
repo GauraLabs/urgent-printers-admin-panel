@@ -92,4 +92,12 @@ describe('ProductsTable permission gating (products.edit)', () => {
     fireEvent.click(screen.getByRole('button', { name: /Apply discount/ }));
     expect(screen.getByText('Selected products (1)')).toBeInTheDocument();
   });
+
+  it('labels the raw tier price column and explains it', () => {
+    renderTable();
+    const header = screen.getByText('Lowest tier price');
+    expect(header).toHaveAttribute('title', expect.stringContaining('before size, paper and finish options'));
+    expect(header).toHaveAttribute('title', expect.stringContaining('including the cheapest options'));
+    expect(screen.queryByText('From')).toBeNull();
+  });
 });

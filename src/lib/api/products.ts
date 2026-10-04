@@ -12,11 +12,13 @@ type RawProduct = Omit<Product, 'id' | 'category_id' | 'sides_options' | 'pricin
   discount?: ProductDiscountSummary;
   category_id: number | string | null;
   // Backend may return old string[] format during migration — normalise to object[]
-  sides_options: Array<string | ProductSideOption>;
+  sides_options: Array<string | (Omit<ProductSideOption, 'is_active'> & { is_active?: boolean })>;
 };
 
-function normalizeSide(s: string | ProductSideOption): ProductSideOption {
-  return typeof s === 'string' ? { label: s, is_default: false, price_multiplier: 1.0 } : s;
+function normalizeSide(s: RawProduct['sides_options'][number]): ProductSideOption {
+  return typeof s === 'string'
+    ? { label: s, is_active: true, is_default: false, price_multiplier: 1.0 }
+    : { ...s, is_active: s.is_active ?? true };
 }
 
 function normalize(raw: RawProduct): ProductSummary {

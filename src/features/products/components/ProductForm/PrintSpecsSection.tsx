@@ -125,7 +125,7 @@ export function PrintSpecsSection({ form }: Props) {
               <option value="ft">ft</option>
             </select>
             <span className="text-[10px] text-[var(--text-muted)] shrink-0">×</span>
-            <input {...register(`sizes.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" aria-label={`Price multiplier for size ${i + 1}`} className={`${inputCls} w-16`} />
+            <input {...register(`sizes.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.0001" min="0.01" max="100" aria-label={`Price multiplier for size ${i + 1}`} className={`${inputCls} w-16`} />
             <MultiplierLabel value={watchedSizes[i]?.price_multiplier ?? 1} />
             <input type="checkbox" {...register(`sizes.${i}.is_active`)} title="Active" aria-label={`Active for size ${i + 1}`} className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
             <DefaultToggle active={!!watchedSizes[i]?.is_default} onClick={() => setDefault('sizes', i)} itemLabel={`size ${i + 1}`} />
@@ -146,7 +146,7 @@ export function PrintSpecsSection({ form }: Props) {
             <input {...register(`paper_types.${i}.label`)} placeholder="350 GSM Art Board" aria-label={`Label for paper type ${i + 1}`} className={`${inputCls} flex-1`} />
             <input {...register(`paper_types.${i}.gsm`, { valueAsNumber: true })} placeholder="GSM" type="number" aria-label={`GSM for paper type ${i + 1}`} className={`${inputCls} w-20`} />
             <span className="text-[10px] text-[var(--text-muted)] shrink-0">×</span>
-            <input {...register(`paper_types.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" aria-label={`Price multiplier for paper type ${i + 1}`} className={`${inputCls} w-16`} />
+            <input {...register(`paper_types.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.0001" min="0.01" max="100" aria-label={`Price multiplier for paper type ${i + 1}`} className={`${inputCls} w-16`} />
             <MultiplierLabel value={watchedPapers[i]?.price_multiplier ?? 1} />
             <input type="checkbox" {...register(`paper_types.${i}.is_active`)} title="Active" aria-label={`Active for paper type ${i + 1}`} className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
             <DefaultToggle active={!!watchedPapers[i]?.is_default} onClick={() => setDefault('paper_types', i)} itemLabel={`paper type ${i + 1}`} />
@@ -166,7 +166,7 @@ export function PrintSpecsSection({ form }: Props) {
           <div className="flex items-center gap-2 flex-1 flex-wrap">
             <input {...register(`finishes.${i}.label`)} placeholder="Matte Lamination" aria-label={`Label for finish ${i + 1}`} className={`${inputCls} flex-1`} />
             <span className="text-[10px] text-[var(--text-muted)] shrink-0">×</span>
-            <input {...register(`finishes.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" aria-label={`Price multiplier for finish ${i + 1}`} className={`${inputCls} w-16`} />
+            <input {...register(`finishes.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.0001" min="0.01" max="100" aria-label={`Price multiplier for finish ${i + 1}`} className={`${inputCls} w-16`} />
             <MultiplierLabel value={watchedFinishes[i]?.price_multiplier ?? 1} />
             <input type="checkbox" {...register(`finishes.${i}.is_active`)} title="Active" aria-label={`Active for finish ${i + 1}`} className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
             <DefaultToggle active={!!watchedFinishes[i]?.is_default} onClick={() => setDefault('finishes', i)} itemLabel={`finish ${i + 1}`} />
@@ -180,7 +180,7 @@ export function PrintSpecsSection({ form }: Props) {
           label="Sides Options"
           itemLabel="sides option"
           items={sides}
-          onAdd={() => addSide({ label: '', is_default: false, price_multiplier: 1.0 })}
+          onAdd={() => addSide({ label: '', is_active: true, is_default: false, price_multiplier: 1.0 })}
           onRemove={removeSide}
           addLabel="Add Side"
         >
@@ -188,8 +188,9 @@ export function PrintSpecsSection({ form }: Props) {
             <div className="flex items-center gap-2 flex-1">
               <input {...register(`sides_options.${i}.label`)} placeholder="e.g. Single Sided" aria-label={`Label for sides option ${i + 1}`} className={`${inputCls} flex-1`} />
               <span className="text-[10px] text-[var(--text-muted)] shrink-0">×</span>
-              <input {...register(`sides_options.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.01" min="0.1" aria-label={`Price multiplier for sides option ${i + 1}`} className={`${inputCls} w-16`} />
+              <input {...register(`sides_options.${i}.price_multiplier`, { valueAsNumber: true })} type="number" step="0.0001" min="0.01" max="100" aria-label={`Price multiplier for sides option ${i + 1}`} className={`${inputCls} w-16`} />
               <MultiplierLabel value={watchedSides[i]?.price_multiplier ?? 1} />
+              <input type="checkbox" {...register(`sides_options.${i}.is_active`)} title="Active" aria-label={`Active for sides option ${i + 1}`} className="h-3.5 w-3.5 rounded shrink-0 cursor-pointer accent-[var(--primary)]" />
               <DefaultToggle active={!!watchedSides[i]?.is_default} onClick={() => setDefault('sides_options', i)} itemLabel={`sides option ${i + 1}`} />
             </div>
           )}
@@ -200,7 +201,7 @@ export function PrintSpecsSection({ form }: Props) {
           .filter((o) => !watchedSides.some((s) => s?.label === o))
           .map((o) => (
             <button key={o} type="button"
-              onClick={() => addSide({ label: o, is_default: watchedSides.length === 0, price_multiplier: o === 'Single Sided' ? 1.0 : 1.35 })}
+              onClick={() => addSide({ label: o, is_active: true, is_default: watchedSides.length === 0, price_multiplier: o === 'Single Sided' ? 1.0 : 1.35 })}
               className="text-xs px-2 py-1 border border-dashed border-[var(--border)] rounded text-[var(--text-muted)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors mr-2">
               + {o}
             </button>

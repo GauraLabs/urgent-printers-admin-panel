@@ -151,3 +151,177 @@ describe('buildProductPayload (PATCH body)', () => {
     expect(body).not.toHaveProperty('discount_starts_at');
   });
 });
+
+import { getTierPriceTypoWarnings, sortTiersByQuantity, collectFieldErrors } from './schema';
+
+const tierOf = (over: Partial<ProductFormValues['pricing_tiers'][number]>) => ({
+  quantity: 100, price_per_unit: 9, mrp_per_unit: null, is_best_value: false, ...over,
+});
+
+function issuePaths(values: Partial<ProductFormValues>): string[] {
+  const r = productSchema.safeParse(baseValues(values));
+  return r.success ? [] : r.error.issues.map((i) => i.path.join('.'));
+}
+
+describe('pricing bounds', () => {
+  it.each([
+    ['price 0', { price_per_unit: 0 }],
+    ['price 0.001', { price_per_unit: 0.001 }],
+    ['price over 100000', { price_per_unit: 100001 }],
+    ['price with 3 decimals', { price_per_unit: 1.005 }],
+    ['negative price', { price_per_unit: -1 }],
+  ])('rejects %s', (_n, over) => {
+    expect(issuePaths({ pricing_tiers: [tierOf(over)] })).toContain('pricing_tiers.0.price_per_unit');
+  });
+
+  it.each([0.01, 100000, 12.34])('accepts price %s', (price) => {
+    expect(issuePaths({ pricing_tiers: [tierOf({ price_per_unit: price })] })).toEqual([]);
+  });
+
+  it('rejects MRP over 100000, with 3 decimals, and over 10x the price', () => {
+    expect(issuePaths({ pricing_tiers: [tierOf({ price_per_unit: 50000, mrp_per_unit: 100001 })] })).toContain('pricing_tiers.0.mrp_per_unit');
+    expect(issuePaths({ pricing_tiers: [tierOf({ mrp_per_unit: 12.345 })] })).toContain('pricing_tiers.0.mrp_per_unit');
+    expect(issuePaths({ pricing_tiers: [tierOf({ price_per_unit: 9, mrp_per_unit: 90.01 })] })).toContain('pricing_tiers.0.mrp_per_unit');
+  });
+
+  it('accepts MRP exactly 10x the price', () => {
+    expect(issuePaths({ pricing_tiers: [tierOf({ price_per_unit: 9, mrp_per_unit: 90 })] })).toEqual([]);
+  });
+
+  it.each([0, -5, 1.5, 1_000_001, 10_000_000])('rejects quantity %s', (quantity) => {
+    expect(issuePaths({ pricing_tiers: [tierOf({ quantity })] })).toContain('pricing_tiers.0.quantity');
+  });
+
+  it('accepts quantity bounds 1 and 1,000,000', () => {
+    expect(issuePaths({ pricing_tiers: [tierOf({ quantity: 1 }), tierOf({ quantity: 1_000_000 })] })).toEqual([]);
+  });
+
+  it('rejects duplicate quantities on the later tier', () => {
+    const paths = issuePaths({ pricing_tiers: [tierOf({ quantity: 100 }), tierOf({ quantity: 500 }), tierOf({ quantity: 100 })] });
+    expect(paths).toEqual(['pricing_tiers.2.quantity']);
+  });
+
+  it('rejects NaN (blank number input) with a readable message', () => {
+    const r = productSchema.safeParse(baseValues({ pricing_tiers: [tierOf({ price_per_unit: NaN })] }));
+    expect(r.success).toBe(false);
+    expect(r.error?.issues[0].message).toBe('Price must be a number');
+  });
+});
+
+describe('option and field bounds', () => {
+  const size = (m: number) => ({ label: 'A4', width: 1, height: 1, unit: 'mm' as const, is_active: true, is_default: true, price_multiplier: m });
+
+  it.each([0, 0.009, 100.01, 1.00001])('rejects multiplier %s on sizes', (m) => {
+    expect(issuePaths({ sizes: [size(m)] })).toContain('sizes.0.price_multiplier');
+  });
+  it.each([0.01, 100, 1.2345])('accepts multiplier %s', (m) => {
+    expect(issuePaths({ sizes: [size(m)] })).toEqual([]);
+  });
+  it('applies to paper, finishes and sides too', () => {
+    expect(issuePaths({ paper_types: [{ label: 'p', gsm: 1, is_active: true, is_default: true, price_multiplier: 0 }] })).toContain('paper_types.0.price_multiplier');
+    expect(issuePaths({ finishes: [{ label: 'f', is_active: true, is_default: true, price_multiplier: 101 }] })).toContain('finishes.0.price_multiplier');
+    expect(issuePaths({ sides_options: [{ label: 's', is_active: true, is_default: true, price_multiplier: 0 }] })).toContain('sides_options.0.price_multiplier');
+  });
+  it.each([-1, 100001])('rejects turnaround extra_cost %s', (extra_cost) => {
+    expect(issuePaths({ turnaround_options: [{ type: 'standard', days: 5, extra_cost, is_active: true }] })).toContain('turnaround_options.0.extra_cost');
+  });
+  it('accepts turnaround extra_cost 0 and 100000', () => {
+    expect(issuePaths({ turnaround_options: [{ type: 'standard', days: 5, extra_cost: 0, is_active: true }, { type: 'rush', days: 1, extra_cost: 100000, is_active: true }] })).toEqual([]);
+  });
+  it('limits name and slug to 255 characters', () => {
+    expect(issuePaths({ name: 'x'.repeat(256) })).toContain('name');
+    expect(issuePaths({ slug: 'x'.repeat(256) })).toContain('slug');
+    expect(issuePaths({ name: 'x'.repeat(255), slug: 'x'.repeat(255) })).toEqual([]);
+  });
+});
+
+describe('tier ordering and typo warning', () => {
+  it('sorts by quantity and does not mutate the input', () => {
+    const input = [{ quantity: 500 }, { quantity: 100 }, { quantity: 250 }];
+    expect(sortTiersByQuantity(input).map((t) => t.quantity)).toEqual([100, 250, 500]);
+    expect(input[0].quantity).toBe(500);
+  });
+  it('payload tiers are sorted by quantity', () => {
+    const body = buildProductPayload(baseValues({ pricing_tiers: [tierOf({ quantity: 500 }), tierOf({ quantity: 100 })] }), 'draft');
+    expect(body.pricing_tiers.map((t) => t.quantity)).toEqual([100, 500]);
+  });
+  it('warns when neighbouring tiers differ by more than 10x (either direction)', () => {
+    const w = getTierPriceTypoWarnings([
+      { quantity: 100, price_per_unit: 5 }, { quantity: 500, price_per_unit: 4 }, { quantity: 1000, price_per_unit: 400 },
+    ]);
+    expect(w).toHaveLength(1);
+    expect(w[0].index).toBe(2);
+    expect(getTierPriceTypoWarnings([{ quantity: 100, price_per_unit: 400 }, { quantity: 500, price_per_unit: 4 }])).toHaveLength(1);
+  });
+  it('uses quantity order, not array order, for neighbours', () => {
+    expect(getTierPriceTypoWarnings([
+      { quantity: 1000, price_per_unit: 4 }, { quantity: 100, price_per_unit: 5 }, { quantity: 500, price_per_unit: 4.5 },
+    ])).toEqual([]);
+  });
+  it('does not warn at exactly 10x or on a single tier', () => {
+    expect(getTierPriceTypoWarnings([{ quantity: 1, price_per_unit: 1 }, { quantity: 2, price_per_unit: 10 }])).toEqual([]);
+    expect(getTierPriceTypoWarnings([{ quantity: 1, price_per_unit: 1 }])).toEqual([]);
+  });
+});
+
+describe('collectFieldErrors', () => {
+  it('flattens nested RHF errors', () => {
+    const errs = { name: { type: 'x', message: 'bad name' }, pricing_tiers: [{ price_per_unit: { type: 'y', message: 'bad price' } }] };
+    expect(collectFieldErrors(errs)).toEqual([
+      { path: 'name', message: 'bad name' },
+      { path: 'pricing_tiers.0.price_per_unit', message: 'bad price' },
+    ]);
+  });
+});
+
+describe('integer limits', () => {
+  it('stock and threshold: whole numbers up to 2,147,483,647', () => {
+    expect(issuePaths({ stock_quantity: 1.5 })).toContain('stock_quantity');
+    expect(issuePaths({ stock_quantity: 2_147_483_648 })).toContain('stock_quantity');
+    expect(issuePaths({ low_stock_threshold: 2_147_483_648 })).toContain('low_stock_threshold');
+    expect(issuePaths({ stock_quantity: 2_147_483_647, low_stock_threshold: 0 })).toEqual([]);
+    expect(issuePaths({ stock_quantity: null })).toEqual([]);
+  });
+  it('quantity_steps entries: integers 1 to 1,000,000', () => {
+    expect(issuePaths({ quantity_steps: [100, 0] })).toContain('quantity_steps.1');
+    expect(issuePaths({ quantity_steps: [1.5] })).toContain('quantity_steps.0');
+    expect(issuePaths({ quantity_steps: [1_000_001] })).toContain('quantity_steps.0');
+    expect(issuePaths({ quantity_steps: [1, 1_000_000] })).toEqual([]);
+  });
+});
+
+import { getCheapestUnitPrice } from './schema';
+
+describe('product_unpriceable client-side check', () => {
+  const m = (price_multiplier: number, is_active = true) => ({ price_multiplier, is_active });
+
+  it('flags when min tier price x min active multipliers is below 0.005', () => {
+    const paths = issuePaths({
+      pricing_tiers: [tierOf({ quantity: 100, price_per_unit: 9 }), tierOf({ quantity: 500, price_per_unit: 0.01 })],
+      paper_types: [{ label: 'p', gsm: 1, is_active: true, is_default: true, price_multiplier: 0.1 }],
+      finishes: [{ label: 'f', is_active: true, is_default: true, price_multiplier: 0.1 }],
+    });
+    expect(paths).toContain('pricing_tiers.1.price_per_unit');
+  });
+
+  it('ignores inactive options and accepts exactly the 0.005 boundary', () => {
+    expect(getCheapestUnitPrice({ pricing_tiers: [{ price_per_unit: 0.01 }], sizes: [m(0.01, false), m(1)] })?.price).toBe(0.01);
+    expect(issuePaths({
+      pricing_tiers: [tierOf({ price_per_unit: 0.01 })],
+      sizes: [{ label: 'a', width: 1, height: 1, unit: 'mm', is_active: true, is_default: true, price_multiplier: 0.5 }],
+    })).toEqual([]);
+  });
+
+  it('does not flag ordinary pricing', () => {
+    expect(issuePaths({})).toEqual([]);
+  });
+});
+
+describe('sides is_active in the payload', () => {
+  it('is sent for each sides option', () => {
+    const body = buildProductPayload(baseValues({
+      sides_options: [{ label: 'Single', is_active: true, is_default: true, price_multiplier: 1 }, { label: 'Double', is_active: false, is_default: false, price_multiplier: 1.35 }],
+    }), 'draft');
+    expect(body.sides_options.map((s) => s.is_active)).toEqual([true, false]);
+  });
+});

@@ -39,4 +39,5 @@ export const ROUTES = {
   SETTINGS_PAYMENTS: '/settings/payments',
   SETTINGS_NOTIFICATIONS: '/settings/notifications',
   SYSTEM: '/system',
+  PRICE_MISMATCHES: '/system/price-mismatches',
 } as const;

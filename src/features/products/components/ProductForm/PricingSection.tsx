@@ -6,15 +6,22 @@ import { Button } from '@/components/ui/button';
 import { formatPrice } from '@/lib/utils/formatPrice';
 import { DiscountPreview } from './DiscountPreview';
 import { priceForPercentOff, hasAtMostTwoDecimals } from '@/lib/utils/discount';
-import type { ProductFormValues } from './schema';
+import { BOUNDS, getTierPriceTypoWarnings, sortTiersByQuantity, type ProductFormValues } from './schema';
 
 interface Props { form: UseFormReturn<ProductFormValues> }
 
 export function PricingSection({ form }: Props) {
   const { register, watch, setValue, formState: { errors } } = form;
-  const { fields, append, remove } = useFieldArray({ control: form.control, name: 'pricing_tiers' });
+  const { fields, append, remove, replace } = useFieldArray({ control: form.control, name: 'pricing_tiers' });
 
   const tiers = watch('pricing_tiers') ?? [];
+  const typoWarnings = getTierPriceTypoWarnings(tiers);
+
+  function sortRows() {
+    const current = form.getValues('pricing_tiers') ?? [];
+    const sorted = sortTiersByQuantity(current);
+    if (sorted.some((t, i) => t !== current[i])) replace(sorted);
+  }
   const hasAnyMrp = tiers.some((t) => t.mrp_per_unit != null);
 
   function applyPercentOff(i: number, raw: string) {
@@ -61,8 +68,10 @@ export function PricingSection({ form }: Props) {
                 <tr key={field.id}>
                   <td className="py-2 pr-3 align-top">
                     <input
-                      {...register(`pricing_tiers.${i}.quantity`, { valueAsNumber: true })}
+                      {...register(`pricing_tiers.${i}.quantity`, { valueAsNumber: true, onBlur: sortRows })}
                       type="number"
+                      min={1}
+                      max={BOUNDS.QTY_MAX}
                       placeholder="500"
                       aria-label={`Quantity for pricing tier ${i + 1}`}
                       className={`${inputCls} w-24`}
@@ -76,6 +85,8 @@ export function PricingSection({ form }: Props) {
                       {...register(`pricing_tiers.${i}.price_per_unit`, { valueAsNumber: true })}
                       type="number"
                       step="0.01"
+                      min={BOUNDS.PRICE_MIN}
+                      max={BOUNDS.PRICE_MAX}
                       placeholder="5.00"
                       aria-label={`Price per unit for pricing tier ${i + 1}`}
                       className={`${inputCls} w-24`}
@@ -83,6 +94,9 @@ export function PricingSection({ form }: Props) {
                     {errors.pricing_tiers?.[i]?.price_per_unit && (
                       <p className={errorCls}>{errors.pricing_tiers[i]?.price_per_unit?.message}</p>
                     )}
+                    {typoWarnings.filter((w) => w.index === i).map((w) => (
+                      <p key={w.index} role="status" data-testid="tier-typo-warning" className="mt-1 max-w-[11rem] text-[11px] text-[var(--warning)]">{w.message}</p>
+                    ))}
                   </td>
                   <td className="py-2 pr-3 align-top">
                     <input

@@ -47,3 +47,37 @@ describe('CouponForm: applies_to_discounted_items', () => {
     expect(mutateAsync.mock.calls[0][0].id).toBe('1');
   });
 });
+
+describe('CouponForm bounds UX', () => {
+  it('warns (without blocking) when a percentage is over 50', () => {
+    render(<CouponForm coupon={{ ...COUPON, discount_value: 60 }} />);
+    expect(screen.getByTestId('percent-typo-warning')).toHaveTextContent('60%');
+  });
+
+  it('shows no warning at or under 50', () => {
+    render(<CouponForm coupon={{ ...COUPON, discount_value: 50 }} />);
+    expect(screen.queryByTestId('percent-typo-warning')).toBeNull();
+  });
+
+  it('highlights an existing out-of-range coupon on load', async () => {
+    render(<CouponForm coupon={{ ...COUPON, discount_value: 150 }} />);
+    expect(await screen.findByText(/at most 100/)).toBeInTheDocument();
+    expect(screen.getByText(/outside the allowed range/)).toBeInTheDocument();
+  });
+
+  it('blocks save for an invalid value and does not call the API', async () => {
+    render(<CouponForm coupon={{ ...COUPON, discount_value: 150 }} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+    await screen.findByText(/at most 100/);
+    expect(mutateAsync).not.toHaveBeenCalled();
+  });
+
+  it('maps invalid_coupon_value to a friendly toast', async () => {
+    const { toast } = await import('sonner');
+    mutateAsync.mockRejectedValueOnce({ status: 422, code: 'invalid_coupon_value', message: 'raw' });
+    render(<CouponForm coupon={COUPON} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+    await waitFor(() => expect(toast.error).toHaveBeenCalled());
+    expect(vi.mocked(toast.error).mock.calls[0][0]).toMatch(/outside the allowed range/);
+  });
+});

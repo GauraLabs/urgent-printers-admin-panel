@@ -82,4 +82,24 @@ describe('PricingSection discount column', () => {
     render(<Harness tiers={[tier(100, 9, 12)]} />);
     expect(screen.getByText(/leaves the stored price at the sale price/)).toBeInTheDocument();
   });
+
+  it('shows a non-blocking typo warning when a neighbouring tier differs by more than 10x', () => {
+    render(<Harness tiers={[tier(100, 5, null), tier(500, 500, null)]} />);
+    const warnings = screen.getAllByTestId('tier-typo-warning');
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toHaveTextContent(/more than 10x/);
+  });
+
+  it('shows no typo warning for ordinary tiers', () => {
+    render(<Harness tiers={[tier(100, 9, null), tier(500, 7, null)]} />);
+    expect(screen.queryByTestId('tier-typo-warning')).toBeNull();
+  });
+
+  it('re-sorts rows by quantity when a quantity field loses focus', async () => {
+    render(<Harness tiers={[tier(100, 9, null), tier(500, 7, null)]} />);
+    const q1 = screen.getByLabelText('Quantity for pricing tier 1');
+    await act(async () => { fireEvent.change(q1, { target: { value: '900' } }); });
+    await act(async () => { fireEvent.blur(q1); });
+    expect(latest?.getValues('pricing_tiers').map((t) => t.quantity)).toEqual([500, 900]);
+  });
 });
