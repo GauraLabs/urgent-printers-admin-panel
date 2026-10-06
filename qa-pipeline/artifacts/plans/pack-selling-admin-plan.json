@@ -1,0 +1,184 @@
+{
+  "feature_found": true,
+  "feature_name": "Pack/Set Selling + Shopping Feed (Admin)",
+  "source_files": [
+    "src/features/products/components/ProductForm/PricingSection.tsx",
+    "src/features/products/components/ProductForm/PrintSpecsSection.tsx",
+    "src/features/products/components/ProductForm/schema.ts",
+    "src/features/products/components/ProductForm/index.tsx",
+    "src/features/products/components/ProductsTable.tsx",
+    "src/features/products/components/FeedUrlCard.tsx",
+    "src/features/orders/components/OrderDetail/OrderItems.tsx",
+    "src/lib/utils/pack.ts",
+    "src/lib/api/products.ts",
+    "src/lib/api/orders.ts",
+    "src/lib/api/validationErrors.ts",
+    "src/types/product.ts",
+    "src/types/order.ts",
+    "src/app/(admin)/products/page.tsx",
+    "../urgent-printers-backend/app/schemas/admin.py",
+    "../urgent-printers-backend/app/api/v1/routes/admin/products.py",
+    "../urgent-printers-backend/app/services/pack_quantity.py",
+    "../urgent-printers-backend/app/services/option_ids.py",
+    "../urgent-printers-backend/app/services/listing_offer.py"
+  ],
+  "user_goal": "Configure a sticker-like product to sell in packs, entering the price of one pack rather than a per-piece price, and see the shopping-feed URL to hand to the ad channels.",
+  "business_goal": "Let staff price consumables the way they actually sell them (per pack) without changing the per-unit wire contract the pricing engine, bulk discounts and API clients all depend on.",
+  "user_journey": [
+    { "step": "Sign in to the admin panel", "route_or_state": "/login" },
+    { "step": "Open the Products list and note the shopping feed URL card", "route_or_state": "/products" },
+    { "step": "Open a sticker-like product for editing", "route_or_state": "/products/16" },
+    { "step": "Set the pack size and unit label, review the tier table in pack mode", "route_or_state": "Pricing Tiers section" },
+    { "step": "Save and confirm the per-unit wire values the backend stored", "route_or_state": "PATCH /admin/products/16" },
+    { "step": "Open an order containing a pack product", "route_or_state": "/orders/[id]" }
+  ],
+  "happy_path": [
+    {
+      "step_id": "hp-01",
+      "action": "Log in as the seeded super admin",
+      "selector": "#email / #password inputs, submit button on /login",
+      "expected_result": "Lands on the admin dashboard with an in-memory access token (never localStorage)."
+    },
+    {
+      "step_id": "hp-02",
+      "action": "Open /products and read the Shopping feed card",
+      "selector": "src/features/products/components/FeedUrlCard.tsx on /products",
+      "expected_result": "A read-only card shows NEXT_PUBLIC_API_URL + '/feeds/products.xml' with a copy button and a note naming the three channels; no new backend call is made for it."
+    },
+    {
+      "step_id": "hp-03",
+      "action": "Open Custom Die-Cut Stickers for editing and expand Pricing Tiers",
+      "selector": "/products/16, Section title 'Pricing Tiers *'",
+      "expected_result": "Pack controls render at the top of the section: label 'Sold in packs of', #pack-size-input (default 1) and the unit-label input (default 'pcs'); the table header reads 'Quantity' / 'Price / unit (₹)' / 'MRP / unit (₹)' while pack size is 1."
+    },
+    {
+      "step_id": "hp-04",
+      "action": "Set the pack size to 50 and leave the unit label as 'pcs'",
+      "selector": "#pack-size-input (aria-label 'Pack size'); input aria-label 'Unit label'",
+      "expected_result": "Table switches to pack mode: headers become 'Packs' / 'Price per pack (₹)' / 'MRP per pack (₹)'. Existing tiers rehydrate from the stored per-unit values, e.g. 50 pcs @ ₹15.00/unit becomes 1 pack @ ₹750.00, 250 pcs @ ₹6.00/unit becomes 5 packs @ ₹1500.00. Each row shows '= N pcs' (data-testid 'tier-pieces') and '₹X.XX/pc' (data-testid 'tier-per-piece')."
+    },
+    {
+      "step_id": "hp-05",
+      "action": "Enter 300 as the price per pack on the 1-pack row and read the per-piece readout",
+      "selector": "input aria-label 'Price per pack for pricing tier 1'; p[data-testid='tier-per-piece']",
+      "expected_result": "Accepted with no field error; the per-piece line reads '₹6.00/pc' because 30000 paise divides evenly by 50, and the hidden wire value price_per_unit becomes 6.00."
+    },
+    {
+      "step_id": "hp-06",
+      "action": "Save the product and re-read it from the admin API",
+      "selector": "Save Changes button -> PATCH /admin/products/16",
+      "expected_result": "200. Stored pack_size=50, unit_label='pcs', and tier quantities unchanged in pieces with price_per_unit stored per unit (6.00 for the edited row). pricing_updated_at is not bumped by a pack-only change."
+    },
+    {
+      "step_id": "hp-07",
+      "action": "Return to /products and read the pack product's lowest-tier price cell",
+      "selector": "src/features/products/components/ProductsTable.tsx price column",
+      "expected_result": "The cell shows the price per pack for the pack product; sorting stays per-piece per spec decision D5."
+    },
+    {
+      "step_id": "hp-08",
+      "action": "Open an order that contains a pack product and read the item quantity",
+      "selector": "src/features/orders/components/OrderDetail/OrderItems.tsx",
+      "expected_result": "Quantity renders as 'N packs (M pcs)' from the order item's snapshotted pack_size/unit_label, which orders.ts reads in either snake or camel case and defaults to 1/'pcs'."
+    }
+  ],
+  "alternate_paths": [
+    {
+      "path_name": "Pack size back to 1 restores per-unit entry",
+      "steps": [
+        {
+          "step_id": "alt-01",
+          "action": "Set the pack size from 50 back to 1 without saving",
+          "selector": "#pack-size-input",
+          "expected_result": "Table headers revert to 'Quantity' / 'Price / unit (₹)' / 'MRP / unit (₹)' and the same stored wire tiers are re-expressed per unit with no numeric drift."
+        }
+      ]
+    },
+    {
+      "path_name": "MRP entered per pack",
+      "steps": [
+        {
+          "step_id": "alt-02",
+          "action": "On a pack product with MRP, read the MRP per pack column",
+          "selector": "input aria-label 'MRP per pack for pricing tier 1'",
+          "expected_result": "MRP hydrates as mrp_per_unit x pack_size (e.g. ₹12.00/unit at pack 50 shows ₹600.00) and the Discount preview percentage is unchanged, since percent off is scale-invariant."
+        }
+      ]
+    },
+    {
+      "path_name": "quantity_steps editor is gone",
+      "steps": [
+        {
+          "step_id": "alt-03",
+          "action": "Search the Print Specs section for a Quantity steps editor",
+          "selector": "src/features/products/components/ProductForm/PrintSpecsSection.tsx",
+          "expected_result": "No quantity-steps editor is rendered and the field is never sent, so a PATCH leaves the stored value untouched (spec decision D6)."
+        }
+      ]
+    }
+  ],
+  "error_paths": [
+    {
+      "step_id": "err-01",
+      "trigger": "Enter 100 as the price per pack while pack size is 30",
+      "expected_ui_response": "Inline field error under 'Price per pack': '₹100 per pack does not divide into whole paise per piece at pack size 30' (zod superRefine on the pack_price path, integer-paise check, never float division).",
+      "selector": "input aria-label 'Price per pack for pricing tier 1' + sibling error paragraph"
+    },
+    {
+      "step_id": "err-02",
+      "trigger": "Set pack size to 30 while the product's stored tier quantities are 50/100/250/500/1000",
+      "expected_ui_response": "Save is rejected and the backend's 422 pack_size_tier_mismatch message is surfaced on the pack_size field: 'Every pricing tier quantity must be a multiple of the pack size. Change the pack size or the tier quantities.'",
+      "selector": "div[data-field='pack_size'] error paragraph; src/lib/api/validationErrors.ts -> pack_size_tier_mismatch"
+    },
+    {
+      "step_id": "err-03",
+      "trigger": "Give two options in the same group the same label ignoring case and punctuation, e.g. finishes 'Matte Lamination' and 'matte-lamination'",
+      "expected_ui_response": "Client-side zod flags only the later duplicate row with DUPLICATE_OPTION_MESSAGE on finishes.<i>.label; a backend 422 duplicate_option_label is routed to the same group via optionGroupFromMessage, which matches an anchored prefix so a quoted label containing another group's name cannot mis-target the section.",
+      "selector": "PrintSpecsSection row error (role='alert'); optionGroupFromMessage in src/lib/api/validationErrors.ts"
+    },
+    {
+      "step_id": "err-04",
+      "trigger": "Enter a pack size of 0 or above 1,000,000",
+      "expected_ui_response": "Inline pack-size error from the zod bounds (1..1,000,000); the input itself carries min=1 and max=PACK_SIZE_MAX.",
+      "selector": "div[data-field='pack_size'] error paragraph"
+    },
+    {
+      "step_id": "err-05",
+      "trigger": "Enter a unit label that fails the regex, e.g. '123' or a leading symbol",
+      "expected_ui_response": "Inline unit-label error; the stored label must match ^[A-Za-z][A-Za-z0-9 ./-]{0,29}$ and is kept as typed, not lowercased.",
+      "selector": "input aria-label 'Unit label' + pack-section error paragraph"
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "A stored tier quantity is not divisible by the pack size when the form hydrates",
+      "existing_validation": "wireTierToPack / hydrateTiers show the row in an error state rather than crashing (spec section 7)",
+      "risk_note": "Silently rounding here would change a live price; the row must surface the problem and leave the stored value alone until staff fix it."
+    },
+    {
+      "case": "Pack-mode inputs are form-only and could be stripped by zod",
+      "existing_validation": "packs / pack_price / pack_mrp are declared in tierSchema precisely so z.object does not strip them, and the wire values are re-derived in both a PricingSection effect and buildProductPayload",
+      "risk_note": "A dropped key would silently erase the tier's price on a PATCH, which replaces the whole tier list."
+    },
+    {
+      "case": "An option multiplier makes the pack price non-exact",
+      "existing_validation": "optionRoundingNotes renders a non-blocking role='status' hint (data-testid 'pack-rounding-note')",
+      "risk_note": "This must stay advisory: the charge is always rounded_unit x quantity, so the hint explains a real rounding, it is not a validation failure."
+    },
+    {
+      "case": "Pack size changed on a product that already has conforming tiers",
+      "existing_validation": "Route validates the merged state (sent fields plus existing values), not just the payload",
+      "risk_note": "A PATCH may carry pack_size without tiers or tiers without pack_size; validating only the payload would let a mismatch through."
+    },
+    {
+      "case": "Admin access token is in-memory only",
+      "existing_validation": "authStore keeps the token out of localStorage; _hasHydrated gates AuthGuard",
+      "risk_note": "A Lighthouse final_state checkpoint taken after login gets bounced to /login, so lighthouse must stay off for these steps (pipeline README, known per-app wrinkles)."
+    }
+  ],
+  "gaps": [
+    "The feed URL card is derived entirely from NEXT_PUBLIC_API_URL with no backend call, so the admin cannot tell from this screen whether the feed route is actually serving. Locally it is not: resolve_link_base rejects a localhost FRONTEND_URL and the route returns 503 feed_not_configured, and the card gives no hint of that.",
+    "Bulk discount remains per-piece: the preview payload carries no pack_size, so a pack product's bulk discount is still entered and previewed per unit.",
+    "No admin surface exercises invalid_pack_multiple (it is a cart/order code); it is mapped in validationErrors.ts but unreachable from the admin UI."
+  ]
+}

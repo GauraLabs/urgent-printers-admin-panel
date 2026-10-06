@@ -116,6 +116,8 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
     sides: (item.sides as string | null) ?? null,
     turnaround_label: (item.turnaround_label as string | null) ?? null,
     quantity: item.quantity as number,
+    pack_size: Number(item.pack_size ?? item.packSize ?? 1) || 1,
+    unit_label: ((item.unit_label ?? item.unitLabel) as string | undefined) ?? 'pcs',
     price_per_unit: Number(item.price_per_unit ?? 0),
     mrp_per_unit: item.mrp_per_unit != null ? Number(item.mrp_per_unit) : null,
     discount_per_unit: item.discount_per_unit != null ? Number(item.discount_per_unit) : null,

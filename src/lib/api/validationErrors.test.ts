@@ -44,3 +44,13 @@ describe('coded error mapping', () => {
     expect(codedErrorMessage(undefined)).toBeUndefined();
   });
 });
+
+describe('pack error codes', () => {
+  it('maps pack_size_tier_mismatch and invalid_pack_multiple to friendly messages', () => {
+    expect(codedErrorMessage('pack_size_tier_mismatch')).toMatch(/multiple of the pack size/);
+    expect(codedErrorMessage('invalid_pack_multiple')).toMatch(/whole number of packs/);
+  });
+  it('describeApiError uses the code mapping before the raw message', () => {
+    expect(describeApiError({ code: 'pack_size_tier_mismatch', status: 422, message: 'raw' }, 'fallback')).toMatch(/multiple of the pack size/);
+  });
+});

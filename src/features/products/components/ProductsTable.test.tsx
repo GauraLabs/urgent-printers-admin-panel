@@ -26,10 +26,12 @@ function product(id: string, status: ProductDiscountStatus, max: number | null):
 }
 
 const ITEMS = [product('1', 'active', 25), product('2', 'none', null)];
+const PACK_ITEMS = [{ ...product('9', 'none', null), min_price: 5.8, pack_size: 50, unit_label: 'pcs', pricing_tiers: [{ quantity: 100, price_per_unit: 5.8 }, { quantity: 50, price_per_unit: 6 }] }];
+const source = { items: ITEMS };
 
 vi.mock('../hooks/useProducts', () => ({
   useProducts: () => ({
-    query: { data: { items: ITEMS, total: 2 }, isLoading: false },
+    query: { data: { items: source.items, total: source.items.length }, isLoading: false },
     filters: { page: 1, page_size: 20 }, sorting: [], setSorting: vi.fn(), setPage: vi.fn(),
     setSearch: vi.fn(), setStatus: vi.fn(), setCategory: vi.fn(),
   }),
@@ -41,7 +43,20 @@ function renderTable() {
   return render(<QueryClientProvider client={qc}><ProductsTable /></QueryClientProvider>);
 }
 
-beforeEach(() => { perms.canManageProducts = false; });
+beforeEach(() => { perms.canManageProducts = false; source.items = ITEMS; });
+
+describe('lowest tier price for pack products', () => {
+  it('shows the lowest-quantity tier total, not min unit price x pack size', () => {
+    source.items = PACK_ITEMS as unknown as typeof ITEMS;
+    renderTable();
+    expect(screen.getByTestId('min-price-pack')).toHaveTextContent('₹300 / 50 pcs');
+  });
+  it('is unchanged for pack size 1', () => {
+    renderTable();
+    expect(screen.queryByTestId('min-price-pack')).toBeNull();
+    expect(screen.getAllByText('₹9').length).toBeGreaterThan(0);
+  });
+});
 
 describe('DiscountChip', () => {
   it('shows status and max percent', () => {

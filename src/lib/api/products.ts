@@ -1,10 +1,13 @@
 import { get, post, patch, del } from './client';
+import { normalizePackSize, DEFAULT_UNIT_LABEL } from '@/lib/utils/pack';
 import type { Product, ProductPricingTier, ProductDiscountSummary, ProductSummary, ProductsListResponse, ProductFilters, ProductSideOption, CustomizationMode } from '@/types';
 
 // ── Normalizer ────────────────────────────────────────────────────────────────
 type RawTier = Omit<ProductPricingTier, 'mrp_per_unit'> & { mrp_per_unit?: number | null };
 
-type RawProduct = Omit<Product, 'id' | 'category_id' | 'sides_options' | 'pricing_tiers' | 'discount' | 'discount_starts_at' | 'discount_ends_at'> & {
+type RawProduct = Omit<Product, 'id' | 'category_id' | 'sides_options' | 'pricing_tiers' | 'discount' | 'discount_starts_at' | 'discount_ends_at' | 'pack_size' | 'unit_label'> & {
+  pack_size?: number;
+  unit_label?: string;
   id: number | string;
   pricing_tiers: RawTier[];
   discount_starts_at?: string | null;
@@ -25,6 +28,8 @@ function normalize(raw: RawProduct): ProductSummary {
   const product: Product = {
     ...raw,
     id: String(raw.id),
+    pack_size: normalizePackSize(raw.pack_size),
+    unit_label: raw.unit_label || DEFAULT_UNIT_LABEL,
     category_id: raw.category_id != null ? String(raw.category_id) : null,
     sides_options: (raw.sides_options ?? []).map(normalizeSide),
     pricing_tiers: raw.pricing_tiers.map((t) => ({ ...t, mrp_per_unit: t.mrp_per_unit ?? null })),
@@ -87,6 +92,8 @@ export interface ProductPayload {
   finishes?: object[];
   sides_options?: object[];
   quantity_steps?: number[];
+  pack_size?: number;
+  unit_label?: string;
   pricing_tiers?: object[];
   discount_starts_at?: string | null;
   discount_ends_at?: string | null;

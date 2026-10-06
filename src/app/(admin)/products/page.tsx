@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { FeedUrlCard } from '@/features/products/components/FeedUrlCard';
 import { ProductsTable } from '@/features/products/components/ProductsTable';
 import { ROUTES } from '@/lib/constants/routes';
 
@@ -19,6 +20,7 @@ export default function ProductsPage() {
           </Link>
         }
       />
+      <FeedUrlCard />
       <ProductsTable />
     </div>
   );
