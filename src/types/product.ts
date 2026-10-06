@@ -130,7 +130,10 @@ export interface Product {
   paper_types: ProductPaperType[];
   finishes: ProductFinish[];
   sides_options: ProductSideOption[];
+  /** Deprecated: no longer edited; kept so existing values round-trip. */
   quantity_steps: number[];
+  pack_size: number;
+  unit_label: string;
   pricing_tiers: ProductPricingTier[];
   discount_starts_at: string | null;   // UTC ISO; shown/entered in IST
   discount_ends_at: string | null;

@@ -44,6 +44,9 @@ const CODED_MESSAGES: Record<string, string> = {
   product_unavailable: 'This product is not available (it may be archived, inactive or have invalid pricing).',
   invalid_order_total: 'This order has an invalid total, usually caused by a price or coupon outside the allowed range.',
   product_unpriceable: 'The cheapest combination of tier price and option multipliers would cost less than ₹0.01 per unit. Raise the lowest tier price or the smallest option multiplier.',
+  pack_size_tier_mismatch: 'Every pricing tier quantity must be a multiple of the pack size. Change the pack size or the tier quantities.',
+  invalid_pack_multiple: 'The quantity must be a whole number of packs.',
+  duplicate_option_label: 'Two options in the same group have the same name (ignoring case, spaces and punctuation). Give each option a unique label.',
   invalid_mrp: 'MRP must be greater than the selling price and have at most 2 decimal places',
 };
 
@@ -58,4 +61,14 @@ export function describeApiError(err: unknown, fallback: string): string {
   if (coded) return coded;
   if ((e?.status === 422 || e?.status === 409) && e.message) return e.message;
   return fallback;
+}
+
+export type OptionGroup = 'sizes' | 'paper_types' | 'finishes' | 'sides_options';
+
+const OPTION_GROUP_PREFIX = /^Duplicate (sizes|paper_types|finishes|sides_options) option label/;
+
+/** Parses the category from the backend's `Duplicate {category} option label '{label}'` message. */
+export function optionGroupFromMessage(message: string | undefined): OptionGroup | undefined {
+  const m = OPTION_GROUP_PREFIX.exec(message ?? '');
+  return m ? (m[1] as OptionGroup) : undefined;
 }

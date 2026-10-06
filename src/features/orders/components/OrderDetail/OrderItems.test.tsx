@@ -7,7 +7,7 @@ function item(over: Partial<OrderItem> = {}): OrderItem {
   return {
     id: '1', product_id: '9', product_name: 'Cards', product_slug: 'cards', thumbnail_url: null, category_name: null,
     size_label: null, paper_label: null, finish_label: null, sides: null, turnaround_label: null,
-    quantity: 100, price_per_unit: 9, mrp_per_unit: null, discount_per_unit: null, line_savings: null,
+    quantity: 100, pack_size: 1, unit_label: 'pcs', price_per_unit: 9, mrp_per_unit: null, discount_per_unit: null, line_savings: null,
     turnaround_extra_cost: 0, total_price: 900, artwork_status: 'pending' as OrderItem['artwork_status'],
     artwork_file_key: null, artwork_filename: null, artwork_type: null, template_data: null,
     ...over,
@@ -31,5 +31,17 @@ describe('OrderItems MRP and savings', () => {
     render(<OrderItems items={[item({ mrp_per_unit: 9, discount_per_unit: 0, line_savings: 0 })]} />);
     expect(screen.queryByTestId('line-mrp')).toBeNull();
     expect(screen.queryByTestId('line-savings')).toBeNull();
+  });
+});
+
+describe('OrderItems pack display', () => {
+  it('shows packs and pieces for a pack line', () => {
+    render(<OrderItems items={[item({ quantity: 150, pack_size: 50, unit_label: 'stickers', price_per_unit: 6, total_price: 900 })]} />);
+    expect(screen.getByTestId('line-packs')).toHaveTextContent('3 packs (150 stickers)');
+  });
+
+  it('shows nothing extra for pack size 1', () => {
+    render(<OrderItems items={[item()]} />);
+    expect(screen.queryByTestId('line-packs')).toBeNull();
   });
 });

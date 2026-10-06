@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildProductPayload, getWindowEndInPastError, productSchema, type ProductFormValues } from './schema';
+import { buildProductPayload, hydrateTiers, getWindowEndInPastError, productSchema, type ProductFormValues } from './schema';
 
 function baseValues(over: Partial<ProductFormValues> = {}): ProductFormValues {
   return {
@@ -282,12 +282,6 @@ describe('integer limits', () => {
     expect(issuePaths({ stock_quantity: 2_147_483_647, low_stock_threshold: 0 })).toEqual([]);
     expect(issuePaths({ stock_quantity: null })).toEqual([]);
   });
-  it('quantity_steps entries: integers 1 to 1,000,000', () => {
-    expect(issuePaths({ quantity_steps: [100, 0] })).toContain('quantity_steps.1');
-    expect(issuePaths({ quantity_steps: [1.5] })).toContain('quantity_steps.0');
-    expect(issuePaths({ quantity_steps: [1_000_001] })).toContain('quantity_steps.0');
-    expect(issuePaths({ quantity_steps: [1, 1_000_000] })).toEqual([]);
-  });
 });
 
 import { getCheapestUnitPrice } from './schema';
@@ -323,5 +317,97 @@ describe('sides is_active in the payload', () => {
       sides_options: [{ label: 'Single', is_active: true, is_default: true, price_multiplier: 1 }, { label: 'Double', is_active: false, is_default: false, price_multiplier: 1.35 }],
     }), 'draft');
     expect(body.sides_options.map((s) => s.is_active)).toEqual([true, false]);
+  });
+});
+
+
+describe('pack size: schema and payload', () => {
+  const packTier = (packs: number, packPrice: number, packMrp: number | null = null) => ({
+    quantity: packs * 50,
+    price_per_unit: packPrice / 50,
+    mrp_per_unit: packMrp == null ? null : packMrp / 50,
+    is_best_value: false,
+    packs, pack_price: packPrice, pack_mrp: packMrp,
+  });
+  const issues = (over: Partial<ProductFormValues>) =>
+    productSchema.safeParse(baseValues(over)).error?.issues.map((i) => `${i.path.join('.')}|${i.message}`) ?? [];
+
+  it('pack size 1 behaves as before (no pack fields needed)', () => {
+    expect(issues({ pack_size: 1, unit_label: 'pcs' })).toEqual([]);
+    expect(issues({})).toEqual([]);
+  });
+
+  it('accepts rupees 300 per pack of 50 and stores 6.00 per piece', () => {
+    const values = baseValues({ pack_size: 50, unit_label: 'stickers', pricing_tiers: [packTier(1, 300)] });
+    expect(productSchema.safeParse(values).success).toBe(true);
+    const p = buildProductPayload(values, 'draft');
+    expect(p.pack_size).toBe(50);
+    expect(p.unit_label).toBe('stickers');
+    expect(p.pricing_tiers).toEqual([{ quantity: 50, price_per_unit: 6, mrp_per_unit: null, is_best_value: false }]);
+  });
+
+  it('rejects rupees 100 per pack of 30 (not whole paise per piece)', () => {
+    const t = { ...packTier(1, 100), quantity: 30, price_per_unit: 3.33 };
+    const out = issues({ pack_size: 30, pricing_tiers: [t] });
+    expect(out.some((m) => m.startsWith('pricing_tiers.0.pack_price|') && m.includes('does not divide into whole paise per piece at pack size 30'))).toBe(true);
+  });
+
+  it('rejects an inexact MRP per pack on the MRP field', () => {
+    const t = { ...packTier(1, 99), pack_mrp: 100 };
+    const out = issues({ pack_size: 30, pricing_tiers: [{ ...t, quantity: 30, price_per_unit: 3.3 }] });
+    expect(out.some((m) => m.startsWith('pricing_tiers.0.pack_mrp|'))).toBe(true);
+    expect(out.some((m) => m.startsWith('pricing_tiers.0.pack_price|'))).toBe(false);
+  });
+
+  it('shows the whole-paise message even when a derived wire value is invalid', () => {
+    const t = { ...packTier(1, 100), quantity: 30, price_per_unit: NaN };
+    const out = issues({ pack_size: 30, pricing_tiers: [t] });
+    expect(out).toContain('pricing_tiers.0.pack_price|₹100 per pack does not divide into whole paise per piece at pack size 30');
+    const frac = issues({ pack_size: 30, pricing_tiers: [{ ...packTier(1, 100), quantity: 15.5, price_per_unit: 3.33 }] });
+    expect(frac.some((m) => m.startsWith('pricing_tiers.0.pack_price|') && m.includes('whole paise'))).toBe(true);
+  });
+
+  it('flags fractional or zero packs without crashing', () => {
+    const out = issues({ pack_size: 50, pricing_tiers: [{ ...packTier(1, 300), packs: 1.5, quantity: 75 }] });
+    expect(out.some((m) => m.startsWith('pricing_tiers.0.packs|'))).toBe(true);
+  });
+
+  it('requires per-unit tier quantities to be pack multiples when no pack fields exist', () => {
+    const out = issues({ pack_size: 50, pricing_tiers: [{ quantity: 120, price_per_unit: 6, mrp_per_unit: null, is_best_value: false }] });
+    expect(out.some((m) => m.startsWith('pricing_tiers.0.quantity|'))).toBe(true);
+  });
+
+  it('validates pack_size bounds and unit_label format', () => {
+    expect(issues({ pack_size: 0 }).some((m) => m.startsWith('pack_size|'))).toBe(true);
+    expect(issues({ pack_size: 1_000_001 }).some((m) => m.startsWith('pack_size|'))).toBe(true);
+    expect(issues({ pack_size: 2.5 }).some((m) => m.startsWith('pack_size|'))).toBe(true);
+    expect(issues({ unit_label: '' }).some((m) => m.startsWith('unit_label|'))).toBe(true);
+    expect(issues({ unit_label: '1pcs' }).some((m) => m.startsWith('unit_label|'))).toBe(true);
+    expect(issues({ unit_label: 'x'.repeat(31) }).some((m) => m.startsWith('unit_label|'))).toBe(true);
+    expect(issues({ unit_label: 'sq. ft/rolls-2' })).toEqual([]);
+  });
+
+  it('round-trips an existing pack product from per-unit without drift', () => {
+    const stored = [
+      { quantity: 50, price_per_unit: 6, mrp_per_unit: 7.5, is_best_value: false },
+      { quantity: 100, price_per_unit: 5.8, mrp_per_unit: null, is_best_value: true },
+      { quantity: 250, price_per_unit: 0.37, mrp_per_unit: null, is_best_value: false },
+    ];
+    const values = baseValues({ pack_size: 50, unit_label: 'stickers', pricing_tiers: hydrateTiers(stored, 50) });
+    expect(values.pricing_tiers[0]).toMatchObject({ packs: 1, pack_price: 300, pack_mrp: 375 });
+    expect(values.pricing_tiers[2]).toMatchObject({ packs: 5, pack_price: 18.5 });
+    expect(productSchema.safeParse(values).success).toBe(true);
+    const p = buildProductPayload(values, 'active');
+    expect(p.pricing_tiers).toEqual(stored);
+  });
+
+  it('never sends quantity_steps', () => {
+    expect('quantity_steps' in buildProductPayload(baseValues(), 'draft')).toBe(false);
+  });
+
+  it('sends pack_size 1 and the default label for ordinary products', () => {
+    const p = buildProductPayload(baseValues(), 'draft');
+    expect(p.pack_size).toBe(1);
+    expect(p.unit_label).toBe('pcs');
   });
 });

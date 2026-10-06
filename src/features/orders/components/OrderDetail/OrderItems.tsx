@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { FileText, LayoutTemplate, AlertTriangle, Paperclip } from 'lucide-react';
 import { formatPrice } from '@/lib/utils/formatPrice';
+import { formatPacks } from '@/lib/utils/pack';
 import { ArtworkStatusBadge, Badge } from '@/components/common/StatusBadge';
 import type { OrderItem } from '@/types';
 
@@ -108,6 +109,11 @@ export function OrderItems({ items }: { items: OrderItem[] }) {
                   <p className="text-sm font-semibold text-[var(--text-primary)] tabular-nums">
                     {formatPrice(item.total_price)}
                   </p>
+                  {item.pack_size > 1 && (
+                    <p data-testid="line-packs" className="text-[11px] font-medium text-[var(--text-secondary)] tabular-nums">
+                      {formatPacks(item.quantity, item.pack_size, item.unit_label)}
+                    </p>
+                  )}
                   <p className="text-[11px] text-[var(--text-muted)] tabular-nums">
                     {item.quantity} ×{' '}
                     {item.mrp_per_unit != null && item.mrp_per_unit > item.price_per_unit && (
