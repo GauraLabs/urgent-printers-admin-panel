@@ -97,11 +97,11 @@ export function ProductForm({ product }: ProductFormProps) {
       discount_starts_at: product.discount_starts_at,
       discount_ends_at: product.discount_ends_at,
       turnaround_options: normaliseTurnaroundOptions(product.turnaround_options),
-      seo: product.seo,
+      seo: product.seo ?? { title: null, description: null, canonical_url: null },
       track_inventory: product.track_inventory,
       stock_quantity: product.stock_quantity,
       low_stock_threshold: product.low_stock_threshold,
-      image_keys: product.image_keys,
+      image_keys: product.image_keys ?? [],
       video_key: product.video_key,
       customization_mode: product.customization_mode,
       template_fields: product.template_fields,
@@ -171,7 +171,8 @@ export function ProductForm({ product }: ProductFormProps) {
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product?.id]);
-  const outOfRangeFields = loadInvalid ? collectFieldErrors(formErrors) : [];
+  const loadErrors = loadInvalid ? collectFieldErrors(formErrors) : [];
+  const hasRangeError = loadErrors.some((f) => f.message.includes(OUT_OF_RANGE));
   const currentStatus = watch('status') as ProductStatus;
 
   // Storefront product URLs are /products/{categorySlug}/{productSlug} — the
@@ -322,11 +323,11 @@ export function ProductForm({ product }: ProductFormProps) {
     <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-1 xl:grid-cols-3 gap-6">
       {/* Main sections */}
       <div className="xl:col-span-2 space-y-4">
-        {outOfRangeFields.length > 0 && (
+        {loadErrors.length > 0 && (
           <div role="alert" data-testid="out-of-range-banner" className="rounded-xl border border-[var(--danger)] bg-[var(--danger-bg)] p-4 text-xs text-[var(--danger)]">
-            <p className="font-semibold">{OUT_OF_RANGE}</p>
+            <p className="font-semibold">{hasRangeError ? OUT_OF_RANGE : 'Some saved values need fixing before this product can be saved.'}</p>
             <ul className="mt-1.5 list-disc pl-4 space-y-0.5">
-              {outOfRangeFields.map((f) => (
+              {loadErrors.map((f) => (
                 <li key={f.path}>{humanizePath(f.path)}: {f.message}</li>
               ))}
             </ul>
