@@ -1,0 +1,79 @@
+{
+  "feature_name": "Pack Selling Admin",
+  "pass_count": 16,
+  "fail_count": 0,
+  "failures": [],
+  "accessibility_summary": {
+    "critical": [
+      "button-name — up to 3 buttons with no discernible text, on the login page (1 node) and the products list (2 nodes on first load, 3 once the search box has been used). This matches the known residual from the Product Catalog run, which took button-name from 27 nodes down to 2 on these screens; the third node appears only after typing in search, so the search input's clear affordance is the likely addition. The new pack UI is not implicated: #pack-size-input, the unit-label input and every per-row pack input carry explicit aria-labels, and FeedUrlCard's only button has visible 'Copy' text.",
+      "label — up to 2 form controls with no programmatic label, on the login page. Also pre-existing; the pack controls pair 'Sold in packs of' with #pack-size-input via htmlFor/id and additionally set aria-label='Pack size'."
+    ],
+    "serious": [
+      "color-contrast — the dominant finding by volume, peaking at 18 nodes on the product edit page. The pack UI contributes to the count: the '= 50 pcs' and '₹6.00/pc' readouts, the pack explainer paragraph and the option-rounding hint all use --text-muted, the same token already failing elsewhere on this form (17 nodes before any pack interaction, 18 after). So pack selling adds nodes to an existing failure rather than creating a new one."
+    ],
+    "moderate": [
+      "region — up to 5 content areas outside any landmark. FeedUrlCard is itself a correctly-labelled <section aria-labelledby='feed-url-heading'>, so it improves rather than worsens this.",
+      "landmark-one-main / landmark-unique / page-has-heading-one / heading-order — one node each, on the login and products screens. Note FeedUrlCard introduces an <h2> on the products list; heading-order is flagged at one node, so it is worth confirming the products page has an h1 above it rather than starting at h2."
+    ],
+    "coverage_caveat": "automated scan only — manual/screen-reader review still needed"
+  },
+  "performance_summary": {
+    "initial_load": "Not measured — lighthouse is 'off' for every admin-panel spec by design, because the access token lives only in memory and a post-login checkpoint gets bounced to /login (pipeline/README.md, known per-app wrinkles).",
+    "final_state": "Not measured, same reason.",
+    "concerns": [
+      "PricingSection now runs a per-keystroke effect that re-derives every tier's wire values from the pack inputs, keyed on a JSON.stringify of all three pack fields across all rows. With five tiers this is invisible, but it is O(rows) work on every character typed into any pack field and would be worth re-checking on a product with a long tier list."
+    ]
+  },
+  "ux_gaps": [
+    {
+      "issue": "The spec's own headline validation example — ₹100 per pack of 30 — is unreachable through this form. At pack size 30 every stored tier (50/100/250/500/1000 pcs) rehydrates to a fractional `packs`, so the derived `quantity` stops being an integer, fails tierSchema's `.int()` base check, and zod skips the object-level superRefine that owns the whole-paise rule. The admin therefore sees quantity/packs errors instead of the far clearer '₹100 per pack does not divide into whole paise per piece at pack size 30'. The rule itself is correct and fires as soon as quantities are integral (verified live at ₹300.01 per pack of 50) and is unit-tested at the spec's exact vector in ProductForm/schema.test.ts:349 — this is an error-precedence/messaging gap, not a correctness bug.",
+      "related_edge_case": "A stored tier quantity is not divisible by the pack size when the form hydrates"
+    },
+    {
+      "issue": "Backend code pack_size_tier_mismatch is not reachable from this form. Client-side validation blocks the submit before any PATCH is issued (verified: zero PATCH requests fired while attempting to save at pack size 30, and the stored pack_size stayed 50). The backend does enforce it independently — confirmed directly against PATCH /admin/products/16 with {\"pack_size\":30}, which returns 422 pack_size_tier_mismatch with the message 'Tier quantities must be multiples of pack_size 30; offending: 50, 100, 250, 500, 1000'. So the code is correct defence-in-depth, but validationErrors.ts's mapping of it onto the pack_size field is dead code from this UI's perspective and will only ever be seen by a non-browser API client.",
+      "related_edge_case": "Pack size changed on a product that already has conforming tiers"
+    },
+    {
+      "issue": "The products list's 'Lowest tier price' column reads '₹125 per pack of 50' for the test product, while the storefront card for the same product reads '₹300 per 50 pcs'. Both are internally correct: the admin shows min(price_per_unit) x pack_size (₹2.50 on the 1,000-pc tier), i.e. the best achievable per-pack rate, whereas the storefront shows the is_best_value tier (₹6.00). But ₹125 is not a price any customer can pay for one pack — reaching that rate requires buying 20 packs — and the 'per pack of 50' caption reads as an entry price. The underlying min-vs-best-value divergence predates pack selling; multiplying by pack_size makes it look like a concrete pack price rather than a unit rate, which is new. Flagged for a human product call, not fixed.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "Order detail's 'N packs (M pcs)' rendering could not be verified against live data: no order_item in the dev database has pack_size > 1 (confirmed by direct query), because creating one requires an authenticated customer checkout and customer auth is OTP-only with the code going to a terminal this run cannot read. Covered instead by the admin's OrderItems.test.tsx and the backend's order-snapshot tests. The same gap means the spec's 'history unaffected when a product's pack_size later changes' requirement has no live data to demonstrate either, even though product 16 is now exactly the product that would demonstrate it.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "FeedUrlCard shows the feed URL unconditionally and makes no backend call, so it cannot tell staff the route is currently returning 503 feed_not_configured (which it does anywhere FRONTEND_URL is a localhost origin). An admin could copy the URL into Merchant Center from a staging box and only discover the 503 on the channel's side.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "ProductForm.save() hard-requires 3 photos, so a pack-size-only edit to a product with fewer photos is impossible without first uploading images. This blocked the save path on the chosen test product (which shipped with zero images) and had to be worked around inside the spec. Pre-existing guard, but pack configuration is exactly the kind of small metadata edit where it bites: the field being changed has nothing to do with media.",
+      "related_edge_case": null
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "Decide and act on the 'Lowest tier price' per-pack figure. Either keep the rate semantics and relabel it so it cannot be read as a buyable pack price (e.g. 'from ₹125/pack at 1,000 pcs'), or switch the column to the same is_best_value basis the storefront and feed use so all three surfaces agree. This is a product-copy decision, which is why it was flagged rather than fixed."
+    },
+    {
+      "priority": "medium",
+      "action": "Reorder the pack validations so the whole-paise message survives a mismatched pack size. Running the paise check before (or independently of) the integer-quantity check — or suppressing the derived-quantity error while pack inputs are mid-edit — would let the admin see the message that actually tells them what to do."
+    },
+    {
+      "priority": "medium",
+      "action": "Exempt a pack-size/unit-label-only edit from the 3-photo save guard, or scope that guard to publishing rather than every save. As it stands, opting an existing low-media product into pack selling forces an unrelated media upload."
+    },
+    {
+      "priority": "medium",
+      "action": "Have FeedUrlCard reflect reality — a HEAD/GET against the feed URL showing 'serving' vs 'not configured (503)' would stop a staging URL being handed to a merchant channel. The spec explicitly deferred a feed-health summary; this is the minimum version of it."
+    },
+    {
+      "priority": "low",
+      "action": "Confirm the products list has an h1 above FeedUrlCard's new h2, given heading-order is flagged on that screen."
+    },
+    {
+      "priority": "low",
+      "action": "Close out the residual button-name criticals (2-3 nodes on login and the products list). They are pre-existing and tracked from the Product Catalog run, but they remain genuine critical findings on screens this feature now owns a card on."
+    }
+  ]
+}

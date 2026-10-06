@@ -1,8 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { UserCheck, ShoppingCart, TrendingUp, Zap } from 'lucide-react';
@@ -13,30 +13,14 @@ import {
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils/cn';
 import { useSaveCoupon } from '../hooks/useCoupons';
+import { couponSchema, getPercentTypoWarning, type CouponFormValues } from './couponSchema';
+import { describeApiError } from '@/lib/api/validationErrors';
 import { ROUTES } from '@/lib/constants/routes';
 import type { Coupon, CouponTrigger } from '@/types';
 
-const schema = z.object({
-  code: z.string().min(1, 'Code is required').toUpperCase(),
-  description: z.string().optional(),
-  discount_type: z.enum(['percentage', 'fixed']),
-  discount_value: z.number().positive('Must be greater than 0'),
-  min_order_amount: z.number().nonnegative().optional(),
-  max_discount_amount: z.number().positive().optional(),
-  usage_limit: z.number().positive().optional(),
-  per_user_limit: z.number().int().positive().optional(),
-  valid_from: z.string().min(1, 'Start date is required'),
-  valid_until: z.string().optional(),
-  is_active: z.boolean(),
-  trigger: z.enum(['on_signup', 'on_nth_order', 'on_spend_milestone']).nullable(),
-  trigger_n: z.number().int().positive().optional(),
-  trigger_amount: z.number().positive().optional(),
-  is_personal: z.boolean(),
-});
-
 // Empty optional number inputs → undefined (not NaN) so the schema above accepts them
 const optNum = (v: string) => v === '' ? undefined : Number(v);
-type FormValues = z.infer<typeof schema>;
+type FormValues = CouponFormValues;
 
 const inputCls = 'w-full px-3 py-2 text-sm bg-[var(--surface)] border border-[var(--border)] rounded-lg text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]';
 const labelCls = 'block text-xs font-medium text-[var(--text-primary)] mb-1.5';
@@ -58,8 +42,8 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
   const router = useRouter();
   const mutation = useSaveCoupon();
 
-  const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const { register, handleSubmit, watch, setValue, trigger: validateAll, formState: { errors, isSubmitting } } = useForm<FormValues>({
+    resolver: zodResolver(couponSchema),
     defaultValues: coupon ? {
       code: coupon.code,
       description: coupon.description ?? '',
@@ -76,6 +60,7 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
       trigger_n: (coupon.trigger_config?.n as number | undefined),
       trigger_amount: (coupon.trigger_config?.amount as number | undefined),
       is_personal: coupon.is_personal,
+      applies_to_discounted_items: coupon.applies_to_discounted_items,
     } : {
       discount_type: 'percentage',
       discount_value: 10,
@@ -83,10 +68,16 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
       is_active: true,
       trigger: null,
       is_personal: false,
+      applies_to_discounted_items: true,
     },
   });
 
+  useEffect(() => {
+    if (coupon) void validateAll();
+  }, [coupon, validateAll]);
+
   const discountType = watch('discount_type');
+  const percentWarning = getPercentTypoWarning(discountType, watch('discount_value'));
   const trigger = watch('trigger');
 
   async function onSubmit(values: FormValues) {
@@ -113,12 +104,13 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
           trigger: values.trigger,
           trigger_config,
           is_personal: values.is_personal,
+          applies_to_discounted_items: values.applies_to_discounted_items,
         },
       });
       toast.success(coupon ? 'Coupon updated' : 'Coupon created');
       router.push(ROUTES.COUPONS);
-    } catch {
-      toast.error('Failed to save coupon');
+    } catch (err) {
+      toast.error(describeApiError(err, 'Failed to save coupon'));
     }
   }
 
@@ -155,11 +147,13 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
             <label className={labelCls}>Value * {discountType === 'percentage' ? '(%)' : '(₹)'}</label>
             <input {...register('discount_value', { valueAsNumber: true })} type="number" step={discountType === 'percentage' ? '1' : '0.01'} className={inputCls} placeholder={discountType === 'percentage' ? '10' : '200'} />
             {errors.discount_value && <p className={errorCls}>{errors.discount_value.message}</p>}
+            {!errors.discount_value && percentWarning && <p role="status" data-testid="percent-typo-warning" className="mt-1 text-xs text-[var(--warning)]">{percentWarning}</p>}
           </div>
           {discountType === 'percentage' && (
             <div>
               <label className={labelCls}>Max Discount (₹)</label>
               <input {...register('max_discount_amount', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 1000" />
+              {errors.max_discount_amount && <p className={errorCls}>{errors.max_discount_amount.message}</p>}
             </div>
           )}
         </div>
@@ -172,6 +166,7 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
           <div>
             <label className={labelCls}>Minimum Order (₹)</label>
             <input {...register('min_order_amount', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 500" />
+            {errors.min_order_amount && <p className={errorCls}>{errors.min_order_amount.message}</p>}
           </div>
           <div>
             <label className={labelCls}>Total Usage Limit</label>
@@ -182,6 +177,21 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
             <input {...register('per_user_limit', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 1" />
           </div>
         </div>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <Switch
+            checked={watch('applies_to_discounted_items') ?? true}
+            onCheckedChange={(v) => setValue('applies_to_discounted_items', v, { shouldDirty: true })}
+            size="sm"
+          />
+          <span className="text-sm text-[var(--text-primary)]">
+            Applies to items already on discount
+            <span className="block text-[11px] text-[var(--text-muted)] font-normal">
+              {(watch('applies_to_discounted_items') ?? true)
+                ? 'The coupon applies to the whole order subtotal'
+                : 'Items sold below their MRP are excluded; the minimum order and the discount are calculated on the remaining items only'}
+            </span>
+          </span>
+        </label>
       </div>
 
       {/* Validity */}
@@ -197,6 +207,7 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
             <label className={labelCls}>Valid Until</label>
             <input {...register('valid_until')} type="date" className={inputCls} />
             <p className="mt-1 text-[11px] text-[var(--text-muted)]">Leave blank for no expiry</p>
+            {errors.valid_until && <p className={errorCls}>{errors.valid_until.message}</p>}
           </div>
         </div>
       </div>

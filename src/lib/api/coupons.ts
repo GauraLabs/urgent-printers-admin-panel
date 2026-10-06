@@ -4,7 +4,8 @@ import type { Coupon, CouponAnalytics, CouponsListResponse, CouponFilters, Creat
 // ── Normalizer ────────────────────────────────────────────────────────────────
 // Backend returns id as int and Decimal fields as strings ("10.00")
 
-type RawCoupon = Omit<Coupon, 'id' | 'discount_value' | 'min_order_amount' | 'max_discount_amount' | 'applicable_product_ids' | 'applicable_category_ids'> & {
+type RawCoupon = Omit<Coupon, 'id' | 'discount_value' | 'min_order_amount' | 'max_discount_amount' | 'applicable_product_ids' | 'applicable_category_ids' | 'applies_to_discounted_items'> & {
+  applies_to_discounted_items?: boolean;
   id: number | string;
   discount_value: number | string;
   min_order_amount: number | string | null;
@@ -17,6 +18,7 @@ function normalize(raw: RawCoupon): Coupon {
   return {
     ...raw,
     id: String(raw.id),
+    applies_to_discounted_items: raw.applies_to_discounted_items ?? true,
     discount_value: Number(raw.discount_value),
     min_order_amount: raw.min_order_amount != null ? Number(raw.min_order_amount) : null,
     max_discount_amount: raw.max_discount_amount != null ? Number(raw.max_discount_amount) : null,

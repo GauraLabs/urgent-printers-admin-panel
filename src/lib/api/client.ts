@@ -1,6 +1,7 @@
 import axios, { type AxiosRequestConfig, type AxiosError } from 'axios';
 import { useAuthStore } from '@/store/authStore';
 import type { ApiError } from '@/types';
+import { formatValidationDetail, parseValidationDetail } from './validationErrors';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1';
 
@@ -100,26 +101,6 @@ apiClient.interceptors.response.use(
   }
 );
 
-// FastAPI's default RequestValidationError handler (uncaught pydantic errors,
-// e.g. a `Field(min_length=1)` violation) returns `detail` as an array of
-// { loc, msg, type, ... } objects, not a string — unlike the app's own
-// `AppError` handlers, which always send a string. Flatten it into one
-// human-readable line so callers can safely treat `ApiError.message` as text.
-function formatValidationDetail(detail: unknown): string | undefined {
-  if (typeof detail === 'string') return detail;
-  if (!Array.isArray(detail)) return undefined;
-  const messages = detail
-    .map((item) => {
-      if (!item || typeof item !== 'object' || !('msg' in item)) return null;
-      const loc = (item as { loc?: unknown[] }).loc;
-      const field = Array.isArray(loc) ? loc.filter((p) => p !== 'body').join('.') : undefined;
-      const msg = String((item as { msg: unknown }).msg);
-      return field ? `${field}: ${msg}` : msg;
-    })
-    .filter((m): m is string => Boolean(m));
-  return messages.length > 0 ? messages.join('; ') : undefined;
-}
-
 function toApiError(error: AxiosError): ApiError {
   // Backend may return { detail: "..." | [...] } (FastAPI default, string for
   // AppError subclasses / array for raw pydantic validation errors) or
@@ -134,6 +115,8 @@ function toApiError(error: AxiosError): ApiError {
       error.message ??
       'An unexpected error occurred',
     status: error.response?.status ?? 0,
+    code: data?.error,
+    fields: parseValidationDetail(data?.detail),
   };
 }
 

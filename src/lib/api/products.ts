@@ -1,24 +1,41 @@
 import { get, post, patch, del } from './client';
-import type { Product, ProductSummary, ProductsListResponse, ProductFilters, ProductSideOption, CustomizationMode } from '@/types';
+import { normalizePackSize, DEFAULT_UNIT_LABEL } from '@/lib/utils/pack';
+import type { Product, ProductPricingTier, ProductDiscountSummary, ProductSummary, ProductsListResponse, ProductFilters, ProductSideOption, CustomizationMode } from '@/types';
 
 // ── Normalizer ────────────────────────────────────────────────────────────────
-type RawProduct = Omit<Product, 'id' | 'category_id' | 'sides_options'> & {
+type RawTier = Omit<ProductPricingTier, 'mrp_per_unit'> & { mrp_per_unit?: number | null };
+
+type RawProduct = Omit<Product, 'id' | 'category_id' | 'sides_options' | 'pricing_tiers' | 'discount' | 'discount_starts_at' | 'discount_ends_at' | 'pack_size' | 'unit_label'> & {
+  pack_size?: number;
+  unit_label?: string;
   id: number | string;
+  pricing_tiers: RawTier[];
+  discount_starts_at?: string | null;
+  discount_ends_at?: string | null;
+  discount?: ProductDiscountSummary;
   category_id: number | string | null;
   // Backend may return old string[] format during migration — normalise to object[]
-  sides_options: Array<string | ProductSideOption>;
+  sides_options: Array<string | (Omit<ProductSideOption, 'is_active'> & { is_active?: boolean })>;
 };
 
-function normalizeSide(s: string | ProductSideOption): ProductSideOption {
-  return typeof s === 'string' ? { label: s, is_default: false, price_multiplier: 1.0 } : s;
+function normalizeSide(s: RawProduct['sides_options'][number]): ProductSideOption {
+  return typeof s === 'string'
+    ? { label: s, is_active: true, is_default: false, price_multiplier: 1.0 }
+    : { ...s, is_active: s.is_active ?? true };
 }
 
 function normalize(raw: RawProduct): ProductSummary {
   const product: Product = {
     ...raw,
     id: String(raw.id),
+    pack_size: normalizePackSize(raw.pack_size),
+    unit_label: raw.unit_label || DEFAULT_UNIT_LABEL,
     category_id: raw.category_id != null ? String(raw.category_id) : null,
     sides_options: (raw.sides_options ?? []).map(normalizeSide),
+    pricing_tiers: raw.pricing_tiers.map((t) => ({ ...t, mrp_per_unit: t.mrp_per_unit ?? null })),
+    discount_starts_at: raw.discount_starts_at ?? null,
+    discount_ends_at: raw.discount_ends_at ?? null,
+    discount: raw.discount ?? { status: 'none', max_percent: null },
   };
   return {
     ...product,
@@ -75,7 +92,11 @@ export interface ProductPayload {
   finishes?: object[];
   sides_options?: object[];
   quantity_steps?: number[];
+  pack_size?: number;
+  unit_label?: string;
   pricing_tiers?: object[];
+  discount_starts_at?: string | null;
+  discount_ends_at?: string | null;
   turnaround_options?: object[];
   seo?: object;
   image_keys?: string[];

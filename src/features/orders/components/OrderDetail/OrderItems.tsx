@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { FileText, LayoutTemplate, AlertTriangle, Paperclip } from 'lucide-react';
 import { formatPrice } from '@/lib/utils/formatPrice';
+import { formatPacks } from '@/lib/utils/pack';
 import { ArtworkStatusBadge, Badge } from '@/components/common/StatusBadge';
 import type { OrderItem } from '@/types';
 
@@ -108,9 +109,23 @@ export function OrderItems({ items }: { items: OrderItem[] }) {
                   <p className="text-sm font-semibold text-[var(--text-primary)] tabular-nums">
                     {formatPrice(item.total_price)}
                   </p>
+                  {item.pack_size > 1 && (
+                    <p data-testid="line-packs" className="text-[11px] font-medium text-[var(--text-secondary)] tabular-nums">
+                      {formatPacks(item.quantity, item.pack_size, item.unit_label)}
+                    </p>
+                  )}
                   <p className="text-[11px] text-[var(--text-muted)] tabular-nums">
-                    {item.quantity} × {formatPrice(item.price_per_unit)}
+                    {item.quantity} ×{' '}
+                    {item.mrp_per_unit != null && item.mrp_per_unit > item.price_per_unit && (
+                      <s data-testid="line-mrp" className="mr-1">{formatPrice(item.mrp_per_unit)}</s>
+                    )}
+                    {formatPrice(item.price_per_unit)}
                   </p>
+                  {item.line_savings != null && item.line_savings > 0 && (
+                    <p data-testid="line-savings" className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 tabular-nums">
+                      Saved {formatPrice(item.line_savings)} on MRP
+                    </p>
+                  )}
                   {item.turnaround_extra_cost > 0 && (
                     <p className="text-[11px] text-[var(--text-muted)] tabular-nums">
                       + {formatPrice(item.turnaround_extra_cost)} {item.turnaround_label ?? 'turnaround'} surcharge

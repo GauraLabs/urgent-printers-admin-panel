@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -17,60 +16,17 @@ import { PrintSpecsSection } from './PrintSpecsSection';
 import { PricingSection } from './PricingSection';
 import { TurnaroundSection, normaliseTurnaroundOptions } from './TurnaroundSection';
 import { SeoSection } from './SeoSection';
+import { DiscountWindowSection } from './DiscountWindowSection';
+import { productSchema, buildProductPayload, getWindowEndInPastError, collectFieldErrors, sortTiersByQuantity, hydrateTiers, OUT_OF_RANGE, type ProductFormValues } from './schema';
+import { humanizePath, codedErrorMessage, optionGroupFromMessage } from '@/lib/api/validationErrors';
 import { useSaveProduct, useDeleteProduct } from '../../hooks/useProducts';
 import { useCategories } from '@/features/categories/hooks/useCategories';
 import { ROUTES } from '@/lib/constants/routes';
+import { normalizePackSize } from '@/lib/utils/pack';
 import { cn } from '@/lib/utils/cn';
 import type { ApiError, Product, ProductStatus } from '@/types';
 
-const schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  slug: z.string().min(1, 'Slug is required'),
-  short_description: z.string().min(1, 'Short description is required'),
-  description: z.string().optional(),
-  category_id: z.string().min(1, 'Category is required'),
-  status: z.string(),
-  badge: z.string().optional(),
-  is_featured: z.boolean().optional(),
-  tags: z.array(z.string()).optional(),
-  sizes: z.array(z.object({ label: z.string(), width: z.number(), height: z.number(), unit: z.enum(['mm', 'cm', 'in', 'ft']), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
-  paper_types: z.array(z.object({ label: z.string(), gsm: z.number().nullable(), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
-  finishes: z.array(z.object({ label: z.string(), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
-  sides_options: z.array(z.object({ label: z.string(), is_default: z.boolean(), price_multiplier: z.number() })).optional(),
-  quantity_steps: z.array(z.number()).optional(),
-  pricing_tiers: z.array(z.object({
-    quantity: z.number().min(1, 'Quantity must be at least 1'),
-    price_per_unit: z.number().min(0, 'Price cannot be negative'),
-    is_best_value: z.boolean(),
-  })).min(1, 'At least one pricing tier is required'),
-  turnaround_options: z.array(z.object({ type: z.string(), days: z.number(), extra_cost: z.number(), is_active: z.boolean() })).optional(),
-  seo: z.object({ title: z.string().nullable().optional(), description: z.string().nullable().optional(), canonical_url: z.string().nullable().optional() }).optional(),
-  track_inventory: z.boolean().optional(),
-  stock_quantity: z.number().nullable().optional(),
-  low_stock_threshold: z.number().nullable().optional(),
-  // Populated by MediaSection callbacks — ordered keys of uploaded images + video
-  image_keys: z.array(z.string()).optional(),
-  video_key: z.string().nullable().optional(),
-  customization_mode: z.enum(['artwork', 'template', 'both', 'none']),
-  template_fields: z.array(z.object({
-    id: z.string(),
-    label: z.string(),
-    type: z.enum(['text', 'email', 'phone', 'multiline', 'url']),
-    placeholder: z.string().optional(),
-    required: z.boolean(),
-    max_length: z.number().optional(),
-  })).optional(),
-}).superRefine((data, ctx) => {
-  if (!data.track_inventory) return;
-  if (data.stock_quantity != null && data.stock_quantity < 0) {
-    ctx.addIssue({ code: 'custom', message: 'Stock cannot be negative', path: ['stock_quantity'] });
-  }
-  if (data.low_stock_threshold != null && data.low_stock_threshold < 0) {
-    ctx.addIssue({ code: 'custom', message: 'Threshold cannot be negative', path: ['low_stock_threshold'] });
-  }
-});
-
-export type ProductFormValues = z.infer<typeof schema>;
+export type { ProductFormValues } from './schema';
 
 const PRODUCT_MIN_IMAGES = 3;
 const PRODUCT_MAX_IMAGES = 8;
@@ -120,7 +76,7 @@ export function ProductForm({ product }: ProductFormProps) {
   const sectionRefs = useRef<Record<string, SectionHandle | null>>({});
 
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(productSchema),
     defaultValues: product ? {
       name: product.name,
       slug: product.slug,
@@ -135,8 +91,11 @@ export function ProductForm({ product }: ProductFormProps) {
       paper_types: product.paper_types,
       finishes: product.finishes,
       sides_options: product.sides_options,
-      quantity_steps: product.quantity_steps,
-      pricing_tiers: product.pricing_tiers,
+      pack_size: normalizePackSize(product.pack_size),
+      unit_label: product.unit_label || 'pcs',
+      pricing_tiers: hydrateTiers(sortTiersByQuantity(product.pricing_tiers), normalizePackSize(product.pack_size)),
+      discount_starts_at: product.discount_starts_at,
+      discount_ends_at: product.discount_ends_at,
       turnaround_options: normaliseTurnaroundOptions(product.turnaround_options),
       seo: product.seo,
       track_inventory: product.track_inventory,
@@ -169,17 +128,20 @@ export function ProductForm({ product }: ProductFormProps) {
         { label: 'Spot UV',          is_active: true, is_default: false, price_multiplier: 1.3  },
       ],
       sides_options: [
-        { label: 'Single Sided', is_default: true,  price_multiplier: 1.0  },
-        { label: 'Double Sided', is_default: false, price_multiplier: 1.35 },
+        { label: 'Single Sided', is_active: true, is_default: true,  price_multiplier: 1.0  },
+        { label: 'Double Sided', is_active: true, is_default: false, price_multiplier: 1.35 },
       ],
-      quantity_steps: [100, 250, 500, 1000, 2500, 5000],
+      pack_size: 1,
+      unit_label: 'pcs',
       pricing_tiers: [
-        { quantity: 100,  price_per_unit: 12.00, is_best_value: false },
-        { quantity: 250,  price_per_unit: 9.00,  is_best_value: false },
-        { quantity: 500,  price_per_unit: 7.00,  is_best_value: true  },
-        { quantity: 1000, price_per_unit: 5.50,  is_best_value: false },
-        { quantity: 2500, price_per_unit: 4.20,  is_best_value: false },
+        { quantity: 100,  price_per_unit: 12.00, mrp_per_unit: null, is_best_value: false },
+        { quantity: 250,  price_per_unit: 9.00,  mrp_per_unit: null, is_best_value: false },
+        { quantity: 500,  price_per_unit: 7.00,  mrp_per_unit: null, is_best_value: true  },
+        { quantity: 1000, price_per_unit: 5.50,  mrp_per_unit: null, is_best_value: false },
+        { quantity: 2500, price_per_unit: 4.20,  mrp_per_unit: null, is_best_value: false },
       ],
+      discount_starts_at: null,
+      discount_ends_at: null,
       turnaround_options: [
         { type: 'standard', days: 5, extra_cost: 0,   is_active: true  },
         { type: 'express',  days: 3, extra_cost: 200, is_active: false },
@@ -196,7 +158,20 @@ export function ProductForm({ product }: ProductFormProps) {
     },
   });
 
-  const { watch, setValue, formState: { isDirty, isSubmitting } } = form;
+  const { watch, setValue, formState: { isDirty, isSubmitting, errors: formErrors } } = form;
+
+  // Saved data that predates the backend's pricing bounds would otherwise only
+  // fail on save with a generic error; validate once on load so every
+  // offending field is flagged up front.
+  const [loadInvalid, setLoadInvalid] = useState(false);
+  useEffect(() => {
+    if (!product) return;
+    let cancelled = false;
+    form.trigger().then((ok) => { if (!cancelled) setLoadInvalid(!ok); });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.id]);
+  const outOfRangeFields = loadInvalid ? collectFieldErrors(formErrors) : [];
   const currentStatus = watch('status') as ProductStatus;
 
   // Storefront product URLs are /products/{categorySlug}/{productSlug} — the
@@ -262,32 +237,18 @@ export function ProductForm({ product }: ProductFormProps) {
       return;
     }
 
-    const payload = {
-      name: v.name,
-      slug: v.slug,
-      short_description: v.short_description,
-      description: v.description ?? null,
-      category_id: v.category_id ? Number(v.category_id) : null,
-      status,
-      badge: v.badge || 'none',
-      is_featured: v.is_featured ?? false,
-      tags: v.tags ?? [],
-      sizes: v.sizes ?? [],
-      paper_types: v.paper_types ?? [],
-      finishes: v.finishes ?? [],
-      sides_options: v.sides_options ?? [],
-      quantity_steps: v.quantity_steps ?? [],
-      pricing_tiers: v.pricing_tiers,
-      turnaround_options: v.turnaround_options ?? [],
-      seo: v.seo ?? { title: null, description: null, canonical_url: null },
-      image_keys: v.image_keys ?? [],
-      video_key: v.video_key ?? null,
-      track_inventory: v.track_inventory ?? false,
-      stock_quantity: v.stock_quantity ?? null,
-      low_stock_threshold: v.low_stock_threshold ?? null,
-      customization_mode: v.customization_mode,
-      template_fields: v.template_fields ?? [],
-    };
+    const original = product
+      ? { discount_starts_at: product.discount_starts_at, discount_ends_at: product.discount_ends_at }
+      : undefined;
+    const windowError = getWindowEndInPastError(v, original);
+    if (windowError) {
+      form.setError('discount_ends_at', { type: 'custom', message: windowError });
+      toast.error(windowError);
+      onInvalid({ discount_ends_at: { type: 'custom', message: windowError } });
+      return;
+    }
+
+    const payload = buildProductPayload(v, status, original);
     try {
       await saveMutation.mutateAsync({ id: product?.id, data: payload });
       toast.success(product ? 'Product updated' : 'Product created');
@@ -299,6 +260,49 @@ export function ProductForm({ product }: ProductFormProps) {
       // surface it. Anything else (5xx, network errors) falls back to a
       // generic message rather than leaking a raw server string.
       const showDetail = apiErr.status === 422 || apiErr.status === 409;
+      if (apiErr.code === 'discount_window_in_past') {
+        form.setError('discount_ends_at', { type: 'server', message: 'Sale end must be in the future' });
+        toast.error('Sale end must be in the future');
+        return;
+      }
+      if (apiErr.code === 'discount_window_requires_mrp') {
+        form.setError('discount_ends_at', { type: 'server', message: 'Add an MRP to at least one pricing tier to use a sale window' });
+        toast.error('Add an MRP to at least one pricing tier to use a sale window');
+        return;
+      }
+      if (apiErr.code === 'duplicate_option_label') {
+        const msg = codedErrorMessage(apiErr.code) as string;
+        const group = optionGroupFromMessage(apiErr.message);
+        if (group) form.setError(group, { type: 'server', message: apiErr.message || msg });
+        toast.error(apiErr.message || msg);
+        return;
+      }
+      if (apiErr.code === 'pack_size_tier_mismatch') {
+        const msg = codedErrorMessage(apiErr.code) as string;
+        form.setError('pack_size', { type: 'server', message: apiErr.message || msg });
+        toast.error(msg);
+        onInvalid({ pack_size: { type: 'server', message: msg } });
+        return;
+      }
+      if (apiErr.code === 'invalid_mrp' || apiErr.code === 'product_unpriceable') {
+        const msg = codedErrorMessage(apiErr.code) as string;
+        form.setError('pricing_tiers', { type: 'server', message: msg });
+        toast.error(msg);
+        return;
+      }
+      const coded = codedErrorMessage(apiErr.code);
+      if (coded) {
+        toast.error(coded);
+        return;
+      }
+      if (apiErr.status === 422 && apiErr.fields && apiErr.fields.length > 0) {
+        for (const f of apiErr.fields) {
+          if (!f.path) continue;
+          form.setError(f.path as Parameters<typeof form.setError>[0], { type: 'server', message: f.message });
+        }
+        toast.error(apiErr.message);
+        return;
+      }
       toast.error(showDetail ? apiErr.message : 'Failed to save product');
     }
   }
@@ -318,6 +322,16 @@ export function ProductForm({ product }: ProductFormProps) {
     <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-1 xl:grid-cols-3 gap-6">
       {/* Main sections */}
       <div className="xl:col-span-2 space-y-4">
+        {outOfRangeFields.length > 0 && (
+          <div role="alert" data-testid="out-of-range-banner" className="rounded-xl border border-[var(--danger)] bg-[var(--danger-bg)] p-4 text-xs text-[var(--danger)]">
+            <p className="font-semibold">{OUT_OF_RANGE}</p>
+            <ul className="mt-1.5 list-disc pl-4 space-y-0.5">
+              {outOfRangeFields.map((f) => (
+                <li key={f.path}>{humanizePath(f.path)}: {f.message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <Section title="Basic Information">
           <BasicInfoSection form={form} mode={product ? 'edit' : 'create'} />
         </Section>
@@ -344,6 +358,9 @@ export function ProductForm({ product }: ProductFormProps) {
         </Section>
         <Section title="Pricing Tiers *">
           <PricingSection form={form} />
+        </Section>
+        <Section title="Sale Window (IST)">
+          <DiscountWindowSection form={form} status={product?.discount.status ?? 'none'} />
         </Section>
         <Section title="Turnaround Options">
           <TurnaroundSection form={form} />

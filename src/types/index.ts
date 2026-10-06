@@ -5,6 +5,7 @@ export * from './customer';
 export * from './payment';
 export * from './coupon';
 export * from './report';
+export * from './productDiscount';
 
 import type { ShipmentStatus, ShipmentSource } from './order';
 
@@ -253,4 +254,6 @@ export interface ApiError {
   message: string;
   status: number;
   code?: string;
+  /** Per-field pydantic errors (422 `detail` array); empty for coded/other errors. */
+  fields?: Array<{ path: string; message: string }>;
 }

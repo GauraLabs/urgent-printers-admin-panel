@@ -21,6 +21,7 @@ export interface Coupon {
   trigger: CouponTrigger | null;
   trigger_config: Record<string, unknown>;
   is_personal: boolean;
+  applies_to_discounted_items: boolean;
   is_active: boolean;
   created_at: string;
 }
@@ -68,5 +69,6 @@ export interface CreateCouponRequest {
   trigger?: CouponTrigger | null;
   trigger_config?: Record<string, unknown>;
   is_personal?: boolean;
+  applies_to_discounted_items?: boolean;
   is_active?: boolean;
 }

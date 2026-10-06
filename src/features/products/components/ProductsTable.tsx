@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
-import { Plus, MoreHorizontal, Pencil, Trash2, Star } from 'lucide-react';
+import { Plus, MoreHorizontal, Pencil, Trash2, Star, Percent } from 'lucide-react';
 import { toast } from 'sonner';
 import { DataTable } from '@/components/common/DataTable';
 import { SearchInput } from '@/components/common/SearchInput';
@@ -18,18 +18,42 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useProducts, useDeleteProduct } from '../hooks/useProducts';
 import { useCategories } from '@/features/categories/hooks/useCategories';
-import { ProductStatusBadge, ProductBadgeLabel } from '@/components/common/StatusBadge';
+import { ProductStatusBadge, ProductBadgeLabel, Badge } from '@/components/common/StatusBadge';
+import { BulkDiscountDialog } from './BulkDiscountDialog';
+import { usePermissions } from '@/hooks/usePermissions';
 import { formatPrice } from '@/lib/utils/formatPrice';
+import { packPrice } from '@/lib/utils/pack';
 import { formatDate } from '@/lib/utils/formatDate';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/constants/routes';
-import type { ProductSummary, ProductStatus, ProductBadge } from '@/types';
+import type { ProductSummary, ProductStatus, BulkDiscountAction } from '@/types';
+
+const DISCOUNT_CHIP = {
+  scheduled: { label: 'Scheduled', variant: 'info' },
+  active: { label: 'Active', variant: 'success' },
+  expired: { label: 'Ended', variant: 'default' },
+} as const;
+
+export function DiscountChip({ product }: { product: ProductSummary }) {
+  const chip = product.discount.status === 'none' ? null : DISCOUNT_CHIP[product.discount.status];
+  if (!chip) return <span className="text-xs text-[var(--text-muted)]">—</span>;
+  const pct = product.discount.max_percent;
+  return (
+    <Badge
+      label={pct != null && pct >= 1 ? `${chip.label} · up to ${pct}%` : chip.label}
+      variant={chip.variant}
+      dot={false}
+    />
+  );
+}
 
 export function ProductsTable() {
   const { query, filters, sorting, setSorting, setPage, setSearch, setStatus, setCategory } = useProducts();
   const { data: categories } = useCategories();
   const deleteMutation = useDeleteProduct();
   const [deleteProduct, setDeleteProduct] = useState<ProductSummary | null>(null);
+  const { canManageProducts } = usePermissions();
+  const [bulk, setBulk] = useState<{ action: BulkDiscountAction; selected: ProductSummary[] } | null>(null);
 
   async function handleDelete() {
     if (!deleteProduct) return;
@@ -91,11 +115,29 @@ export function ProductsTable() {
     {
       id: 'min_price',
       accessorKey: 'min_price',
-      header: 'From',
-      enableSorting: true,
-      cell: ({ row }) => (
-        <span className="text-xs font-medium tabular-nums">{formatPrice(row.original.min_price)}</span>
+      header: () => (
+        <span title="Base tier price before size, paper and finish options (for pack products, the lowest-quantity tier's total). Customers see the price including the cheapest options. Sorting compares per-piece prices.">
+          Lowest tier price
+        </span>
       ),
+      enableSorting: true,
+      cell: ({ row }) => {
+        const p = row.original;
+        if (p.pack_size > 1 && p.pricing_tiers.length > 0) {
+          const first = p.pricing_tiers.reduce((lo, t) => (t.quantity < lo.quantity ? t : lo));
+          return (
+            <span className="text-xs font-medium tabular-nums" data-testid="min-price-pack">
+              {formatPrice(packPrice(first.price_per_unit, first.quantity))} / {first.quantity} {p.unit_label || 'pcs'}
+            </span>
+          );
+        }
+        return <span className="text-xs font-medium tabular-nums">{formatPrice(p.min_price)}</span>;
+      },
+    },
+    {
+      id: 'discount',
+      header: 'Discount',
+      cell: ({ row }) => <DiscountChip product={row.original} />,
     },
     {
       id: 'created_at',
@@ -153,6 +195,17 @@ export function ProductsTable() {
         sorting={sorting}
         onSortingChange={setSorting}
         compact
+        enableRowSelection={canManageProducts}
+        bulkActions={canManageProducts ? (rows) => (
+          <>
+            <Button type="button" size="sm" variant="outline" onClick={() => setBulk({ action: 'apply', selected: rows })}>
+              <Percent className="h-3.5 w-3.5" /> Apply discount…
+            </Button>
+            <Button type="button" size="sm" variant="outline" onClick={() => setBulk({ action: 'clear', selected: rows })}>
+              Clear discount
+            </Button>
+          </>
+        ) : undefined}
         getRowId={(row) => row.id}
         emptyMessage="No products found."
         emptyAction={
@@ -172,6 +225,11 @@ export function ProductsTable() {
                 <SelectItem value="archived">Archived</SelectItem>
               </SelectContent>
             </Select>
+            {canManageProducts && (
+              <Button type="button" size="sm" variant="outline" onClick={() => setBulk({ action: 'apply', selected: [] })}>
+                <Percent className="h-3.5 w-3.5" /> Bulk discount…
+              </Button>
+            )}
             <Select value={filters.category_id ?? ''} onValueChange={(v) => setCategory(v || undefined)}>
               <SelectTrigger size="sm" className="w-40"><SelectValue placeholder="All categories" /></SelectTrigger>
               <SelectContent>
@@ -182,6 +240,17 @@ export function ProductsTable() {
           </div>
         }
       />
+
+      {bulk && (
+        <BulkDiscountDialog
+          open
+          onOpenChange={(v) => { if (!v) setBulk(null); }}
+          initialAction={bulk.action}
+          selected={bulk.selected}
+          categories={(categories ?? []).map((c) => ({ id: c.id, name: c.name }))}
+          defaultCategoryId={filters.category_id}
+        />
+      )}
 
       <ConfirmDialog
         open={!!deleteProduct}

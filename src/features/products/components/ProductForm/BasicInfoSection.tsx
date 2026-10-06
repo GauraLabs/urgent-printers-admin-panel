@@ -11,7 +11,6 @@ const BADGES = [
   { value: 'none',       label: 'None' },
   { value: 'bestseller', label: 'Bestseller' },
   { value: 'new',        label: 'New' },
-  { value: 'sale',       label: 'Sale' },
   { value: 'popular',    label: 'Popular' },
 ];
 
@@ -126,7 +125,9 @@ export function BasicInfoSection({ form, mode }: Props) {
           <label htmlFor={badgeId} className={labelClass}>Badge</label>
           <select id={badgeId} {...register('badge')} className={fieldClass}>
             {BADGES.map((b) => <option key={b.value} value={b.value}>{b.label}</option>)}
+            {watch('badge') === 'sale' && <option value="sale" disabled>Sale (legacy, read-only)</option>}
           </select>
+          <p className="mt-1 text-[11px] text-[var(--text-muted)]">Sale pricing is shown automatically from the MRP and sale window.</p>
         </div>
         <div>
           <label htmlFor={tagsId} className={labelClass}>Tags (comma-separated)</label>
