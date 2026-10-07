@@ -34,14 +34,14 @@ describe('OrderItems MRP and savings', () => {
   });
 });
 
-describe('OrderItems pack display', () => {
-  it('shows packs and pieces for a pack line', () => {
-    render(<OrderItems items={[item({ quantity: 150, pack_size: 50, unit_label: 'stickers', price_per_unit: 6, total_price: 900 })]} />);
-    expect(screen.getByTestId('line-packs')).toHaveTextContent('3 packs (150 stickers)');
+describe('OrderItems quantity display', () => {
+  it('shows quantity with the unit label for a normal line', () => {
+    render(<OrderItems items={[item({ quantity: 120, unit_label: 'pcs' })]} />);
+    expect(screen.getByTestId('line-quantity')).toHaveTextContent('120 pcs');
   });
 
-  it('shows nothing extra for pack size 1', () => {
-    render(<OrderItems items={[item()]} />);
-    expect(screen.queryByTestId('line-packs')).toBeNull();
+  it('keeps the legacy packs rendering for a historical pack snapshot', () => {
+    render(<OrderItems items={[item({ quantity: 150, pack_size: 50, unit_label: 'stickers', price_per_unit: 6, total_price: 900 })]} />);
+    expect(screen.getByTestId('line-quantity')).toHaveTextContent('3 packs (150 stickers)');
   });
 });

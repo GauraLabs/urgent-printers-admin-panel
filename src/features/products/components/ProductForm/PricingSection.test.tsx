@@ -50,6 +50,13 @@ describe('PricingSection discount column', () => {
     expect(screen.queryByTestId('discount-preview')).toBeNull();
   });
 
+  it('shows a dash, not the per-unit price, in the Discount cell without an MRP', () => {
+    render(<Harness tiers={[tier(100, 9, null)]} />);
+    const cell = screen.getByLabelText('Mark pricing tier 1 as best value').closest('tr')?.querySelectorAll('td')[3];
+    expect(cell).toHaveTextContent('—');
+    expect(cell).not.toHaveTextContent('₹9');
+  });
+
   it('percent-off helper fills the selling price', () => {
     render(<Harness tiers={[tier(100, 12, 12)]} />);
     fireEvent.change(screen.getByLabelText('Percent off MRP for pricing tier 1'), { target: { value: '25' } });
@@ -80,7 +87,7 @@ describe('PricingSection discount column', () => {
 
   it('warns that blanking the MRP alone leaves the sale price', () => {
     render(<Harness tiers={[tier(100, 9, 12)]} />);
-    expect(screen.getByText(/leaves the stored price at the sale price/)).toBeInTheDocument();
+    expect(screen.getByText(/keeps the sale price/)).toBeInTheDocument();
   });
 
   it('shows a non-blocking typo warning when a neighbouring tier differs by more than 10x', () => {
@@ -101,5 +108,64 @@ describe('PricingSection discount column', () => {
     await act(async () => { fireEvent.change(q1, { target: { value: '900' } }); });
     await act(async () => { fireEvent.blur(q1); });
     expect(latest?.getValues('pricing_tiers').map((t) => t.quantity)).toEqual([500, 900]);
+  });
+});
+
+describe('PricingSection order quantity panel', () => {
+  const tiers = [tier(50, 6, null), tier(100, 4, null)];
+
+  it('shows no pack UI and the new column headers', () => {
+    render(<Harness tiers={tiers} />);
+    expect(screen.queryByText(/Sold in packs/i)).toBeNull();
+    expect(screen.queryByLabelText('Pack size')).toBeNull();
+    expect(screen.queryByText(/per pack/i)).toBeNull();
+    expect(screen.queryByText(/packis/i)).toBeNull();
+    for (const h of ['Quantity from', 'Price per piece (₹)', 'MRP per piece (₹, optional)', 'Example', 'Best value']) {
+      expect(screen.getByText(h)).toBeInTheDocument();
+    }
+  });
+
+  it('shows automatic placeholders and Auto chips derived from the tiers', () => {
+    render(<Harness tiers={tiers} />);
+    expect(screen.getByLabelText('Show on listing as')).toHaveAttribute('placeholder', '50 (auto: lowest quantity)');
+    expect(screen.getByLabelText('Min order')).toHaveAttribute('placeholder', '50 (auto)');
+    expect(screen.getByLabelText('Max order')).toHaveAttribute('placeholder', 'No limit');
+    expect(screen.getAllByText('Auto')).toHaveLength(3);
+    expect(screen.getByTestId('preview-card')).toHaveTextContent('50 pcs for ₹300.00');
+    expect(screen.getByTestId('preview-page')).toHaveTextContent('customers can order from 50 pcs');
+  });
+
+  it('renders the Example column per tier', () => {
+    render(<Harness tiers={tiers} />);
+    expect(screen.getAllByTestId('tier-example').map((e) => e.textContent)).toEqual(['50 pcs = ₹300.00', '100 pcs = ₹400.00']);
+  });
+
+  it('updates the live preview as limits are typed and resets to auto', async () => {
+    render(<Harness tiers={tiers} />);
+    await act(async () => { fireEvent.change(screen.getByLabelText('Min order'), { target: { value: '40' } }); });
+    await act(async () => { fireEvent.change(screen.getByLabelText('Max order'), { target: { value: '5000' } }); });
+    expect(screen.getByTestId('preview-card')).toHaveTextContent('40 pcs for ₹240.00');
+    expect(screen.getByTestId('preview-page')).toHaveTextContent('customers can order 40 to 5,000 pcs');
+    expect(screen.getByTestId('limit-notes')).toHaveTextContent('Orders of 40 to 49 pcs will be charged the 50+ rate');
+    expect(latest?.getValues('min_order_quantity')).toBe(40);
+    await act(async () => { fireEvent.click(screen.getAllByRole('button', { name: 'Reset to auto' })[0]); });
+    expect(latest?.getValues('min_order_quantity')).toBeNull();
+    expect(screen.getByTestId('preview-card')).toHaveTextContent('50 pcs for ₹300.00');
+  });
+
+  it('empty limit inputs store null, not NaN', async () => {
+    render(<Harness tiers={tiers} />);
+    const input = screen.getByLabelText('Min order');
+    await act(async () => { fireEvent.change(input, { target: { value: '40' } }); });
+    await act(async () => { fireEvent.change(input, { target: { value: '' } }); });
+    expect(latest?.getValues('min_order_quantity')).toBeNull();
+  });
+
+  it('shows the MRP strike-through and percent in the card preview', () => {
+    render(<Harness tiers={[tier(40, 6, 7.5)]} />);
+    const card = screen.getByTestId('preview-card');
+    expect(card).toHaveTextContent('₹300');
+    expect(card).toHaveTextContent('40 pcs for ₹240.00');
+    expect(card).toHaveTextContent('20% off');
   });
 });

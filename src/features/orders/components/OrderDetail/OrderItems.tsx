@@ -1,9 +1,14 @@
 import Image from 'next/image';
 import { FileText, LayoutTemplate, AlertTriangle, Paperclip } from 'lucide-react';
 import { formatPrice } from '@/lib/utils/formatPrice';
-import { formatPacks } from '@/lib/utils/pack';
 import { ArtworkStatusBadge, Badge } from '@/components/common/StatusBadge';
 import type { OrderItem } from '@/types';
+
+function formatLineQuantity(quantity: number, packSize: number, unitLabel: string): string {
+  if (packSize <= 1) return `${quantity} ${unitLabel}`;
+  const packs = quantity / packSize;
+  return `${packs} ${packs === 1 ? 'pack' : 'packs'} (${quantity} ${unitLabel})`;
+}
 
 function titleCase(key: string): string {
   return key.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
@@ -109,11 +114,9 @@ export function OrderItems({ items }: { items: OrderItem[] }) {
                   <p className="text-sm font-semibold text-[var(--text-primary)] tabular-nums">
                     {formatPrice(item.total_price)}
                   </p>
-                  {item.pack_size > 1 && (
-                    <p data-testid="line-packs" className="text-[11px] font-medium text-[var(--text-secondary)] tabular-nums">
-                      {formatPacks(item.quantity, item.pack_size, item.unit_label)}
-                    </p>
-                  )}
+                  <p data-testid="line-quantity" className="text-[11px] font-medium text-[var(--text-secondary)] tabular-nums">
+                    {formatLineQuantity(item.quantity, item.pack_size, item.unit_label)}
+                  </p>
                   <p className="text-[11px] text-[var(--text-muted)] tabular-nums">
                     {item.quantity} ×{' '}
                     {item.mrp_per_unit != null && item.mrp_per_unit > item.price_per_unit && (

@@ -10,7 +10,7 @@ export function DiscountPreview({ mrp, price }: Props) {
   if (price == null || !(price > 0)) return <span className="text-[var(--text-muted)]">—</span>;
   const percent = displayDiscountPercent(mrp, price);
   if (percent == null || mrp == null) {
-    return <span className="tabular-nums text-[var(--text-primary)]">{formatPrice(price)}</span>;
+    return <span className="text-[var(--text-muted)]">—</span>;
   }
   return (
     <span className="inline-flex items-center gap-1.5 tabular-nums whitespace-nowrap" data-testid="discount-preview">

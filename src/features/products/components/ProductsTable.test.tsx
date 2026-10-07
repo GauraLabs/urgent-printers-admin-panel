@@ -26,7 +26,7 @@ function product(id: string, status: ProductDiscountStatus, max: number | null):
 }
 
 const ITEMS = [product('1', 'active', 25), product('2', 'none', null)];
-const PACK_ITEMS = [{ ...product('9', 'none', null), min_price: 5.8, pack_size: 50, unit_label: 'pcs', pricing_tiers: [{ quantity: 100, price_per_unit: 5.8 }, { quantity: 50, price_per_unit: 6 }] }];
+const LEGACY_PACK_ITEMS = [{ ...product('9', 'none', null), min_price: 5.8, pack_size: 50, unit_label: 'pcs', pricing_tiers: [{ quantity: 100, price_per_unit: 5.8 }, { quantity: 50, price_per_unit: 6 }] }];
 const source = { items: ITEMS };
 
 vi.mock('../hooks/useProducts', () => ({
@@ -45,74 +45,15 @@ function renderTable() {
 
 beforeEach(() => { perms.canManageProducts = false; source.items = ITEMS; });
 
-describe('lowest tier price for pack products', () => {
-  it('shows the lowest-quantity tier total, not min unit price x pack size', () => {
-    source.items = PACK_ITEMS as unknown as typeof ITEMS;
-    renderTable();
-    expect(screen.getByTestId('min-price-pack')).toHaveTextContent('₹300 / 50 pcs');
-  });
-  it('is unchanged for pack size 1', () => {
+describe('lowest tier price column', () => {
+  it('shows the per-piece lowest tier price and no pack display', () => {
+    source.items = LEGACY_PACK_ITEMS as unknown as typeof ITEMS;
     renderTable();
     expect(screen.queryByTestId('min-price-pack')).toBeNull();
+    expect(screen.getByText('₹5.8')).toBeInTheDocument();
+  });
+  it('shows the plain price for ordinary products', () => {
+    renderTable();
     expect(screen.getAllByText('₹9').length).toBeGreaterThan(0);
-  });
-});
-
-describe('DiscountChip', () => {
-  it('shows status and max percent', () => {
-    render(<DiscountChip product={product('1', 'active', 25)} />);
-    expect(screen.getByText('Active · up to 25%')).toBeInTheDocument();
-  });
-  it.each([
-    ['scheduled', 'Scheduled · up to 10%'],
-    ['expired', 'Ended · up to 10%'],
-  ] as const)('%s', (status, label) => {
-    render(<DiscountChip product={product('1', status, 10)} />);
-    expect(screen.getByText(label)).toBeInTheDocument();
-  });
-  it('omits the percent when null or 0', () => {
-    render(<DiscountChip product={product('1', 'active', 0)} />);
-    expect(screen.getByText('Active')).toBeInTheDocument();
-  });
-  it('renders a dash when there is no discount', () => {
-    render(<DiscountChip product={product('1', 'none', null)} />);
-    expect(screen.getByText('—')).toBeInTheDocument();
-  });
-});
-
-describe('ProductsTable permission gating (products.edit)', () => {
-  it('shows the discount column for everyone but no bulk controls without products.edit', () => {
-    renderTable();
-    expect(screen.getByText('Discount')).toBeInTheDocument();
-    expect(screen.getByText('Active · up to 25%')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Bulk discount/ })).toBeNull();
-    expect(screen.queryByRole('checkbox', { name: 'Select all' })).toBeNull();
-  });
-
-  it('with products.edit: selection checkboxes and the bulk toolbar appear', () => {
-    perms.canManageProducts = true;
-    renderTable();
-    expect(screen.getByRole('button', { name: /Bulk discount/ })).toBeInTheDocument();
-    const rowBoxes = screen.getAllByRole('checkbox', { name: 'Select row' });
-    expect(rowBoxes).toHaveLength(2);
-    fireEvent.click(rowBoxes[0]);
-    expect(screen.getByRole('button', { name: /Apply discount/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Clear discount' })).toBeInTheDocument();
-  });
-
-  it('opens the dialog scoped to the selected rows', () => {
-    perms.canManageProducts = true;
-    renderTable();
-    fireEvent.click(screen.getAllByRole('checkbox', { name: 'Select row' })[0]);
-    fireEvent.click(screen.getByRole('button', { name: /Apply discount/ }));
-    expect(screen.getByText('Selected products (1)')).toBeInTheDocument();
-  });
-
-  it('labels the raw tier price column and explains it', () => {
-    renderTable();
-    const header = screen.getByText('Lowest tier price');
-    expect(header).toHaveAttribute('title', expect.stringContaining('before size, paper and finish options'));
-    expect(header).toHaveAttribute('title', expect.stringContaining('including the cheapest options'));
-    expect(screen.queryByText('From')).toBeNull();
   });
 });

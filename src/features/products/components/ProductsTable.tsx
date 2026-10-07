@@ -22,7 +22,6 @@ import { ProductStatusBadge, ProductBadgeLabel, Badge } from '@/components/commo
 import { BulkDiscountDialog } from './BulkDiscountDialog';
 import { usePermissions } from '@/hooks/usePermissions';
 import { formatPrice } from '@/lib/utils/formatPrice';
-import { packPrice } from '@/lib/utils/pack';
 import { formatDate } from '@/lib/utils/formatDate';
 import { cn } from '@/lib/utils/cn';
 import { ROUTES } from '@/lib/constants/routes';
@@ -116,21 +115,13 @@ export function ProductsTable() {
       id: 'min_price',
       accessorKey: 'min_price',
       header: () => (
-        <span title="Base tier price before size, paper and finish options (for pack products, the lowest-quantity tier's total). Customers see the price including the cheapest options. Sorting compares per-piece prices.">
+        <span title="Lowest per-piece tier price before size, paper and finish options. Customers see the price including the cheapest options. Sorting compares per-piece prices.">
           Lowest tier price
         </span>
       ),
       enableSorting: true,
       cell: ({ row }) => {
         const p = row.original;
-        if (p.pack_size > 1 && p.pricing_tiers.length > 0) {
-          const first = p.pricing_tiers.reduce((lo, t) => (t.quantity < lo.quantity ? t : lo));
-          return (
-            <span className="text-xs font-medium tabular-nums" data-testid="min-price-pack">
-              {formatPrice(packPrice(first.price_per_unit, first.quantity))} / {first.quantity} {p.unit_label || 'pcs'}
-            </span>
-          );
-        }
         return <span className="text-xs font-medium tabular-nums">{formatPrice(p.min_price)}</span>;
       },
     },

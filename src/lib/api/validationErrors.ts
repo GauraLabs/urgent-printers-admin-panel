@@ -44,8 +44,9 @@ const CODED_MESSAGES: Record<string, string> = {
   product_unavailable: 'This product is not available (it may be archived, inactive or have invalid pricing).',
   invalid_order_total: 'This order has an invalid total, usually caused by a price or coupon outside the allowed range.',
   product_unpriceable: 'The cheapest combination of tier price and option multipliers would cost less than ₹0.01 per unit. Raise the lowest tier price or the smallest option multiplier.',
-  pack_size_tier_mismatch: 'Every pricing tier quantity must be a multiple of the pack size. Change the pack size or the tier quantities.',
-  invalid_pack_multiple: 'The quantity must be a whole number of packs.',
+  quantity_limits_invalid: 'The order quantity limits are inconsistent. The minimum cannot exceed the maximum, and the show-on-listing quantity must sit between them.',
+  quantity_below_minimum: 'The quantity is below the minimum order for this product.',
+  quantity_above_maximum: 'The quantity is above the maximum order for this product.',
   duplicate_option_label: 'Two options in the same group have the same name (ignoring case, spaces and punctuation). Give each option a unique label.',
   invalid_mrp: 'MRP must be greater than the selling price and have at most 2 decimal places',
 };
@@ -71,4 +72,14 @@ const OPTION_GROUP_PREFIX = /^Duplicate (sizes|paper_types|finishes|sides_option
 export function optionGroupFromMessage(message: string | undefined): OptionGroup | undefined {
   const m = OPTION_GROUP_PREFIX.exec(message ?? '');
   return m ? (m[1] as OptionGroup) : undefined;
+}
+
+export type QuantityLimitField = 'listing_quantity' | 'min_order_quantity' | 'max_order_quantity';
+
+/** Picks the form field a `quantity_limits_invalid` message is about. */
+export function quantityLimitFieldFromMessage(message: string | undefined): QuantityLimitField {
+  const m = (message ?? '').toLowerCase();
+  if (m.includes('show-on-listing') || m.includes('listing')) return 'listing_quantity';
+  if (m.includes('maximum order must be at most') || m.startsWith('maximum order')) return 'max_order_quantity';
+  return 'min_order_quantity';
 }

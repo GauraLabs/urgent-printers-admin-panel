@@ -2,13 +2,8 @@ import { z } from 'zod';
 import type { ProductStatus } from '@/types';
 import { sameInstant } from '@/lib/utils/istDate';
 import { hasAtMostDecimals } from '@/lib/utils/discount';
-import {
-  PACK_SIZE_MAX,
-  UNIT_LABEL_PATTERN,
-  normalizePackSize,
-  packTierToWire,
-  wireTierToPack,
-} from '@/lib/utils/pack';
+import { UNIT_LABEL_PATTERN } from '@/lib/utils/unitLabel';
+import { effectiveLimits, MAX_LINE_QUANTITY } from '@/lib/utils/orderQuantity';
 
 export const BOUNDS = {
   PRICE_MIN: 0.01,
@@ -49,34 +44,23 @@ const multiplier = z.number({ error: 'Multiplier must be a number' })
 // replaces the whole tier list, so a dropped mrp_per_unit silently erases
 // the discount on save.
 const tierSchema = z.object({
-  // quantity/price_per_unit are checked in the tier superRefine, not here: a
-  // field-level failure would skip the pack-mode superRefine and hide the
-  // friendly per-pack message. In pack mode they are derived values.
+  // quantity/price_per_unit are checked in the superRefine so a bad number
+  // yields one friendly message instead of a generic field-level failure.
   quantity: z.number().or(z.nan()),
   price_per_unit: z.number().or(z.nan()),
   mrp_per_unit: money('MRP').nullable().optional(),
   discount_percent: z.number().nullable().optional(),
   discount_per_unit: z.number().nullable().optional(),
   is_best_value: z.boolean(),
-  // Pack-mode entry fields (form-only). The wire fields above are derived from them.
-  packs: z.number({ error: 'Packs must be a number' }).nullable().optional(),
-  pack_price: z.number({ error: 'Price per pack must be a number' }).nullable().optional(),
-  pack_mrp: z.number({ error: 'MRP per pack must be a number' }).nullable().optional(),
 }).superRefine((tier, ctx) => {
   const add = (message: string, key: string) => ctx.addIssue({ code: 'custom', message, path: [key] });
-  if (tier.packs == null) {
-    const q = tier.quantity;
-    if (!Number.isFinite(q)) add('Quantity must be a number', 'quantity');
-    else if (!Number.isInteger(q)) add('Quantity must be a whole number', 'quantity');
-    else if (q < 1) add(`Quantity must be at least 1. ${OUT_OF_RANGE}`, 'quantity');
-    else if (q > BOUNDS.QTY_MAX) add(`Quantity must be at most 1,000,000. ${OUT_OF_RANGE}`, 'quantity');
-  }
-  if (tier.pack_price == null) {
-    const m = moneyMessage(tier.price_per_unit, 'Price');
-    if (m) add(m, 'price_per_unit');
-  } else if (!Number.isFinite(tier.pack_price) || tier.pack_price < BOUNDS.PRICE_MIN) {
-    add(!Number.isFinite(tier.pack_price) ? 'Price per pack must be a number' : `Price per pack must be at least 0.01. ${OUT_OF_RANGE}`, 'pack_price');
-  }
+  const q = tier.quantity;
+  if (!Number.isFinite(q)) add('Quantity must be a number', 'quantity');
+  else if (!Number.isInteger(q)) add('Quantity must be a whole number', 'quantity');
+  else if (q < 1) add(`Quantity must be at least 1. ${OUT_OF_RANGE}`, 'quantity');
+  else if (q > BOUNDS.QTY_MAX) add(`Quantity must be at most 1,000,000. ${OUT_OF_RANGE}`, 'quantity');
+  const m = moneyMessage(tier.price_per_unit, 'Price');
+  if (m) add(m, 'price_per_unit');
   if (tier.mrp_per_unit == null) return;
   if (!(tier.price_per_unit > 0)) {
     ctx.addIssue({ code: 'custom', message: 'Set a selling price above 0 before adding an MRP', path: ['mrp_per_unit'] });
@@ -88,6 +72,15 @@ const tierSchema = z.object({
     ctx.addIssue({ code: 'custom', message: 'MRP can be at most 10 times the selling price', path: ['mrp_per_unit'] });
   }
 });
+
+export const LIMIT_RANGE_MESSAGE = 'Enter a whole number from 1 to 1,000,000';
+
+const orderLimit = z.number({ error: LIMIT_RANGE_MESSAGE })
+  .int(LIMIT_RANGE_MESSAGE)
+  .min(1, LIMIT_RANGE_MESSAGE)
+  .max(MAX_LINE_QUANTITY, LIMIT_RANGE_MESSAGE)
+  .nullable()
+  .optional();
 
 export const productSchema = z.object({
   name: z.string().min(1, 'Name is required').max(BOUNDS.NAME_MAX, 'Name can be at most 255 characters'),
@@ -103,11 +96,9 @@ export const productSchema = z.object({
   paper_types: z.array(z.object({ label: z.string(), gsm: z.number().nullable(), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: multiplier })).optional(),
   finishes: z.array(z.object({ label: z.string(), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: multiplier })).optional(),
   sides_options: z.array(z.object({ label: z.string(), is_active: z.boolean(), is_default: z.boolean(), price_multiplier: multiplier })).optional(),
-  pack_size: z.number({ error: 'Pack size must be a number' })
-    .int('Pack size must be a whole number')
-    .min(1, 'Pack size must be at least 1')
-    .max(PACK_SIZE_MAX, 'Pack size must be at most 1,000,000')
-    .optional(),
+  listing_quantity: orderLimit,
+  min_order_quantity: orderLimit,
+  max_order_quantity: z.number({ error: LIMIT_RANGE_MESSAGE }).int(LIMIT_RANGE_MESSAGE).min(1, LIMIT_RANGE_MESSAGE).max(MAX_LINE_QUANTITY, 'Maximum order must be at most 1,000,000').nullable().optional(),
   unit_label: z.string()
     .refine((v) => UNIT_LABEL_PATTERN.test(v.trim()), 'Use 1-30 characters, starting with a letter (letters, digits, spaces, . / -)')
     .optional(),
@@ -134,31 +125,24 @@ export const productSchema = z.object({
     max_length: z.number().optional(),
   })).optional(),
 }).superRefine((data, ctx) => {
-  const packSize = normalizePackSize(data.pack_size);
-  if (packSize > 1) {
-    data.pricing_tiers.forEach((t, i) => {
-      const inPackMode = t.packs != null && t.pack_price != null;
-      if (inPackMode) {
-        const r = packTierToWire({ packs: t.packs as number, pack_price: t.pack_price as number, pack_mrp: t.pack_mrp ?? null }, packSize);
-        for (const key of ['packs', 'pack_price', 'pack_mrp'] as const) {
-          const message = r.errors[key];
-          if (message) ctx.addIssue({ code: 'custom', message, path: ['pricing_tiers', i, key] });
-        }
-        if (!r.errors.packs && r.wire.quantity > BOUNDS.QTY_MAX) {
-          ctx.addIssue({ code: 'custom', message: `Packs times pack size must be at most 1,000,000 pieces. ${OUT_OF_RANGE}`, path: ['pricing_tiers', i, 'packs'] });
-        }
-        if (!r.errors.pack_price && Number.isFinite(t.pack_price as number)) {
-          const pp = t.pack_price as number;
-          if (!hasAtMostDecimals(pp, 2)) {
-            ctx.addIssue({ code: 'custom', message: 'Price per pack can have at most 2 decimal places', path: ['pricing_tiers', i, 'pack_price'] });
-          } else if (r.wire.price_per_unit < BOUNDS.PRICE_MIN || r.wire.price_per_unit > BOUNDS.PRICE_MAX) {
-            ctx.addIssue({ code: 'custom', message: `Price per piece must be between 0.01 and 100000. ${OUT_OF_RANGE}`, path: ['pricing_tiers', i, 'pack_price'] });
-          }
-        }
-      } else if (Number.isFinite(t.quantity) && t.quantity % packSize !== 0) {
-        ctx.addIssue({ code: 'custom', message: `Quantity must be a multiple of the pack size (${packSize})`, path: ['pricing_tiers', i, 'quantity'] });
-      }
-    });
+  const lim = {
+    listing: data.listing_quantity ?? null,
+    min: data.min_order_quantity ?? null,
+    max: data.max_order_quantity ?? null,
+  };
+  if (lim.min != null && lim.max != null && lim.min > lim.max) {
+    ctx.addIssue({ code: 'custom', message: 'Minimum order cannot be more than the maximum', path: ['min_order_quantity'] });
+  } else {
+    const eff = effectiveLimits(lim, data.pricing_tiers);
+    if (eff.min > eff.max) {
+      ctx.addIssue({ code: 'custom', message: 'Minimum order cannot be more than the maximum', path: [lim.min != null ? 'min_order_quantity' : 'max_order_quantity'] });
+    } else if (lim.listing != null && (lim.listing < eff.min || lim.listing > eff.max)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: `Show-on-listing quantity must be between ${eff.min} and ${eff.max.toLocaleString('en-IN')}`,
+        path: ['listing_quantity'],
+      });
+    }
   }
 
   for (const group of ['sizes', 'paper_types', 'finishes', 'sides_options'] as const) {
@@ -231,7 +215,6 @@ export function buildProductPayload(
   status: ProductStatus,
   original?: OriginalDiscountWindow,
 ) {
-  const packSize = normalizePackSize(v.pack_size);
   const payload = {
     name: v.name,
     slug: v.slug,
@@ -246,9 +229,11 @@ export function buildProductPayload(
     paper_types: v.paper_types ?? [],
     finishes: v.finishes ?? [],
     sides_options: v.sides_options ?? [],
-    pack_size: packSize,
+    listing_quantity: v.listing_quantity ?? null,
+    min_order_quantity: v.min_order_quantity ?? null,
+    max_order_quantity: v.max_order_quantity ?? null,
     unit_label: (v.unit_label ?? '').trim() || 'pcs',
-    pricing_tiers: sortTiersByQuantity(v.pricing_tiers.map((t) => tierToWire(t, packSize))).map((t) => ({
+    pricing_tiers: sortTiersByQuantity(v.pricing_tiers).map((t) => ({
       quantity: t.quantity,
       price_per_unit: t.price_per_unit,
       mrp_per_unit: t.mrp_per_unit ?? null,
@@ -278,24 +263,6 @@ export function buildProductPayload(
     if (!sameInstant(end, original.discount_ends_at)) windowKeys.discount_ends_at = end;
   }
   return { ...payload, ...windowKeys };
-}
-
-type FormTier = ProductFormValues['pricing_tiers'][number];
-
-/** Adds pack-mode entry fields derived from the stored per-unit tiers; a no-op at pack size 1. */
-export function hydrateTiers<T extends { quantity: number; price_per_unit: number; mrp_per_unit: number | null }>(
-  tiers: readonly T[],
-  packSize: number,
-): Array<T & { packs?: number | null; pack_price?: number | null; pack_mrp?: number | null }> {
-  if (packSize <= 1) return [...tiers];
-  return tiers.map((t) => ({ ...t, ...wireTierToPack(t, packSize) }));
-}
-
-/** In pack mode the per-pack inputs are authoritative; otherwise the per-unit fields are sent as-is. */
-export function tierToWire(t: FormTier, packSize: number): FormTier {
-  if (packSize <= 1 || t.packs == null || t.pack_price == null) return t;
-  const { wire } = packTierToWire({ packs: t.packs, pack_price: t.pack_price, pack_mrp: t.pack_mrp ?? null }, packSize);
-  return { ...t, ...wire };
 }
 
 /** Mirrors the backend: lowercase and drop every non-alphanumeric character. */

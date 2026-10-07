@@ -17,12 +17,11 @@ import { PricingSection } from './PricingSection';
 import { TurnaroundSection, normaliseTurnaroundOptions } from './TurnaroundSection';
 import { SeoSection } from './SeoSection';
 import { DiscountWindowSection } from './DiscountWindowSection';
-import { productSchema, buildProductPayload, getWindowEndInPastError, collectFieldErrors, sortTiersByQuantity, hydrateTiers, OUT_OF_RANGE, type ProductFormValues } from './schema';
-import { humanizePath, codedErrorMessage, optionGroupFromMessage } from '@/lib/api/validationErrors';
+import { productSchema, buildProductPayload, getWindowEndInPastError, collectFieldErrors, sortTiersByQuantity, OUT_OF_RANGE, type ProductFormValues } from './schema';
+import { humanizePath, codedErrorMessage, optionGroupFromMessage, quantityLimitFieldFromMessage } from '@/lib/api/validationErrors';
 import { useSaveProduct, useDeleteProduct } from '../../hooks/useProducts';
 import { useCategories } from '@/features/categories/hooks/useCategories';
 import { ROUTES } from '@/lib/constants/routes';
-import { normalizePackSize } from '@/lib/utils/pack';
 import { cn } from '@/lib/utils/cn';
 import type { ApiError, Product, ProductStatus } from '@/types';
 
@@ -91,9 +90,11 @@ export function ProductForm({ product }: ProductFormProps) {
       paper_types: product.paper_types,
       finishes: product.finishes,
       sides_options: product.sides_options,
-      pack_size: normalizePackSize(product.pack_size),
+      listing_quantity: product.listing_quantity ?? null,
+      min_order_quantity: product.min_order_quantity ?? null,
+      max_order_quantity: product.max_order_quantity ?? null,
       unit_label: product.unit_label || 'pcs',
-      pricing_tiers: hydrateTiers(sortTiersByQuantity(product.pricing_tiers), normalizePackSize(product.pack_size)),
+      pricing_tiers: sortTiersByQuantity(product.pricing_tiers),
       discount_starts_at: product.discount_starts_at,
       discount_ends_at: product.discount_ends_at,
       turnaround_options: normaliseTurnaroundOptions(product.turnaround_options),
@@ -131,7 +132,9 @@ export function ProductForm({ product }: ProductFormProps) {
         { label: 'Single Sided', is_active: true, is_default: true,  price_multiplier: 1.0  },
         { label: 'Double Sided', is_active: true, is_default: false, price_multiplier: 1.35 },
       ],
-      pack_size: 1,
+      listing_quantity: null,
+      min_order_quantity: null,
+      max_order_quantity: null,
       unit_label: 'pcs',
       pricing_tiers: [
         { quantity: 100,  price_per_unit: 12.00, mrp_per_unit: null, is_best_value: false },
@@ -278,11 +281,12 @@ export function ProductForm({ product }: ProductFormProps) {
         toast.error(apiErr.message || msg);
         return;
       }
-      if (apiErr.code === 'pack_size_tier_mismatch') {
-        const msg = codedErrorMessage(apiErr.code) as string;
-        form.setError('pack_size', { type: 'server', message: apiErr.message || msg });
+      if (apiErr.code === 'quantity_limits_invalid') {
+        const msg = apiErr.message || (codedErrorMessage(apiErr.code) as string);
+        const field = quantityLimitFieldFromMessage(msg);
+        form.setError(field, { type: 'server', message: msg });
         toast.error(msg);
-        onInvalid({ pack_size: { type: 'server', message: msg } });
+        onInvalid({ [field]: { type: 'server', message: msg } });
         return;
       }
       if (apiErr.code === 'invalid_mrp' || apiErr.code === 'product_unpriceable') {

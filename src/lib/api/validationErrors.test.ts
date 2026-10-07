@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  codedErrorMessage, describeApiError, formatValidationDetail, humanizePath, parseValidationDetail,
+  codedErrorMessage, describeApiError, formatValidationDetail, humanizePath, parseValidationDetail, quantityLimitFieldFromMessage,
 } from './validationErrors';
 
 const DETAIL = [
@@ -45,12 +45,17 @@ describe('coded error mapping', () => {
   });
 });
 
-describe('pack error codes', () => {
-  it('maps pack_size_tier_mismatch and invalid_pack_multiple to friendly messages', () => {
-    expect(codedErrorMessage('pack_size_tier_mismatch')).toMatch(/multiple of the pack size/);
-    expect(codedErrorMessage('invalid_pack_multiple')).toMatch(/whole number of packs/);
+describe('quantity limit error codes', () => {
+  it('maps the new codes to friendly messages and drops the pack codes', () => {
+    expect(codedErrorMessage('quantity_limits_invalid')).toMatch(/minimum cannot exceed the maximum/);
+    expect(codedErrorMessage('quantity_below_minimum')).toMatch(/below the minimum/);
+    expect(codedErrorMessage('quantity_above_maximum')).toMatch(/above the maximum/);
+    expect(codedErrorMessage('pack_size_tier_mismatch')).toBeUndefined();
+    expect(codedErrorMessage('invalid_pack_multiple')).toBeUndefined();
   });
-  it('describeApiError uses the code mapping before the raw message', () => {
-    expect(describeApiError({ code: 'pack_size_tier_mismatch', status: 422, message: 'raw' }, 'fallback')).toMatch(/multiple of the pack size/);
+  it('picks the field named in a quantity_limits_invalid message', () => {
+    expect(quantityLimitFieldFromMessage('Minimum order cannot be more than the maximum')).toBe('min_order_quantity');
+    expect(quantityLimitFieldFromMessage('Show-on-listing quantity must be between the minimum (40) and the maximum (500)')).toBe('listing_quantity');
+    expect(quantityLimitFieldFromMessage('Maximum order must be at most 1,000,000')).toBe('max_order_quantity');
   });
 });

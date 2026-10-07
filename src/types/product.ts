@@ -132,8 +132,11 @@ export interface Product {
   sides_options: ProductSideOption[];
   /** Deprecated: no longer edited; kept so existing values round-trip. */
   quantity_steps: number[];
-  pack_size: number;
   unit_label: string;
+  /** Stored order-quantity settings; null means automatic. */
+  listing_quantity: number | null;
+  min_order_quantity: number | null;
+  max_order_quantity: number | null;
   pricing_tiers: ProductPricingTier[];
   discount_starts_at: string | null;   // UTC ISO; shown/entered in IST
   discount_ends_at: string | null;
