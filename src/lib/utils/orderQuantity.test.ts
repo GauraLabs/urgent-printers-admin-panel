@@ -89,7 +89,7 @@ describe('example column', () => {
   it('formats quantity x price in paise', () => {
     expect(exampleText(100, 4, null, 'pcs')).toBe('100 pcs = ₹400.00');
     expect(exampleText(3, 0.1, null, 'pcs')).toBe('3 pcs = ₹0.30');
-    expect(exampleText(100, 4, 5, 'pcs')).toBe('100 pcs = ₹400.00 (MRP ₹500)');
+    expect(exampleText(100, 4, 5, 'pcs')).toBe('100 pcs = ₹400.00 (MRP ₹500.00)');
   });
   it('is blank until quantity and price are valid', () => {
     expect(exampleText(0, 4, null, 'pcs')).toBeNull();
@@ -103,7 +103,7 @@ describe('inline notes', () => {
   it('flags min below the lowest tier, unreachable tiers and mixed MRP', () => {
     const tiers = [{ quantity: 50, price_per_unit: 6, mrp_per_unit: 8 }, { quantity: 100, price_per_unit: 4 }];
     const n = limitNotes(tiers, effectiveLimits({ listing: null, min: 40, max: 80 }, tiers));
-    expect(n.belowLowestTier).toBe('Orders of 40 to 49 pcs will be charged the 50+ rate (₹6/pc)');
+    expect(n.belowLowestTier).toBe('Orders of 40 to 49 pcs will be charged the 50+ rate (₹6.00/pc)');
     expect(n.unreachableTiers).toEqual(['Tier 100+ can never be reached (above the maximum)']);
     expect(n.mixedMrp).toBe(true);
   });
@@ -133,9 +133,9 @@ describe('review fixes', () => {
   it('notes use the unit label and suffix', () => {
     const t = [{ quantity: 50, price_per_unit: 6 }];
     const n = limitNotes(t, effectiveLimits({ listing: null, min: 40, max: null }, t), 'stickers');
-    expect(n.belowLowestTier).toBe('Orders of 40 to 49 stickers will be charged the 50+ rate (₹6 each)');
+    expect(n.belowLowestTier).toBe('Orders of 40 to 49 stickers will be charged the 50+ rate (₹6.00 each)');
     const one = limitNotes([{ quantity: 2, price_per_unit: 6 }], effectiveLimits({ listing: null, min: 1, max: null }, [{ quantity: 2 }]));
-    expect(one.belowLowestTier).toBe('Orders of 1 to 1 pc will be charged the 2+ rate (₹6/pc)');
+    expect(one.belowLowestTier).toBe('Orders of 1 to 1 pc will be charged the 2+ rate (₹6.00/pc)');
   });
   it('groups quantities en-IN in previews and notes', () => {
     const t = [{ quantity: 100000, price_per_unit: 1 }];
@@ -146,5 +146,14 @@ describe('review fixes', () => {
     const n = limitNotes([{ quantity: 100000, price_per_unit: 1 }], effectiveLimits({ listing: null, min: 1000, max: 5000 }, t));
     expect(n.belowLowestTier).toContain('Orders of 1,000 to 99,999 pcs will be charged the 1,00,000+ rate');
     expect(n.unreachableTiers).toEqual(['Tier 1,00,000+ can never be reached (above the maximum)']);
+  });
+});
+
+describe('formatPrice2', () => {
+  it('always renders two decimals with en-IN grouping', async () => {
+    const { formatPrice2 } = await import('./formatPrice');
+    expect(formatPrice2(6)).toBe('₹6.00');
+    expect(formatPrice2(12.6)).toBe('₹12.60');
+    expect(formatPrice2(2500)).toBe('₹2,500.00');
   });
 });

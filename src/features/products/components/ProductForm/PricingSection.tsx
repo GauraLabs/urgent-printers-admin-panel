@@ -15,8 +15,8 @@ import {
   minOptionMultipliers,
   pagePreviewText,
 } from '@/lib/utils/orderQuantity';
-import { formatPrice } from '@/lib/utils/formatPrice';
-import { BOUNDS, getTierPriceTypoWarnings, sortTiersByQuantity, type ProductFormValues } from './schema';
+import { formatPrice2 } from '@/lib/utils/formatPrice';
+import { BOUNDS, getTierPriceTypoWarnings, getRisingPriceWarnings, sortTiersByQuantity, type ProductFormValues } from './schema';
 
 interface Props { form: UseFormReturn<ProductFormValues> }
 
@@ -37,11 +37,14 @@ export function PricingSection({ form }: Props) {
   const multipliers = minOptionMultipliers(optionGroups);
   const hasMultipliers = optionGroups.some((g) => (g ?? []).some((o) => o.price_multiplier !== 1));
   const eff = effectiveLimits({ listing: listingRaw, min: minRaw, max: maxRaw }, tiers);
-  const limitsConsistent = eff.min <= eff.max && eff.listing >= eff.min;
-  const preview = limitsConsistent ? listingPreview(tiers, eff.listing, multipliers) : null;
+  const limitsInvalid = Boolean(errors.listing_quantity || errors.min_order_quantity || errors.max_order_quantity)
+    || eff.min > eff.max
+    || (listingRaw != null && (listingRaw < eff.min || listingRaw > eff.max));
+  const preview = limitsInvalid ? null : listingPreview(tiers, eff.listing, multipliers);
   const notes = limitNotes(tiers, eff, unitLabel);
 
   const typoWarnings = getTierPriceTypoWarnings(tiers);
+  const risingWarnings = getRisingPriceWarnings(tiers, unitLabel);
 
   function sortRows() {
     const current = form.getValues('pricing_tiers') ?? [];
@@ -138,19 +141,22 @@ export function PricingSection({ form }: Props) {
         </p>
 
         <div data-testid="listing-preview" className="mt-3 space-y-1 rounded-md bg-[var(--surface-hover)] p-2.5 text-xs text-[var(--text-secondary)]">
-          <p data-testid="preview-card">
+          {limitsInvalid && (
+            <p data-testid="preview-blocked" role="status" className="text-[var(--text-muted)]">Fix the order quantity to see the preview</p>
+          )}
+          <p data-testid="preview-card" className={limitsInvalid ? 'hidden' : undefined}>
             <span className="text-[var(--text-muted)]">Product card: </span>
             {preview ? (
               <>
                 {preview.mrpTotalPaise != null && (
-                  <s className="mr-1.5 text-[var(--text-muted)]">{formatPrice(preview.mrpTotalPaise / 100)}</s>
+                  <s className="mr-1.5 text-[var(--text-muted)]">{formatPrice2(preview.mrpTotalPaise / 100)}</s>
                 )}
                 <strong className="text-[var(--text-primary)]">{cardPreviewText(preview, unitLabel)}</strong>
                 {preview.percentOff != null && <span className="ml-1.5 text-emerald-600">{preview.percentOff}% off</span>}
               </>
             ) : '—'}
           </p>
-          <p data-testid="preview-page">
+          <p data-testid="preview-page" className={limitsInvalid ? 'hidden' : undefined}>
             <span className="text-[var(--text-muted)]">Product page: </span>
             {preview ? pagePreviewText(preview, unitLabel, eff) : '—'}
           </p>
@@ -215,6 +221,9 @@ export function PricingSection({ form }: Props) {
                     {errors.pricing_tiers?.[i]?.price_per_unit && (
                       <p className={errorCls}>{errors.pricing_tiers[i]?.price_per_unit?.message}</p>
                     )}
+                    {risingWarnings.filter((w) => w.index === i).map((w) => (
+                      <p key={w.message} role="status" data-testid="tier-rising-warning" className="mt-1 max-w-[14rem] text-[11px] text-[var(--warning)]">{w.message}</p>
+                    ))}
                     {typoWarnings.filter((w) => w.index === i).map((w) => (
                       <p key={w.index} role="status" data-testid="tier-typo-warning" className="mt-1 max-w-[11rem] text-[11px] text-[var(--warning)]">{w.message}</p>
                     ))}

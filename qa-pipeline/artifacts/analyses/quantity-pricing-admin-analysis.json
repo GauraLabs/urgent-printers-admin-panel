@@ -1,0 +1,82 @@
+{
+  "feature_name": "Quantity Pricing (Admin)",
+  "pass_count": 31,
+  "fail_count": 0,
+  "failures": [],
+  "accessibility_summary": {
+    "critical": [
+      "label — 6 nodes across /products/10 and /products/16 (3 per product edit page). Attribution matters here and the evidence points away from this feature: every control the Order quantity panel and the rewritten pricing table add is explicitly named in source — listing/min/max and Unit name each have a real <label htmlFor> paired to an id, and every tier-row input (quantity, price, MRP, the '% off' helper) carries an aria-label naming both the field and its row index. The same violation at the same density was recorded as known residue on the product-catalog pass ('label 21→2') and the pack-selling pass, on these same routes. Treat as pre-existing product-form residue, but confirm by selector on the next pass that can afford a login — this run could not, see the note under performance.",
+      "button-name — 4 nodes on /login and /products, neither of which this feature touches. Matches the residue both previous admin runs recorded verbatim."
+    ],
+    "serious": [
+      "color-contrast — 84 nodes across /dashboard, /products and the product edit pages. Site-wide admin theme issue, present on /dashboard which contains none of this feature's UI."
+    ],
+    "moderate": [
+      "region — 10 nodes on /login (content outside a landmark).",
+      "landmark-unique — 6 nodes across /dashboard, /products and /products/10.",
+      "heading-order — 5 nodes across /dashboard and both product edit pages.",
+      "landmark-one-main and page-has-heading-one — 2 nodes each on /login."
+    ],
+    "coverage_caveat": "automated scan only — manual/screen-reader review still needed"
+  },
+  "performance_summary": {
+    "initial_load": "Not measured. Lighthouse is off by structural necessity on this app, not by choice: the admin access token lives only in memory (Zustand, never localStorage), so capture.js's seedDefaultContextStorage() cannot restore a live session and a post-login checkpoint is redirected to /login, voiding the numbers with url_mismatch. See project.config.json's _notes.auth and pipeline/README.md's per-app wrinkles.",
+    "final_state": "Not measured, same structural reason.",
+    "concerns": [
+      "The live preview, the Example column and the amber notes all recompute on every keystroke, entirely client-side in integer paise (orderQuantity.ts). No request is issued while typing; the only network calls in this capture were the two PATCH saves. No input latency was observable across 31 steps.",
+      "POST /admin/auth/login is rate-limited to 10/hour/IP and this run exhausted it twice, costing roughly 35 minutes of wall-clock waiting. That is a real constraint on how often this suite can be re-run, and it is why the capture is deliberately two tests rather than one per path."
+    ]
+  },
+  "ux_gaps": [
+    {
+      "issue": "A pricing-only edit cannot be saved on any product with fewer than three photos. ProductForm.save()'s image_keys guard runs before the request is built, so changing only the Order quantity panel on Matte Finish Business Cards (1 photo) is blocked with 'At least 3 photos are required' and zero PATCH issued — verified as err-06. Nine of the ten real products in the dev database are in that state, so in practice only one product in this environment can have its quantity limits edited through the UI at all. This was already flagged on the pack-selling run and is unchanged.",
+      "related_edge_case": "A pricing-only edit on a product that predates the 3-photo minimum"
+    },
+    {
+      "issue": "Nothing warns an admin that their per-piece rates RISE with quantity. getTierPriceTypoWarnings only fires above a 10x ratio between neighbouring tiers (BOUNDS.TYPO_TIER_RATIO), and the real dev data for Custom Die-Cut Stickers — 50 @ ₹6.00 then 100 @ ₹10.00 — is a 1.67x ratio, so it passes silently (asserted as edge-01). limitNotes covers below-lowest-tier, unreachable tiers and mixed MRP, but has no rule for a non-decreasing rate. The storefront then renders a rate card where buying more costs more per piece. Not a spec violation — the spec only asked that the existing warnings be kept — but it is the gap most likely to let a real pricing mistake reach customers.",
+      "related_edge_case": "Non-monotonic tier rates (dev stickers price the 100 tier at ₹10 against ₹6 at the 50 tier)"
+    },
+    {
+      "issue": "The live preview and the validator disagree about the same keystroke. Typing a listing quantity of 5,000 against a maximum of 1,000 shows an inline blocking error on the field while the preview confidently renders '1,000 pcs for ₹2,500.00' — effectiveLimits() clamps, exactly as spec section 1 defines effective_listing, so both halves are individually correct. But staff can read the preview as confirmation the value is acceptable. A short qualifier ('previewing the nearest allowed quantity') would close it.",
+      "related_edge_case": "Listing quantity typed outside the effective range while the preview is live"
+    },
+    {
+      "issue": "Money formatting in this section was inconsistent on arrival and was fixed during this run, not found clean. formatPrice() uses minimumFractionDigits: 0, so the Discount column rendered '₹14' and '₹12.6', the preview's struck MRP rendered '₹2,500' beside a sale price of '₹2,250.00', and the below-lowest-tier note read '(₹6/pc)' — against a storefront that always formats to two decimals and a spec whose own worked examples do too. Fixed by admin-panel-developer via a scoped formatPrice2 helper at four call sites; re-verified live (hp-09, alt-03, hp-11). The same no-decimal formatting remains in BulkDiscountDialog.tsx and ProductsTable.tsx, deliberately out of scope for this feature.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "Two requirements have no live data to exercise. No order_item in the dev database carries pack_size > 1, so the legacy 'N packs (M pcs)' order-detail rendering that spec section 2 preserves is untestable here; and the backend invariant that a limits-only change must not bump pricing_updated_at is not observable from the browser — it was confirmed instead by reading the field directly over the admin API before and after both the API-set listing quantity and the UI save of max=1,000 (null in every case).",
+      "related_edge_case": "A limits-only change should not bump pricing_updated_at"
+    },
+    {
+      "issue": "RBAC was not exercised. The product form is gated on products.edit and this run signed in only as the seeded super admin, so the view-only rendering of the Order quantity panel is unverified.",
+      "related_edge_case": null
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "Stop the 3-photo media guard from blocking edits that touch no media. Scope it to creation and to saves that actually change image_keys, so staff can correct a price or an order limit on a legacy product without first sourcing three photos. This is the second consecutive run to report it and it currently makes 9 of 10 dev products uneditable for pricing."
+    },
+    {
+      "priority": "medium",
+      "action": "Add a non-blocking amber note when a tier's per-piece rate is greater than or equal to the previous tier's — the same treatment limitNotes already gives unreachable tiers. The existing 10x typo heuristic cannot catch the realistic case, and this is the admin's only chance to notice before customers see a rate card that rises with quantity."
+    },
+    {
+      "priority": "medium",
+      "action": "Confirm by selector whether the 6 critical `label` nodes on the product edit pages are pre-existing residue or something this feature's table rewrite introduced. Source reading says every new control is named, but the previous pass's residue was counted at 2, not 6, so the delta deserves one deliberate check rather than an inference."
+    },
+    {
+      "priority": "low",
+      "action": "Add a qualifier to the live preview when the listing quantity is being clamped, so the preview cannot be mistaken for validation approval."
+    },
+    {
+      "priority": "low",
+      "action": "Apply the same formatPrice2 two-decimal treatment to BulkDiscountDialog.tsx, which shows the same '₹12.6'-style truncation for per-tier before/after prices and was left out of scope for this fix."
+    },
+    {
+      "priority": "low",
+      "action": "Give the pricing table's remove column an sr-only header — empty-table-header (minor, 3 nodes) is attributable to this feature's own table and is the one axe finding here that clearly is."
+    }
+  ]
+}

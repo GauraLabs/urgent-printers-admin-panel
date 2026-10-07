@@ -3,7 +3,8 @@ import type { ProductStatus } from '@/types';
 import { sameInstant } from '@/lib/utils/istDate';
 import { hasAtMostDecimals } from '@/lib/utils/discount';
 import { UNIT_LABEL_PATTERN } from '@/lib/utils/unitLabel';
-import { effectiveLimits, MAX_LINE_QUANTITY } from '@/lib/utils/orderQuantity';
+import { effectiveLimits, formatQty, MAX_LINE_QUANTITY } from '@/lib/utils/orderQuantity';
+import { formatPrice2 } from '@/lib/utils/formatPrice';
 
 export const BOUNDS = {
   PRICE_MIN: 0.01,
@@ -300,6 +301,30 @@ export function getTierPriceTypoWarnings(
         index: cur.index,
         message: `This price is more than 10x different from the neighbouring tier (${prev.price_per_unit}). Check for a typo.`,
       });
+    }
+  }
+  return warnings;
+}
+
+/** Non-blocking: flags a higher-quantity tier whose per-piece price (or MRP) is higher than the next lower tier's. */
+export function getRisingPriceWarnings(
+  tiers: ReadonlyArray<{ quantity: number; price_per_unit: number; mrp_per_unit?: number | null }>,
+  unitLabel = 'pcs',
+): TierTypoWarning[] {
+  const order = tiers
+    .map((t, index) => ({ ...t, index }))
+    .filter((t) => Number.isFinite(t.quantity) && t.quantity >= 1 && Number.isFinite(t.price_per_unit) && t.price_per_unit > 0)
+    .sort((a, b) => a.quantity - b.quantity);
+  const warnings: TierTypoWarning[] = [];
+  const fmt = (n: number) => formatPrice2(n);
+  for (let k = 1; k < order.length; k++) {
+    const prev = order[k - 1];
+    const cur = order[k];
+    const at = formatQty(cur.quantity, unitLabel);
+    if (cur.price_per_unit > prev.price_per_unit) {
+      warnings.push({ index: cur.index, message: `Price per piece goes up at ${at} (${fmt(prev.price_per_unit)} \u2192 ${fmt(cur.price_per_unit)}). Bigger orders usually get a lower rate \u2014 check this is intended.` });
+    } else if (prev.mrp_per_unit != null && cur.mrp_per_unit != null && cur.mrp_per_unit > prev.mrp_per_unit) {
+      warnings.push({ index: cur.index, message: `MRP per piece goes up at ${at} (${fmt(prev.mrp_per_unit)} \u2192 ${fmt(cur.mrp_per_unit)}). Bigger orders usually get a lower rate \u2014 check this is intended.` });
     }
   }
   return warnings;

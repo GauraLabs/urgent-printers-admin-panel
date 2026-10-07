@@ -1,0 +1,255 @@
+{
+  "feature_found": true,
+  "feature_name": "Quantity Pricing (Admin) — simple per-piece tier table and the Order quantity panel",
+  "source_files": [
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/PricingSection.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/DiscountPreview.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/schema.ts",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/index.tsx",
+    "urgent-printers-admin-panel/src/lib/utils/orderQuantity.ts",
+    "urgent-printers-admin-panel/src/lib/utils/unitLabel.ts",
+    "urgent-printers-admin-panel/src/lib/utils/discount.ts",
+    "urgent-printers-admin-panel/src/lib/api/products.ts",
+    "urgent-printers-admin-panel/src/lib/api/validationErrors.ts",
+    "urgent-printers-admin-panel/src/types/product.ts",
+    "urgent-printers-admin-panel/src/features/products/components/ProductsTable.tsx",
+    "urgent-printers-admin-panel/src/features/orders/components/OrderDetail/OrderItems.tsx",
+    "urgent-printers-backend/app/api/v1/routes/admin/products.py",
+    "urgent-printers-backend/app/schemas/admin.py",
+    "urgent-printers-backend/app/services/order_limits.py",
+    "urgent-printers-backend/app/services/pricing.py",
+    ".claude/plans/quantity-pricing-spec.md"
+  ],
+  "user_goal": "Price a product per piece in a plain table, and optionally control which quantity the storefront advertises and the smallest and largest order accepted — without having to understand packs.",
+  "business_goal": "Make quantity-based pricing self-explanatory for staff so products are priced correctly first time, and show, before saving, exactly what the customer will see on the card and the product page.",
+  "user_journey": [
+    {
+      "step": "Signs in to the admin panel",
+      "route_or_state": "/login"
+    },
+    {
+      "step": "Opens an existing product for editing",
+      "route_or_state": "/products/{id}"
+    },
+    {
+      "step": "Reads the Pricing Tiers section — the Order quantity panel then the per-piece table",
+      "route_or_state": "#order-quantity inside the Pricing Tiers section"
+    },
+    {
+      "step": "Adjusts listing quantity / min / max and watches the live card and page preview update",
+      "route_or_state": "[data-testid='listing-preview']"
+    },
+    {
+      "step": "Saves; the storefront card and product page then match the preview",
+      "route_or_state": "PATCH /admin/products/{id}"
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "hp-01",
+      "action": "Open Custom Die-Cut Stickers for editing and read the pricing table header row",
+      "selector": "thead tr",
+      "expected_result": "Exactly these columns, in order: 'Quantity from', 'Price per piece (₹)', 'MRP per piece (₹, optional)', 'Discount', 'Example', 'Best value', plus an unlabelled remove column. No 'Total (₹)' column and no pack column."
+    },
+    {
+      "step_id": "hp-02",
+      "action": "Search the whole product form for any pack control or pack copy",
+      "selector": "form",
+      "expected_result": "Zero matches for 'pack size', 'Packs', 'Price per pack', 'per pack' or the reported 'Price per packis' typo. The pack-size block, pack-mode inputs and all pack-mode help text are gone (spec D12 asks QA to confirm the typo is gone)."
+    },
+    {
+      "step_id": "hp-03",
+      "action": "Read the Discount cell of a tier that has no MRP",
+      "selector": "tbody tr:nth-child(1) td:nth-child(4)",
+      "expected_result": "An em dash '—' only. No '₹0.00', no empty badge, no bare price — this is the DiscountPreview bug fix (it used to render formatPrice(price) when there was no MRP). The '% off' helper input is also absent on an MRP-less row."
+    },
+    {
+      "step_id": "hp-04",
+      "action": "Read the read-only Example cell of the 50 and 250 tiers",
+      "selector": "[data-testid='tier-example']",
+      "expected_result": "'50 pcs = ₹300.00' and '250 pcs = ₹1,500.00' — quantity x price per piece, computed in integer paise, using the product's unit label."
+    },
+    {
+      "step_id": "hp-05",
+      "action": "Read the Order quantity panel's three number inputs and their Auto state",
+      "selector": "#order-quantity",
+      "expected_result": "'Min order' and 'Max order' are empty with 'Auto' chips and placeholders '50 (auto)' and 'No limit'. 'Show on listing as' is NOT automatic on this product: migration f5b2d9c4a713's data step copied its retired pack size into listing_quantity, so it holds a stored 50 and offers 'Reset to auto'. A 'Unit name' input sits next to it, pre-filled 'pcs', hinted 'Shown after quantities, e.g. 40 pcs'. No field is required."
+    },
+    {
+      "step_id": "hp-06",
+      "action": "Read the helper line and the live preview card below the panel",
+      "selector": "[data-testid='listing-preview']",
+      "expected_result": "Helper: 'Customers can order any quantity between the minimum and the maximum. The price follows the ‘Quantity from’ tiers below.' Preview: 'Product card: 50 pcs for ₹300.00' and 'Product page: opens at 50 pcs · ₹6.00/pc · total ₹300.00 · customers can order from 50 pcs' — the no-maximum wording. A 'Price from options: shown for the cheapest options' line is present because the product has non-1.0 option multipliers, even though the cheapest in each group is 1.0."
+    },
+    {
+      "step_id": "hp-07",
+      "action": "Type 1000 into Max order and watch the preview update on the keystroke",
+      "selector": "#max-order-input",
+      "expected_result": "The label's 'Auto' chip is replaced by a 'Reset to auto' button and the page preview's range clause becomes '... customers can order 50 to 1,000 pcs'. The card line is unchanged at '50 pcs for ₹300.00' because a maximum does not affect the advertised price."
+    },
+    {
+      "step_id": "hp-08",
+      "action": "Save the product with Max order = 1,000",
+      "selector": "button:has-text('Save')",
+      "expected_result": "The PATCH body carries max_order_quantity: 1000, min_order_quantity: null and the product's stored listing_quantity: 50, with no pack_size or quantity_steps key at all; the save succeeds and the value is still 1,000 after a reload."
+    },
+    {
+      "step_id": "hp-09",
+      "action": "Open Matte Finish Business Cards and read the Discount cell of a tier that does have an MRP",
+      "selector": "[data-testid='discount-preview']",
+      "expected_result": "Struck-through '₹14.00', a '10% off' badge, then '₹12.60' — a real discount renders in full, proving hp-03's dash is a no-MRP rule and not a broken component. A '% off' helper input is present on this row because it has an MRP."
+    },
+    {
+      "step_id": "hp-10",
+      "action": "Read the Order quantity panel on Matte Finish Business Cards, whose listing quantity is stored as 250",
+      "selector": "#order-quantity",
+      "expected_result": "'Show on listing as' is pre-filled with 250 and its label shows a 'Reset to auto' button instead of the 'Auto' chip, while 'Min order' and 'Max order' are both still empty with 'Auto' chips and placeholders '100 (auto)' and 'No limit'. This is hydration from the STORED admin values, which is what lets staff tell 'set' from 'automatic'."
+    },
+    {
+      "step_id": "hp-11",
+      "action": "Read the live preview for Matte Finish Business Cards and compare it with what the storefront renders",
+      "selector": "[data-testid='listing-preview']",
+      "expected_result": "Card: struck '₹2,500.00' then '250 pcs for ₹2,250.00' then '10% off'. Page: 'opens at 250 pcs · ₹9.00/pc · total ₹2,250.00 · customers can order from 100 pcs'. The 'Price from options' line is present. Every figure must match the storefront card and PDP for the same product, including the two-decimal money formatting the spec's own worked examples use."
+    },
+    {
+      "step_id": "hp-12",
+      "action": "Check the products list for any surviving pack column or wording",
+      "selector": "thead th",
+      "expected_result": "No column heading in the products list matches /pack/i and the table body contains none of 'per pack', 'Pack of' or 'Pack size' — the spec's 'no pack UI anywhere' requirement covers the list as well as the form (ProductsTable.tsx previously rendered a pack-aware price)."
+    }
+  ],
+  "alternate_paths": [
+    {
+      "path_name": "Automatic defaults track the tiers with no admin input at all",
+      "steps": [
+        {
+          "step_id": "alt-01",
+          "action": "With all three limit fields left empty, change the lowest tier's 'Quantity from' from 50 to 25 and read the preview",
+          "selector": "input[aria-label='Quantity for pricing tier 1']",
+          "expected_result": "Because the limits are automatic, the derived minimum follows the tiers: the Min order placeholder becomes '25 (auto)' and the card preview becomes '25 pcs for ₹150.00' with no field having been typed into — demonstrating the zero-edit path the spec promises."
+        },
+        {
+          "step_id": "alt-02",
+          "action": "Click 'Reset to auto' on a limit field that has a value",
+          "selector": "button:text-is('Reset to auto')",
+          "expected_result": "The input clears, the 'Auto' chip returns, and the preview reverts to the derived value — the field round-trips back to automatic without needing a page reload."
+        }
+      ]
+    },
+    {
+      "path_name": "Non-blocking amber notes guide, rather than block, a risky but legal configuration",
+      "steps": [
+        {
+          "step_id": "alt-03",
+          "action": "Type 25 into Min order on Custom Die-Cut Stickers, below the lowest tier quantity of 50",
+          "selector": "#min-order-input",
+          "expected_result": "An amber note appears in the role='status' notes block: 'Orders of 25 to 49 pcs will be charged the 50+ rate (₹6.00/pc)'. It is a note, not a validation error — the field shows no red message and the form stays savable, matching spec section 1's 'admin gets a note, not an error'."
+        },
+        {
+          "step_id": "alt-04",
+          "action": "Type 200 into Max order on Custom Die-Cut Stickers, below several tier quantities",
+          "selector": "#max-order-input",
+          "expected_result": "One amber note per unreachable tier: 'Tier 250+ can never be reached (above the maximum)', and the same for 500+ and 1,000+. Still non-blocking — unreachable tiers are explicitly not an error per the spec."
+        },
+        {
+          "step_id": "alt-05",
+          "action": "Clear the MRP on one of Premium Foil Business Cards' four tiers, leaving the others set",
+          "selector": "input[aria-label='MRP per unit for pricing tier 2']",
+          "expected_result": "The mixed-MRP note appears: 'Add an MRP to every tier so the card discount matches the product page.' (spec D11 — otherwise the card and PDP can disagree about the discount)."
+        }
+      ]
+    }
+  ],
+  "error_paths": [
+    {
+      "trigger": "Set Min order to 500 and Max order to 100, then try to save",
+      "expected_ui_response": "The Zod schema blocks the save with 'Minimum order cannot be more than the maximum' rendered under the offending field; no PATCH request is issued.",
+      "selector": "[data-field='min_order_quantity'] p",
+      "step_id": "err-01"
+    },
+    {
+      "trigger": "Set 'Show on listing as' to 5,000 while the effective maximum is 1,000",
+      "expected_ui_response": "'Show on listing as' shows the range message naming the real bounds ('Show-on-listing quantity must be between 50 and 1,000') and the save is blocked. The live preview does NOT blank out: effectiveLimits() clamps the listing quantity into [min, max] per spec section 1, so it previews the clamped 1,000 pcs for ₹2,500.00. Correct per the spec, but mildly odd UX — a preview priced for a quantity the form refuses to save.",
+      "selector": "[data-field='listing_quantity'] p",
+      "step_id": "err-02"
+    },
+    {
+      "trigger": "Set Max order to 1,000,001",
+      "expected_ui_response": "'Maximum order must be at most 1,000,000' (or the whole-number range message) is shown inline and the save is blocked — mirroring the backend CHECK constraint and the quantity_limits_invalid 422.",
+      "selector": "[data-field='max_order_quantity'] p",
+      "step_id": "err-03"
+    },
+    {
+      "trigger": "Type a non-integer such as 50.5 into Min order",
+      "expected_ui_response": "'Enter a whole number from 1 to 1,000,000' is shown inline and the save is blocked.",
+      "selector": "[data-field='min_order_quantity'] p",
+      "step_id": "err-04"
+    },
+    {
+      "trigger": "Open a product and click Save without changing anything",
+      "expected_ui_response": "The save succeeds with no validation error and no unintended field change — in particular the three limit values stay null (automatic) rather than being materialised to their derived numbers, and no pack_size is sent.",
+      "selector": "button:has-text('Save')",
+      "step_id": "err-05"
+    },
+    {
+      "trigger": "Change only the Order quantity panel on Matte Finish Business Cards (1 photo on file) and click Save Changes",
+      "expected_ui_response": "The save is blocked by the unrelated media guard with the toast 'At least 3 photos are required' and no PATCH is issued — a pricing-only edit cannot be saved on any product with fewer than 3 photos. Nine of the ten real dev products are in that state.",
+      "selector": "button:has-text('Save Changes')",
+      "step_id": "err-06"
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "Tier quantity typed but price still blank (a half-filled new tier row)",
+      "existing_validation": "exampleText() returns null unless quantity is a valid integer and price > 0; the cell renders '—'",
+      "risk_note": "Must not render '₹NaN' or '0 pcs = ₹0.00' while the admin is mid-typing."
+    },
+    {
+      "case": "Limits inconsistent while typing (min temporarily above max)",
+      "existing_validation": "PricingSection computes limitsConsistent and passes null to the preview, rendering '—'",
+      "risk_note": "The preview must degrade to a dash rather than show a price derived from an impossible range."
+    },
+    {
+      "case": "A limits-only change should not bump pricing_updated_at",
+      "existing_validation": "Backend route-level rule (spec section 3) — no prices changed, so no repricing timestamp",
+      "risk_note": "Not observable from the admin UI; needs an API-level assertion or the backend unit suite."
+    },
+    {
+      "case": "Stale admin client still sending pack_size in the payload",
+      "existing_validation": "Backend accepts and IGNORES pack_size for one release (marked deprecated in the schema)",
+      "risk_note": "Only reachable by hand-crafting a request; the current form never sends the key, which hp-08 asserts directly."
+    },
+    {
+      "case": "Tiers above the maximum, or a minimum below the lowest tier",
+      "existing_validation": "limitNotes() emits amber role='status' notes; deliberately NOT validation errors",
+      "risk_note": "If these ever became blocking errors, the zero-edit migration promise in spec section 1 would break for every existing product."
+    },
+    {
+      "case": "Non-monotonic tier rates (dev stickers price the 100 tier at ₹10 against ₹6 at the 50 tier)",
+      "existing_validation": null,
+      "risk_note": "CONFIRMED GAP: getTierPriceTypoWarnings only fires above a 10x ratio between neighbouring tiers (BOUNDS.TYPO_TIER_RATIO), and 10/6 = 1.67, so a per-piece rate that RISES with quantity passes silently. limitNotes covers below-lowest-tier, unreachable tiers and mixed MRP, but not a non-decreasing rate. The storefront then renders a tier guide where buying more costs more per piece. Not a spec defect (the spec only asks that the existing typo/floor warnings be kept) but a real admin-facing risk worth a v2 note."
+    },
+    {
+      "case": "Order detail for a historical line with a pack_size > 1 snapshot",
+      "existing_validation": "OrderItems.tsx keeps the legacy branch rendering 'N packs (M pcs)' when pack_size > 1",
+      "risk_note": "No order_item in the dev DB has pack_size > 1, so this legacy path has no live data to exercise — unit-test coverage only."
+    },
+    {
+      "case": "A pricing-only edit on a product that predates the 3-photo minimum",
+      "existing_validation": "ProductForm/index.tsx save() guards on image_keys.length < PRODUCT_MIN_IMAGES before any request",
+      "risk_note": "Real friction, previously flagged on the pack-selling run and still present: staff cannot adjust quantity limits or tier prices on a legacy low-media product without first sourcing three photos. Only Custom Die-Cut Stickers (3 photos) is editable among the real dev products."
+    },
+    {
+      "case": "Listing quantity typed outside the effective range while the preview is live",
+      "existing_validation": "Zod blocks the save; effectiveLimits() clamps the value the preview renders",
+      "risk_note": "The preview and the validator disagree about the same keystroke: the preview shows a price for the CLAMPED quantity while the field shows a blocking error for the typed one. Harmless but worth a copy tweak (e.g. 'previewing the nearest allowed quantity') so staff do not read the preview as confirmation the value is acceptable."
+    }
+  ],
+  "gaps": [
+    "pricing_updated_at not being bumped by a limits-only change is a backend invariant with no admin-panel surface; it cannot be asserted from the browser and is left to the backend suite.",
+    "RBAC: the product form is gated on products.edit, but this run signs in as the seeded super admin only, so the view-only rendering of the Order quantity panel is not exercised.",
+    "POST /admin/auth/login is rate-limited to 10/hour/IP, so this plan is deliberately captured as a single test under one login rather than one test per path.",
+    "No order_item in the dev database carries pack_size > 1, so the legacy 'N packs (M pcs)' order-detail rendering has no live data to verify against.",
+    "Matte Finish Business Cards cannot be saved through the admin form at all (1 photo vs the 3-photo save guard), so its listing quantity was set through the authorized admin API instead; the admin UI is verified read-only plus live-preview for that product."
+  ]
+}

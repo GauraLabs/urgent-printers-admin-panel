@@ -1,5 +1,5 @@
 import { toPaise, discountPercent } from './discount';
-import { formatPrice } from './formatPrice';
+import { formatPrice2 } from './formatPrice';
 
 export const MAX_LINE_QUANTITY = 1_000_000;
 
@@ -121,12 +121,10 @@ export function perPieceSuffix(unitLabel: string): string {
   return unitLabel === 'pcs' ? '/pc' : ' each';
 }
 
-const money = (paise: number): string => formatPrice(paise / 100);
-const money2 = (paise: number): string =>
-  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(paise / 100);
+const money = (paise: number): string => formatPrice2(paise / 100);
 
 export function cardPreviewText(p: ListingPreview, unitLabel: string): string {
-  return `${formatQty(p.qty, unitLabel)} for ${money2(p.totalPaise)}`;
+  return `${formatQty(p.qty, unitLabel)} for ${money(p.totalPaise)}`;
 }
 
 export function pagePreviewText(p: ListingPreview, unitLabel: string, eff: EffectiveLimits): string {
@@ -134,7 +132,7 @@ export function pagePreviewText(p: ListingPreview, unitLabel: string, eff: Effec
   const range = eff.hasMax
     ? `customers can order ${fmtInt(eff.min)} to ${formatQty(eff.max, unitLabel)}`
     : `customers can order from ${formatQty(eff.min, unitLabel)}`;
-  return `opens at ${formatQty(p.qty, unitLabel)} · ${money2(p.unitPaise)}${per} · total ${money2(p.totalPaise)} · ${range}`;
+  return `opens at ${formatQty(p.qty, unitLabel)} · ${money(p.unitPaise)}${per} · total ${money(p.totalPaise)} · ${range}`;
 }
 
 /** Read-only "Example" cell: integer paise, no float drift. Null until quantity and price are valid. */
@@ -147,7 +145,7 @@ export function exampleText(
   if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_LINE_QUANTITY) return null;
   if (!Number.isFinite(price) || !(price > 0)) return null;
   const total = toPaise(price) * quantity;
-  const base = `${formatQty(quantity, unitLabel)} = ${money2(total)}`;
+  const base = `${formatQty(quantity, unitLabel)} = ${money(total)}`;
   if (mrp != null && Number.isFinite(mrp) && mrp > price) return `${base} (MRP ${money(toPaise(mrp) * quantity)})`;
   return base;
 }
@@ -163,7 +161,7 @@ export function limitNotes(tiers: readonly QtyTier[], eff: EffectiveLimits, unit
   const lowest = tierForQuantity(valid, 0);
   let belowLowestTier: string | null = null;
   if (lowest && eff.min < lowest.quantity) {
-    belowLowestTier = `Orders of ${fmtInt(eff.min)} to ${formatQty(lowest.quantity - 1, unitLabel)} will be charged the ${fmtInt(lowest.quantity)}+ rate (${formatPrice(lowest.price_per_unit)}${perPieceSuffix(unitLabel)})`;
+    belowLowestTier = `Orders of ${fmtInt(eff.min)} to ${formatQty(lowest.quantity - 1, unitLabel)} will be charged the ${fmtInt(lowest.quantity)}+ rate (${formatPrice2(lowest.price_per_unit)}${perPieceSuffix(unitLabel)})`;
   }
   const unreachableTiers = eff.hasMax
     ? valid.filter((t) => t.quantity > eff.max).map((t) => `Tier ${fmtInt(t.quantity)}+ can never be reached (above the maximum)`)
