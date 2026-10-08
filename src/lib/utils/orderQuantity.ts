@@ -79,6 +79,28 @@ export function minOptionMultipliers(groups: ReadonlyArray<ReadonlyArray<Multipl
   return out;
 }
 
+export type SaleState = 'active' | 'scheduled' | 'expired';
+
+/** Half-open [starts, ends): mirrors backend window_status. */
+export function saleState(startsAt: string | null | undefined, endsAt: string | null | undefined, now: Date = new Date()): SaleState {
+  const t = now.getTime();
+  if (startsAt) {
+    const st = new Date(startsAt).getTime();
+    if (Number.isFinite(st) && t < st) return 'scheduled';
+  }
+  if (endsAt) {
+    const en = new Date(endsAt).getTime();
+    if (Number.isFinite(en) && t >= en) return 'expired';
+  }
+  return 'active';
+}
+
+export function saleStateNote(state: SaleState): string | null {
+  if (state === 'scheduled') return 'Sale not active yet \u2014 customers pay MRP';
+  if (state === 'expired') return 'Sale ended \u2014 customers pay MRP';
+  return null;
+}
+
 export interface ListingPreview {
   qty: number;
   unitPaise: number;
@@ -91,15 +113,18 @@ export function listingPreview(
   tiers: readonly QtyTier[],
   qty: number,
   multipliers: readonly number[],
+  sale: SaleState = 'active',
 ): ListingPreview | null {
   const tier = tierForQuantity(tiers, qty);
   if (!tier || !Number.isFinite(tier.price_per_unit) || !(tier.price_per_unit > 0)) return null;
-  const unitPaise = unitPaiseWithMultipliers(tier.price_per_unit, multipliers);
+  const hasMrp = tier.mrp_per_unit != null && Number.isFinite(tier.mrp_per_unit);
+  const charged = sale !== 'active' && hasMrp ? (tier.mrp_per_unit as number) : tier.price_per_unit;
+  const unitPaise = unitPaiseWithMultipliers(charged, multipliers);
   if (!(unitPaise > 0)) return null;
   let mrpTotalPaise: number | null = null;
   let percentOff: number | null = null;
-  if (tier.mrp_per_unit != null && Number.isFinite(tier.mrp_per_unit)) {
-    const mrpUnit = unitPaiseWithMultipliers(tier.mrp_per_unit, multipliers);
+  if (sale === 'active' && hasMrp) {
+    const mrpUnit = unitPaiseWithMultipliers(tier.mrp_per_unit as number, multipliers);
     if (mrpUnit > unitPaise) {
       mrpTotalPaise = mrpUnit * qty;
       const pct = discountPercent(mrpUnit / 100, unitPaise / 100);

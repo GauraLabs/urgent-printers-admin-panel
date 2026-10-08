@@ -12,6 +12,8 @@ import {
   exampleText,
   limitNotes,
   listingPreview,
+  saleState,
+  saleStateNote,
   minOptionMultipliers,
   pagePreviewText,
 } from '@/lib/utils/orderQuantity';
@@ -40,7 +42,9 @@ export function PricingSection({ form }: Props) {
   const limitsInvalid = Boolean(errors.listing_quantity || errors.min_order_quantity || errors.max_order_quantity)
     || eff.min > eff.max
     || (listingRaw != null && (listingRaw < eff.min || listingRaw > eff.max));
-  const preview = limitsInvalid ? null : listingPreview(tiers, eff.listing, multipliers);
+  const sale = saleState(watch('discount_starts_at'), watch('discount_ends_at'));
+  const saleNote = saleStateNote(sale);
+  const preview = limitsInvalid ? null : listingPreview(tiers, eff.listing, multipliers, sale);
   const notes = limitNotes(tiers, eff, unitLabel);
 
   const typoWarnings = getTierPriceTypoWarnings(tiers);
@@ -148,6 +152,9 @@ export function PricingSection({ form }: Props) {
             <span className="text-[var(--text-muted)]">Product card: </span>
             {preview ? (
               <>
+                {saleNote && preview.mrpTotalPaise == null && tiers.some((t) => t.mrp_per_unit != null) && (
+                  <span data-testid="preview-sale-note" className="mr-1.5 text-[var(--warning)]">{saleNote}: </span>
+                )}
                 {preview.mrpTotalPaise != null && (
                   <s className="mr-1.5 text-[var(--text-muted)]">{formatPrice2(preview.mrpTotalPaise / 100)}</s>
                 )}

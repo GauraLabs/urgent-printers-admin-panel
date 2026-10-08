@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   cardPreviewText, effectiveLimits, exampleText, formatQty, limitNotes, listingPreview, lowestTierQuantity,
-  minOptionMultipliers, unitPaiseWithMultipliers, perPieceSuffix, pagePreviewText, tierForQuantity,
+  minOptionMultipliers, unitPaiseWithMultipliers, perPieceSuffix, saleState, saleStateNote, pagePreviewText, tierForQuantity,
 } from './orderQuantity';
 
 const stickers = [
@@ -155,5 +155,28 @@ describe('formatPrice2', () => {
     expect(formatPrice2(6)).toBe('₹6.00');
     expect(formatPrice2(12.6)).toBe('₹12.60');
     expect(formatPrice2(2500)).toBe('₹2,500.00');
+  });
+});
+
+describe('sale window', () => {
+  const t = [{ quantity: 50, price_per_unit: 6, mrp_per_unit: 7.2 }];
+  const now = new Date('2030-06-01T00:00:00Z');
+  it('is half-open [starts, ends)', () => {
+    expect(saleState(null, null, now)).toBe('active');
+    expect(saleState('2030-06-01T00:00:00Z', null, now)).toBe('active');
+    expect(saleState('2030-06-01T00:00:01Z', null, now)).toBe('scheduled');
+    expect(saleState(null, '2030-06-01T00:00:00Z', now)).toBe('expired');
+    expect(saleState(null, '2030-06-01T00:00:01Z', now)).toBe('active');
+  });
+  it('charges the MRP with no discount outside the window', () => {
+    for (const s of ['scheduled', 'expired'] as const) {
+      const p = listingPreview(t, 50, [], s);
+      expect(p).toMatchObject({ totalPaise: 36000, mrpTotalPaise: null, percentOff: null });
+    }
+    expect(listingPreview(t, 50, [], 'active')?.totalPaise).toBe(30000);
+  });
+  it('tiers without an MRP are unaffected', () => {
+    expect(listingPreview([{ quantity: 50, price_per_unit: 6 }], 50, [], 'expired')?.totalPaise).toBe(30000);
+    expect(saleStateNote('scheduled')).toMatch(/not active yet/);
   });
 });

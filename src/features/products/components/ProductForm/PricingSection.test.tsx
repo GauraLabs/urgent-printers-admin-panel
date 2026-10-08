@@ -9,9 +9,9 @@ type Tier = ProductFormValues['pricing_tiers'][number];
 
 let latest: ReturnType<typeof useForm<ProductFormValues>> | null = null;
 
-function Harness({ tiers }: { tiers: Tier[] }) {
+function Harness({ tiers, start = '2030-01-01T00:00:00.000Z', end = '2030-02-01T00:00:00.000Z' }: { tiers: Tier[]; start?: string | null; end?: string | null }) {
   const form = useForm<ProductFormValues>({
-    defaultValues: { pricing_tiers: tiers, discount_starts_at: '2030-01-01T00:00:00.000Z', discount_ends_at: '2030-02-01T00:00:00.000Z' },
+    defaultValues: { pricing_tiers: tiers, discount_starts_at: start, discount_ends_at: end },
   });
   useEffect(() => { latest = form; });
   return <PricingSection form={form} />;
@@ -162,7 +162,7 @@ describe('PricingSection order quantity panel', () => {
   });
 
   it('shows the MRP strike-through and percent in the card preview', () => {
-    render(<Harness tiers={[tier(40, 6, 7.5)]} />);
+    render(<Harness tiers={[tier(40, 6, 7.5)]} start={null} end={null} />);
     const card = screen.getByTestId('preview-card');
     expect(card.querySelector('s')).toHaveTextContent(/^₹300\.00$/);
     expect(card).toHaveTextContent('40 pcs for ₹240.00');
@@ -205,5 +205,20 @@ describe('PricingSection rising price warning and blocked preview', () => {
     await act(async () => { fireEvent.change(screen.getByLabelText('Max order'), { target: { value: '1000' } }); });
     await act(async () => { fireEvent.change(screen.getByLabelText('Show on listing as'), { target: { value: '5' } }); });
     expect(screen.getByTestId('preview-blocked')).toBeInTheDocument();
+  });
+});
+
+describe('PricingSection preview with a closed sale window', () => {
+  it('shows the MRP total and a not-active note while the sale is scheduled', () => {
+    render(<Harness tiers={[tier(50, 6, 7.2)]} />);
+    const card = screen.getByTestId('preview-card');
+    expect(card).toHaveTextContent('Sale not active yet — customers pay MRP: 50 pcs for ₹360.00');
+    expect(card).not.toHaveTextContent('% off');
+    expect(screen.getByTestId('preview-page')).toHaveTextContent('total ₹360.00');
+  });
+  it('shows the sale price with a discount when the window is open', () => {
+    render(<Harness tiers={[tier(50, 6, 7.2)]} start={null} end={null} />);
+    expect(screen.getByTestId('preview-card')).toHaveTextContent('50 pcs for ₹300.00');
+    expect(screen.queryByTestId('preview-sale-note')).toBeNull();
   });
 });
