@@ -47,6 +47,7 @@ const CODED_MESSAGES: Record<string, string> = {
   quantity_limits_invalid: 'The order quantity limits are inconsistent. The minimum cannot exceed the maximum, and the show-on-listing quantity must sit between them.',
   quantity_below_minimum: 'The quantity is below the minimum order for this product.',
   quantity_above_maximum: 'The quantity is above the maximum order for this product.',
+  invalid_coupon_scope: 'One or more of the selected products or categories no longer exist. Remove them from "Applies to" and try again.',
   duplicate_option_label: 'Two options in the same group have the same name (ignoring case, spaces and punctuation). Give each option a unique label.',
   invalid_mrp: 'MRP must be greater than the selling price and have at most 2 decimal places',
 };

@@ -4,7 +4,8 @@ import { couponSchema, getPercentTypoWarning, type CouponFormValues } from './co
 function base(over: Partial<CouponFormValues> = {}): CouponFormValues {
   return {
     code: 'SAVE10', discount_type: 'percentage', discount_value: 10, valid_from: '2026-01-01',
-    is_active: true, trigger: null, is_personal: false, applies_to_discounted_items: true, ...over,
+    is_active: true, trigger: null, is_personal: false, applies_to_discounted_items: true,
+    scope: 'all', applicable_product_ids: [], applicable_category_ids: [], ...over,
   };
 }
 function paths(over: Partial<CouponFormValues>): string[] {
@@ -69,5 +70,16 @@ describe('coupon integer limits', () => {
     expect(paths({ [k]: 2_147_483_648 })).toContain(k);
     expect(paths({ [k]: 2_147_483_647 })).toEqual([]);
     expect(paths({ [k]: undefined })).toEqual([]);
+  });
+});
+
+describe('coupon scope', () => {
+  it('all products needs no ids', () => {
+    expect(paths({})).toEqual([]);
+  });
+  it('specific scope needs at least one product or category', () => {
+    expect(paths({ scope: 'specific' })).toEqual(['scope']);
+    expect(paths({ scope: 'specific', applicable_product_ids: ['1'] })).toEqual([]);
+    expect(paths({ scope: 'specific', applicable_category_ids: ['2'] })).toEqual([]);
   });
 });

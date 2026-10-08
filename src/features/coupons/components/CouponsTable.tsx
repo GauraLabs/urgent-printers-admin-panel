@@ -1,5 +1,6 @@
 'use client';
 
+import { couponScopeSummary } from './couponScope';
 import { useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
@@ -87,6 +88,15 @@ export function CouponsTable() {
       ),
     },
     {
+      id: 'scope',
+      header: 'Applies to',
+      cell: ({ row }) => (
+        <span data-testid="coupon-scope" className="text-xs text-[var(--text-secondary)]">
+          {couponScopeSummary(row.original.applicable_product_ids, row.original.applicable_category_ids)}
+        </span>
+      ),
+    },
+    {
       id: 'usage',
       header: 'Usage',
       cell: ({ row }) => {
@@ -130,7 +140,10 @@ export function CouponsTable() {
         const c = row.original;
         return (
           <DropdownMenu>
-            <DropdownMenuTrigger className="p-1.5 rounded-md hover:bg-[var(--surface-secondary)] transition-colors">
+            <DropdownMenuTrigger
+              aria-label={`Actions for ${c.code}`}
+              className="p-1.5 rounded-md hover:bg-[var(--surface-secondary)] transition-colors"
+            >
               <MoreHorizontal className="h-4 w-4 text-[var(--text-muted)]" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

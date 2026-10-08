@@ -100,6 +100,42 @@ export async function getOrder(id: string): Promise<OrderWithDetails> {
   return normaliseOrder(raw);
 }
 
+function numOrNull(v: unknown): number | null {
+  if (v == null || v === '') return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+const strList = (v: unknown): string[] => (Array.isArray(v) ? v.map(String) : []);
+
+export function normaliseCouponSnapshot(v: unknown): import('@/types').CouponSnapshot | null {
+  if (!v || typeof v !== 'object') return null;
+  const s = v as Record<string, unknown>;
+  const type = s.type === 'percentage' || s.type === 'fixed' ? s.type : null;
+  return {
+    product_ids: strList(s.product_ids),
+    category_ids: strList(s.category_ids),
+    product_names: strList(s.product_names),
+    category_names: strList(s.category_names),
+    all_items: s.all_items !== false,
+    applies_to_discounted_items: s.applies_to_discounted_items !== false,
+    minimum_order_amount: numOrNull(s.minimum_order_amount),
+    type,
+    value: numOrNull(s.value),
+    max_discount: numOrNull(s.max_discount),
+    eligible_line_indexes: Array.isArray(s.eligible_line_indexes) ? s.eligible_line_indexes.map(Number) : [],
+    line_count: numOrNull(s.line_count),
+  };
+}
+
+function normaliseAppliedTo(v: unknown): { eligible: number; total: number } | null {
+  if (!v || typeof v !== 'object') return null;
+  const a = v as Record<string, unknown>;
+  const eligible = numOrNull(a.eligible);
+  const total = numOrNull(a.total);
+  return eligible != null && total != null ? { eligible, total } : null;
+}
+
 function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
   const normaliseId = (v: unknown): string => String(v);
 
@@ -129,6 +165,7 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
     artwork_filename: (item.artwork_filename as string | null) ?? null,
     artwork_type: (item.artwork_type as 'file' | 'template' | null) ?? null,
     template_data: (item.template_data as Record<string, string> | null) ?? null,
+    coupon_eligible: typeof item.coupon_eligible === 'boolean' ? item.coupon_eligible : null,
   }));
 
   const notes = ((raw.notes as Record<string, unknown>[] | null) ?? []).map((n) => ({
@@ -164,6 +201,8 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
     total_amount: Number(raw.total_amount ?? 0),
     currency: 'INR',
     coupon_code: (raw.coupon_code as string | null) ?? null,
+    coupon_snapshot: normaliseCouponSnapshot(raw.coupon_snapshot),
+    coupon_applied_to: normaliseAppliedTo(raw.coupon_applied_to),
     discount_amount: Number(raw.discount_amount ?? 0),
     subtotal: Number(raw.subtotal ?? 0),
     gst_amount: Number(raw.gst_amount ?? 0),

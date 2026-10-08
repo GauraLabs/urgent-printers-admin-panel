@@ -70,6 +70,8 @@ export interface OrderItem {
   artwork_filename: string | null;
   artwork_type: 'file' | 'template' | null;
   template_data: Record<string, string> | null;
+  /** Whether this line was eligible for the order's coupon; null on legacy/couponless orders. */
+  coupon_eligible?: boolean | null;
 }
 
 export interface OrderAddress {
@@ -142,7 +144,25 @@ export interface Order {
   updated_at: string;
 }
 
+/** Coupon terms frozen at order time (not the live coupon). Money fields arrive as strings. */
+export interface CouponSnapshot {
+  product_ids: string[];
+  category_ids: string[];
+  product_names: string[];
+  category_names: string[];
+  all_items: boolean;
+  applies_to_discounted_items: boolean;
+  minimum_order_amount: number | null;
+  type: 'percentage' | 'fixed' | null;
+  value: number | null;
+  max_discount: number | null;
+  eligible_line_indexes: number[];
+  line_count: number | null;
+}
+
 export interface OrderWithDetails extends Omit<Order, 'turnaround'> {
+  coupon_snapshot: CouponSnapshot | null;
+  coupon_applied_to: { eligible: number; total: number } | null;
   customer_name: string;
   customer_email: string;
   customer_phone: string;

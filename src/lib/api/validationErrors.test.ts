@@ -59,3 +59,10 @@ describe('quantity limit error codes', () => {
     expect(quantityLimitFieldFromMessage('Maximum order must be at most 1,000,000')).toBe('max_order_quantity');
   });
 });
+
+describe('invalid_coupon_scope', () => {
+  it('maps to a friendly message', () => {
+    expect(codedErrorMessage('invalid_coupon_scope')).toMatch(/no longer exist/);
+    expect(describeApiError({ code: 'invalid_coupon_scope', status: 422, message: 'raw' }, 'fb')).toMatch(/Applies to/);
+  });
+});

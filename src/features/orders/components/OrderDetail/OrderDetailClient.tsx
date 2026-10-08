@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, PackageX, Ticket } from 'lucide-react';
+import { ArrowLeft, PackageX } from 'lucide-react';
 import { useOrderDetail } from '../../hooks/useOrderDetail';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { OrderActions } from './OrderActions';
@@ -12,6 +12,7 @@ import { OrderCustomer } from './OrderCustomer';
 import { OrderPayment } from './OrderPayment';
 import { OrderShipping } from './OrderShipping';
 import { OrderNotes } from './OrderNotes';
+import { OrderCoupon } from './OrderCoupon';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import { PageSkeleton } from '@/components/common/LoadingSkeleton';
 import { formatPrice } from '@/lib/utils/formatPrice';
@@ -109,18 +110,12 @@ export function OrderDetailClient({ id }: { id: string }) {
           />
 
           {order.coupon_code && (
-            <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)] mb-3">Coupon Applied</h3>
-              <div className="flex items-center gap-2">
-                <Ticket className="h-4 w-4 text-[var(--primary)]" />
-                <span className="font-mono text-sm font-semibold text-[var(--text-primary)]">{order.coupon_code}</span>
-              </div>
-              {order.discount_amount > 0 && (
-                <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                  Saved {formatPrice(order.discount_amount)}
-                </p>
-              )}
-            </div>
+            <OrderCoupon
+              code={order.coupon_code}
+              discountAmount={order.discount_amount}
+              snapshot={order.coupon_snapshot}
+              appliedTo={order.coupon_applied_to}
+            />
           )}
         </div>
       </div>

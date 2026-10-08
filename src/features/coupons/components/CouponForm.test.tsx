@@ -1,12 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render as rtlRender, screen, fireEvent, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CouponForm } from './CouponForm';
 import type { Coupon } from '@/types';
 
 const mutateAsync = vi.fn();
+const render = (ui: React.ReactElement) => rtlRender(<QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>);
 
 vi.mock('../hooks/useCoupons', () => ({ useSaveCoupon: () => ({ mutateAsync, isPending: false }) }));
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
+vi.mock('@/features/categories/hooks/useCategories', () => ({ useCategories: () => ({ data: [{ id: '4', name: 'Cards' }, { id: '5', name: 'Flyers' }] }) }));
+vi.mock('@/lib/api/products', () => ({
+  getProducts: vi.fn(async () => ({ items: [{ id: '9', name: 'Matte Stickers' }, { id: '10', name: 'Gloss Stickers' }] })),
+  getProduct: vi.fn(async (id: string) => ({ id, name: `Product ${id}` })),
+}));
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 const COUPON: Coupon = {
@@ -79,5 +86,69 @@ describe('CouponForm bounds UX', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
     await waitFor(() => expect(toast.error).toHaveBeenCalled());
     expect(vi.mocked(toast.error).mock.calls[0][0]).toMatch(/outside the allowed range/);
+  });
+});
+
+function renderForm(coupon?: Coupon) {
+  return render(<CouponForm coupon={coupon} />);
+}
+
+describe('CouponForm: Applies to', () => {
+  it('defaults to All products and saves unscoped with empty id lists', async () => {
+    renderForm();
+    expect(screen.getByRole('radio', { name: 'All products' })).toBeChecked();
+    expect(screen.queryByLabelText('Products')).toBeNull();
+    fireEvent.change(screen.getByPlaceholderText('SAVE10'), { target: { value: 'NEW5' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Create Coupon' }));
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
+    const d = mutateAsync.mock.calls[0][0].data;
+    expect(d.applicable_product_ids).toEqual([]);
+    expect(d.applicable_category_ids).toEqual([]);
+  });
+
+  it('an existing unscoped coupon loads as All products and saves unchanged', async () => {
+    renderForm(COUPON);
+    expect(screen.getByTestId('scope-summary')).toHaveTextContent('Applies to all products');
+    fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
+    expect(mutateAsync.mock.calls[0][0].data.applicable_product_ids).toEqual([]);
+  });
+
+  it('loads a scoped coupon, shows the summary and resaves the ids', async () => {
+    renderForm({ ...COUPON, applicable_product_ids: ['9', '10', '11'], applicable_category_ids: ['4'] });
+    expect(screen.getByRole('radio', { name: 'Specific products or categories' })).toBeChecked();
+    expect(screen.getByTestId('scope-summary')).toHaveTextContent('Applies to 3 products and 1 category');
+    expect(await screen.findByText('Cards')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
+    const d = mutateAsync.mock.calls[0][0].data;
+    expect(d.applicable_product_ids).toEqual(['9', '10', '11']);
+    expect(d.applicable_category_ids).toEqual(['4']);
+  });
+
+  it('searches and picks a product and a category, and can remove them', async () => {
+    renderForm();
+    fireEvent.click(screen.getByRole('radio', { name: 'Specific products or categories' }));
+    fireEvent.change(screen.getByLabelText('Products'), { target: { value: 'stick' } });
+    fireEvent.click(await screen.findByRole('button', { name: 'Matte Stickers' }));
+    fireEvent.change(screen.getByLabelText('Categories'), { target: { value: 'fly' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Flyers' }));
+    expect(screen.getByTestId('scope-summary')).toHaveTextContent('Applies to 1 product and 1 category');
+    fireEvent.click(screen.getByRole('button', { name: 'Remove Flyers' }));
+    expect(screen.getByTestId('scope-summary')).toHaveTextContent('Applies to 1 product');
+  });
+
+  it('blocks saving a specific scope with nothing selected', async () => {
+    renderForm();
+    fireEvent.click(screen.getByRole('radio', { name: 'Specific products or categories' }));
+    fireEvent.change(screen.getByPlaceholderText('SAVE10'), { target: { value: 'NEW5' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Create Coupon' }));
+    expect(await screen.findByText(/Pick at least one product or category/)).toBeInTheDocument();
+    expect(mutateAsync).not.toHaveBeenCalled();
+  });
+
+  it('explains the rules in plain text', () => {
+    renderForm();
+    expect(screen.getByText(/minimum order still counts the whole cart/)).toBeInTheDocument();
   });
 });

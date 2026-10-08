@@ -101,6 +101,9 @@ export function OrderItems({ items }: { items: OrderItem[] }) {
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-[var(--text-primary)] leading-snug">{item.product_name}</p>
+                  {item.coupon_eligible === false && (
+                    <span data-testid="not-in-coupon" className="mt-1 mr-1.5 inline-block rounded border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--text-muted)]">Not in coupon</span>
+                  )}
                   {item.category_name && (
                     <Badge
                       label={item.category_name}

@@ -65,13 +65,26 @@ export async function getCouponAnalytics(id: string): Promise<CouponAnalytics> {
 }
 
 // ── Create / Update ───────────────────────────────────────────────────────────
+/** Backend expects integer ids; the app keeps them as strings. */
+function toWire<T extends Partial<CreateCouponRequest>>(data: T): Omit<T, 'applicable_product_ids' | 'applicable_category_ids'> & {
+  applicable_product_ids?: number[];
+  applicable_category_ids?: number[];
+} {
+  const { applicable_product_ids, applicable_category_ids, ...rest } = data;
+  return {
+    ...rest,
+    ...(applicable_product_ids ? { applicable_product_ids: applicable_product_ids.map(Number) } : {}),
+    ...(applicable_category_ids ? { applicable_category_ids: applicable_category_ids.map(Number) } : {}),
+  };
+}
+
 export async function createCoupon(data: CreateCouponRequest): Promise<Coupon> {
-  const raw = await post<RawCoupon>('/admin/coupons', data);
+  const raw = await post<RawCoupon>('/admin/coupons', toWire(data));
   return normalize(raw);
 }
 
 export async function updateCoupon(id: string, data: Partial<CreateCouponRequest>): Promise<Coupon> {
-  const raw = await patch<RawCoupon>(`/admin/coupons/${id}`, data);
+  const raw = await patch<RawCoupon>(`/admin/coupons/${id}`, toWire(data));
   return normalize(raw);
 }
 

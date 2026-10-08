@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,7 @@ import {
 import { cn } from '@/lib/utils/cn';
 import { useSaveCoupon } from '../hooks/useCoupons';
 import { couponSchema, getPercentTypoWarning, type CouponFormValues } from './couponSchema';
+import { ScopePicker } from './ScopePicker';
 import { describeApiError } from '@/lib/api/validationErrors';
 import { ROUTES } from '@/lib/constants/routes';
 import type { Coupon, CouponTrigger } from '@/types';
@@ -41,6 +42,8 @@ const TRIGGER_OPTIONS: {
 export function CouponForm({ coupon }: { coupon?: Coupon }) {
   const router = useRouter();
   const mutation = useSaveCoupon();
+  const uid = useId();
+  const fid = (name: string) => `${uid}-${name}`;
 
   const { register, handleSubmit, watch, setValue, trigger: validateAll, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(couponSchema),
@@ -61,6 +64,9 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
       trigger_amount: (coupon.trigger_config?.amount as number | undefined),
       is_personal: coupon.is_personal,
       applies_to_discounted_items: coupon.applies_to_discounted_items,
+      scope: coupon.applicable_product_ids.length + coupon.applicable_category_ids.length > 0 ? 'specific' : 'all',
+      applicable_product_ids: coupon.applicable_product_ids,
+      applicable_category_ids: coupon.applicable_category_ids,
     } : {
       discount_type: 'percentage',
       discount_value: 10,
@@ -69,6 +75,9 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
       trigger: null,
       is_personal: false,
       applies_to_discounted_items: true,
+      scope: 'all',
+      applicable_product_ids: [],
+      applicable_category_ids: [],
     },
   });
 
@@ -105,6 +114,8 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
           trigger_config,
           is_personal: values.is_personal,
           applies_to_discounted_items: values.applies_to_discounted_items,
+          applicable_product_ids: values.scope === 'specific' ? values.applicable_product_ids : [],
+          applicable_category_ids: values.scope === 'specific' ? values.applicable_category_ids : [],
         },
       });
       toast.success(coupon ? 'Coupon updated' : 'Coupon created');
@@ -119,13 +130,13 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
       {/* Code + description */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className={labelCls}>Coupon Code *</label>
-          <input {...register('code')} className={`${inputCls} font-mono uppercase tracking-wider`} placeholder="SAVE10" />
+          <label htmlFor={fid('code')} className={labelCls}>Coupon Code *</label>
+          <input id={fid('code')} {...register('code')} className={`${inputCls} font-mono uppercase tracking-wider`} placeholder="SAVE10" />
           {errors.code && <p className={errorCls}>{errors.code.message}</p>}
         </div>
         <div>
-          <label className={labelCls}>Description</label>
-          <input {...register('description')} className={inputCls} placeholder="10% off all orders" />
+          <label htmlFor={fid('description')} className={labelCls}>Description</label>
+          <input id={fid('description')} {...register('description')} className={inputCls} placeholder="10% off all orders" />
         </div>
       </div>
 
@@ -134,9 +145,9 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
         <p className="text-xs font-semibold text-[var(--text-primary)]">Discount</p>
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className={labelCls}>Type *</label>
+            <label id={fid('discount_type-label')} className={labelCls}>Type *</label>
             <Select value={discountType} onValueChange={(v) => setValue('discount_type', (v ?? 'percentage') as 'percentage' | 'fixed', { shouldValidate: true })}>
-              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="w-full" aria-labelledby={fid('discount_type-label')}><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="percentage">Percentage (%)</SelectItem>
                 <SelectItem value="fixed">Fixed Amount (₹)</SelectItem>
@@ -144,15 +155,15 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
             </Select>
           </div>
           <div>
-            <label className={labelCls}>Value * {discountType === 'percentage' ? '(%)' : '(₹)'}</label>
-            <input {...register('discount_value', { valueAsNumber: true })} type="number" step={discountType === 'percentage' ? '1' : '0.01'} className={inputCls} placeholder={discountType === 'percentage' ? '10' : '200'} />
+            <label htmlFor={fid('discount_value')} className={labelCls}>Value * {discountType === 'percentage' ? '(%)' : '(₹)'}</label>
+            <input id={fid('discount_value')} {...register('discount_value', { valueAsNumber: true })} type="number" step={discountType === 'percentage' ? '1' : '0.01'} className={inputCls} placeholder={discountType === 'percentage' ? '10' : '200'} />
             {errors.discount_value && <p className={errorCls}>{errors.discount_value.message}</p>}
             {!errors.discount_value && percentWarning && <p role="status" data-testid="percent-typo-warning" className="mt-1 text-xs text-[var(--warning)]">{percentWarning}</p>}
           </div>
           {discountType === 'percentage' && (
             <div>
-              <label className={labelCls}>Max Discount (₹)</label>
-              <input {...register('max_discount_amount', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 1000" />
+              <label htmlFor={fid('max_discount_amount')} className={labelCls}>Max Discount (₹)</label>
+              <input id={fid('max_discount_amount')} {...register('max_discount_amount', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 1000" />
               {errors.max_discount_amount && <p className={errorCls}>{errors.max_discount_amount.message}</p>}
             </div>
           )}
@@ -164,17 +175,17 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
         <p className="text-xs font-semibold text-[var(--text-primary)]">Conditions & Limits</p>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={labelCls}>Minimum Order (₹)</label>
-            <input {...register('min_order_amount', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 500" />
+            <label htmlFor={fid('min_order_amount')} className={labelCls}>Minimum Order (₹)</label>
+            <input id={fid('min_order_amount')} {...register('min_order_amount', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 500" />
             {errors.min_order_amount && <p className={errorCls}>{errors.min_order_amount.message}</p>}
           </div>
           <div>
-            <label className={labelCls}>Total Usage Limit</label>
-            <input {...register('usage_limit', { setValueAs: optNum })} type="number" className={inputCls} placeholder="Leave blank for unlimited" />
+            <label htmlFor={fid('usage_limit')} className={labelCls}>Total Usage Limit</label>
+            <input id={fid('usage_limit')} {...register('usage_limit', { setValueAs: optNum })} type="number" className={inputCls} placeholder="Leave blank for unlimited" />
           </div>
           <div>
-            <label className={labelCls}>Per User Limit</label>
-            <input {...register('per_user_limit', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 1" />
+            <label htmlFor={fid('per_user_limit')} className={labelCls}>Per User Limit</label>
+            <input id={fid('per_user_limit')} {...register('per_user_limit', { setValueAs: optNum })} type="number" className={inputCls} placeholder="e.g. 1" />
           </div>
         </div>
         <label className="flex items-center gap-3 cursor-pointer">
@@ -194,18 +205,32 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
         </label>
       </div>
 
+      {/* Scope */}
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 space-y-3" data-field="scope">
+        <p className="text-xs font-semibold text-[var(--text-primary)]">Applies to</p>
+        <ScopePicker
+          scope={watch('scope')}
+          productIds={watch('applicable_product_ids')}
+          categoryIds={watch('applicable_category_ids')}
+          onScope={(v) => setValue('scope', v, { shouldDirty: true, shouldValidate: true })}
+          onProducts={(ids) => setValue('applicable_product_ids', ids, { shouldDirty: true, shouldValidate: true })}
+          onCategories={(ids) => setValue('applicable_category_ids', ids, { shouldDirty: true, shouldValidate: true })}
+        />
+        {errors.scope && <p className={errorCls}>{errors.scope.message}</p>}
+      </div>
+
       {/* Validity */}
       <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 space-y-4">
         <p className="text-xs font-semibold text-[var(--text-primary)]">Validity Period</p>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={labelCls}>Valid From *</label>
-            <input {...register('valid_from')} type="date" className={inputCls} />
+            <label htmlFor={fid('valid_from')} className={labelCls}>Valid From *</label>
+            <input id={fid('valid_from')} {...register('valid_from')} type="date" className={inputCls} />
             {errors.valid_from && <p className={errorCls}>{errors.valid_from.message}</p>}
           </div>
           <div>
-            <label className={labelCls}>Valid Until</label>
-            <input {...register('valid_until')} type="date" className={inputCls} />
+            <label htmlFor={fid('valid_until')} className={labelCls}>Valid Until</label>
+            <input id={fid('valid_until')} {...register('valid_until')} type="date" className={inputCls} />
             <p className="mt-1 text-[11px] text-[var(--text-muted)]">Leave blank for no expiry</p>
             {errors.valid_until && <p className={errorCls}>{errors.valid_until.message}</p>}
           </div>
@@ -217,7 +242,7 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
         <div>
           <p className="text-xs font-semibold text-[var(--text-primary)]">Automation trigger</p>
           <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-            Manual coupons are entered at checkout. Triggered coupons are auto-issued to customers' wallets.
+            Manual coupons are entered at checkout. Triggered coupons are auto-issued to customers&apos; wallets.
           </p>
         </div>
 
@@ -252,14 +277,14 @@ export function CouponForm({ coupon }: { coupon?: Coupon }) {
         {/* Trigger config */}
         {trigger === 'on_nth_order' && (
           <div className="max-w-xs">
-            <label className={labelCls}>Issue after customer's N-th order</label>
-            <input {...register('trigger_n', { setValueAs: optNum })} type="number" min={1} className={inputCls} placeholder="e.g. 3" />
+            <label htmlFor={fid('trigger_n')} className={labelCls}>Issue after customer&apos;s N-th order</label>
+            <input id={fid('trigger_n')} {...register('trigger_n', { setValueAs: optNum })} type="number" min={1} className={inputCls} placeholder="e.g. 3" />
           </div>
         )}
         {trigger === 'on_spend_milestone' && (
           <div className="max-w-xs">
-            <label className={labelCls}>Issue when lifetime spend exceeds (₹)</label>
-            <input {...register('trigger_amount', { setValueAs: optNum })} type="number" min={1} className={inputCls} placeholder="e.g. 5000" />
+            <label htmlFor={fid('trigger_amount')} className={labelCls}>Issue when lifetime spend exceeds (₹)</label>
+            <input id={fid('trigger_amount')} {...register('trigger_amount', { setValueAs: optNum })} type="number" min={1} className={inputCls} placeholder="e.g. 5000" />
           </div>
         )}
 

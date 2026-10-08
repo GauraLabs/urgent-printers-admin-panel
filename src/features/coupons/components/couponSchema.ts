@@ -28,7 +28,13 @@ export const couponSchema = z.object({
   trigger_amount: z.number().positive().optional(),
   is_personal: z.boolean(),
   applies_to_discounted_items: z.boolean(),
+  scope: z.enum(['all', 'specific']),
+  applicable_product_ids: z.array(z.string()),
+  applicable_category_ids: z.array(z.string()),
 }).superRefine((d, ctx) => {
+  if (d.scope === 'specific' && d.applicable_product_ids.length === 0 && d.applicable_category_ids.length === 0) {
+    ctx.addIssue({ code: 'custom', path: ['scope'], message: 'Pick at least one product or category, or choose All products' });
+  }
   if (d.discount_type === 'percentage' && Number.isFinite(d.discount_value) && d.discount_value > 100) {
     ctx.addIssue({ code: 'custom', path: ['discount_value'], message: `A percentage can be at most 100. ${COUPON_OUT_OF_RANGE}` });
   }
