@@ -24,8 +24,6 @@ export interface OperationsSettings {
 export interface PaymentSettings {
   razorpay_enabled: boolean;
   paytm_enabled: boolean;
-  cod_enabled: boolean;
-  cod_min_order: number;
   razorpay_key_id: string;
 }
 
@@ -62,7 +60,7 @@ export async function updateOperationsSettings(data: Partial<OperationsSettings>
 
 export async function getPaymentSettings(): Promise<PaymentSettings> {
   await delay();
-  return { razorpay_enabled: true, paytm_enabled: false, cod_enabled: true, cod_min_order: 1000, razorpay_key_id: 'rzp_test_xxx' };
+  return { razorpay_enabled: true, paytm_enabled: false, razorpay_key_id: 'rzp_test_xxx' };
 }
 
 export async function updatePaymentSettings(data: Partial<PaymentSettings>): Promise<PaymentSettings> {
