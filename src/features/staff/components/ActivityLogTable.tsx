@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
-import { LogIn, LogOut, UserPlus, UserX, FileEdit, FolderTree, Undo2, MoveRight, Activity as ActivityIcon } from 'lucide-react';
+import { LogIn, LogOut, UserPlus, UserX, FileEdit, FolderTree, Undo2, MoveRight, FileUp, FilePen, Activity as ActivityIcon } from 'lucide-react';
 import { DataTable } from '@/components/common/DataTable';
 import { ExportButton } from '@/components/common/ExportButton';
 import {
@@ -24,9 +24,13 @@ const ACTION_ICON: Record<string, { icon: React.ElementType; cls: string }> = {
   'taxonomy.applied':            { icon: FolderTree, cls: 'text-blue-600 dark:text-blue-400' },
   'taxonomy.rolled_back':        { icon: Undo2,      cls: 'text-amber-600 dark:text-amber-400' },
   'product.bulk_category_moved': { icon: MoveRight,  cls: 'text-blue-600 dark:text-blue-400' },
+  'category.updated':            { icon: FilePen,    cls: 'text-amber-600 dark:text-amber-400' },
+  'product.updated':             { icon: FilePen,    cls: 'text-amber-600 dark:text-amber-400' },
+  'content.imported':            { icon: FileUp,     cls: 'text-blue-600 dark:text-blue-400' },
+  'content.rolled_back':         { icon: Undo2,      cls: 'text-amber-600 dark:text-amber-400' },
 };
 
-const RESOURCE_TYPES = ['admin_user', 'category', 'product'];
+const RESOURCE_TYPES = ['admin_user', 'category', 'product', 'content'];
 
 /** Human-readable rendering of the meta JSON. */
 function renderMeta(action: string, meta: Record<string, unknown>): React.ReactNode {

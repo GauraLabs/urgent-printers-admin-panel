@@ -9,6 +9,10 @@ export const ACTION_LABELS: Record<string, string> = {
   'taxonomy.applied':            'Taxonomy Applied',
   'taxonomy.rolled_back':        'Taxonomy Rolled Back',
   'product.bulk_category_moved': 'Products Moved (Bulk)',
+  'category.updated':            'Category Updated',
+  'product.updated':             'Product Updated',
+  'content.imported':            'Content Imported',
+  'content.rolled_back':         'Content Rolled Back',
 };
 
 export function actionLabel(action: string): string {
@@ -54,6 +58,30 @@ function countOf(value: unknown): number | null {
   return Array.isArray(value) ? value.length : null;
 }
 
+function plural(n: number, word: string): string {
+  return `${n} ${n === 1 ? word.replace(/ies$/, 'y').replace(/s$/, '') : word}`;
+}
+
+const MAX_FIELDS_SHOWN = 3;
+
+function summarizeContentImportRow(meta: Record<string, unknown>): string {
+  const label = meta.rollback === true ? 'Content rollback' : 'Content import';
+  const fields = Array.isArray(meta.fields) ? meta.fields.filter((f): f is string => typeof f === 'string') : [];
+  if (!fields.length) return label;
+  const shown = fields.slice(0, MAX_FIELDS_SHOWN).join(', ');
+  const extra = fields.length - MAX_FIELDS_SHOWN;
+  return `${label} · ${shown}${extra > 0 ? ` +${extra} more` : ''}`;
+}
+
+function summarizeContentRun(meta: Record<string, unknown>): string {
+  const parts: string[] = [];
+  const cats = countOf(meta.category_ids);
+  const prods = countOf(meta.product_ids);
+  if (cats) parts.push(plural(cats, 'categories'));
+  if (prods) parts.push(plural(prods, 'products'));
+  return parts.length ? `${parts.join(' · ')} updated` : 'No changes';
+}
+
 /** One-line summary for actions whose meta holds id arrays/maps that the generic key=value fallback garbles. */
 export function summarizeMeta(action: string, meta: Record<string, unknown>): string | null {
   if (action === 'product.bulk_category_moved') {
@@ -62,6 +90,10 @@ export function summarizeMeta(action: string, meta: Record<string, unknown>): st
     if (n != null) parts.push(`${n} product${n === 1 ? '' : 's'}`);
     parts.push(meta.category_id != null ? `→ category #${String(meta.category_id)}` : '→ uncategorised');
     return parts.join(' ');
+  }
+  if (action === 'content.imported' || action === 'content.rolled_back') return summarizeContentRun(meta);
+  if ((action === 'category.updated' || action === 'product.updated') && meta.source === 'content_import') {
+    return summarizeContentImportRow(meta);
   }
   const counts: [unknown, string][] =
     action === 'taxonomy.applied'

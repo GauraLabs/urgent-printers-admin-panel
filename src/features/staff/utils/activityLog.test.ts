@@ -98,3 +98,62 @@ describe('summarizeMeta', () => {
     expect(summarizeMeta('taxonomy.applied', {})).toBeNull();
   });
 });
+
+describe('content import events', () => {
+  it('labels the import, rollback and row-level update events', () => {
+    expect(actionLabel('content.imported')).toBe('Content Imported');
+    expect(actionLabel('content.rolled_back')).toBe('Content Rolled Back');
+    expect(actionLabel('category.updated')).toBe('Category Updated');
+    expect(actionLabel('product.updated')).toBe('Product Updated');
+  });
+
+  it('labels the content import script as a system actor', () => {
+    const r = resolveActivityActor(
+      { actor_admin_id: null, meta: { actor: 'system:content_import', source: 'content_import' } },
+      STAFF,
+    );
+    expect(r).toEqual({ kind: 'system', name: 'System · content import', role: null });
+  });
+
+  it('summarises an import run as counts, not id arrays', () => {
+    const meta = {
+      source: 'content_import', input_sha256: 'abc',
+      category_ids: [1, 2, 3, 4, 5, 6, 7, 8], product_ids: Array.from({ length: 39 }, (_, i) => i + 1),
+      fields_changed: 120,
+    };
+    expect(summarizeMeta('content.imported', meta)).toBe('8 categories · 39 products updated');
+  });
+
+  it('summarises a rollback and singularises counts of one', () => {
+    expect(summarizeMeta('content.rolled_back', {
+      source: 'content_import', snapshot_taken_at: '2026-10-11T00:00:00Z', category_ids: [4], product_ids: [9],
+    })).toBe('1 category · 1 product updated');
+    expect(summarizeMeta('content.imported', { category_ids: [], product_ids: [1, 2] })).toBe('2 products updated');
+  });
+
+  it('reports no changes when both id lists are empty or missing', () => {
+    expect(summarizeMeta('content.imported', { category_ids: [], product_ids: [] })).toBe('No changes');
+    expect(summarizeMeta('content.rolled_back', {})).toBe('No changes');
+  });
+
+  it('summarises a content-import row update with its changed fields', () => {
+    expect(summarizeMeta('category.updated', {
+      source: 'content_import', name: 'Wedding Cards', fields: ['seo.title', 'description'],
+    })).toBe('Content import · seo.title, description');
+    expect(summarizeMeta('product.updated', {
+      source: 'content_import', actor: 'system:content_import', name: 'Card', fields: ['description'], rollback: true,
+    })).toBe('Content rollback · description');
+  });
+
+  it('caps the field list and handles missing fields', () => {
+    expect(summarizeMeta('product.updated', {
+      source: 'content_import', fields: ['a', 'b', 'c', 'd', 'e'],
+    })).toBe('Content import · a, b, c +2 more');
+    expect(summarizeMeta('category.updated', { source: 'content_import', fields: 'oops' })).toBe('Content import');
+  });
+
+  it('leaves ordinary admin updates to the generic renderer', () => {
+    expect(summarizeMeta('category.updated', { name: 'Wedding Cards' })).toBeNull();
+    expect(summarizeMeta('product.updated', { name: 'Card', status: 'active', pricing_changed: false })).toBeNull();
+  });
+});
