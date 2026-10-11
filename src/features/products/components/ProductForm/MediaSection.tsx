@@ -158,7 +158,7 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
     // `image_keys`, deleting the object now would destroy a live asset even
     // if the admin never clicks Save (or the save is blocked/cancelled), or
     // the guard just below rejects the submit for an unrelated reason (e.g.
-    // dropping below the 3-photo minimum). Once removed here, the key is no
+    // dropping below the photo minimum). Once removed here, the key is no
     // longer written back by the next successful save (see save()'s
     // image_keys payload, sourced from this component's own state via
     // onImagesChange) — so it naturally becomes unreferenced and is swept up

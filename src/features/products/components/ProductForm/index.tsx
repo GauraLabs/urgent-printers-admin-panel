@@ -27,7 +27,7 @@ import type { ApiError, Product, ProductStatus } from '@/types';
 
 export type { ProductFormValues } from './schema';
 
-const PRODUCT_MIN_IMAGES = 3;
+const PRODUCT_MIN_IMAGES = 1;
 const PRODUCT_MAX_IMAGES = 8;
 
 // Imperative `open()` lets a collapsed-by-default section (Inventory, SEO)
@@ -237,7 +237,7 @@ export function ProductForm({ product }: ProductFormProps) {
       return;
     }
     if ((v.image_keys ?? []).length < PRODUCT_MIN_IMAGES) {
-      toast.error(`At least ${PRODUCT_MIN_IMAGES} photos are required`);
+      toast.error('At least 1 photo is required');
       return;
     }
 
