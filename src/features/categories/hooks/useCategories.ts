@@ -33,6 +33,8 @@ export function useSaveCategory() {
       id ? updateCategory(id, data) : createCategory(data as CategoryCreateRequest),
     onSuccess: (_, variables) => {
       qc.invalidateQueries({ queryKey: ['categories'] });
+      // A re-parent changes rolled-up counts and nav paths shown elsewhere.
+      qc.invalidateQueries({ queryKey: ['products'] });
       // Also bust the individual detail cache so re-opening the edit form
       // gets the updated values rather than stale ones.
       if (variables.id) {
@@ -69,7 +71,20 @@ export function useDeleteCategory() {
     // refetch to reconcile here. Skipping it removes the race entirely
     // instead of racing it with a longer delay.
     onSuccess: (_, id) => {
-      qc.setQueryData<Category[]>(['categories'], (old) => old?.filter((c) => c.id !== id));
+      qc.setQueryData<Category[]>(['categories'], (old) => {
+        const removed = old?.find((c) => c.id === id);
+        if (!old || !removed) return old;
+        const ancestorIds = new Set(removed.ancestors.map((a) => a.id));
+        return old
+          .filter((c) => c.id !== id)
+          .map((c) => (ancestorIds.has(c.id)
+            ? {
+                ...c,
+                total_product_count: Math.max(0, c.total_product_count - removed.total_product_count),
+                children_count: c.id === removed.parent_id ? Math.max(0, c.children_count - 1) : c.children_count,
+              }
+            : c));
+      });
     },
   });
 }
@@ -77,6 +92,7 @@ export function useDeleteCategory() {
 export function useReorderCategories() {
   const qc = useQueryClient();
   return useMutation({
+    // `ids` are the moved category's siblings only (same parent), in new order.
     mutationFn: (ids: string[]) => reorderCategories(ids),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['categories'] }),
   });

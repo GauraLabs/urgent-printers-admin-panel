@@ -13,15 +13,17 @@ function normalizeUser(raw: AdminUser & { id: string | number }): AdminUser {
   return { ...raw, id: String(raw.id) };
 }
 
-function normalizeActivity(raw: Omit<ActivityLog, 'id' | 'actor_admin_id' | 'resource_id'> & {
+export function normalizeActivity(raw: Omit<ActivityLog, 'id' | 'actor_admin_id' | 'actor_customer_id' | 'resource_id'> & {
   id: string | number;
-  actor_admin_id: string | number;
+  actor_admin_id: string | number | null;
+  actor_customer_id?: string | number | null;
   resource_id: string | number | null;
 }): ActivityLog {
   return {
     ...raw,
     id: String(raw.id),
-    actor_admin_id: String(raw.actor_admin_id),
+    actor_admin_id: raw.actor_admin_id != null ? String(raw.actor_admin_id) : null,
+    actor_customer_id: raw.actor_customer_id != null ? String(raw.actor_customer_id) : null,
     resource_id: raw.resource_id != null ? String(raw.resource_id) : null,
   };
 }

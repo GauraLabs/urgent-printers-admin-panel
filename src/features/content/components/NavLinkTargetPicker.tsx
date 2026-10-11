@@ -2,6 +2,7 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCategories } from '@/features/categories/hooks/useCategories';
+import { categoryOptions } from '@/features/categories/utils/categoryTree';
 import { cn } from '@/lib/utils/cn';
 
 type TargetMode = 'category' | 'custom';
@@ -61,10 +62,10 @@ export function NavLinkTargetPicker({ categoryId, customUrl, onChange, error, di
           onValueChange={(v) => onChange({ category_id: (v ?? '') || null, custom_url: null })}
           disabled={disabled}
         >
-          <SelectTrigger className="w-full"><SelectValue placeholder="Select a category" /></SelectTrigger>
+          <SelectTrigger className="w-full" aria-label="Target category"><SelectValue placeholder="Select a category" /></SelectTrigger>
           <SelectContent>
-            {(categories ?? []).map((c) => (
-              <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+            {categoryOptions(categories ?? []).map((c) => (
+              <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>

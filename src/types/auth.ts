@@ -92,7 +92,9 @@ export interface LoginResponse {
  */
 export interface ActivityLog {
   id: string;
-  actor_admin_id: string;
+  actor_admin_id: string | null;
+  // Not yet in ActivityLogResponse; typed so the UI picks it up once exposed.
+  actor_customer_id?: string | null;
   action: string;            // e.g. "staff.created", "admin.login"
   resource_type: string;     // e.g. "admin_user"
   resource_id: string | null;

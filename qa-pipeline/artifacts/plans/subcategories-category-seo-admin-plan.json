@@ -1,0 +1,436 @@
+{
+  "feature_found": true,
+  "feature_name": "Subcategories and Category SEO (Admin)",
+  "source_files": [
+    "urgent-printers-admin-panel/project.config.json",
+    "urgent-printers-admin-panel/CLAUDE.md",
+    "urgent-printers-admin-panel/src/features/categories/components/CategoriesTable.tsx",
+    "urgent-printers-admin-panel/src/features/categories/components/CategoryForm.tsx",
+    "urgent-printers-admin-panel/src/features/categories/components/CategorySelectOptions.tsx",
+    "urgent-printers-admin-panel/src/features/categories/components/FaqEditor.tsx",
+    "urgent-printers-admin-panel/src/features/categories/components/SnippetPreview.tsx",
+    "urgent-printers-admin-panel/src/features/categories/components/CategoryEditClient.tsx",
+    "urgent-printers-admin-panel/src/features/categories/utils/categoryTree.ts",
+    "urgent-printers-admin-panel/src/features/categories/hooks/useCategories.ts",
+    "urgent-printers-admin-panel/src/features/products/components/BulkMoveCategoryDialog.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductsTable.tsx",
+    "urgent-printers-admin-panel/src/features/products/components/ProductForm/BasicInfoSection.tsx",
+    "urgent-printers-admin-panel/src/features/products/hooks/useProducts.ts",
+    "urgent-printers-admin-panel/src/features/content/components/NavLinkTargetPicker.tsx",
+    "urgent-printers-admin-panel/src/lib/api/categories.ts",
+    "urgent-printers-admin-panel/src/lib/api/products.ts",
+    "urgent-printers-admin-panel/src/components/common/ConfirmDialog.tsx",
+    "urgent-printers-admin-panel/src/components/common/DataTable.tsx",
+    "urgent-printers-backend/app/api/v1/routes/admin/categories.py",
+    "urgent-printers-backend/app/api/v1/routes/admin/products.py",
+    "urgent-printers-backend/app/services/category_tree.py",
+    "urgent-printers-backend/app/schemas/category.py",
+    "urgent-printers-backend/app/schemas/admin.py",
+    "urgent-printers-backend/app/core/exceptions.py",
+    "urgent-printers-backend/app/core/permissions.py",
+    "plans/subcategories-seo-plan.md"
+  ],
+  "user_goal": "Organise the catalog into a two-level category tree and give every category the SEO content (meta, intro/body copy, FAQs, Google product category, noindex) the storefront needs, without breaking existing product URLs.",
+  "business_goal": "Subcategories make a thin catalog navigable and give each level its own indexable, answer-first landing page, which is where organic and shopping-feed traffic actually arrives.",
+  "user_journey": [
+    {
+      "step": "Sign in to the admin panel",
+      "route_or_state": "/login"
+    },
+    {
+      "step": "Review the category tree, its indentation and rolled-up product counts",
+      "route_or_state": "/categories"
+    },
+    {
+      "step": "Create a top-level category",
+      "route_or_state": "/categories/new"
+    },
+    {
+      "step": "Create a child category under it and fill the SEO section",
+      "route_or_state": "/categories/new"
+    },
+    {
+      "step": "Re-open the child to confirm the SEO content round-tripped",
+      "route_or_state": "/categories/{id}"
+    },
+    {
+      "step": "Assign a product to a category from the grouped Parent > Child select",
+      "route_or_state": "/products/new"
+    },
+    {
+      "step": "Filter the products list by a parent category and see descendants rolled up",
+      "route_or_state": "/products"
+    },
+    {
+      "step": "Drive the bulk Move to category dialog to its confirmation step",
+      "route_or_state": "/products (dialog)"
+    },
+    {
+      "step": "Point a navigation link at a subcategory by its full path",
+      "route_or_state": "/content/navigation"
+    },
+    {
+      "step": "Attempt to delete a parent that still has subcategories",
+      "route_or_state": "/categories (confirm dialog)"
+    },
+    {
+      "step": "Delete the subcategory, then the parent",
+      "route_or_state": "/categories"
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "hp-01",
+      "action": "Open the categories list",
+      "selector": "a[href='/categories/new'] (\"Add Category\")",
+      "expected_result": "The tree renders parent-before-children: 'Stickers & Labels' at depth 0 with 'Die-cut Stickers' indented under it, and 'Marketing Prints' at depth 0 with 'Flyers & Leaflets' and 'Posters' indented under it (CategoriesTable name cell sets paddingLeft: depth * 24 and data-depth)."
+    },
+    {
+      "step_id": "hp-02",
+      "action": "Read the rolled-up product count on a parent row",
+      "selector": "tr containing 'Marketing Prints' -> Products cell",
+      "expected_result": "The cell shows the direct count then the rolled-up one: '0 · 2 total' (product_count then total_product_count, only rendered when hasChildren)."
+    },
+    {
+      "step_id": "hp-03",
+      "action": "Collapse the 'Marketing Prints' row",
+      "selector": "button[aria-label='Collapse Marketing Prints']",
+      "expected_result": "Both child rows disappear from the table (visibleRows drops descendants of a collapsed row) and the button's aria-label flips to 'Expand Marketing Prints' with aria-expanded=false."
+    },
+    {
+      "step_id": "hp-04",
+      "action": "Expand 'Marketing Prints' again",
+      "selector": "button[aria-label='Expand Marketing Prints']",
+      "expected_result": "'Flyers & Leaflets' and 'Posters' are visible again, still indented."
+    },
+    {
+      "step_id": "hp-05",
+      "action": "Click 'Add Category'",
+      "selector": "a[href='/categories/new'] (\"Add Category\")",
+      "expected_result": "Navigates to /categories/new and the 'New Category' heading is shown."
+    },
+    {
+      "step_id": "hp-06",
+      "action": "Enter the new top-level category's name",
+      "selector": "label:text-is('Name *') + input",
+      "expected_result": "The Name field holds the typed value."
+    },
+    {
+      "step_id": "hp-07",
+      "action": "Observe the auto-derived slug",
+      "selector": "label:text-is('Slug *') + input",
+      "expected_result": "Slug is auto-filled from the name by slugify() (lowercase, non-alphanumeric runs collapsed to single hyphens); no slug-change warning is shown on a create form."
+    },
+    {
+      "step_id": "hp-08",
+      "action": "Inspect the parent picker on the create form",
+      "selector": "#category-parent",
+      "expected_result": "Enabled, defaults to 'None (top-level)', lists only top-level categories as options (eligibleParents filters parent_id === null), and the hint reads 'Only top-level categories can be parents (two levels maximum).'"
+    },
+    {
+      "step_id": "hp-09",
+      "action": "Upload one category image",
+      "selector": "input[type='file'][accept*='image']",
+      "expected_result": "Upload completes and the MediaSection status line reports the 1-photo minimum as met; the 'At least 1 photo is required' error is not shown."
+    },
+    {
+      "step_id": "hp-10",
+      "action": "Submit the create form for the new top-level category",
+      "selector": "button:text-is('Create Category')",
+      "expected_result": "A 'Category created' toast appears and the app returns to /categories with the new row present at depth 0."
+    },
+    {
+      "step_id": "hp-11",
+      "action": "Start a second category and name it as the child",
+      "selector": "label:text-is('Name *') + input",
+      "expected_result": "Name and auto-derived slug are filled for the child category."
+    },
+    {
+      "step_id": "hp-12",
+      "action": "Choose the newly created top-level category as the parent",
+      "selector": "#category-parent",
+      "expected_result": "The select's value becomes the parent's id; the parent appears among the options because it is top-level."
+    },
+    {
+      "step_id": "hp-13",
+      "action": "Enter the Meta Title and watch its character counter",
+      "selector": "label:text-is('Meta Title') -> ../following-sibling::input[1]",
+      "expected_result": "The field holds the typed title and the counter next to the label reads '<len>/60', staying in the muted colour while under the limit."
+    },
+    {
+      "step_id": "hp-14",
+      "action": "Enter the Meta Description and watch its character counter",
+      "selector": "label:text-is('Meta Description') -> ../following-sibling::textarea[1]",
+      "expected_result": "The field holds the typed description and its counter reads '<len>/160'."
+    },
+    {
+      "step_id": "hp-15",
+      "action": "Read the Google snippet preview",
+      "selector": "[data-testid='snippet-preview']",
+      "expected_result": "Shows the storefront host plus ' › products › <slug>', the meta title as the blue title line, and the meta description underneath."
+    },
+    {
+      "step_id": "hp-16",
+      "action": "Fill the answer-first intro copy",
+      "selector": "label:text-is('Intro text') -> ../following-sibling::textarea[1]",
+      "expected_result": "The textarea accepts the copy and its counter shows the length against 2000 with no error."
+    },
+    {
+      "step_id": "hp-17",
+      "action": "Fill the longer body copy shown below the product grid",
+      "selector": "label:text-is('Body text') -> ../following-sibling::textarea[1]",
+      "expected_result": "The textarea accepts the copy against its 20000-character limit with no error."
+    },
+    {
+      "step_id": "hp-18",
+      "action": "Add two FAQs and fill both question/answer pairs",
+      "selector": "button:has-text('Add FAQ') then [aria-label='FAQ 1 question'] / [aria-label='FAQ 1 answer']",
+      "expected_result": "Two [data-testid='faq-row'] rows exist, the Add button label counts '(2/20)', and no FAQ validation message is shown."
+    },
+    {
+      "step_id": "hp-19",
+      "action": "Reorder the FAQs by moving the second one up",
+      "selector": "button[aria-label='Move FAQ 2 up']",
+      "expected_result": "The two FAQ rows swap places (moveItem), FAQ 1 now holds what was FAQ 2, and 'Move FAQ 1 up' is disabled."
+    },
+    {
+      "step_id": "hp-20",
+      "action": "Enter a Google product category from Google’s taxonomy",
+      "selector": "label:text-is('Google product category') -> following-sibling::input[1]",
+      "expected_result": "The field holds the taxonomy string; the helper text links to Google's product taxonomy and the 255-character limit is not reached."
+    },
+    {
+      "step_id": "hp-21",
+      "action": "Turn on the noindex switch",
+      "selector": "switch named 'Hide from search engines (noindex)'",
+      "expected_result": "The switch reads checked. (Base UI points aria-labelledby at the wrapping label, so the accessible name is the label's full text.)"
+    },
+    {
+      "step_id": "hp-22",
+      "action": "Submit the child category",
+      "selector": "button:text-is('Create Category')",
+      "expected_result": "A 'Category created' toast appears and /categories now shows the child indented one level under its parent, with the parent row showing a '· N total' rolled-up count."
+    },
+    {
+      "step_id": "hp-23",
+      "action": "Re-open the child category for editing and verify the SEO content round-tripped",
+      "selector": "row menu -> menuitem 'Edit' -> /categories/{id}",
+      "expected_result": "Parent picker is pre-set to the parent, Meta Title/Description, Intro, Body and Google product category hold the saved values, two FAQ rows are present in the reordered order, and the noindex switch is on."
+    }
+  ],
+  "alternate_paths": [
+    {
+      "path_name": "Product form: grouped Parent > Child category select",
+      "steps": [
+        {
+          "step_id": "alt-01",
+          "action": "Open the new-product form and inspect the Category select's options",
+          "selector": "select#<useId>-category (label 'Category *')",
+          "expected_result": "Categories with children render as an <optgroup> labelled with the parent name, containing '<Parent> (top level)' followed by one '<Parent> > <Child>' option per child; childless top-level categories render as plain options (CategorySelectOptions)."
+        },
+        {
+          "step_id": "alt-02",
+          "action": "Select a parent category that has children",
+          "selector": "the Category select, option value = parent id",
+          "expected_result": "An amber soft warning appears: 'This category has subcategories. Pick the most specific subcategory unless this product truly belongs at the top level.' ([data-testid='parent-category-warning']) — advisory only, the selection is allowed."
+        },
+        {
+          "step_id": "alt-03",
+          "action": "Switch the selection to one of that parent's children",
+          "selector": "the Category select, option value = child id",
+          "expected_result": "The warning disappears (selectedCategoryHasChildren is false for a leaf)."
+        }
+      ]
+    },
+    {
+      "path_name": "Products list: category filter rolls up descendants and shows the path label",
+      "steps": [
+        {
+          "step_id": "alt-04",
+          "action": "Open the products list and read the category shown under a child-category product",
+          "selector": "row for 'A5 Flyers' -> category sub-label",
+          "expected_result": "Shows the full path 'Marketing Prints > Flyers & Leaflets' (categoryPath), not just the leaf name and never a raw 'Cat #<id>' fallback."
+        },
+        {
+          "step_id": "alt-05",
+          "action": "Filter the list by the parent category 'Marketing Prints'",
+          "selector": "the 'All categories' Select trigger -> item 'Marketing Prints'",
+          "expected_result": "getProducts sends category_id plus include_descendants=true, so the list shows the parent's descendants' products ('A5 Flyers' from Flyers & Leaflets and 'A2 Posters' from Posters) even though the parent itself has 0 direct products."
+        },
+        {
+          "step_id": "alt-06",
+          "action": "Read the filter trigger's own label while the filter is active",
+          "selector": "the category Select trigger",
+          "expected_result": "The trigger renders the human label 'Marketing Prints' via the SelectValue render-function child, not the raw numeric id."
+        },
+        {
+          "step_id": "alt-07",
+          "action": "Filter by a subcategory instead",
+          "selector": "the category Select trigger -> item 'Stickers & Labels > Die-cut Stickers'",
+          "expected_result": "The option label is the full path, and the list narrows to that subcategory's own product ('Custom Die-Cut Stickers')."
+        }
+      ]
+    },
+    {
+      "path_name": "Bulk 'Move to category…' dialog, driven to confirmation and cancelled",
+      "steps": [
+        {
+          "step_id": "alt-08",
+          "action": "Select one product row and open the bulk 'Move to category…' action",
+          "selector": "row checkbox, then button:has-text('Move to category…')",
+          "expected_result": "The bulk toolbar (rendered only when canManageProducts / products.edit) shows the action, and clicking it opens a 'Move to category' dialog whose description reads 'Choose the category 1 selected product will move to.'"
+        },
+        {
+          "step_id": "alt-09",
+          "action": "Pick a target category that has children",
+          "selector": "select#bulk-move-target",
+          "expected_result": "An amber warning appears: 'This category has subcategories. Prefer the most specific subcategory.' ([data-testid='parent-category-warning'])."
+        },
+        {
+          "step_id": "alt-10",
+          "action": "Pick the subcategory instead and click Continue",
+          "selector": "select#bulk-move-target then button:text-is('Continue')",
+          "expected_result": "The dialog switches to its confirmation step: the description reads 'Move 1 product to \"Stickers & Labels > Die-cut Stickers\"?' (count plus full path) and [data-testid='move-confirm'] explains that product URLs change and old links redirect once the storefront refreshes."
+        },
+        {
+          "step_id": "alt-11",
+          "action": "Back out of the confirmation without moving anything",
+          "selector": "button:text-is('Back') then button:text-is('Cancel')",
+          "expected_result": "The dialog returns to its select step and then closes; no PATCH /admin/products/bulk-category request is sent and no product changes category."
+        }
+      ]
+    },
+    {
+      "path_name": "Navigation-link picker shows full category paths",
+      "steps": [
+        {
+          "step_id": "alt-12",
+          "action": "Open Content > Navigation and start adding a header link",
+          "selector": "/content/navigation -> 'Add Link'",
+          "expected_result": "The form shows the category/custom-URL target picker with 'Select a category' as the placeholder."
+        },
+        {
+          "step_id": "alt-13",
+          "action": "Open the category picker's option list",
+          "selector": "NavLinkTargetPicker's Select trigger",
+          "expected_result": "Options are rendered from categoryOptions(), so subcategories read as their full path ('Marketing Prints > Posters', 'Stickers & Labels > Die-cut Stickers') rather than the bare leaf name, in parent-before-children tree order."
+        }
+      ]
+    },
+    {
+      "path_name": "Slug-change warning on an existing category",
+      "steps": [
+        {
+          "step_id": "alt-14",
+          "action": "On an existing category's edit form, change the slug",
+          "selector": "label:text-is('Slug *') + input",
+          "expected_result": "[data-testid='slug-warning'] appears with role=alert: 'Changing the slug changes this category's URL (/products/<old> becomes /products/<new>). Existing links and search rankings will break.'"
+        },
+        {
+          "step_id": "alt-15",
+          "action": "Restore the original slug",
+          "selector": "label:text-is('Slug *') + input",
+          "expected_result": "The warning disappears, because it is rendered only while watch('slug') !== category.slug — nothing needs to be saved to clear it."
+        }
+      ]
+    },
+    {
+      "path_name": "Parent picker is disabled for a category that already has children",
+      "steps": [
+        {
+          "step_id": "alt-16",
+          "action": "Open the edit form of a category that has subcategories and inspect the parent picker",
+          "selector": "#category-parent",
+          "expected_result": "The select is disabled and the hint reads 'This category has subcategories, so it must stay top-level.' (eligibleParents returns disabled: true with that reason), so the depth-2 rule is enforced client-side before any request is made."
+        },
+        {
+          "step_id": "alt-17",
+          "action": "Confirm the same form still excludes the category itself from the options when it has no children",
+          "selector": "#category-parent on the child category's edit form",
+          "expected_result": "The child's own name is absent from the option list (eligibleParents filters c.id !== selfId) while every other top-level category is present."
+        }
+      ]
+    }
+  ],
+  "error_paths": [
+    {
+      "trigger": "Delete a parent category while it still has a subcategory (row menu -> Delete -> Delete Category)",
+      "expected_ui_response": "The ConfirmDialog description warns first: '\"<name>\" has 1 subcategory. Move or delete its subcategories first, otherwise the delete will be rejected.'; confirming anyway gets a 409 from DELETE /admin/categories/{id} (ConflictError 'Category has subcategories; move or delete them first') and the UI shows the toast '\"<name>\" still has subcategories. Move or delete its subcategories first.' The row stays in the table and nothing is deleted.",
+      "selector": "ConfirmDialog -> button:text-is('Delete Category')",
+      "step_id": "err-01"
+    },
+    {
+      "trigger": "Submit a category with an FAQ row whose question and answer are blank",
+      "expected_ui_response": "zodResolver's superRefine over validateFaqs blocks the submit; FaqEditor shows 'Question is required' and 'Answer is required' under the offending row once submitCount > 0, and no POST/PATCH is sent.",
+      "selector": "[data-testid='faq-row'] -> p.text-destructive",
+      "step_id": "err-02"
+    },
+    {
+      "trigger": "Ask the backend to re-parent a category under its own descendant (PATCH /admin/categories/{parent} with parent_id = its child)",
+      "expected_ui_response": "HTTP 422 with message 'Parent would create a cycle in the category tree' (category_tree.validate_parent). The admin UI cannot produce this request — eligibleParents disables the picker for a category with children — so this asserts the server-side guard directly, and the category's parent_id is unchanged afterwards.",
+      "selector": null,
+      "step_id": "err-03"
+    },
+    {
+      "trigger": "Ask the backend to make a category its own parent (PATCH /admin/categories/{id} with parent_id = id)",
+      "expected_ui_response": "HTTP 422 with message 'A category cannot be its own parent'. Unreachable from the UI (eligibleParents excludes selfId), so this is a direct check of the server guard; parent_id is unchanged.",
+      "selector": null,
+      "step_id": "err-04"
+    },
+    {
+      "trigger": "Ask the backend to nest three levels deep (PATCH a category that has children, setting parent_id to another top-level category)",
+      "expected_ui_response": "HTTP 422 with message 'A category with subcategories cannot become a subcategory (max depth 2)'. Unreachable from the UI (disabled picker), so this is a direct check of MAX_CATEGORY_DEPTH; parent_id is unchanged.",
+      "selector": null,
+      "step_id": "err-05"
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "FAQ list hits the 20-row cap",
+      "existing_validation": "MAX_FAQS = 20 in categoryTree.ts: FaqEditor disables the 'Add FAQ (20/20)' button at the cap, validateFaqs returns the form-level 'At most 20 FAQs', and the backend's CategoryCreate/CategoryUpdate declare faqs with max_length=MAX_FAQS.",
+      "risk_note": "Exercised as edge-01/edge-02. The cap is enforced in three places; only the button-disable is user-visible, so a regression there would silently let a 21st row be typed and then rejected by the server with a raw message."
+    },
+    {
+      "case": "Meta Title longer than its 60-character guideline",
+      "existing_validation": "CharCount switches to text-destructive past the max, but the Zod schema puts no limit on meta_title/meta_description — deliberately advisory, since Google's limit is a rendering guideline, not a hard constraint.",
+      "risk_note": "Exercised as edge-03. Worth knowing the save still succeeds: the red counter is guidance only, not validation, and the storefront will truncate in the SERP rather than reject."
+    },
+    {
+      "case": "Intro text longer than the 2000-character limit",
+      "existing_validation": "CategoryForm's Zod schema: seo_intro max SEO_INTRO_MAX (2000) with the message 'Max 2000 characters'; the backend mirrors it with Field(max_length=2000).",
+      "risk_note": "Exercised as edge-04. This one IS a hard limit, unlike meta_title — the asymmetry is easy to misread as a bug in either direction."
+    },
+    {
+      "case": "A category with 0 direct products but children still shows a meaningful count",
+      "existing_validation": "CategoriesTable renders product_count and, when hasChildren, '· total_product_count total'; the backend sums the subtree in AdminCategoryResponse.build.",
+      "risk_note": "Exercised as hp-02. A parent reading '0' with no rollup is the exact symptom the storefront's empty-parent-page bug had, so it is worth asserting on the admin side too."
+    },
+    {
+      "case": "Bulk move of more than 500 products at once",
+      "existing_validation": "MAX_BULK_MOVE = 500 in BulkMoveCategoryDialog disables Continue and shows 'Select at most 500 products at a time.'; the backend's BulkCategoryMoveRequest declares product_ids with max_length=500 and de-duplicates.",
+      "risk_note": "Not generated — the dev catalog has 12 products, so the cap cannot be reached through the UI without creating ~500 rows, which is out of scope for a QA run. Both guards were confirmed by reading the source."
+    },
+    {
+      "case": "A staff member with products.view but not products.edit opens the products list",
+      "existing_validation": "ProductsTable gates enableRowSelection and the whole bulkActions toolbar (including 'Move to category…') on usePermissions().canManageProducts, i.e. products.edit; the backend route is Depends(require_permission('products.edit')).",
+      "risk_note": "Not generated — only a super-admin account is seeded in this environment and creating a second, lower-privileged staff account would be an unapproved DB mutation. The gate is confirmed by source reading only, so a regression that renders the bulk bar for a view-only role would not be caught by this run."
+    },
+    {
+      "case": "The parent picker's option list is served from a cached category list (TanStack Query, staleTime 60s)",
+      "existing_validation": "None client-side beyond the cache invalidation in useSaveCategory/useDeleteCategory — the server re-validates every parent change with validate_parent, which is what err-03..err-05 assert.",
+      "risk_note": "A second admin creating a child category concurrently can leave the first admin's picker offering a now-ineligible parent; the request then fails with a 422 whose message is surfaced in the save toast. Acceptable (server is authoritative) but the toast is the only feedback."
+    },
+    {
+      "case": "Deleting a subcategory changes the ancestor's rolled-up count without a refetch",
+      "existing_validation": "useDeleteCategory patches the ['categories'] cache directly (no invalidateQueries) and decrements each ancestor's total_product_count and the parent's children_count, deliberately avoiding the commit-after-response race documented in the admin CLAUDE.md.",
+      "risk_note": "Exercised implicitly by edge-05/edge-06. If the arithmetic drifts from what the server would return, the list shows a wrong total until something else touches the key — the same class of phantom-row bug this code was written to avoid."
+    }
+  ],
+  "gaps": [
+    "RBAC view-only rendering of the bulk 'Move to category…' toolbar cannot be exercised in this environment (super-admin only seeded account; creating a restricted staff user would be an unapproved DB mutation).",
+    "The 500-product bulk-move cap cannot be reached with a 12-product dev catalog.",
+    "Sibling-scoped reorder across two different parents (reorderWithinSiblings) is only partially exercised here — the existing dev tree's categories all sit at sort_order 0, so the Up/Down arrows mostly reorder by name-tiebreak; a dedicated reorder scenario belongs with the Category Management plan, which already owns the reorder steps.",
+    "err-03..err-05 assert the backend's cycle/self-parent/depth guards over the authenticated API rather than through the DOM, because the admin UI deliberately makes those requests unreachable (disabled picker, filtered options). There is no UI path to drive them, so a DOM-only test would have had to assert the absence of a control rather than the rejection itself.",
+    "A post-login Lighthouse final_state checkpoint is unreliable in this app (access token is in-memory only — see project.config.json's _notes.auth), so this plan runs with lighthouse off."
+  ]
+}

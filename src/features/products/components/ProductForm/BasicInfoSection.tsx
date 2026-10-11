@@ -4,6 +4,7 @@ import { useEffect, useId, useRef } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 import { Switch } from '@/components/ui/switch';
 import { useCategories } from '@/features/categories/hooks/useCategories';
+import { CategorySelectOptions, selectedCategoryHasChildren } from '@/features/categories/components/CategorySelectOptions';
 import { RichTextEditor } from '@/components/common/RichTextEditor';
 import type { ProductFormValues } from './index';
 
@@ -117,8 +118,13 @@ export function BasicInfoSection({ form, mode }: Props) {
             className={fieldClass}
           >
             <option value="">Select category</option>
-            {categories?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            <CategorySelectOptions categories={categories ?? []} />
           </select>
+          {selectedCategoryHasChildren(categories ?? [], watch('category_id')) && (
+            <p className="mt-1 text-[11px] text-amber-600 dark:text-amber-400" data-testid="parent-category-warning">
+              This category has subcategories. Pick the most specific subcategory unless this product truly belongs at the top level.
+            </p>
+          )}
           {errors.category_id && <p className={errorClass}>{errors.category_id.message}</p>}
         </div>
         <div>
