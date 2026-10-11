@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
-import { Plus, MoreHorizontal, Pencil, Trash2, Star, Percent } from 'lucide-react';
+import { Plus, MoreHorizontal, Pencil, Trash2, Star, Percent, FolderInput } from 'lucide-react';
 import { toast } from 'sonner';
 import { DataTable } from '@/components/common/DataTable';
 import { SearchInput } from '@/components/common/SearchInput';
@@ -20,6 +20,8 @@ import { useProducts, useDeleteProduct } from '../hooks/useProducts';
 import { useCategories } from '@/features/categories/hooks/useCategories';
 import { ProductStatusBadge, ProductBadgeLabel, Badge } from '@/components/common/StatusBadge';
 import { BulkDiscountDialog } from './BulkDiscountDialog';
+import { BulkMoveCategoryDialog } from './BulkMoveCategoryDialog';
+import { categoryOptions, categoryPath } from '@/features/categories/utils/categoryTree';
 import { usePermissions } from '@/hooks/usePermissions';
 import { formatPrice } from '@/lib/utils/formatPrice';
 import { formatDate } from '@/lib/utils/formatDate';
@@ -52,6 +54,7 @@ export function ProductsTable() {
   const deleteMutation = useDeleteProduct();
   const [deleteProduct, setDeleteProduct] = useState<ProductSummary | null>(null);
   const { canManageProducts } = usePermissions();
+  const [moveSelected, setMoveSelected] = useState<{ rows: ProductSummary[]; clear: () => void } | null>(null);
   const [bulk, setBulk] = useState<{ action: BulkDiscountAction; selected: ProductSummary[] } | null>(null);
 
   async function handleDelete() {
@@ -90,7 +93,7 @@ export function ProductsTable() {
                 {p.is_featured && <Star className="h-3 w-3 text-yellow-500 fill-yellow-500 flex-shrink-0" />}
               </div>
               <p className="text-[11px] text-[var(--text-muted)]">
-                {p.category_id ? (categories?.find((c) => c.id === p.category_id)?.name ?? `Cat #${p.category_id}`) : '—'}
+                {p.category_id ? (categoryPath(categories ?? [], p.category_id) || `Cat #${p.category_id}`) : '—'}
               </p>
             </div>
           </div>
@@ -187,13 +190,16 @@ export function ProductsTable() {
         onSortingChange={setSorting}
         compact
         enableRowSelection={canManageProducts}
-        bulkActions={canManageProducts ? (rows) => (
+        bulkActions={canManageProducts ? (rows, clear) => (
           <>
             <Button type="button" size="sm" variant="outline" onClick={() => setBulk({ action: 'apply', selected: rows })}>
               <Percent className="h-3.5 w-3.5" /> Apply discount…
             </Button>
             <Button type="button" size="sm" variant="outline" onClick={() => setBulk({ action: 'clear', selected: rows })}>
               Clear discount
+            </Button>
+            <Button type="button" size="sm" variant="outline" onClick={() => setMoveSelected({ rows, clear })}>
+              <FolderInput className="h-3.5 w-3.5" /> Move to category…
             </Button>
           </>
         ) : undefined}
@@ -208,7 +214,7 @@ export function ProductsTable() {
           <div className="flex flex-wrap items-center gap-2">
             <SearchInput placeholder="Search products…" onChange={setSearch} className="w-52" />
             <Select value={filters.status ?? ''} onValueChange={(v) => setStatus(v ? v as ProductStatus : undefined)}>
-              <SelectTrigger size="sm" className="w-32"><SelectValue placeholder="All statuses" /></SelectTrigger>
+              <SelectTrigger size="sm" className="w-32" aria-label="Filter by status"><SelectValue placeholder="All statuses" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="">All statuses</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
@@ -222,10 +228,10 @@ export function ProductsTable() {
               </Button>
             )}
             <Select value={filters.category_id ?? ''} onValueChange={(v) => setCategory(v || undefined)}>
-              <SelectTrigger size="sm" className="w-40"><SelectValue placeholder="All categories" /></SelectTrigger>
+              <SelectTrigger size="sm" className="w-48" aria-label="Filter by category"><SelectValue placeholder="All categories">{(v: string | null) => categoryOptions(categories ?? []).find((c) => c.id === v)?.label ?? 'All categories'}</SelectValue></SelectTrigger>
               <SelectContent>
                 <SelectItem value="">All categories</SelectItem>
-                {categories?.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                {categoryOptions(categories ?? []).map((c) => <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
@@ -240,6 +246,15 @@ export function ProductsTable() {
           selected={bulk.selected}
           categories={(categories ?? []).map((c) => ({ id: c.id, name: c.name }))}
           defaultCategoryId={filters.category_id}
+        />
+      )}
+
+      {moveSelected && (
+        <BulkMoveCategoryDialog
+          open
+          onOpenChange={(v) => { if (!v) setMoveSelected(null); }}
+          selected={moveSelected.rows}
+          onDone={moveSelected.clear}
         />
       )}
 

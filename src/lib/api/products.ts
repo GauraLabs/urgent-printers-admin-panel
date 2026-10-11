@@ -65,7 +65,10 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
     page: filters.page ?? 1,
     page_size: filters.page_size ?? 20,
   };
-  if (filters.category_id) params.category_id = Number(filters.category_id);
+  if (filters.category_id) {
+    params.category_id = Number(filters.category_id);
+    params.include_descendants = true;
+  }
   if (filters.status) params.status = filters.status;
   if (filters.q) params.q = filters.q;
   if (filters.sort) params.sort = filters.sort;

@@ -447,7 +447,7 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
             'border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-colors',
             imgDrag ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-muted/30'
           )}>
-            <input {...imgInputProps()} />
+            <input aria-label="Upload images" {...imgInputProps()} />
             <Upload className="h-6 w-6 mx-auto mb-1.5 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
               {imgDrag ? 'Drop images here' : 'Drag & drop or click to upload images'}
@@ -514,7 +514,7 @@ export const MediaSection = forwardRef<MediaSectionHandle, MediaSectionProps>(fu
             'border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-colors',
             vidDrag ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-muted/30'
           )}>
-            <input {...vidInputProps()} />
+            <input aria-label="Upload video" {...vidInputProps()} />
             <Film className="h-6 w-6 mx-auto mb-1.5 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
               {vidDrag ? 'Drop video here' : 'Drag & drop or click to upload video'}

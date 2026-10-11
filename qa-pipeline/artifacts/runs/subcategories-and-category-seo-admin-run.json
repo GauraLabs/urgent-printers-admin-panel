@@ -1,0 +1,1296 @@
+{
+  "feature_name": "Subcategories and Category SEO (Admin)",
+  "plan_path": "qa-pipeline/artifacts/plans/subcategories-category-seo-admin-plan.json",
+  "run_timestamp": "2026-10-10T20:30:49.195Z",
+  "trace_path": "qa-pipeline/artifacts/traces/subcategories-and-category-seo-admin-trace.zip",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "steps": [
+    {
+      "step_id": "auth-01",
+      "action": "Open the admin login page",
+      "selector": null,
+      "route": "/login",
+      "bounding_box": null,
+      "timestamp_ms": 518,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/auth-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "description": "Ensure buttons have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "nodes": 5
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-02",
+      "action": "Enter the admin email",
+      "selector": "locator('#email')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 358,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 653,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/auth-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "admin@urgentprinters.com",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-03",
+      "action": "Enter the admin password",
+      "selector": "locator('#password')",
+      "route": "/login",
+      "bounding_box": {
+        "x": 481,
+        "y": 438,
+        "width": 318,
+        "height": 38
+      },
+      "timestamp_ms": 754,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/auth-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "SuperAdmin@123",
+      "typed_masked": true,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "auth-04",
+      "action": "Submit the login form",
+      "selector": "getByRole('button', { name: 'Sign in' })",
+      "route": "/dashboard",
+      "bounding_box": {
+        "x": 481,
+        "y": 500,
+        "width": 318,
+        "height": 36
+      },
+      "timestamp_ms": 1989,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/auth-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 12
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-01",
+      "action": "Open the categories list",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 2691,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "nodes": 3
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-02",
+      "action": "Read the direct and rolled-up product counts on the \"Marketing Prints\" row",
+      "selector": "locator('tr').filter({ hasText: 'Marketing Prints' }).locator('[title^=\"Products directly in this category\"]')",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 989,
+        "y": 573,
+        "width": 53,
+        "height": 15
+      },
+      "timestamp_ms": 2861,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-03",
+      "action": "Collapse the \"Marketing Prints\" row",
+      "selector": "locator('button[aria-label=\"Collapse Marketing Prints\"]')",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 359,
+        "y": 571,
+        "width": 18,
+        "height": 18
+      },
+      "timestamp_ms": 3059,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-04",
+      "action": "Expand \"Marketing Prints\" again",
+      "selector": "locator('button[aria-label=\"Expand Marketing Prints\"]')",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 359,
+        "y": 571,
+        "width": 18,
+        "height": 18
+      },
+      "timestamp_ms": 3278,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-05",
+      "action": "Click \"Add Category\"",
+      "selector": "getByRole('link', { name: 'Add Category' })",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 1117,
+        "y": 80,
+        "width": 139,
+        "height": 32
+      },
+      "timestamp_ms": 3779,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 9
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-06",
+      "action": "Enter the new category name",
+      "selector": "locator('label:text-is(\"Name *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 156,
+        "width": 672,
+        "height": 38
+      },
+      "timestamp_ms": 3915,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "QA Parent 249196",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-07",
+      "action": "Observe the auto-derived slug",
+      "selector": "locator('label:text-is(\"Slug *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 232,
+        "width": 672,
+        "height": 38
+      },
+      "timestamp_ms": 4030,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-08",
+      "action": "Inspect the parent picker on the create form",
+      "selector": "locator('#category-parent')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 308,
+        "width": 672,
+        "height": 37
+      },
+      "timestamp_ms": 4181,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-09",
+      "action": "Upload one category image",
+      "selector": "locator('input[type=\"file\"][accept*=\"image\"]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 600,
+        "y": 637,
+        "width": 1,
+        "height": 1
+      },
+      "timestamp_ms": 7196,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-10",
+      "action": "Submit the new top-level category",
+      "selector": "getByRole('button', { name: 'Create Category' })",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 264,
+        "y": 664,
+        "width": 137,
+        "height": 32
+      },
+      "timestamp_ms": 7637,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "nodes": 4
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-11",
+      "action": "Enter the subcategory name",
+      "selector": "locator('label:text-is(\"Name *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 156,
+        "width": 672,
+        "height": 38
+      },
+      "timestamp_ms": 8103,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-11.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "QA Child 249196",
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 10
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-12",
+      "action": "Choose \"QA Parent 249196\" as the parent category",
+      "selector": "locator('#category-parent')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 308,
+        "width": 672,
+        "height": 37
+      },
+      "timestamp_ms": 8246,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-12.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-13",
+      "action": "Enter the meta title",
+      "selector": "locator('label:text-is(\"Meta Title\")').locator('../following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 341,
+        "width": 672,
+        "height": 38
+      },
+      "timestamp_ms": 10854,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-13.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "Wedding Thank-You Tags — printed in 24 hours",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-14",
+      "action": "Enter the meta description",
+      "selector": "locator('label:text-is(\"Meta Description\")').locator('../following-sibling::textarea[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 417,
+        "width": 672,
+        "height": 78
+      },
+      "timestamp_ms": 11046,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-14.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "Personalised wedding thank-you tags printed on premium card and delivered across India in 24 hours. Order from 50 pieces.",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-15",
+      "action": "Read the Google snippet preview",
+      "selector": "locator('[data-testid=\"snippet-preview\"]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 516,
+        "width": 672,
+        "height": 117
+      },
+      "timestamp_ms": 11183,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-15.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-16",
+      "action": "Enter the answer-first intro copy",
+      "selector": "locator('label:text-is(\"Intro text\")').locator('../following-sibling::textarea[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 643,
+        "width": 672,
+        "height": 78
+      },
+      "timestamp_ms": 11348,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-16.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "Thank-you tags are printed on 300gsm card, cut to shape, and dispatched within 24 hours. Order from 50 pieces, with free delivery over Rs. 1,500.",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-17",
+      "action": "Enter the longer body copy",
+      "selector": "locator('label:text-is(\"Body text\")').locator('../following-sibling::textarea[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 271,
+        "width": 672,
+        "height": 178
+      },
+      "timestamp_ms": 11514,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-17.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "Every tag is printed to order on premium uncoated card, so the colours stay true to the invitation suite they accompany. Choose a shape, add the names and date, and approve the digital proof before we print.",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-18",
+      "action": "Add two FAQs and fill both",
+      "selector": "getByRole('button', { name: /^Add FAQ/ })",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 520,
+        "width": 134,
+        "height": 28
+      },
+      "timestamp_ms": 11862,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-18.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-19",
+      "action": "Move the second FAQ above the first",
+      "selector": "locator('button[aria-label=\"Move FAQ 2 up\"]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 853,
+        "y": 493,
+        "width": 22,
+        "height": 22
+      },
+      "timestamp_ms": 12050,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-19.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-20",
+      "action": "Enter the Google product category",
+      "selector": "locator('label:text-is(\"Google product category\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 546,
+        "width": 672,
+        "height": 38
+      },
+      "timestamp_ms": 12210,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-20.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": "Arts & Entertainment > Party & Celebration > Party Supplies",
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-21",
+      "action": "Turn on the noindex switch",
+      "selector": "getByRole('switch', { name: /Hide from search engines/ })",
+      "route": "/categories/new",
+      "bounding_box": {
+        "x": 264,
+        "y": 623,
+        "width": 24,
+        "height": 14
+      },
+      "timestamp_ms": 12411,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-21.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-22",
+      "action": "Submit the subcategory",
+      "selector": "getByRole('button', { name: 'Create Category' })",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 264,
+        "y": 664,
+        "width": 137,
+        "height": 32
+      },
+      "timestamp_ms": 12847,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-22.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "nodes": 5
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "hp-23",
+      "action": "Re-open the subcategory and verify every SEO field",
+      "selector": null,
+      "route": "/categories/51526",
+      "bounding_box": null,
+      "timestamp_ms": 13999,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/hp-23.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 8
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-14",
+      "action": "Change the subcategory's slug and read the warning",
+      "selector": "locator('label:text-is(\"Slug *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/51526",
+      "bounding_box": {
+        "x": 264,
+        "y": 232,
+        "width": 672,
+        "height": 38
+      },
+      "timestamp_ms": 14174,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-14.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-15",
+      "action": "Restore the original slug",
+      "selector": "locator('label:text-is(\"Slug *\")').locator('xpath=following-sibling::input[1]')",
+      "route": "/categories/51526",
+      "bounding_box": {
+        "x": 264,
+        "y": 232,
+        "width": 672,
+        "height": 38
+      },
+      "timestamp_ms": 14307,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-15.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-17",
+      "action": "Confirm the subcategory's own parent picker excludes itself",
+      "selector": "locator('#category-parent')",
+      "route": "/categories/51526",
+      "bounding_box": {
+        "x": 264,
+        "y": 308,
+        "width": 672,
+        "height": 37
+      },
+      "timestamp_ms": 14422,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-17.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-16",
+      "action": "Inspect the parent picker on a category that already has subcategories",
+      "selector": "locator('#category-parent')",
+      "route": "/categories/51525",
+      "bounding_box": {
+        "x": 264,
+        "y": 308,
+        "width": 672,
+        "height": 37
+      },
+      "timestamp_ms": 15512,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-16.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 8
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-02",
+      "action": "Enter a meta title longer than the 60-character guideline",
+      "selector": "locator('label:text-is(\"Meta Title\")').locator('../following-sibling::input[1]')",
+      "route": "/categories/51525",
+      "bounding_box": {
+        "x": 264,
+        "y": 341,
+        "width": 672,
+        "height": 38
+      },
+      "timestamp_ms": 15680,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/edge-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-03",
+      "action": "Enter intro copy past the hard 2000-character limit and try to save",
+      "selector": "locator('label:text-is(\"Intro text\")').locator('../following-sibling::textarea[1]')",
+      "route": "/categories/51525",
+      "bounding_box": {
+        "x": 264,
+        "y": 643,
+        "width": 672,
+        "height": 78
+      },
+      "timestamp_ms": 15940,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/edge-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-02",
+      "action": "Add an empty FAQ row and try to save",
+      "selector": "getByRole('button', { name: /^Add FAQ/ })",
+      "route": "/categories/51525",
+      "bounding_box": {
+        "x": 264,
+        "y": 479,
+        "width": 134,
+        "height": 28
+      },
+      "timestamp_ms": 17308,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/err-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-01",
+      "action": "Add FAQ rows up to the 20-row cap",
+      "selector": "getByRole('button', { name: /^Add FAQ/ })",
+      "route": "/categories/51525",
+      "bounding_box": {
+        "x": 264,
+        "y": 488,
+        "width": 131,
+        "height": 28
+      },
+      "timestamp_ms": 18518,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/edge-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-01",
+      "action": "Open the new-product form and inspect the Category select",
+      "selector": null,
+      "route": "/products/new",
+      "bounding_box": null,
+      "timestamp_ms": 19574,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 26
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-02",
+      "action": "Select a parent category that has subcategories",
+      "selector": "locator('select[name=\"category_id\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 586,
+        "width": 193,
+        "height": 37
+      },
+      "timestamp_ms": 19802,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-02.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-03",
+      "action": "Switch the selection to one of its subcategories",
+      "selector": "locator('select[name=\"category_id\"]')",
+      "route": "/products/new",
+      "bounding_box": {
+        "x": 285,
+        "y": 586,
+        "width": 193,
+        "height": 37
+      },
+      "timestamp_ms": 20004,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-04",
+      "action": "Open the products list and read a product's category path",
+      "selector": null,
+      "route": "/products",
+      "bounding_box": null,
+      "timestamp_ms": 20827,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-05",
+      "action": "Filter the list by the parent category \"Marketing Prints\"",
+      "selector": "locator('[data-slot=\"select-trigger\"]').nth(1)",
+      "route": "/products",
+      "bounding_box": {
+        "x": 755,
+        "y": 305,
+        "width": 192,
+        "height": 28
+      },
+      "timestamp_ms": 22316,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-06",
+      "action": "Read the filter trigger's own label",
+      "selector": "locator('[data-slot=\"select-trigger\"]').nth(1)",
+      "route": "/products",
+      "bounding_box": {
+        "x": 755,
+        "y": 305,
+        "width": 192,
+        "height": 28
+      },
+      "timestamp_ms": 22432,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-06.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-07",
+      "action": "Filter by the \"Stickers & Labels > Die-cut Stickers\" subcategory instead",
+      "selector": "locator('[data-slot=\"select-trigger\"]').nth(1)",
+      "route": "/products",
+      "bounding_box": {
+        "x": 755,
+        "y": 305,
+        "width": 192,
+        "height": 28
+      },
+      "timestamp_ms": 23762,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-07.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-08",
+      "action": "Select one product and open the bulk \"Move to category…\" action",
+      "selector": "locator('tbody tr').filter({ hasText: 'A5 Flyers' }).locator('[aria-label=\"Select row\"]')",
+      "route": "/products",
+      "bounding_box": {
+        "x": 279,
+        "y": 396,
+        "width": 16,
+        "height": 16
+      },
+      "timestamp_ms": 25486,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-08.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-09",
+      "action": "Pick a target category that has subcategories",
+      "selector": "locator('select#bulk-move-target')",
+      "route": "/products",
+      "bounding_box": {
+        "x": 437,
+        "y": 353,
+        "width": 406,
+        "height": 37
+      },
+      "timestamp_ms": 25686,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-09.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-10",
+      "action": "Pick the subcategory and continue to the confirmation step",
+      "selector": "locator('select#bulk-move-target')",
+      "route": "/products",
+      "bounding_box": {
+        "x": 437,
+        "y": 344,
+        "width": 406,
+        "height": 37
+      },
+      "timestamp_ms": 25897,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-10.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-11",
+      "action": "Back out of the confirmation and close the dialog without moving anything",
+      "selector": "getByRole('button', { name: 'Back' })",
+      "route": "/products",
+      "bounding_box": {
+        "x": 650,
+        "y": 410,
+        "width": 56,
+        "height": 32
+      },
+      "timestamp_ms": 26210,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-11.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-12",
+      "action": "Open Content > Navigation and start a new header link",
+      "selector": null,
+      "route": "/content/navigation",
+      "bounding_box": null,
+      "timestamp_ms": 27031,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-12.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "description": "Ensure the order of headings is semantically correct",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": []
+    },
+    {
+      "step_id": "alt-13",
+      "action": "Open the category picker and read its option labels",
+      "selector": "locator('[data-slot=\"select-trigger\"]').last()",
+      "route": "/content/navigation",
+      "bounding_box": {
+        "x": 281,
+        "y": 563,
+        "width": 958,
+        "height": 32
+      },
+      "timestamp_ms": 27319,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/alt-13.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-03",
+      "action": "Ask the backend to re-parent a category under its own child",
+      "selector": null,
+      "route": "/content/navigation",
+      "bounding_box": null,
+      "timestamp_ms": 27909,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/err-03.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-04",
+      "action": "Ask the backend to make a category its own parent",
+      "selector": null,
+      "route": "/content/navigation",
+      "bounding_box": null,
+      "timestamp_ms": 28043,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/err-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-05",
+      "action": "Ask the backend to nest three levels deep",
+      "selector": null,
+      "route": "/content/navigation",
+      "bounding_box": null,
+      "timestamp_ms": 28173,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/err-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "err-01",
+      "action": "Confirm the delete anyway and read the rejection",
+      "selector": "getByRole('button', { name: 'Delete Category' })",
+      "route": "/categories",
+      "bounding_box": {
+        "x": 706,
+        "y": 423,
+        "width": 133,
+        "height": 31
+      },
+      "timestamp_ms": 29737,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/err-01.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 6
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "description": "Ensure table headers have discernible text",
+          "nodes": 1
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "nodes": 5
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "description": "Ensure landmarks are unique",
+          "nodes": 1
+        }
+      ],
+      "console_errors": [
+        "Failed to load resource: the server responded with a status of 409 (Conflict)"
+      ]
+    },
+    {
+      "step_id": "edge-04",
+      "action": "Delete the subcategory",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 32461,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/edge-04.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    },
+    {
+      "step_id": "edge-05",
+      "action": "Delete the now-childless parent category",
+      "selector": null,
+      "route": "/categories",
+      "bounding_box": null,
+      "timestamp_ms": 35057,
+      "screenshot_path": "qa-pipeline/artifacts/screenshots/subcategories-and-category-seo-admin/edge-05.png",
+      "status": "pass",
+      "error": null,
+      "typed_text": null,
+      "typed_masked": false,
+      "axe_violations": [],
+      "console_errors": []
+    }
+  ],
+  "lighthouse": {
+    "initial_load": null,
+    "final_state": null
+  }
+}

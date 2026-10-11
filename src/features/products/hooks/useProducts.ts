@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import type { SortingState } from '@tanstack/react-table';
+import { bulkMoveProductsToCategory } from '@/lib/api/categories';
 import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, type ProductPayload } from '@/lib/api/products';
 import type { ApiError, ProductFilters, ProductStatus } from '@/types';
 
@@ -75,5 +76,18 @@ export function useDeleteProduct() {
   return useMutation({
     mutationFn: (id: string) => deleteProduct(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: PRODUCTS_KEY }),
+  });
+}
+
+export function useBulkMoveCategory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ productIds, categoryId }: { productIds: string[]; categoryId: string }) =>
+      bulkMoveProductsToCategory(productIds, categoryId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: PRODUCTS_KEY });
+      qc.invalidateQueries({ queryKey: ['product'] });
+      qc.invalidateQueries({ queryKey: ['categories'] });
+    },
   });
 }

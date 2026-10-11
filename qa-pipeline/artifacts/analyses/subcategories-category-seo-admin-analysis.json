@@ -1,0 +1,100 @@
+{
+  "feature_name": "Subcategories and Category SEO (Admin)",
+  "plan_path": "qa-pipeline/artifacts/plans/subcategories-category-seo-admin-plan.json",
+  "run_path": "qa-pipeline/artifacts/runs/subcategories-and-category-seo-admin-run.json",
+  "pass_count": 54,
+  "fail_count": 0,
+  "failures": [],
+  "accessibility_summary": {
+    "critical": [
+      "RESOLVED THIS RUN — button-name on /categories: 9-11 nodes (the count tracked the number of category rows exactly: 9 categories -> 9 nodes, 10 -> 10, 11 -> 11), now 0. CategoriesTable's per-row actions DropdownMenuTrigger rendered a bare MoreHorizontal lucide icon with no accessible name, so every row's only route to Edit/Delete was unreachable by name for a screen-reader or voice-control user. The reorder arrows and expand/collapse chevron in the same file were already labelled; only the actions trigger was missing one. Fixed with aria-label=\"Actions for <name>\", matching the fix ProductsTable already carried from the Product Catalog run. This was first reported by the Category Management run ('up to 27-30 nodes') and was still open: the arrows were fixed then, the menu trigger was not.",
+      "RESOLVED THIS RUN — button-name on /content/navigation: 21 nodes, now 0. NavLinksManager's four per-row icon-only buttons (ArrowUp, ArrowDown, Pencil, Trash2) had no accessible name at all, so reordering, editing and deleting a navigation link were all unnameable. In scope because this run verifies that the NavLink picker renders full 'Parent > Child' category paths on that page (alt-12/alt-13). Fixed with aria-labels naming both action and link ('Move <label> up', 'Delete <label>', ...).",
+      "RESOLVED THIS RUN — label on /categories/new and /categories/{id}: 3 nodes, now 0; and the same fix cleared 2 nodes on /products/new. Two causes. (a) CategoryForm's Slug input was a visual sibling of a bare <label> with no htmlFor/id pairing AND no placeholder — unlike Name, Description and every SEO field, which were only passing because a placeholder was serving as their accessible name of last resort. Fixed by giving every text control in that form a real useId()-derived id/htmlFor pair, so the names no longer depend on placeholder copy surviving a rewrite. (b) MediaSection's two react-dropzone file inputs had no accessible name; naming them also cleared the 2 residual label nodes on /products/new that three previous admin analyses recorded as a known leftover.",
+      "RESOLVED THIS RUN — button-name on /products (2 nodes) and /content/navigation (1 node), now 0, and with it a misattribution that stood for three runs. All three previous admin analyses recorded these as 'residual, outside this feature's components, deliberately left'. A read-only axe scan that captured node.target/node.html proved they are the three Base UI SelectTrigger elements: the products list's status and category filters, and NavLinkTargetPicker's category picker. They are not empty of text — they render 'All statuses' / 'All categories' / 'Select a category' visibly — but Base UI forces role=\"combobox\" on the trigger, and combobox is not a name-from-content role, so that text contributes nothing to the accessible name; Base UI only sets aria-labelledby when a Field or Select.Label exists, and none of the three had one. Fixed with purpose-naming aria-labels ('Filter by status', 'Filter by category', 'Target category') rather than value-naming ones, which would have created a WCAG 2.5.3 label-in-name mismatch. Two of the three are controls this feature changed.",
+      "STILL OPEN, out of scope — button-name, 1 node on /login: the password show/hide toggle (src/app/(auth)/login/page.tsx) is an icon-only button with no aria-label. Not part of this feature's surface; the login page is only crossed to reach an authenticated page. Recorded as residual by the three previous admin runs and now a fourth. Cheap to fix and worth doing in whichever run next owns /login."
+    ],
+    "serious": [
+      "STILL OPEN, deliberately out of scope — color-contrast: 6-26 nodes on every route the run touched (/dashboard 12, /categories 6, /categories/new 10, each category edit page 8, /products 6, /products/new 26, /content/navigation 6). Unchanged by this run's fixes and unchanged in volume from previous runs. It appears on /dashboard, which contains none of this feature's UI, so it is an admin-theme design-token decision spanning the whole app rather than anything these components introduced — the same conclusion the Category Management, Product Catalog and Quantity Pricing analyses reached. /products/new's 26 nodes are the worst single page and are a reasonable place to start if a human picks this up. It needs a deliberate design decision about the theme's foreground/muted tokens, not a per-component patch, which is why no fix was dispatched for it."
+    ],
+    "moderate": [
+      "landmark-unique, 1 node on every authenticated route (/dashboard, /categories, /categories/new, both category edit pages, /products, /products/new, /content/navigation). Two landmarks resolve to the same role+accessible-name pair — almost certainly the admin shell's sidebar <nav> and header <nav>, since it is perfectly uniform across every page including ones with none of this feature's UI. Shared-layout issue, not a categories issue. Worth noting that the storefront half of this same feature had a real landmark-unique defect of its own (CategoryChipBar's and SubcategoryTiles' navs both labelled '<Parent> subcategories'), which WAS this feature's fault and was fixed there — the admin one is a different, pre-existing instance of the same rule.",
+      "heading-order, 1 node each on /dashboard, /products/new and /content/navigation. A heading level is skipped (e.g. an h3 section header under an h1 with no h2). Not present on any /categories route, so it does not touch this feature's own screens.",
+      "landmark-one-main, page-has-heading-one and region (5 nodes) on /login only — the login page has no <main>, no h1, and content outside any landmark. Out of this feature's scope; same residue every admin run records.",
+      "No other console errors appeared anywhere in the run. The single console error recorded (err-01) is the expected 409 from the server correctly refusing to delete a parent that still has a subcategory, i.e. the finding under test. The hydration-mismatch warning seen on /login during an intermediate capture pass did not recur in the final one and is the caret-color/Playwright-programmatic-input artefact documented as test-tooling noise, not an app defect, in pipeline/README.md finding #10."
+    ],
+    "coverage_caveat": "automated scan only — manual/screen-reader review still needed. Automated scanning typically catches only 30-40% of real accessibility issues, so a clean critical/serious result on this feature's routes does not mean these screens are accessible. Specifically unverified here: whether the categories table is actually comprehensible as a tree to a screen reader (the hierarchy is conveyed by inline paddingLeft and a data-depth attribute, with no role=\"treegrid\", aria-level or aria-owns, so a screen reader reads nine flat rows with no indication that three of them are children), whether the expand/collapse aria-expanded state is announced on toggle, whether the FAQ reorder buttons announce the new position after a move, and whether the slug-change warning (role=\"alert\") is actually spoken when it appears."
+  },
+  "performance_summary": {
+    "initial_load": "Not measured. lighthouse was deliberately set to 'off' for this spec, so both checkpoints are null in the run log. The reason is recorded in project.config.json's _notes.auth and pipeline/README.md's per-app wrinkles: the admin panel's access token lives in memory only, so capture.js's seedDefaultContextStorage() cannot restore a live session into the context Lighthouse audits, and a post-login checkpoint gets redirected to /login — producing numbers for the wrong page (url_mismatch) rather than for the route under test. A number that measures the login screen is worse than no number.",
+    "final_state": "Not measured, same reason. Nothing in this run should be read as a performance result for any admin route.",
+    "concerns": [
+      "No performance baseline exists for the two screens this feature changed most (/categories with the tree, and the category form with the SEO section). If one is wanted, it needs a different measurement approach than a post-login Lighthouse checkpoint — e.g. auditing a pre-redirect page, or restoring a live token into the audit context.",
+      "A structural performance note the run does supply for free, which matters more here than a score: the category tree, ancestors, rolled-up counts and eligible-parent lists are all computed in Python over one already-cached category list (app/services/category_tree.py) rather than with recursive SQL, and the admin UI computes its own tree client-side in categoryTree.ts from a single GET /admin/categories. So the whole feature adds no per-row queries. The 54-step run completed in ~50s wall-clock including a full category create/delete lifecycle twice, which is consistent with that.",
+      "Steps alt-05 and alt-07 confirm the descendant rollup is a single request with include_descendants=true, not an N+1 fan-out over children — worth keeping as the thing to re-check if the catalog ever grows past a handful of categories."
+    ]
+  },
+  "ux_gaps": [
+    {
+      "issue": "RBAC view-only rendering of the bulk 'Move to category…' toolbar was never exercised. The gate exists on both sides (usePermissions().canManageProducts / products.edit client-side, Depends(require_permission('products.edit')) on PATCH /admin/products/bulk-category), but only a super-admin account is seeded in this environment and creating a restricted staff user would have been an unapproved DB mutation under this run's data rules. A regression that rendered the bulk bar — or row selection — for a products.view-only role would not have been caught here.",
+      "related_edge_case": "A staff member with products.view but not products.edit opens the products list"
+    },
+    {
+      "issue": "The 500-product bulk-move cap was not exercised. Both guards were confirmed by reading the source (MAX_BULK_MOVE disables Continue and shows 'Select at most 500 products at a time.'; BulkCategoryMoveRequest declares product_ids with max_length=500 and de-duplicates), but the dev catalog holds 12 products so the cap is unreachable through the UI.",
+      "related_edge_case": "Bulk move of more than 500 products at once"
+    },
+    {
+      "issue": "No bulk move was ever committed. alt-08..alt-11 drive the dialog to its confirmation step, assert the count and the full target path, then back out — the confirm button is deliberately never clicked, because this run's data rules forbid moving any existing product (a cached 308 on the storefront is not revocable). So the dialog's own UI contract is verified but the actual PATCH /admin/products/bulk-category round-trip, its success toast wording, and its cache invalidation are not covered by this run. They were verified live and manually beforehand (toast: 'Moved 1 product to Stickers & Labels > Die-cut Stickers'), which is evidence, but not evidence this suite reproduces or will catch a regression in.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "The categories table conveys hierarchy visually and programmatically only as inline padding plus a data-depth attribute. There is no role=\"treegrid\"/aria-level/aria-owns, so the parent-child structure the whole feature exists to express is not exposed to assistive technology at all — a screen-reader user hears nine flat rows. The expand/collapse control is correctly labelled and does carry aria-expanded, which is the part that was gettable automatically; axe cannot flag the missing tree semantics because a plain table with padding is valid HTML. This is a design decision to make deliberately, not a bug the run found, but it is the single biggest accessibility gap left on this feature's own screens.",
+      "related_edge_case": null
+    },
+    {
+      "issue": "Sibling-scoped reorder across two different parents is not covered here. reorderWithinSiblings sends only the moved category's siblings to PATCH /admin/categories/reorder, which is the behavioural change this feature made to reordering, but every category in the dev tree sits at sort_order 0, so the Up/Down arrows mostly exercise the name tie-break rather than a real cross-parent ordering. The Category Management plan owns the reorder steps and should be the one extended.",
+      "related_edge_case": "Deleting a subcategory changes the ancestor's rolled-up count without a refetch"
+    },
+    {
+      "issue": "The stale-cache parent-picker race has no client-side mitigation by design. If a second admin creates a child category while the first admin's categories query is still within its 60s staleTime, the first admin's picker will keep offering a now-ineligible parent; the save then fails and the only feedback is the server's 422 message in a toast. err-03..err-05 confirm the server is authoritative and its messages are specific and human-readable ('A category with subcategories cannot become a subcategory (max depth 2)'), so the failure mode is safe rather than silent — but it is a toast on a form the admin has just filled in, not an inline field error.",
+      "related_edge_case": "The parent picker's option list is served from a cached category list (TanStack Query, staleTime 60s)"
+    },
+    {
+      "issue": "Two character limits in the same SEO section behave differently with no visual distinction. Meta Title's 60 and Meta Description's 160 are advisory — the counter turns red (edge-02 confirms '70/60' in the destructive colour) but the Zod schema has no max, so the value saves. Intro text's 2000 and Body text's 20000 are hard limits that block the save with 'Max 2000 characters' (edge-03). Both render as the same '<len>/<max>' counter in the same red, so there is nothing on screen telling an admin which number is a guideline and which is a wall until they try to save. Correct behaviour in both cases — Google's limits are rendering guidelines, the column limits are real — but worth a word of copy.",
+      "related_edge_case": "Meta Title longer than its 60-character guideline"
+    },
+    {
+      "issue": "err-03..err-05 assert the backend's cycle, self-parent and depth guards over the authenticated API rather than through the DOM, because the admin UI deliberately makes those three requests unreachable (the parent picker is disabled for a category with children, and filters out self and non-top-level options). alt-16/alt-17 cover the client-side prevention. So the guards are verified, but via a channel a DOM-only regression could diverge from — if the picker's filtering broke open, the server would still reject the request and the user would see a toast, which is the designed outcome.",
+      "related_edge_case": null
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "Decide whether the categories table should expose its hierarchy to assistive technology. Right now the tree is purely visual (inline paddingLeft + data-depth), so the feature's core concept is invisible to a screen reader even though every button on the row is now correctly labelled. Options, cheapest first: add aria-level/aria-posinset to the row-name cell and keep the plain table; or move to role=\"treegrid\" with proper aria-expanded/aria-level on rows. This is the one remaining accessibility gap on this feature's own screens that automated scanning structurally cannot catch, which is exactly why it needs a human call."
+    },
+    {
+      "priority": "high",
+      "action": "Give the admin theme's colour tokens a deliberate contrast pass, or deliberately accept the debt in writing. color-contrast is the only serious finding left and it is now on its fourth consecutive admin analysis, unchanged, with /products/new at 26 nodes. It is being carried forward run after run as 'out of scope', which is the right call per run and the wrong outcome over four of them. A single decision about the --text-muted / --text-secondary foreground tokens would likely clear most of the volume across all eight routes at once."
+    },
+    {
+      "priority": "medium",
+      "action": "Audit the rest of the repo's <SelectTrigger> call sites for the same empty accessible name this run uncovered. role=\"combobox\" means the visible value text never contributes a name, and Base UI only wires aria-labelledby when a Field or Select.Label exists — so every Select in the admin panel without one is an unnamed control, not just the three fixed here. A grep for '<SelectTrigger' lacking an aria-label would find them. The stronger version, flagged by the implementing agent and worth considering: make the src/components/ui/select.tsx wrapper require a label/aria-label prop so a new unnamed Select cannot ship. That widens the wrapper's API, so it is a human decision rather than something this run should have done."
+    },
+    {
+      "priority": "medium",
+      "action": "Cover the bulk-move commit path and the products.edit gate in a follow-up run that has permission to mutate product categories and a second, lower-privileged seeded staff account. Those are the two genuine coverage holes this run leaves, both for environment reasons rather than product ones: the confirm button was never clicked (data rules), and no view-only role exists to test the gate with. A reversible target — move a product to a sibling category and move it back within the same spec — would cover the commit path without touching product 16."
+    },
+    {
+      "priority": "low",
+      "action": "Add aria-label to /login's password show/hide toggle (src/app/(auth)/login/page.tsx) and to SearchInput's clear (X) button. The login toggle is the last critical axe node left anywhere in this run and has now been deferred by four consecutive admin runs; the SearchInput clear button was found by source reading during this run's fix loop and only renders once the input has text, which is why it is not in this run's node counts — but it is a genuine unnamed button on every admin list screen, and it explains an earlier run's observation that /products' button-name count rose from 2 to 3 after the search box was used."
+    },
+    {
+      "priority": "low",
+      "action": "Distinguish advisory from hard character limits in the category SEO section. Meta Title/Description recolour past their limit but still save; Intro/Body block the save. Identical counters, identical red. One clarifying word per counter (or a different colour for advisory) would remove the ambiguity."
+    },
+    {
+      "priority": "low",
+      "action": "Record node.html/node.target for axe violations in the capture fixture, not just a node count. This run spent a whole fix dispatch on a misattribution that the node data settled in one read-only scan — and three previous runs carried the same two /products nodes as 'unattributed residual' for want of it. The fixture already has the full axe results in hand when it writes the count; keeping the first node's target and a truncated html per violation would have made all four runs' triage immediate. This is a pipeline change (qa-pipeline/playwright/capture.js plus the run-log schema's axe_violations shape), so it belongs to qa-pipeline-scribe rather than to a dev agent."
+    }
+  ]
+}

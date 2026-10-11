@@ -102,10 +102,10 @@ function PlacementLinksList({ placement }: { placement: Placement }) {
               <div className="flex items-center gap-4 p-3">
                 {canManageContent && (
                   <div className="flex flex-col gap-0.5 flex-shrink-0">
-                    <button onClick={() => move(link.id, 'up')} className="p-1 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] transition-colors">
+                    <button type="button" aria-label={`Move ${link.label} up`} onClick={() => move(link.id, 'up')} className="p-1 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] transition-colors">
                       <ArrowUp className="h-3.5 w-3.5" />
                     </button>
-                    <button onClick={() => move(link.id, 'down')} className="p-1 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] transition-colors">
+                    <button type="button" aria-label={`Move ${link.label} down`} onClick={() => move(link.id, 'down')} className="p-1 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] transition-colors">
                       <ArrowDown className="h-3.5 w-3.5" />
                     </button>
                   </div>
@@ -121,10 +121,10 @@ function PlacementLinksList({ placement }: { placement: Placement }) {
 
                 {canManageContent && (
                   <div className="flex items-center gap-1 flex-shrink-0">
-                    <button onClick={() => setEditing(link)} className="p-1.5 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] hover:text-[var(--text-primary)] transition-colors">
+                    <button type="button" aria-label={`Edit ${link.label}`} onClick={() => setEditing(link)} className="p-1.5 rounded text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] hover:text-[var(--text-primary)] transition-colors">
                       <Pencil className="h-4 w-4" />
                     </button>
-                    <button onClick={() => setDeleteTarget(link)} className="p-1.5 rounded text-[var(--text-muted)] hover:bg-[var(--danger-bg)] hover:text-[var(--danger)] transition-colors">
+                    <button type="button" aria-label={`Delete ${link.label}`} onClick={() => setDeleteTarget(link)} className="p-1.5 rounded text-[var(--text-muted)] hover:bg-[var(--danger-bg)] hover:text-[var(--danger)] transition-colors">
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>

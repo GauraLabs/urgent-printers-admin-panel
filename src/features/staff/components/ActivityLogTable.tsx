@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
-import { LogIn, LogOut, UserPlus, UserCog, UserX, FileEdit, Activity as ActivityIcon } from 'lucide-react';
+import { LogIn, LogOut, UserPlus, UserX, FileEdit, FolderTree, Undo2, MoveRight, Activity as ActivityIcon } from 'lucide-react';
 import { DataTable } from '@/components/common/DataTable';
 import { ExportButton } from '@/components/common/ExportButton';
 import {
@@ -13,14 +13,7 @@ import { ROLE_LABELS } from '@/lib/constants/roles';
 import { formatDateTime } from '@/lib/utils/formatDate';
 import { cn } from '@/lib/utils/cn';
 import type { ActivityLog } from '@/types';
-
-const ACTION_LABELS: Record<string, string> = {
-  'admin.login':       'Logged In',
-  'admin.logout':      'Logged Out',
-  'staff.created':     'Staff Created',
-  'staff.updated':     'Staff Updated',
-  'staff.deactivated': 'Staff Deactivated',
-};
+import { ACTION_LABELS, actionLabel, resolveActivityActor, summarizeMeta } from '../utils/activityLog';
 
 const ACTION_ICON: Record<string, { icon: React.ElementType; cls: string }> = {
   'admin.login':       { icon: LogIn,      cls: 'text-emerald-600 dark:text-emerald-400' },
@@ -28,13 +21,21 @@ const ACTION_ICON: Record<string, { icon: React.ElementType; cls: string }> = {
   'staff.created':     { icon: UserPlus,   cls: 'text-blue-600 dark:text-blue-400' },
   'staff.updated':     { icon: FileEdit,   cls: 'text-amber-600 dark:text-amber-400' },
   'staff.deactivated': { icon: UserX,      cls: 'text-red-600 dark:text-red-400' },
+  'taxonomy.applied':            { icon: FolderTree, cls: 'text-blue-600 dark:text-blue-400' },
+  'taxonomy.rolled_back':        { icon: Undo2,      cls: 'text-amber-600 dark:text-amber-400' },
+  'product.bulk_category_moved': { icon: MoveRight,  cls: 'text-blue-600 dark:text-blue-400' },
 };
 
-const RESOURCE_TYPES = ['admin_user'];
+const RESOURCE_TYPES = ['admin_user', 'category', 'product'];
 
 /** Human-readable rendering of the meta JSON. */
 function renderMeta(action: string, meta: Record<string, unknown>): React.ReactNode {
   if (!meta || Object.keys(meta).length === 0) return null;
+
+  const summary = summarizeMeta(action, meta);
+  if (summary) {
+    return <p className="text-[11px] text-muted-foreground truncate max-w-[220px]">{summary}</p>;
+  }
 
   // staff.updated → { changes: { field: { from, to } } }
   if (action === 'staff.updated' && meta.changes && typeof meta.changes === 'object') {
@@ -94,10 +95,13 @@ export function ActivityLogTable() {
       id: 'actor',
       header: 'Actor',
       cell: ({ row }) => {
-        const actor = staffById.get(row.original.actor_admin_id);
-        const name = actor?.name ?? `Admin #${row.original.actor_admin_id}`;
-        const role = actor?.role;
-        const initials = name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
+        const { kind, name, role } = resolveActivityActor(row.original, staffById);
+        const initials = kind === 'system'
+          ? 'SY'
+          : name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
+        const subtitle = role
+          ? ROLE_LABELS[role as keyof typeof ROLE_LABELS] ?? role
+          : kind === 'customer' ? 'Customer' : kind === 'system' ? 'Automated' : '—';
         return (
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center text-[10px] font-bold text-primary flex-shrink-0">
@@ -106,7 +110,7 @@ export function ActivityLogTable() {
             <div>
               <p className="text-[13px] font-medium text-foreground">{name}</p>
               <p className="text-[11px] text-muted-foreground">
-                {role ? ROLE_LABELS[role as keyof typeof ROLE_LABELS] : '—'}
+                {subtitle}
               </p>
             </div>
           </div>
@@ -119,7 +123,7 @@ export function ActivityLogTable() {
       cell: ({ row }) => {
         const cfg = ACTION_ICON[row.original.action];
         const Icon = cfg?.icon ?? ActivityIcon;
-        const label = ACTION_LABELS[row.original.action] ?? row.original.action.replace(/[._]/g, ' ');
+        const label = actionLabel(row.original.action);
         return (
           <div className="flex items-center gap-2">
             <Icon className={cn('h-3.5 w-3.5 flex-shrink-0', cfg?.cls ?? 'text-muted-foreground')} />
@@ -210,10 +214,10 @@ export function ActivityLogTable() {
           <ExportButton
             filename="activity-log"
             getData={() => logs.map((l) => {
-              const actor = staffById.get(l.actor_admin_id);
+              const actor = resolveActivityActor(l, staffById);
               return {
-                actor: actor?.name ?? `Admin #${l.actor_admin_id}`,
-                role: actor?.role ?? '',
+                actor: actor.name,
+                role: actor.role ?? '',
                 action: l.action,
                 resource: `${l.resource_type}${l.resource_id ? ` #${l.resource_id}` : ''}`,
                 ip: l.ip_address ?? '',
