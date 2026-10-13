@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import {
   getStaff, getStaffMember, createStaffMember,
-  updateStaffMember, deleteStaffMember, getActivityLog,
+  updateStaffMember, deleteStaffMember, unlockStaffLogin, getActivityLog,
 } from '@/lib/api/staff';
 
 const STAFF_KEY = ['staff'];
@@ -98,4 +98,12 @@ export function useActivityLog() {
     setResourceType: (resource_type: string) => setFilters((f) => ({ ...f, resource_type, page: 1 })),
     setAction: (action: string) => setFilters((f) => ({ ...f, action, page: 1 })),
   };
+}
+
+export function useUnlockStaffLogin() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => unlockStaffLogin(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: STAFF_KEY }),
+  });
 }

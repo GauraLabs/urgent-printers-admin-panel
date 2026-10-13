@@ -5,7 +5,7 @@ import { type ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
 import { MoreHorizontal, Eye, RefreshCw } from 'lucide-react';
 import { DataTable } from '@/components/common/DataTable';
-import { StatusBadge, TurnaroundBadge } from '@/components/common/StatusBadge';
+import { Badge, StatusBadge, TurnaroundBadge } from '@/components/common/StatusBadge';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -81,7 +81,12 @@ export function OrdersTable() {
       accessorKey: 'status',
       header: 'Status',
       enableSorting: false,
-      cell: ({ row }) => <StatusBadge status={row.original.status as OrderStatus} />,
+      cell: ({ row }) => (
+        <div className="flex flex-col items-start gap-1">
+          <StatusBadge status={row.original.status as OrderStatus} />
+          {row.original.refund_unconfirmed && <Badge label="Refund unconfirmed" variant="danger" />}
+        </div>
+      ),
     },
     {
       id: 'turnaround',

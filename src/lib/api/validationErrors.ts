@@ -50,6 +50,20 @@ const CODED_MESSAGES: Record<string, string> = {
   invalid_coupon_scope: 'One or more of the selected products or categories no longer exist. Remove them from "Applies to" and try again.',
   duplicate_option_label: 'Two options in the same group have the same name (ignoring case, spaces and punctuation). Give each option a unique label.',
   invalid_mrp: 'MRP must be greater than the selling price and have at most 2 decimal places',
+  refund_already_issued: 'This order was already refunded.',
+  refund_not_paid: "Order isn't paid.",
+  refund_rejected: 'Razorpay rejected the refund; you can retry.',
+  refund_unconfirmed: 'Refund status unknown — check the Razorpay dashboard before retrying.',
+  no_open_refund_claim: 'This order has no unconfirmed refund to resolve.',
+  refund_exists_at_provider: 'Razorpay already holds a refund for this payment. Use "Adopt whatever Razorpay holds" instead.',
+  no_refund_at_provider: 'Razorpay has no refund for this payment. If you are sure, clear the lock instead.',
+  refund_not_found_at_provider: 'Razorpay could not find that refund ID for this payment. Check the ID and try again.',
+  invalid_transition: "That status change isn't allowed from the order's current status.",
+  payment_required: "Order isn't paid.",
+  refund_not_issued: 'Issue the refund before marking the order refunded.',
+  tracking_number_in_use: 'This tracking number is already used by another order.',
+  invalid_tracking_update: 'A tracking number can only be added when marking the order shipped.',
+  order_not_shippable: "This order can't be shipped from its current status.",
 };
 
 /** Friendly text for a backend error code, or undefined when the code is not one we know. */
@@ -63,6 +77,29 @@ export function describeApiError(err: unknown, fallback: string): string {
   if (coded) return coded;
   if ((e?.status === 422 || e?.status === 409) && e.message) return e.message;
   return fallback;
+}
+
+export const REFUND_UNCONFIRMED_CODE = 'refund_unconfirmed';
+
+export function isRefundUnconfirmed(err: unknown): boolean {
+  const e = err as { code?: string } | undefined;
+  return e?.code === REFUND_UNCONFIRMED_CODE;
+}
+
+export function describeRefundError(err: unknown): string {
+  const e = err as { code?: string; message?: string; status?: number } | undefined;
+  if (e?.code === 'refund_amount_invalid') return e.message || 'Refund amount is invalid.';
+  return describeApiError(err, 'Failed to issue refund. Please try again.');
+}
+
+export function describeStatusChangeError(err: unknown, fallback = 'Failed to update status. Please try again.'): string {
+  const e = err as { code?: string; message?: string; status?: number } | undefined;
+  if (e?.code === 'not_cancellable' && e.message) return e.message;
+  return describeApiError(err, fallback);
+}
+
+export function isRateLimited(err: unknown): boolean {
+  return (err as { status?: number } | undefined)?.status === 429;
 }
 
 export type OptionGroup = 'sizes' | 'paper_types' | 'finishes' | 'sides_options';

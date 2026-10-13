@@ -1,4 +1,5 @@
 import { get, post, patch } from './client';
+import { normalisePaymentStatus } from './payments';
 import type {
   Order,
   OrderWithDetails,
@@ -45,6 +46,7 @@ function makeOrder(i: number): Order {
     coupon_code: i % 7 === 0 ? 'SAVE10' : null,
     discount_amount: i % 7 === 0 ? 200 : 0,
     subtotal: Math.floor(2500 + (i * 1337) % 18000),
+    refund_unconfirmed: false,
     turnaround: (['standard', 'express', 'rush'] as const)[i % 3],
     created_at: new Date(Date.now() - i * 1000 * 60 * 90).toISOString(),
     updated_at: new Date(Date.now() - i * 1000 * 60 * 45).toISOString(),
@@ -64,6 +66,7 @@ function normaliseListOrder(raw: Record<string, unknown>): Order {
     coupon_code: (raw.coupon_code as string | null) ?? null,
     discount_amount: (raw.discount_amount as number) ?? 0,
     subtotal: (raw.subtotal as number) ?? 0,
+    refund_unconfirmed: raw.refund_unconfirmed === true,
     turnaround: (raw.turnaround as string | string[] | null) ?? null,
     created_at: raw.created_at as string,
     updated_at: (raw.updated_at as string) ?? '',
@@ -205,6 +208,7 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
     coupon_applied_to: normaliseAppliedTo(raw.coupon_applied_to),
     discount_amount: Number(raw.discount_amount ?? 0),
     subtotal: Number(raw.subtotal ?? 0),
+    refund_unconfirmed: payment.refund_unconfirmed === true,
     gst_amount: Number(raw.gst_amount ?? 0),
     shipping_cost: Number(raw.shipping_cost ?? 0),
     turnaround: raw.turnaround as string | string[],
@@ -215,8 +219,12 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
       transaction_id: payment.transaction_id as string,
       amount: Number(payment.amount ?? 0),
       currency: 'INR',
-      status: payment.status as import('@/types').OrderPaymentInfo['status'],
+      status: normalisePaymentStatus(payment.status),
       paid_at: (payment.paid_at as string | null) ?? null,
+      refund_id: (payment.refund_id as string | null) ?? null,
+      refund_amount: payment.refund_amount != null ? Number(payment.refund_amount) : null,
+      refunded_at: (payment.refunded_at as string | null) ?? null,
+      refund_unconfirmed: payment.refund_unconfirmed === true,
     },
     shipping_address: {
       full_name: (shippingAddress.full_name as string) ?? '',
@@ -262,11 +270,14 @@ function normaliseOrder(raw: Record<string, unknown>): OrderWithDetails {
 export async function updateOrderStatus(
   id: string,
   status: OrderStatus,
-  trackingNumber?: string
+  trackingNumber?: string,
+  note?: string
 ): Promise<{ success: boolean }> {
+  const trimmedNote = note?.trim();
   await patch(`/admin/orders/${id}/status`, {
     status,
     ...(trackingNumber ? { tracking_number: trackingNumber } : {}),
+    ...(trimmedNote ? { note: trimmedNote } : {}),
   });
   return { success: true };
 }

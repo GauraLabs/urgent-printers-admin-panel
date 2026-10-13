@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
-import { Plus, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
+import { Plus, Pencil, Trash2, MoreHorizontal, LockOpen } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
 import { DataTable } from '@/components/common/DataTable';
@@ -15,7 +15,8 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { StaffForm } from './StaffForm';
-import { useStaff, useDeleteStaff } from '../hooks/useStaff';
+import { useStaff, useDeleteStaff, useUnlockStaffLogin } from '../hooks/useStaff';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useAuthStore } from '@/store/authStore';
 import { ROLE_LABELS, ROLE_COLORS } from '@/lib/constants/roles';
 import { formatTimeAgo } from '@/lib/utils/formatDate';
@@ -25,6 +26,8 @@ import type { AdminUser, ApiError } from '@/types';
 export function StaffTable() {
   const { query, page, pageSize, setPage, includeInactive, setIncludeInactive } = useStaff();
   const deleteMutation = useDeleteStaff();
+  const unlockMutation = useUnlockStaffLogin();
+  const { isSuperAdmin } = usePermissions();
   const currentUser = useAuthStore((s) => s.user);
   const [editing, setEditing] = useState<AdminUser | 'new' | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(null);
@@ -39,6 +42,16 @@ export function StaffTable() {
       const apiErr = err as ApiError;
       toast.error(apiErr.message ?? 'Failed to deactivate staff member');
       setDeleteTarget(null);
+    }
+  }
+
+  async function handleUnlock(m: AdminUser) {
+    try {
+      await unlockMutation.mutateAsync(m.id);
+      toast.success(`Login unlocked for ${m.name}`);
+    } catch (err) {
+      const apiErr = err as ApiError;
+      toast.error(apiErr.message ?? 'Failed to unlock login');
     }
   }
 
@@ -130,6 +143,11 @@ export function StaffTable() {
               <DropdownMenuItem onClick={() => setEditing(m)}>
                 <Pencil className="h-3.5 w-3.5" /> Edit
               </DropdownMenuItem>
+              {isSuperAdmin && (
+                <DropdownMenuItem onClick={() => handleUnlock(m)}>
+                  <LockOpen className="h-3.5 w-3.5" /> Unlock login
+                </DropdownMenuItem>
+              )}
               {m.is_active && !isYou && (
                 <>
                   <DropdownMenuSeparator />

@@ -91,8 +91,12 @@ export interface OrderPaymentInfo {
   transaction_id: string;
   amount: number;
   currency: string;
-  status: 'pending' | 'paid' | 'failed' | 'refunded' | 'partial_refund';
+  status: import('./payment').PaymentStatus;
   paid_at: string | null;
+  refund_id: string | null;
+  refund_amount: number | null;
+  refunded_at: string | null;
+  refund_unconfirmed: boolean;
 }
 
 export interface OrderShippingInfo {
@@ -139,6 +143,7 @@ export interface Order {
   coupon_code: string | null;
   discount_amount: number;
   subtotal: number;
+  refund_unconfirmed: boolean;
   turnaround: string | string[] | null;
   created_at: string;
   updated_at: string;

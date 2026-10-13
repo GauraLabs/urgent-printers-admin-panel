@@ -10,6 +10,7 @@ import { Logo } from '@/components/common/Logo';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/store/authStore';
 import { loginUser } from '@/lib/api/auth';
+import { loginErrorMessage } from '@/lib/api/loginError';
 import { cn } from '@/lib/utils/cn';
 import type { Metadata } from 'next';
 
@@ -43,10 +44,7 @@ export default function LoginPage() {
       toast.success(`Welcome back, ${res.user.name.split(' ')[0]}!`);
       router.replace('/dashboard');
     } catch (err: unknown) {
-      const msg =
-        typeof err === 'object' && err !== null && 'message' in err
-          ? String((err as { message: unknown }).message)
-          : 'Login failed. Please try again.';
+      const msg = loginErrorMessage(err);
       setServerError(msg);
     }
   }

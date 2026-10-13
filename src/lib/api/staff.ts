@@ -100,3 +100,8 @@ export async function getActivityLog(params: GetActivityParams = {}): Promise<Ac
   });
   return { ...res, items: res.items.map(normalizeActivity) };
 }
+
+export async function unlockStaffLogin(id: string): Promise<AdminUser> {
+  const user = await post<AdminUser & { id: string | number }>(`/admin/staff/${id}/unlock-login`);
+  return normalizeUser(user);
+}

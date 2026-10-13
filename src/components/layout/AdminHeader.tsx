@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils/cn';
 const SEGMENT_LABELS: Record<string, string> = {
   dashboard: 'Dashboard', orders: 'Orders', 'printing-queue': 'Printing Queue',
   products: 'Products', new: 'New', categories: 'Categories', customers: 'Customers',
-  payments: 'Payments', refunds: 'Refunds', coupons: 'Coupons', content: 'Content',
+  payments: 'Payments', refunds: 'Refunds', anomalies: 'Anomalies', coupons: 'Coupons', content: 'Content',
   banners: 'Banners', testimonials: 'Testimonials', announcements: 'Announcements',
   faqs: 'FAQs', reviews: 'Reviews', shipping: 'Shipping', serviceability: 'Serviceability',
   communications: 'Communications', templates: 'Templates', reports: 'Reports',

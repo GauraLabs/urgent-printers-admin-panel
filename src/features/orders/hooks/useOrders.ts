@@ -12,10 +12,10 @@ import {
   getOrderProofs,
   sendProofForApproval,
 } from '@/lib/api/orders';
-import { createRefund } from '@/lib/api/payments';
+import { createRefund, resolveRefund } from '@/lib/api/payments';
 import type { OrderFilters, OrderStatus } from '@/types';
 import type { SortingState } from '@tanstack/react-table';
-import type { CreateRefundRequest } from '@/types';
+import type { CreateRefundRequest, ResolveRefundRequest } from '@/types';
 
 export function useOrders(initialFilters: OrderFilters = {}) {
   const [filters, setFilters] = useState<OrderFilters>({
@@ -62,8 +62,8 @@ export function useOrders(initialFilters: OrderFilters = {}) {
 export function useUpdateOrderStatus() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status, trackingNumber }: { id: string; status: OrderStatus; trackingNumber?: string }) =>
-      updateOrderStatus(id, status, trackingNumber),
+    mutationFn: ({ id, status, trackingNumber, note }: { id: string; status: OrderStatus; trackingNumber?: string; note?: string }) =>
+      updateOrderStatus(id, status, trackingNumber, note),
     onSuccess: (_, { id }) => {
       qc.invalidateQueries({ queryKey: ['orders'] });
       qc.invalidateQueries({ queryKey: ['order', id] });
@@ -96,9 +96,26 @@ export function useCreateRefund() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: CreateRefundRequest) => createRefund(data),
-    onSuccess: () => {
+    onSuccess: (_, { order_id }) => {
       qc.invalidateQueries({ queryKey: ['orders'] });
+      qc.invalidateQueries({ queryKey: ['order', order_id] });
       qc.invalidateQueries({ queryKey: ['payments'] });
+    },
+    onError: (_, { order_id }) => {
+      qc.invalidateQueries({ queryKey: ['order', order_id] });
+    },
+  });
+}
+
+export function useResolveRefund() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: ResolveRefundRequest) => resolveRefund(data),
+    onSuccess: (_, { order_id }) => {
+      qc.invalidateQueries({ queryKey: ['orders'] });
+      qc.invalidateQueries({ queryKey: ['order', order_id] });
+      qc.invalidateQueries({ queryKey: ['payments'] });
+      qc.invalidateQueries({ queryKey: ['payment-anomalies'] });
     },
   });
 }

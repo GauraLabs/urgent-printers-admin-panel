@@ -50,3 +50,7 @@ export async function refreshSession(): Promise<{ access_token: string; user: Ad
     user: normalizeUser(res.user),
   };
 }
+
+export async function setAdminPassword(token: string, password: string): Promise<void> {
+  await post<null>('/admin/auth/set-password', { token, password });
+}
