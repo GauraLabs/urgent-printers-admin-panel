@@ -1,5 +1,4 @@
-export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded' | 'partial_refund';
-export type RefundStatus = 'pending' | 'processing' | 'completed' | 'failed';
+export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded' | 'partial_refund' | 'refund_pending';
 export type RefundReason =
   | 'customer_request'
   | 'order_cancelled'
@@ -23,25 +22,20 @@ export interface Payment {
   status: PaymentStatus;
   paid_at: string | null;
   created_at: string;
+  refund_unconfirmed: boolean;
 }
 
 export interface Refund {
-  id: string;
-  payment_id: string;
   order_id: string;
   order_number: string;
-  customer_id: string;
-  customer_name: string;
+  refund_id: string;
+  /** Rupees. */
   amount: number;
-  currency: string;
-  reason: RefundReason;
-  notes: string | null;
-  status: RefundStatus;
-  processed_by_id: string | null;
-  processed_by_name: string | null;
-  transaction_id: string | null;
-  created_at: string;
-  completed_at: string | null;
+  reason: RefundReason | null;
+  /** Provider status as reported by Razorpay (e.g. processed, pending, failed). */
+  status: string;
+  created_at: string | null;
+  created_by: string | null;
 }
 
 export interface PaymentsListResponse {
@@ -74,7 +68,56 @@ export interface PaymentFilters {
 
 export interface CreateRefundRequest {
   order_id: string;
-  amount: number;
+  /** Rupees. Omit to refund the full paid amount. */
+  amount?: number;
   reason: RefundReason;
   notes?: string;
+}
+
+export interface RefundResult {
+  order_id: string;
+  order_number: string;
+  /** Null while the refund is unconfirmed. */
+  refund_id: string | null;
+  refund_amount: number;
+  payment_status: PaymentStatus;
+  order_status: string;
+  refunded_at: string | null;
+  refund_unconfirmed: boolean;
+}
+
+export type ResolveRefundRequest =
+  | { order_id: string; mode: 'attach'; refund_id: string; amount: number }
+  | { order_id: string; mode: 'clear' | 'reconcile' };
+
+export interface PaymentAnomaly {
+  event_id: string;
+  event_type: string;
+  order_id: string;
+  order_number: string;
+  razorpay_order_id: string | null;
+  razorpay_payment_id: string | null;
+  event_amount_paise: number | null;
+  order_total_paise: number;
+  order_status: string;
+  payment_status: string;
+  refund_id: string | null;
+  refund_unconfirmed: boolean;
+  resolved: boolean;
+  created_at: string;
+}
+
+export interface PaymentAnomalyFilters {
+  event_type?: string;
+  unresolved_only?: boolean;
+  page?: number;
+  page_size?: number;
+}
+
+export interface PaymentAnomaliesResponse {
+  items: PaymentAnomaly[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
 }

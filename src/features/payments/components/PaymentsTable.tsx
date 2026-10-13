@@ -9,7 +9,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { usePayments } from '../hooks/usePayments';
-import { PaymentStatusBadge } from '@/components/common/StatusBadge';
+import { Badge, PaymentStatusBadge } from '@/components/common/StatusBadge';
 import { formatPrice } from '@/lib/utils/formatPrice';
 import { formatDateTime } from '@/lib/utils/formatDate';
 import { cn } from '@/lib/utils/cn';
@@ -68,7 +68,10 @@ export function PaymentsTable() {
       id: 'status',
       header: 'Status',
       cell: ({ row }) => (
-        <PaymentStatusBadge status={row.original.status} />
+        <div className="flex flex-col items-start gap-1">
+          <PaymentStatusBadge status={row.original.status} />
+          {row.original.refund_unconfirmed && <Badge label="Refund unconfirmed" variant="danger" />}
+        </div>
       ),
     },
     {
@@ -105,6 +108,7 @@ export function PaymentsTable() {
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="failed">Failed</SelectItem>
               <SelectItem value="refunded">Refunded</SelectItem>
+              <SelectItem value="refund_pending">Refund Pending</SelectItem>
             </SelectContent>
           </Select>
           {(filters.search || filters.status) && (

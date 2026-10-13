@@ -33,6 +33,19 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  async headers() {
+    return [
+      {
+        // The set-password link carries a one-time token in the query string.
+        source: '/set-password',
+        headers: [
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+          { key: 'Cache-Control', value: 'no-store' },
+        ],
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

@@ -2,8 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { getPayments, getRefunds } from '@/lib/api/payments';
-import type { PaymentFilters } from '@/types';
+import { getPayments, getRefunds, getPaymentAnomalies, getStuckPayments } from '@/lib/api/payments';
+import type { PaymentFilters, PaymentAnomalyFilters } from '@/types';
 
 export function usePayments() {
   const [filters, setFilters] = useState<PaymentFilters>({ page: 1, page_size: 20 });
@@ -41,4 +41,34 @@ export function useRefunds() {
     setStatus: (status: PaymentFilters['status']) => setFilters((f) => ({ ...f, status, page: 1 })),
     clearFilters: () => setFilters({ page: 1, page_size: 20 }),
   };
+}
+
+export function usePaymentAnomalies() {
+  const [filters, setFilters] = useState<PaymentAnomalyFilters>({ page: 1, page_size: 20, unresolved_only: true });
+
+  const query = useQuery({
+    queryKey: ['payment-anomalies', filters],
+    queryFn: () => getPaymentAnomalies(filters),
+    staleTime: 30_000,
+  });
+
+  return {
+    query,
+    filters,
+    setPage: (page: number) => setFilters((f) => ({ ...f, page })),
+    setEventType: (event_type?: string) => setFilters((f) => ({ ...f, event_type, page: 1 })),
+    setUnresolvedOnly: (unresolved_only: boolean) => setFilters((f) => ({ ...f, unresolved_only, page: 1 })),
+  };
+}
+
+export function useStuckPayments() {
+  const [page, setPage] = useState(1);
+
+  const query = useQuery({
+    queryKey: ['payment-anomalies', 'stuck', page],
+    queryFn: () => getStuckPayments({ page, page_size: 20 }),
+    staleTime: 30_000,
+  });
+
+  return { query, page, setPage };
 }

@@ -16,7 +16,8 @@ export interface CreateStaffRequest {
   email: string;
   name: string;
   role: Role;
-  password: string;
+  /** Omit to invite by email (set-password link). */
+  password?: string;
   phone_number?: string;
   granted_permissions?: Permission[];
   revoked_permissions?: Permission[];

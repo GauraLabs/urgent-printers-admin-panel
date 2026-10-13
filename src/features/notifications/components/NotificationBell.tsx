@@ -14,8 +14,11 @@ import { ROUTES } from '@/lib/constants/routes';
 import { cn } from '@/lib/utils/cn';
 import type { AdminNotification } from '@/lib/api/adminNotifications';
 
-function resolveHref(notification: AdminNotification): string | null {
-  if (!notification.event_type.startsWith('order.')) return null;
+const ORDER_LINKED_EVENT_TYPES = new Set(['payment.anomaly', 'shipment.problem']);
+
+export function resolveHref(notification: AdminNotification): string | null {
+  const { event_type } = notification;
+  if (!event_type.startsWith('order.') && !ORDER_LINKED_EVENT_TYPES.has(event_type)) return null;
   const orderId = notification.data?.order_id;
   if (orderId == null) return null;
   return ROUTES.ORDER_DETAIL(String(orderId));

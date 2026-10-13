@@ -14,6 +14,8 @@ export const ROUTES = {
   CUSTOMER_DETAIL: (id: string) => `/customers/${id}`,
   PAYMENTS: '/payments',
   REFUNDS: '/payments/refunds',
+  PAYMENT_ANOMALIES: '/payments/anomalies',
+  SET_PASSWORD: '/set-password',
   COUPONS: '/coupons',
   COUPON_DETAIL: (id: string) => `/coupons/${id}`,
   CONTENT_BANNERS: '/content/banners',

@@ -24,12 +24,10 @@ const baseSchema = {
   phone_number: z.string().optional(),
 };
 
-const createSchema = z.object({ ...baseSchema, password: z.string().min(8, 'Min 8 characters') });
-const editSchema = z.object({
-  ...baseSchema,
-  // On edit, password is optional but must be ≥ 8 chars if provided
-  password: z.string().refine((v) => v === '' || v.length >= 8, { message: 'Min 8 characters' }).optional(),
-});
+// Password is optional on create (omitted = email invite) and on edit; when filled it must be >= 12 chars.
+const optionalPassword = z.string().refine((v) => v === '' || v.length >= 12, { message: 'Min 12 characters' }).optional();
+const createSchema = z.object({ ...baseSchema, password: optionalPassword });
+const editSchema = z.object({ ...baseSchema, password: optionalPassword });
 
 type CreateValues = z.infer<typeof createSchema>;
 
@@ -50,11 +48,12 @@ export function StaffForm({ member, onSuccess, onCancel }: StaffFormProps) {
   const updateMutation = useUpdateStaff();
   const isEdit = !!member;
 
+  const [setPasswordNow, setSetPasswordNow] = useState(false);
   const [showPermissions, setShowPermissions] = useState(false);
   const [grantedPermissions, setGrantedPermissions] = useState<Permission[]>(member?.granted_permissions ?? []);
   const [revokedPermissions, setRevokedPermissions] = useState<Permission[]>(member?.revoked_permissions ?? []);
 
-  const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<CreateValues>({
+  const { register, handleSubmit, watch, setValue, setError, formState: { errors, isSubmitting } } = useForm<CreateValues>({
     resolver: zodResolver(isEdit ? editSchema : createSchema) as never,
     defaultValues: member
       ? { name: member.name, email: member.email, role: member.role, is_active: member.is_active, password: '', phone_number: member.phone_number ?? '' }
@@ -72,6 +71,10 @@ export function StaffForm({ member, onSuccess, onCancel }: StaffFormProps) {
   }
 
   async function onSubmit(values: CreateValues) {
+    if (!isEdit && setPasswordNow && !values.password) {
+      setError('password', { message: 'Min 12 characters' });
+      return;
+    }
     try {
       if (isEdit && member) {
         await updateMutation.mutateAsync({
@@ -93,12 +96,12 @@ export function StaffForm({ member, onSuccess, onCancel }: StaffFormProps) {
           name: values.name,
           email: values.email,
           role: values.role,
-          password: values.password!,
+          ...(setPasswordNow && values.password ? { password: values.password } : {}),
           phone_number: values.phone_number || undefined,
           granted_permissions: grantedPermissions,
           revoked_permissions: revokedPermissions,
         });
-        toast.success('Staff member created');
+        toast.success(setPasswordNow ? 'Staff member created' : `Invite sent to ${values.email}`);
       }
       onSuccess();
     } catch (err) {
@@ -144,18 +147,46 @@ export function StaffForm({ member, onSuccess, onCancel }: StaffFormProps) {
             </p>
           )}
         </div>
-        <div>
-          <label className={cls.label}>
-            {isEdit ? 'New Password' : 'Password *'}
-          </label>
-          <input
-            {...register('password')}
-            type="password"
-            className={cls.input}
-            placeholder={isEdit ? 'Leave blank to keep current' : 'Min 8 characters'}
-          />
-          {errors.password && <p className={cls.err}>{errors.password.message}</p>}
-        </div>
+        {isEdit ? (
+          <div>
+            <label className={cls.label}>New Password</label>
+            <input
+              {...register('password')}
+              type="password"
+              autoComplete="new-password"
+              className={cls.input}
+              placeholder="Leave blank to keep current"
+            />
+            {errors.password && <p className={cls.err}>{errors.password.message}</p>}
+          </div>
+        ) : (
+          <div>
+            <label className={cls.label}>Sign-in</label>
+            <div className="space-y-1.5" role="radiogroup" aria-label="Sign-in setup">
+              <label className="flex items-center gap-2 text-[13px] text-foreground cursor-pointer">
+                <input type="radio" name="signin-mode" checked={!setPasswordNow} onChange={() => { setSetPasswordNow(false); setValue('password', ''); }} />
+                Invite via email (set-password link)
+              </label>
+              <label className="flex items-center gap-2 text-[13px] text-foreground cursor-pointer">
+                <input type="radio" name="signin-mode" checked={setPasswordNow} onChange={() => setSetPasswordNow(true)} />
+                Set a password now
+              </label>
+            </div>
+            {setPasswordNow && (
+              <>
+                <input
+                  {...register('password')}
+                  type="password"
+                  autoComplete="new-password"
+                  aria-label="Password"
+                  className={`${cls.input} mt-2`}
+                  placeholder="Min 12 characters"
+                />
+                {errors.password && <p className={cls.err}>{errors.password.message}</p>}
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       <div>
@@ -235,7 +266,7 @@ export function StaffForm({ member, onSuccess, onCancel }: StaffFormProps) {
           size="sm"
           disabled={isSubmitting || createMutation.isPending || updateMutation.isPending}
         >
-          {(createMutation.isPending || updateMutation.isPending) ? 'Saving…' : isEdit ? 'Save Changes' : 'Create Member'}
+          {(createMutation.isPending || updateMutation.isPending) ? 'Saving…' : isEdit ? 'Save Changes' : setPasswordNow ? 'Create Member' : 'Send Invite'}
         </Button>
         <Button type="button" size="sm" variant="outline" onClick={onCancel}>Cancel</Button>
       </div>

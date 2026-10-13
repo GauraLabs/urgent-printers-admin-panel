@@ -5,7 +5,7 @@
  */
 
 import { cn } from '@/lib/utils/cn';
-import type { OrderStatus, ProductStatus, CustomerStatus, PaymentStatus, RefundStatus, CouponStatus, ArtworkStatus, ProductBadge, ProofStatus } from '@/types';
+import type { OrderStatus, ProductStatus, CustomerStatus, PaymentStatus, CouponStatus, ArtworkStatus, ProductBadge, ProofStatus } from '@/types';
 import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/constants/orderStatuses';
 
 // ─── Core variant system ──────────────────────────────────────────────────────
@@ -136,10 +136,11 @@ const PAYMENT_STATUS_VARIANT: Record<PaymentStatus, BadgeVariant> = {
   failed:         'danger',
   refunded:       'default',
   partial_refund: 'warning',
+  refund_pending: 'danger',
 };
 const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
   paid: 'Paid', pending: 'Pending', failed: 'Failed',
-  refunded: 'Refunded', partial_refund: 'Partial Refund',
+  refunded: 'Refunded', partial_refund: 'Partial Refund', refund_pending: 'Refund Pending',
 };
 
 export function PaymentStatusBadge({ status, className }: { status: PaymentStatus; className?: string }) {
@@ -148,15 +149,14 @@ export function PaymentStatusBadge({ status, className }: { status: PaymentStatu
 
 // ─── Refund status ────────────────────────────────────────────────────────────
 
-const REFUND_STATUS_VARIANT: Record<RefundStatus, BadgeVariant> = {
-  pending:    'warning',
-  processing: 'info',
-  completed:  'success',
-  failed:     'danger',
+const REFUND_STATUS_VARIANT: Record<string, BadgeVariant> = {
+  processed: 'success',
+  pending:   'warning',
+  failed:    'danger',
 };
 
-export function RefundStatusBadge({ status, className }: { status: RefundStatus; className?: string }) {
-  return <Badge label={status.charAt(0).toUpperCase() + status.slice(1)} variant={REFUND_STATUS_VARIANT[status]} dot className={className} />;
+export function RefundStatusBadge({ status, className }: { status: string; className?: string }) {
+  return <Badge label={status.charAt(0).toUpperCase() + status.slice(1)} variant={REFUND_STATUS_VARIANT[status] ?? 'default'} dot className={className} />;
 }
 
 // ─── Coupon status ────────────────────────────────────────────────────────────

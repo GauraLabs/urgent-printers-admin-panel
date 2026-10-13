@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { RefreshCw, XCircle, DollarSign, Truck, CheckCircle } from 'lucide-react';
+import { RefreshCw, XCircle, DollarSign, Truck, CheckCircle, LifeBuoy } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { UpdateStatusDialog } from '../UpdateStatusDialog';
 import { RefundDialog } from '../RefundDialog';
+import { ResolveRefundDialog } from '../ResolveRefundDialog';
+import { usePermissions } from '@/hooks/usePermissions';
+import { canRefundOrder, canResolveRefund } from '../../utils/refundState';
+import { describeStatusChangeError } from '@/lib/api/validationErrors';
 import { useCancelOrder, useUpdateOrderStatus } from '../../hooks/useOrders';
 import { ORDER_STATUS_LABELS } from '@/lib/constants/orderStatuses';
 import type { OrderWithDetails, OrderStatus } from '@/types';
@@ -15,6 +19,7 @@ const QUICK_ACTIONS: Partial<Record<OrderStatus, { label: string; nextStatus: Or
   artwork_pending: [{ label: 'Force Approve', nextStatus: 'artwork_approved', icon: <CheckCircle className="h-4 w-4" /> }],
   artwork_approved: [{ label: 'Start Printing', nextStatus: 'printing', icon: <RefreshCw className="h-4 w-4" /> }],
   printing: [{ label: 'Mark Shipped', nextStatus: 'shipped', icon: <Truck className="h-4 w-4" /> }],
+  ready_to_dispatch: [{ label: 'Mark Shipped', nextStatus: 'shipped', icon: <Truck className="h-4 w-4" /> }],
   shipped: [{ label: 'Mark Delivered', nextStatus: 'delivered', icon: <CheckCircle className="h-4 w-4" /> }],
 };
 
@@ -26,19 +31,27 @@ export function OrderActions({ order }: OrderActionsProps) {
   const [updateOpen, setUpdateOpen] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [shipOpen, setShipOpen] = useState(false);
+  const [resolveOpen, setResolveOpen] = useState(false);
+  const { can, isSuperAdmin } = usePermissions();
   const cancelMutation = useCancelOrder();
   const statusMutation = useUpdateOrderStatus();
 
   const quickActions = QUICK_ACTIONS[order.status] ?? [];
   const canCancel = !['cancelled', 'refunded', 'delivered'].includes(order.status);
-  const canRefund = order.status === 'delivered' || order.status === 'shipped';
+  const canRefund = (can('orders.refund') || can('payments.refund')) && canRefundOrder(order);
+  const canResolve = canResolveRefund(order, isSuperAdmin);
 
   async function applyQuickAction(nextStatus: OrderStatus) {
+    if (nextStatus === 'shipped') {
+      setShipOpen(true);
+      return;
+    }
     try {
       await statusMutation.mutateAsync({ id: order.id, status: nextStatus });
       toast.success(`Order moved to ${ORDER_STATUS_LABELS[nextStatus]}`);
-    } catch {
-      toast.error('Failed to update status');
+    } catch (err: unknown) {
+      toast.error(describeStatusChangeError(err, 'Failed to update status'));
     }
   }
 
@@ -47,8 +60,8 @@ export function OrderActions({ order }: OrderActionsProps) {
       await cancelMutation.mutateAsync({ id: order.id, reason: 'Cancelled by admin' });
       toast.success(`${order.order_number} cancelled`);
       setCancelOpen(false);
-    } catch {
-      toast.error('Failed to cancel order');
+    } catch (err: unknown) {
+      toast.error(describeStatusChangeError(err, 'Failed to cancel order'));
     }
   }
 
@@ -92,6 +105,18 @@ export function OrderActions({ order }: OrderActionsProps) {
             </Button>
           )}
 
+          {canResolve && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setResolveOpen(true)}
+              className="border-[var(--danger-border)] text-[var(--danger)] hover:bg-[var(--danger-bg)]"
+            >
+              <LifeBuoy className="h-4 w-4" />
+              Resolve refund
+            </Button>
+          )}
+
           {canCancel && (
             <Button
               variant="outline"
@@ -114,9 +139,28 @@ export function OrderActions({ order }: OrderActionsProps) {
         currentStatus={order.status}
       />
 
+      <UpdateStatusDialog
+        open={shipOpen}
+        onOpenChange={setShipOpen}
+        orderId={order.id}
+        orderNumber={order.order_number}
+        currentStatus={order.status}
+        initialStatus="shipped"
+        requireTrackingForShipped
+      />
+
       <RefundDialog
         open={refundOpen}
         onOpenChange={setRefundOpen}
+        orderId={order.id}
+        orderNumber={order.order_number}
+        maxAmount={order.payment.amount}
+        onResolveRequested={canResolve ? () => setResolveOpen(true) : undefined}
+      />
+
+      <ResolveRefundDialog
+        open={resolveOpen}
+        onOpenChange={setResolveOpen}
         orderId={order.id}
         orderNumber={order.order_number}
         maxAmount={order.payment.amount}

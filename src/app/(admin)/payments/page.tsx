@@ -13,9 +13,14 @@ export default function PaymentsPage() {
         title="Payments"
         description="All payment transactions."
         actions={
-          <Link href={ROUTES.REFUNDS} className="text-xs px-3 py-1.5 border border-[var(--border)] rounded-lg text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)] transition-colors">
-            View Refunds →
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href={ROUTES.PAYMENT_ANOMALIES} className="text-xs px-3 py-1.5 border border-[var(--border)] rounded-lg text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)] transition-colors">
+              Anomalies &amp; stuck payments
+            </Link>
+            <Link href={ROUTES.REFUNDS} className="text-xs px-3 py-1.5 border border-[var(--border)] rounded-lg text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)] transition-colors">
+              View Refunds →
+            </Link>
+          </div>
         }
       />
       <PaymentsTable />
