@@ -52,7 +52,12 @@ export function AlertsPanel({ alerts, isLoading }: AlertsPanelProps) {
         <ul className="divide-y divide-[var(--border-subtle)]">
           {alerts.map((alert) => {
             const Icon = ALERT_ICONS[alert.type] ?? AlertTriangle;
-            const isError = alert.severity === 'error';
+            const tone =
+              alert.severity === 'error'
+                ? { bg: 'bg-[var(--danger-bg)]', fg: 'text-[var(--danger)]' }
+                : alert.severity === 'info'
+                  ? { bg: 'bg-[var(--info-bg)]', fg: 'text-[var(--info)]' }
+                  : { bg: 'bg-[var(--warning-bg)]', fg: 'text-[var(--warning)]' };
             return (
               <li key={alert.id}>
                 <Link
@@ -62,14 +67,11 @@ export function AlertsPanel({ alerts, isLoading }: AlertsPanelProps) {
                   <div
                     className={cn(
                       'mt-0.5 flex-shrink-0 w-7 h-7 rounded-md flex items-center justify-center',
-                      isError ? 'bg-[var(--danger-bg)]' : 'bg-[var(--warning-bg)]'
+                      tone.bg
                     )}
                   >
                     <Icon
-                      className={cn(
-                        'h-3.5 w-3.5',
-                        isError ? 'text-[var(--danger)]' : 'text-[var(--warning)]'
-                      )}
+                      className={cn('h-3.5 w-3.5', tone.fg)}
                     />
                   </div>
                   <div className="flex-1 min-w-0">

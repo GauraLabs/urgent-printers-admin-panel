@@ -15,9 +15,10 @@ interface StatCardProps {
   sparkColor?: string;
   icon: React.ReactNode;
   iconBg: string;
+  note?: string;
 }
 
-function StatCard({ label, value, changePct, sparkline, sparkColor = '#3b82f6', icon, iconBg }: StatCardProps) {
+function StatCard({ label, value, changePct, sparkline, sparkColor = '#3b82f6', icon, iconBg, note }: StatCardProps) {
   const positive = changePct !== undefined && changePct >= 0;
   const sparkData = sparkline?.map((v, i) => ({ i, v }));
 
@@ -27,6 +28,7 @@ function StatCard({ label, value, changePct, sparkline, sparkColor = '#3b82f6', 
         <div>
           <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wide">{label}</p>
           <p className="mt-1.5 text-2xl font-semibold text-[var(--text-primary)] tabular-nums">{value}</p>
+          {note && <p className="mt-0.5 text-[11px] text-[var(--text-muted)]">{note}</p>}
         </div>
         <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', iconBg)}>
           {icon}
@@ -91,6 +93,8 @@ export function StatsRow({ stats, isLoading }: StatsRowProps) {
     );
   }
 
+  const abandoned = stats?.abandoned_checkouts_today ?? 0;
+
   const cards: StatCardProps[] = [
     {
       label: 'Revenue Today',
@@ -105,6 +109,7 @@ export function StatsRow({ stats, isLoading }: StatsRowProps) {
       label: 'Orders Today',
       value: String(stats?.orders_today ?? 0),
       changePct: stats?.orders_today_change_pct,
+      note: abandoned > 0 ? `${abandoned} abandoned checkout${abandoned === 1 ? '' : 's'}` : undefined,
       sparkline: stats?.orders_sparkline,
       sparkColor: '#3b82f6',
       icon: <ShoppingCart className="h-4 w-4 text-blue-600" />,

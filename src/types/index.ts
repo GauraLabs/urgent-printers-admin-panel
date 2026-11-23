@@ -19,6 +19,7 @@ export interface DashboardStats {
   new_customers_today: number;
   new_customers_change_pct: number;
   failed_payments_today: number;
+  abandoned_checkouts_today?: number;
   revenue_sparkline: number[];
   orders_sparkline: number[];
   alerts: DashboardAlert[];
@@ -27,7 +28,7 @@ export interface DashboardStats {
 export interface DashboardAlert {
   id: string;
   type: 'artwork_pending' | 'order_stuck' | 'failed_payment' | 'low_product';
-  severity: 'warning' | 'error';
+  severity: 'info' | 'warning' | 'error';
   title: string;
   description: string;
   entity_id: string;
