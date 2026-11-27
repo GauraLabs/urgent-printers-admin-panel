@@ -1,6 +1,4 @@
-function delay(ms = 300): Promise<void> {
-  return new Promise((r) => setTimeout(r, ms + Math.random() * 300));
-}
+import { get, put } from './client';
 
 export interface GeneralSettings {
   site_name: string;
@@ -38,42 +36,11 @@ export interface NotificationSettings {
   admin_failed_payment_email: boolean;
 }
 
-export async function getGeneralSettings(): Promise<GeneralSettings> {
-  await delay();
-  return { site_name: 'Urgent Printers', support_email: 'support@urgentprinters.com', support_phone: '+91 98765 00000', gst_number: '29AABCU9603R1ZX', address: 'MG Road, Bengaluru, Karnataka 560001', timezone: 'Asia/Kolkata', currency: 'INR', logo_url: null };
-}
-
-export async function updateGeneralSettings(data: Partial<GeneralSettings>): Promise<GeneralSettings> {
-  await delay();
-  return { ...await getGeneralSettings(), ...data };
-}
-
-export async function getOperationsSettings(): Promise<OperationsSettings> {
-  await delay();
-  return { default_turnaround_days: 5, max_rush_orders_per_day: 20, artwork_approval_timeout_hours: 24, auto_approve_reorders: false, printing_capacity_per_day: 200 };
-}
-
-export async function updateOperationsSettings(data: Partial<OperationsSettings>): Promise<OperationsSettings> {
-  await delay();
-  return { ...await getOperationsSettings(), ...data };
-}
-
-export async function getPaymentSettings(): Promise<PaymentSettings> {
-  await delay();
-  return { razorpay_enabled: true, paytm_enabled: false, razorpay_key_id: 'rzp_test_xxx' };
-}
-
-export async function updatePaymentSettings(data: Partial<PaymentSettings>): Promise<PaymentSettings> {
-  await delay();
-  return { ...await getPaymentSettings(), ...data };
-}
-
-export async function getNotificationSettings(): Promise<NotificationSettings> {
-  await delay();
-  return { order_confirmed_email: true, order_confirmed_sms: true, order_dispatched_email: true, order_dispatched_sms: true, artwork_pending_email: true, artwork_pending_sms: false, admin_new_order_email: true, admin_failed_payment_email: true };
-}
-
-export async function updateNotificationSettings(data: Partial<NotificationSettings>): Promise<NotificationSettings> {
-  await delay();
-  return { ...await getNotificationSettings(), ...data };
-}
+export const getGeneralSettings = () => get<GeneralSettings>('/admin/settings/general');
+export const updateGeneralSettings = (data: Partial<GeneralSettings>) => put<GeneralSettings>('/admin/settings/general', data);
+export const getOperationsSettings = () => get<OperationsSettings>('/admin/settings/operations');
+export const updateOperationsSettings = (data: Partial<OperationsSettings>) => put<OperationsSettings>('/admin/settings/operations', data);
+export const getPaymentSettings = () => get<PaymentSettings>('/admin/settings/payments');
+export const updatePaymentSettings = (data: Partial<PaymentSettings>) => put<PaymentSettings>('/admin/settings/payments', data);
+export const getNotificationSettings = () => get<NotificationSettings>('/admin/settings/notifications');
+export const updateNotificationSettings = (data: Partial<NotificationSettings>) => put<NotificationSettings>('/admin/settings/notifications', data);

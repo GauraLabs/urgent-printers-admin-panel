@@ -1,7 +1,7 @@
 'use client';
 
 import { useGeneralSettings } from '../hooks/useSettings';
-import { useSettingsForm, SettingsSection, FieldRow, SaveBar, fieldCls } from './SettingsForm';
+import { useSettingsForm, SettingsLoadError, SettingsSection, FieldRow, SaveBar, fieldCls } from './SettingsForm';
 import { LoadingSkeleton } from '@/components/common/LoadingSkeleton';
 import type { GeneralSettings as T } from '@/lib/api/settings';
 
@@ -15,11 +15,13 @@ export function GeneralSettings() {
 
   const { register, handleSubmit, formState: { isDirty, isSubmitting } } = form;
 
+  if (query.isError) return <SettingsLoadError retry={() => { void query.refetch(); }} />;
+
   if (query.isLoading) return <LoadingSkeleton rows={6} className="max-w-2xl" />;
 
   return (
     <form onSubmit={handleSubmit(handleSave)} className="space-y-4 max-w-2xl">
-      <SettingsSection title="Business Info" description="Your public-facing business details.">
+      <SettingsSection title="Business Info" description="Business details used on newly generated invoices. Storefront contact text is managed separately.">
         <FieldRow label="Business Name">
           <input {...register('site_name')} className={fieldCls} />
         </FieldRow>
@@ -31,7 +33,7 @@ export function GeneralSettings() {
         </FieldRow>
       </SettingsSection>
 
-      <SettingsSection title="Contact" description="Support contact details shown to customers.">
+      <SettingsSection title="Contact" description="Support details included on invoices.">
         <FieldRow label="Support Email">
           <input {...register('support_email')} type="email" className={fieldCls} />
         </FieldRow>
@@ -50,7 +52,6 @@ export function GeneralSettings() {
         <FieldRow label="Currency">
           <select {...register('currency')} className={fieldCls}>
             <option value="INR">INR (₹)</option>
-            <option value="USD">USD ($)</option>
           </select>
         </FieldRow>
       </SettingsSection>

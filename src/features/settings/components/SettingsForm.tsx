@@ -54,7 +54,10 @@ export function useSettingsForm<T extends FieldValues>({ data, isLoading, onSave
     try {
       await onSave(values);
       toast.success('Settings saved');
-    } catch { toast.error('Failed to save settings'); }
+    } catch (error) {
+      const message = typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : 'Failed to save settings';
+      toast.error(message);
+    }
   }
 
   return { form, handleSave, isLoading };
@@ -71,4 +74,12 @@ export function SaveBar({ isDirty, isSubmitting }: { isDirty: boolean; isSubmitt
       </Button>
     </div>
   );
+}
+
+
+export function SettingsLoadError({ retry }: { retry: () => void }) {
+  return <div role="alert" className="rounded-xl border border-border bg-card p-5 space-y-3 max-w-2xl">
+    <p className="text-sm">Could not load saved settings. Try again before making changes.</p>
+    <Button type="button" variant="outline" onClick={retry}>Try again</Button>
+  </div>;
 }

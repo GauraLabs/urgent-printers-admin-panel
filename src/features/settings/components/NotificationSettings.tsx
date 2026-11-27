@@ -1,7 +1,7 @@
 'use client';
 
 import { useNotificationSettings } from '../hooks/useSettings';
-import { useSettingsForm, SettingsSection, FieldRow, SaveBar } from './SettingsForm';
+import { useSettingsForm, SettingsLoadError, SettingsSection, FieldRow, SaveBar } from './SettingsForm';
 import { Switch } from '@/components/ui/switch';
 import { LoadingSkeleton } from '@/components/common/LoadingSkeleton';
 import type { NotificationSettings as T } from '@/lib/api/settings';
@@ -10,17 +10,18 @@ interface ToggleRowProps {
   label: string;
   description?: string;
   emailKey: keyof T;
+  disabled?: boolean;
   smsKey?: keyof T;
   watch: (k: keyof T) => boolean;
   setValue: (k: keyof T, v: boolean, opts?: { shouldDirty: boolean }) => void;
 }
 
-function ToggleRow({ label, description, emailKey, smsKey, watch, setValue }: ToggleRowProps) {
+function ToggleRow({ label, description, disabled, emailKey, smsKey, watch, setValue }: ToggleRowProps) {
   return (
     <FieldRow label={label} description={description}>
       <div className="flex items-center gap-6">
         <label className="flex items-center gap-2 cursor-pointer">
-          <Switch checked={watch(emailKey)} onCheckedChange={(v) => setValue(emailKey, v, { shouldDirty: true })} size="sm" />
+          <Switch disabled={disabled} checked={watch(emailKey)} onCheckedChange={(v) => setValue(emailKey, v, { shouldDirty: true })} size="sm" />
           <span className="text-[13px] text-muted-foreground">Email</span>
         </label>
         {smsKey && (
@@ -46,6 +47,8 @@ export function NotificationSettings() {
   const w = (k: keyof T) => (watch(k) as boolean | undefined) ?? false;
   const sv = (k: keyof T, v: boolean, opts?: { shouldDirty: boolean }) => setValue(k, v as never, opts);
 
+  if (query.isError) return <SettingsLoadError retry={() => { void query.refetch(); }} />;
+
   if (query.isLoading) return <LoadingSkeleton rows={6} className="max-w-2xl" />;
 
   return (
@@ -58,7 +61,7 @@ export function NotificationSettings() {
 
       <SettingsSection title="Admin Alerts" description="Internal alerts sent to the operations team.">
         <ToggleRow label="New Order Received" emailKey="admin_new_order_email" watch={w} setValue={sv} />
-        <ToggleRow label="Failed Payment" emailKey="admin_failed_payment_email" watch={w} setValue={sv} />
+        <ToggleRow disabled description="Not available yet. Use the payments screen to review failures." label="Failed Payment" emailKey="admin_failed_payment_email" watch={w} setValue={sv} />
       </SettingsSection>
 
       <SaveBar isDirty={isDirty} isSubmitting={isSubmitting} />
