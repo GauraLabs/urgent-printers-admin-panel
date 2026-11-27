@@ -1,0 +1,105 @@
+{
+  "feature_name": "System Health Monitoring",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 42000,
+  "shots": [
+    {
+      "step_id": "sh-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open System Health",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "sh-02",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Read service status",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check response and timestamps",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Refresh the overview",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Recheck a service",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review external-service evidence",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-07",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Find Pricing Diagnostics",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-08",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Inspect background jobs",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-09",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Read job failures carefully",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-10",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Review the error log",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-11",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Report useful incident details",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sh-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify after recovery",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

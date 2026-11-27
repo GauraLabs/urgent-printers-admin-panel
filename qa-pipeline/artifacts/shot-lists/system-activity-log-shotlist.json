@@ -1,0 +1,105 @@
+{
+  "feature_name": "Activity Log and Audit",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 42000,
+  "shots": [
+    {
+      "step_id": "al-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Activity Log",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "al-02",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Read the audit columns",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Filter by administrator",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose staff resources",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Filter staff updates",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-06",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Read the change details",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Export the filtered rows",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Inspect the export",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Clear the action filter",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review deactivation history",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-11",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Reset the filters",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "al-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review pagination",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

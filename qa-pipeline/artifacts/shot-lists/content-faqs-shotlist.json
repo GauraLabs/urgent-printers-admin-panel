@@ -1,0 +1,185 @@
+{
+  "feature_name": "Content FAQs",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 77000,
+  "shots": [
+    {
+      "step_id": "fa-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open FAQs",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "fa-02",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add a question",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Write the question",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose a group",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-05",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Write the answer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-06",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save as inactive",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-07",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Create the FAQ",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the unpublished FAQ",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Edit the saved question",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-10",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Publish the FAQ",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the FAQ page",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Read the customer answer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-13",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Update the answer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-14",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify the correction",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-15",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add a related FAQ",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Reorder the questions",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the new order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-18",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Hide a question",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-19",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check hidden visibility",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-20",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Restore the question",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-21",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Delete an outdated FAQ",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "fa-22",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Confirm removal",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

@@ -1,0 +1,196 @@
+{
+  "feature_name": "Coupon Creation",
+  "total_estimated_duration_ms": 65600,
+  "shots": [
+    {
+      "step_id": "cp-01",
+      "emphasis": "cut",
+      "duration_ms": 3600,
+      "callout_text": "Open Coupons",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "cp-02",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "New Coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-03",
+      "emphasis": "zoom",
+      "duration_ms": 4000,
+      "callout_text": "Coupon code",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-04",
+      "emphasis": "zoom",
+      "duration_ms": 4000,
+      "callout_text": "Description",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-05",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Discount type",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-06",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "10% discount",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-07",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Maximum ₹200",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-08",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Minimum ₹1,000",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-09",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "100 total uses",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-10",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Once per customer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-11",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Exclude sale items",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-12",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Product/category scope",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-13",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "All products",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-14",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Validity period",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-15",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Manual coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-16",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Inactive demo",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-17",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Create Coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-18",
+      "emphasis": "cut",
+      "duration_ms": 3600,
+      "callout_text": "Verify saved coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "page_findings": [
+    {
+      "route": "/coupons",
+      "violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 6
+        },
+        {
+          "id": "empty-table-header",
+          "impact": "minor",
+          "nodes": 1
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "nodes": 1
+        }
+      ],
+      "blocks_public_cut": false
+    },
+    {
+      "route": "/coupons/new",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 6
+        },
+        {
+          "id": "landmark-unique",
+          "impact": "moderate",
+          "nodes": 1
+        }
+      ],
+      "blocks_public_cut": false
+    }
+  ],
+  "camera_min_zoom": 1.4
+}

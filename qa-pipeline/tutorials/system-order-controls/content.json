@@ -1,0 +1,109 @@
+{
+  "feature": "system-order-controls",
+  "title": "Pause and Resume New Orders",
+  "intro": "Incident में नए orders रोकना, customer message जाँचना और checkout दोबारा शुरू करना सीखिए।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "oc-01",
+      "When to halt new orders"
+    ],
+    [
+      "oc-03",
+      "Pause with a customer message"
+    ],
+    [
+      "oc-08",
+      "Verify customer checkout is blocked"
+    ],
+    [
+      "oc-10",
+      "Resume and verify checkout"
+    ]
+  ],
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "steps": [
+    {
+      "id": "oc-01",
+      "title": "Open Operations Settings",
+      "text": "Settings में Operations खोलिए। Emergency Halt केवल incident के दौरान इस्तेमाल करें।"
+    },
+    {
+      "id": "oc-02",
+      "title": "Review the halt control",
+      "text": "Halt नए checkouts को रोकता है। पहले से placed orders cancel नहीं होते और उनकी processing चलती रहती है।"
+    },
+    {
+      "id": "oc-03",
+      "title": "Open halt confirmation",
+      "text": "Emergency Halt switch चालू करें। Confirmation में customer message और internal reason भरेंगे।"
+    },
+    {
+      "id": "oc-04",
+      "title": "Write the customer message",
+      "text": "Customer को साफ और छोटा message दें। Internal details या private information यहाँ न लिखें।"
+    },
+    {
+      "id": "oc-05",
+      "title": "Record the internal reason",
+      "text": "Internal reason staff के लिए है। Incident और जिम्मेदार team का context लिखिए।"
+    },
+    {
+      "id": "oc-06",
+      "title": "Confirm Halt Orders",
+      "text": "Halt Orders दबाइए। यह तुरंत save होता है; नीचे वाले Save Changes का इंतजार नहीं करता।"
+    },
+    {
+      "id": "oc-07",
+      "title": "Check the blocked state",
+      "text": "Admin में BLOCKED status और customer-facing message जाँचिए।"
+    },
+    {
+      "id": "oc-08",
+      "title": "Check the storefront message",
+      "text": "Customer website खोलिए। Public notice में वही message दिखना चाहिए; internal reason public नहीं होना चाहिए।"
+    },
+    {
+      "id": "oc-09",
+      "title": "Check checkout restrictions",
+      "text": "Checkout में customer को paused message मिलता है और नया order place नहीं होना चाहिए।"
+    },
+    {
+      "id": "oc-10",
+      "title": "Return to Operations",
+      "text": "Admin Operations में वापस जाएँ। Incident ठीक होने की पुष्टि करने के बाद ही orders resume करें।"
+    },
+    {
+      "id": "oc-11",
+      "title": "Open resume confirmation",
+      "text": "Halt switch बंद करें। Resume confirmation ध्यान से पढ़िए।"
+    },
+    {
+      "id": "oc-12",
+      "title": "Resume accepting orders",
+      "text": "Resume Orders दबाइए। अब नए checkouts फिर से स्वीकार हो सकते हैं।"
+    },
+    {
+      "id": "oc-13",
+      "title": "Verify the public notice is gone",
+      "text": "Storefront reload करके paused notice हटना जाँचिए।"
+    },
+    {
+      "id": "oc-14",
+      "title": "Verify checkout is available",
+      "text": "Checkout फिर खोलिए। Pause message हटना confirm करें; test के लिए अनावश्यक order न बनाएँ।"
+    },
+    {
+      "id": "oc-15",
+      "title": "Verify saved state after reload",
+      "text": "Admin reload करके Halt off जाँचिए। सामान्य turnaround fields अभी demo हैं; उनसे incident control नहीं बदलता।"
+    }
+  ]
+}

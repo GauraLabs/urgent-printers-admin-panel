@@ -1,0 +1,342 @@
+{
+  "feature_found": true,
+  "feature_name": "Coupon Lifecycle",
+  "source_files": [
+    "src/features/coupons/components/CouponForm.tsx",
+    "src/features/coupons/components/couponSchema.ts",
+    "src/lib/api/coupons.ts",
+    "../urgent-printers-frontend/app/cart/page.tsx",
+    "../urgent-printers-frontend/features/checkout/ReviewStep.tsx",
+    "../urgent-printers-backend/app/services/coupon_service.py"
+  ],
+  "user_goal": "Record coupon creation, activation, storefront validation, real COD checkout, redemption analytics, per-user limit, and deactivation.",
+  "happy_path": [
+    {
+      "step_id": "cp-01",
+      "action": "Open Coupons",
+      "selector": null,
+      "expected_result": "Coupons खोलिए। यहाँ सभी discount codes manage होते हैं।"
+    },
+    {
+      "step_id": "cp-02",
+      "action": "New Coupon",
+      "selector": null,
+      "expected_result": "नया code बनाने के लिए New Coupon पर click कीजिए।"
+    },
+    {
+      "step_id": "cp-03",
+      "action": "Coupon code",
+      "selector": null,
+      "expected_result": "एक unique coupon code लिखिए। Customer storefront checkout पर यही code enter करेगा।"
+    },
+    {
+      "step_id": "cp-04",
+      "action": "Description",
+      "selector": null,
+      "expected_result": "Description में offer साफ़ लिखिए: printing orders पर ten percent discount।"
+    },
+    {
+      "step_id": "cp-05",
+      "action": "Discount type",
+      "selector": null,
+      "expected_result": "Percentage में प्रतिशत discount मिलता है। Fixed Amount में रुपये का discount मिलता है।"
+    },
+    {
+      "step_id": "cp-06",
+      "action": "10% discount",
+      "selector": null,
+      "expected_result": "Percentage चुनकर Value ten रखिए। यानी eligible amount पर दस प्रतिशत छूट।"
+    },
+    {
+      "step_id": "cp-07",
+      "action": "Maximum ₹200",
+      "selector": null,
+      "expected_result": "Max Discount two hundred रखिए। बड़े order पर भी छूट दो सौ रुपये से ज़्यादा नहीं होगी।"
+    },
+    {
+      "step_id": "cp-08",
+      "action": "Minimum ₹1,000",
+      "selector": null,
+      "expected_result": "Minimum Order one thousand रखिए। Eligible subtotal कम से कम एक हज़ार रुपये होना चाहिए।"
+    },
+    {
+      "step_id": "cp-09",
+      "action": "100 total uses",
+      "selector": null,
+      "expected_result": "Total Usage Limit one hundred रखिए। Blank छोड़ने पर total usage unlimited रहेगा।"
+    },
+    {
+      "step_id": "cp-10",
+      "action": "Once per customer",
+      "selector": null,
+      "expected_result": "Per User Limit one रखिए। हर customer इस coupon को एक बार इस्तेमाल कर सकेगा।"
+    },
+    {
+      "step_id": "cp-11",
+      "action": "Exclude sale items",
+      "selector": null,
+      "expected_result": "यह switch off करने पर पहले से discounted items छूट और minimum calculation से बाहर रहेंगे।"
+    },
+    {
+      "step_id": "cp-12",
+      "action": "Product/category scope",
+      "selector": null,
+      "expected_result": "Specific products or categories से offer चुने हुए products या categories तक सीमित कर सकते हैं।"
+    },
+    {
+      "step_id": "cp-13",
+      "action": "All products",
+      "selector": null,
+      "expected_result": "इस example में All products रखते हैं। Discounted items की पिछली restriction फिर भी लागू रहेगी।"
+    },
+    {
+      "step_id": "cp-14",
+      "action": "Validity period",
+      "selector": null,
+      "expected_result": "Valid From start date है। Valid Until optional है; blank रखने पर expiry नहीं होती।"
+    },
+    {
+      "step_id": "cp-15",
+      "action": "Manual coupon",
+      "selector": null,
+      "expected_result": "Manual only में customer code enter करता है। Automation wallet coupons issue करती है। Personal coupon off रखें।"
+    },
+    {
+      "step_id": "cp-16",
+      "action": "Inactive demo",
+      "selector": null,
+      "expected_result": "यह tutorial example है, इसलिए Active off रखते हैं। Real offer शुरू करते समय इसे on कीजिए।"
+    },
+    {
+      "step_id": "cp-17",
+      "action": "Create Coupon",
+      "selector": null,
+      "expected_result": "अब Create Coupon click कीजिए। Save होने के बाद coupon list में वापस आ जाएंगे।"
+    },
+    {
+      "step_id": "cp-18",
+      "action": "Verify saved coupon",
+      "selector": null,
+      "expected_result": "Code, ten percent discount, minimum amount और Inactive status verify कीजिए। Coupon तैयार है।"
+    },
+    {
+      "step_id": "lc-01",
+      "action": "Activate the offer",
+      "selector": null,
+      "expected_result": "अब saved coupon को edit करके storefront के लिए activate करेंगे।"
+    },
+    {
+      "step_id": "lc-02",
+      "action": "Active: ON",
+      "selector": null,
+      "expected_result": "Active switch on कीजिए। तभी customer इस offer का इस्तेमाल कर सकेगा।"
+    },
+    {
+      "step_id": "lc-03",
+      "action": "Save activation",
+      "selector": null,
+      "expected_result": "Save Changes click कीजिए और list में Active status verify कीजिए।"
+    },
+    {
+      "step_id": "sf-01",
+      "action": "Storefront: customer view",
+      "selector": null,
+      "expected_result": "अब customer की तरह storefront खोलते हैं। यहाँ Custom Die-Cut Stickers चुन रहे हैं।"
+    },
+    {
+      "step_id": "sf-02",
+      "action": "Add 50 stickers",
+      "selector": null,
+      "expected_result": "Fifty pieces वाला configuration Add to Cart कीजिए। पहले minimum order rule देखेंगे।"
+    },
+    {
+      "step_id": "sf-03",
+      "action": "Cart subtotal: ₹300",
+      "selector": null,
+      "expected_result": "Cart में items subtotal three hundred rupees है। यह coupon के one thousand minimum से कम है।"
+    },
+    {
+      "step_id": "sf-04",
+      "action": "Use the same coupon code",
+      "selector": null,
+      "expected_result": "Coupon code में वही code डालिए जो admin panel में बनाया था।"
+    },
+    {
+      "step_id": "sf-05",
+      "action": "Minimum order validation",
+      "selector": null,
+      "expected_result": "Apply करने पर minimum order का message आता है। अभी कोई coupon discount नहीं मिलेगा।"
+    },
+    {
+      "step_id": "sf-06",
+      "action": "Increase the quantity",
+      "selector": null,
+      "expected_result": "Quantity one thousand कीजिए। इस product के quantity tier पर subtotal अब twenty-five hundred rupees है।"
+    },
+    {
+      "step_id": "sf-07",
+      "action": "Apply the coupon",
+      "selector": null,
+      "expected_result": "अब Apply click कीजिए। Eligible cart पर coupon सफलतापूर्वक apply हो जाता है।"
+    },
+    {
+      "step_id": "sf-08",
+      "action": "₹250 calculated → ₹200 capped",
+      "selector": null,
+      "expected_result": "Twenty-five hundred का ten percent two fifty होता है। लेकिन cap two hundred है, इसलिए total twenty-three hundred है।"
+    },
+    {
+      "step_id": "sf-09",
+      "action": "Remove a coupon",
+      "selector": null,
+      "expected_result": "Customer चाहे तो cross button से coupon remove कर सकता है। इससे coupon की savings हट जाती हैं।"
+    },
+    {
+      "step_id": "sf-10",
+      "action": "Re-enter the code",
+      "selector": null,
+      "expected_result": "Checkout से पहले वही coupon code फिर enter करते हैं।"
+    },
+    {
+      "step_id": "sf-11",
+      "action": "Confirm ₹200 savings",
+      "selector": null,
+      "expected_result": "Apply करके two hundred rupees की savings और updated total दोबारा check कीजिए।"
+    },
+    {
+      "step_id": "sf-12",
+      "action": "Proceed to Checkout",
+      "selector": null,
+      "expected_result": "Proceed to Checkout click कीजिए। Applied coupon checkout में साथ जाता है।"
+    },
+    {
+      "step_id": "sf-13",
+      "action": "Delivery address",
+      "selector": null,
+      "expected_result": "Saved delivery address verify करके Continue to Payment चुनिए। यहाँ development account का demo address है।"
+    },
+    {
+      "step_id": "sf-14",
+      "action": "Cash on Delivery",
+      "selector": null,
+      "expected_result": "इस demonstration में Cash on Delivery चुनते हैं। कोई online payment charge नहीं होगा।"
+    },
+    {
+      "step_id": "sf-15",
+      "action": "Review the order",
+      "selector": null,
+      "expected_result": "Review Order click कीजिए। Server prices और coupon eligibility फिर confirm करता है।"
+    },
+    {
+      "step_id": "sf-16",
+      "action": "Server-confirmed totals",
+      "selector": null,
+      "expected_result": "Breakdown में subtotal twenty-five hundred, coupon discount two hundred और final total twenty-three hundred verify कीजिए।"
+    },
+    {
+      "step_id": "sf-17",
+      "action": "Place the order",
+      "selector": null,
+      "expected_result": "Place Order click कीजिए। Coupon redemption असली order के साथ record होगा।"
+    },
+    {
+      "step_id": "sf-18",
+      "action": "Order confirmation",
+      "selector": null,
+      "expected_result": "Confirmation पर coupon code, two hundred discount और twenty-three hundred payable amount एक जैसे होने चाहिए।"
+    },
+    {
+      "step_id": "sf-19",
+      "action": "Account order history",
+      "selector": null,
+      "expected_result": "Account order history में भी वही coupon और saved totals दिखते हैं। Discount order का हिस्सा बन चुका है।"
+    },
+    {
+      "step_id": "ad-01",
+      "action": "Admin: verify the order",
+      "selector": null,
+      "expected_result": "वापस admin order खोलिए। Customer का coupon और discounted total यहाँ भी verify कर सकते हैं।"
+    },
+    {
+      "step_id": "ad-02",
+      "action": "Redemption analytics",
+      "selector": null,
+      "expected_result": "Coupon Analytics में one use, one customer और two hundred rupees discount record हो गया है।"
+    },
+    {
+      "step_id": "sf-20",
+      "action": "Try a second eligible cart",
+      "selector": null,
+      "expected_result": "अब उसी customer का दूसरा eligible cart बनाते हैं। इससे per user limit test करेंगे।"
+    },
+    {
+      "step_id": "sf-21",
+      "action": "Try the same code again",
+      "selector": null,
+      "expected_result": "उसी coupon code को दोबारा enter कीजिए।"
+    },
+    {
+      "step_id": "sf-22",
+      "action": "One use per customer",
+      "selector": null,
+      "expected_result": "Apply पर usage limit का message आता है। Per User Limit one होने से दूसरा redemption allowed नहीं है।"
+    },
+    {
+      "step_id": "ad-03",
+      "action": "End the promotion",
+      "selector": null,
+      "expected_result": "Promotion बंद करने के लिए admin में उसी coupon की settings खोलिए।"
+    },
+    {
+      "step_id": "ad-04",
+      "action": "Deactivate and save",
+      "selector": null,
+      "expected_result": "Active switch off करके Save Changes कीजिए। Existing coupon को delete करना ज़रूरी नहीं है।"
+    },
+    {
+      "step_id": "sf-23",
+      "action": "Inactive coupon rejected",
+      "selector": null,
+      "expected_result": "Storefront पर अब code invalid या inactive दिखता है। नया redemption नहीं हो सकता।"
+    },
+    {
+      "step_id": "ad-05",
+      "action": "Historical discounts stay saved",
+      "selector": null,
+      "expected_result": "पुराने order का coupon और discount फिर भी saved रहता है। Offer बंद करने से पुराना order नहीं बदलता।"
+    },
+    {
+      "step_id": "ad-06",
+      "action": "Cancel the demo order",
+      "selector": null,
+      "expected_result": "अंत में इस development order को cancel करते हैं, ताकि इसे print या fulfil न किया जाए।"
+    },
+    {
+      "step_id": "ad-07",
+      "action": "Confirm cancellation",
+      "selector": null,
+      "expected_result": "Cancellation confirm कीजिए। Order cancelled हो जाता है, लेकिन उसका original coupon discount saved रहता है।"
+    },
+    {
+      "step_id": "ad-08",
+      "action": "Usage quota released",
+      "selector": null,
+      "expected_result": "Cancel होने पर reserved coupon use वापस release होता है। List में zero of one hundred दिखता है, और coupon अभी भी Inactive है।"
+    },
+    {
+      "step_id": "ad-09",
+      "action": "Historical analytics ≠ quota",
+      "selector": null,
+      "expected_result": "ध्यान दीजिए: Analytics पुराने orders count करती है, cancelled order भी। इसे available quota या collected revenue न समझें।"
+    }
+  ],
+  "business_goal": "Train staff to configure accurate coupon offers and verify saved state.",
+  "user_journey": [
+    {
+      "step": "Open Coupons, complete each form section, create and verify an inactive coupon.",
+      "route_or_state": "/coupons → /coupons/new → /coupons"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": []
+}

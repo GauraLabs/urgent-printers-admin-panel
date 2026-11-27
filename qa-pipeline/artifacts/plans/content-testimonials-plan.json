@@ -1,0 +1,159 @@
+{
+  "feature_found": true,
+  "feature_name": "Content Testimonials",
+  "source_files": [
+    "src/features/content/components/TestimonialsManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ],
+  "business_goal": "Teach a website operator to configure, publish, verify, update and retire customer-facing content.",
+  "user_goal": "Customer की approved review जोड़ना, दिखाना और update करना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Create an approved review",
+      "route_or_state": "/content/testimonials and customer storefront"
+    },
+    {
+      "step": "Publish and check the homepage",
+      "route_or_state": "/content/testimonials and customer storefront"
+    },
+    {
+      "step": "Correct, hide and restore",
+      "route_or_state": "/content/testimonials and customer storefront"
+    },
+    {
+      "step": "Delete a review",
+      "route_or_state": "/content/testimonials and customer storefront"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Inactive, scheduled or expired content must be checked on the actual storefront. Saved selections and published changes are different.",
+      "existing_validation": "Actual UI controls and actual public content responses, including customer links and visibility.",
+      "risk_note": "Use approved customer content. Deleting is permanent; hiding is reversible."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "te-01",
+      "action": "Open Testimonials",
+      "selector": null,
+      "expected_result": "Content में Testimonials खोलिए। Homepage की customer quotes यहाँ manage होती हैं।"
+    },
+    {
+      "step_id": "te-02",
+      "action": "Add a testimonial",
+      "selector": null,
+      "expected_result": "Add Testimonial दबाइए। केवल customer की approved review इस्तेमाल करें।"
+    },
+    {
+      "step_id": "te-03",
+      "action": "Enter the customer name",
+      "selector": null,
+      "expected_result": "Customer का नाम सही लिखिए।"
+    },
+    {
+      "step_id": "te-04",
+      "action": "Add a title or company",
+      "selector": null,
+      "expected_result": "Title या company optional है। गलत designation न जोड़ें।"
+    },
+    {
+      "step_id": "te-05",
+      "action": "Upload an approved image",
+      "selector": null,
+      "expected_result": "Avatar optional है। Photo इस्तेमाल करने की permission होनी चाहिए।"
+    },
+    {
+      "step_id": "te-06",
+      "action": "Write the review",
+      "selector": null,
+      "expected_result": "Customer की approved feedback लिखिए। उसके मतलब को न बदलें।"
+    },
+    {
+      "step_id": "te-07",
+      "action": "Select the rating",
+      "selector": null,
+      "expected_result": "Stars में वही rating चुनिए जो customer ने दी है।"
+    },
+    {
+      "step_id": "te-08",
+      "action": "Keep it unpublished",
+      "selector": null,
+      "expected_result": "Active off रखकर पहले review save कर सकते हैं।"
+    },
+    {
+      "step_id": "te-09",
+      "action": "Create the testimonial",
+      "selector": null,
+      "expected_result": "Create दबाइए। Review अब admin list में save है।"
+    },
+    {
+      "step_id": "te-10",
+      "action": "Check inactive visibility",
+      "selector": null,
+      "expected_result": "Homepage पर inactive review नहीं दिखनी चाहिए।"
+    },
+    {
+      "step_id": "te-11",
+      "action": "Edit the saved review",
+      "selector": null,
+      "expected_result": "उसी review का pencil icon खोलिए।"
+    },
+    {
+      "step_id": "te-12",
+      "action": "Publish the review",
+      "selector": null,
+      "expected_result": "Active on करके Save दबाइए।"
+    },
+    {
+      "step_id": "te-13",
+      "action": "Check the homepage",
+      "selector": null,
+      "expected_result": "Homepage के testimonials section में नाम, review और stars जाँचिए।"
+    },
+    {
+      "step_id": "te-14",
+      "action": "Update the review",
+      "selector": null,
+      "expected_result": "Approved correction आने पर review edit कीजिए।"
+    },
+    {
+      "step_id": "te-15",
+      "action": "Save the correction",
+      "selector": null,
+      "expected_result": "Save करके homepage पर नया text verify करें।"
+    },
+    {
+      "step_id": "te-16",
+      "action": "Hide a review",
+      "selector": null,
+      "expected_result": "Review temporarily हटाने के लिए Active off करके Save करें।"
+    },
+    {
+      "step_id": "te-17",
+      "action": "Verify the hidden review",
+      "selector": null,
+      "expected_result": "Homepage refresh करें। Hidden review customer को नहीं दिखती।"
+    },
+    {
+      "step_id": "te-18",
+      "action": "Restore a review",
+      "selector": null,
+      "expected_result": "Active on करके Save करें। Review फिर से दिखने लगेगी।"
+    },
+    {
+      "step_id": "te-19",
+      "action": "Delete a review",
+      "selector": null,
+      "expected_result": "हमेशा के लिए हटाना हो तो trash icon दबाइए।"
+    },
+    {
+      "step_id": "te-20",
+      "action": "Confirm deletion",
+      "selector": null,
+      "expected_result": "Delete confirm करके admin और homepage दोनों पर removal verify करें।"
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "feature_found": true,
+  "feature_name": "Content Banners",
+  "source_files": [
+    "src/features/content/components/BannersManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ],
+  "business_goal": "Teach a website operator to configure, publish, verify, update and retire customer-facing content.",
+  "user_goal": "Homepage banners बनाना, publish करना और पुराने banners हटाना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Create a draft banner",
+      "route_or_state": "/content/banners and customer storefront"
+    },
+    {
+      "step": "Publish and check the homepage",
+      "route_or_state": "/content/banners and customer storefront"
+    },
+    {
+      "step": "Edit and schedule",
+      "route_or_state": "/content/banners and customer storefront"
+    },
+    {
+      "step": "Hide and delete",
+      "route_or_state": "/content/banners and customer storefront"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Inactive, scheduled or expired content must be checked on the actual storefront. Saved selections and published changes are different.",
+      "existing_validation": "Actual UI controls and actual public content responses, including customer links and visibility.",
+      "risk_note": "Use approved customer content. Deleting is permanent; hiding is reversible."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "ba-01",
+      "action": "Open Banners",
+      "selector": null,
+      "expected_result": "Content में Banners खोलिए। Homepage के बड़े slides यहाँ manage होते हैं।"
+    },
+    {
+      "step_id": "ba-02",
+      "action": "Add a banner",
+      "selector": null,
+      "expected_result": "Add Banner पर click करके नया banner बनाइए।"
+    },
+    {
+      "step_id": "ba-03",
+      "action": "Write the headline",
+      "selector": null,
+      "expected_result": "Title छोटा और साफ रखिए। यही headline customer को दिखेगी।"
+    },
+    {
+      "step_id": "ba-04",
+      "action": "Add supporting text",
+      "selector": null,
+      "expected_result": "Subtitle में collection के बारे में एक छोटी line लिखिए।"
+    },
+    {
+      "step_id": "ba-05",
+      "action": "Set a badge",
+      "selector": null,
+      "expected_result": "Badge optional है। यहाँ New Collection लिखते हैं।"
+    },
+    {
+      "step_id": "ba-06",
+      "action": "Upload artwork",
+      "selector": null,
+      "expected_result": "Landscape image upload कीजिए। Text वाली image की readability जाँचिए।"
+    },
+    {
+      "step_id": "ba-07",
+      "action": "Check image quality",
+      "selector": null,
+      "expected_result": "Preview और image quality देखिए। धुँधली image को publish से पहले बदलें।"
+    },
+    {
+      "step_id": "ba-08",
+      "action": "Choose a destination",
+      "selector": null,
+      "expected_result": "Link URL में All Products चुनिए। Button customer को इसी page पर ले जाएगा।"
+    },
+    {
+      "step_id": "ba-09",
+      "action": "Name the button",
+      "selector": null,
+      "expected_result": "Button text Explore Collection रखिए। यह action समझ में आना चाहिए।"
+    },
+    {
+      "step_id": "ba-10",
+      "action": "Set the display dates",
+      "selector": null,
+      "expected_result": "Valid From और Valid Until campaign की dates हैं। खाली रखने पर date limit नहीं लगती।"
+    },
+    {
+      "step_id": "ba-11",
+      "action": "Save without publishing",
+      "selector": null,
+      "expected_result": "पहले Active off रखिए, ताकि तैयारी के दौरान banner site पर न दिखे।"
+    },
+    {
+      "step_id": "ba-12",
+      "action": "Create the banner",
+      "selector": null,
+      "expected_result": "Create Banner दबाइए। Banner save हो गया है, लेकिन अभी inactive है।"
+    },
+    {
+      "step_id": "ba-13",
+      "action": "Check the hidden banner",
+      "selector": null,
+      "expected_result": "Storefront refresh करके देखिए। Inactive banner customer को नहीं दिखता।"
+    },
+    {
+      "step_id": "ba-14",
+      "action": "Open the saved banner",
+      "selector": null,
+      "expected_result": "Admin में उसी banner का pencil icon खोलिए।"
+    },
+    {
+      "step_id": "ba-15",
+      "action": "Publish the banner",
+      "selector": null,
+      "expected_result": "Active on करके Save Changes कीजिए।"
+    },
+    {
+      "step_id": "ba-16",
+      "action": "Set the slide order",
+      "selector": null,
+      "expected_result": "Up arrow से banner ऊपर लाइए। यही homepage slides का display order है।"
+    },
+    {
+      "step_id": "ba-17",
+      "action": "Preview the homepage",
+      "selector": null,
+      "expected_result": "Homepage पर image, headline, badge और button verify कीजिए।"
+    },
+    {
+      "step_id": "ba-18",
+      "action": "Test the button",
+      "selector": null,
+      "expected_result": "Explore Collection पर click कीजिए। Destination page सही खुलना चाहिए।"
+    },
+    {
+      "step_id": "ba-19",
+      "action": "Update the headline",
+      "selector": null,
+      "expected_result": "Banner edit करके headline बदलें। नया banner बनाने की जरूरत नहीं है।"
+    },
+    {
+      "step_id": "ba-20",
+      "action": "Save the update",
+      "selector": null,
+      "expected_result": "Save Changes दबाकर storefront पर नया title जाँचिए।"
+    },
+    {
+      "step_id": "ba-21",
+      "action": "Schedule a future banner",
+      "selector": null,
+      "expected_result": "Future start date और उसके बाद की end date रखकर save कीजिए।"
+    },
+    {
+      "step_id": "ba-22",
+      "action": "Check scheduled visibility",
+      "selector": null,
+      "expected_result": "Start date आने से पहले active banner भी storefront पर नहीं दिखता।"
+    },
+    {
+      "step_id": "ba-23",
+      "action": "Check an expired banner",
+      "selector": null,
+      "expected_result": "अब पुरानी end date वाला campaign देखिए। Expired banner भी छिप जाता है।"
+    },
+    {
+      "step_id": "ba-24",
+      "action": "Restore an evergreen banner",
+      "selector": null,
+      "expected_result": "दोनों dates साफ करके save कीजिए। Banner फिर से बिना date limit के दिखेगा।"
+    },
+    {
+      "step_id": "ba-25",
+      "action": "Hide the banner",
+      "selector": null,
+      "expected_result": "Campaign रोकने के लिए Active off करें और Save Changes दबाएँ।"
+    },
+    {
+      "step_id": "ba-26",
+      "action": "Verify it is hidden",
+      "selector": null,
+      "expected_result": "Homepage refresh करके confirm करें कि banner हट गया है।"
+    },
+    {
+      "step_id": "ba-27",
+      "action": "Delete an old banner",
+      "selector": null,
+      "expected_result": "अब पुराने banner का trash icon दबाइए। Temporary hide के लिए Active off ही रखें।"
+    },
+    {
+      "step_id": "ba-28",
+      "action": "Confirm deletion",
+      "selector": null,
+      "expected_result": "Delete Banner confirm कीजिए। Record और storefront दोनों से banner हट जाता है।"
+    }
+  ]
+}

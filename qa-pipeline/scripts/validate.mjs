@@ -195,9 +195,18 @@ function shotlistRules(shotlist, run, errors) {
   // axe runs per navigation, so its findings describe the whole route rather than the
   // element the step touched, and gating on them excluded every payoff shot in the flow
   // (the dashboard reveal included) over sitewide contrast noise. Those findings belong in
-  // page_findings, where a human still sees them. Failures and console errors keep gating.
+  // page_findings, where a human still sees them. Failures and unreviewed errors keep gating.
+  const reviewed = new Map((shotlist.reviewed_console_findings ?? []).map(r => [r.step_id, r]));
+  for (const review of reviewed.values()) {
+    if (!runSteps.has(review.step_id) || review.run_timestamp !== run.run_timestamp) {
+      errors.push(`shotlist: console review for ${review.step_id} does not match this capture`);
+    }
+  }
   for (const step of run.steps) {
-    const broken = step.status === 'fail' || (step.console_errors ?? []).length > 0;
+    const review = reviewed.get(step.step_id);
+    const unreviewed = (step.console_errors ?? []).some(message =>
+      review?.run_timestamp !== run.run_timestamp || !review.messages.includes(message));
+    const broken = step.status === 'fail' || unreviewed;
     if (broken && !flagged.has(step.step_id)) {
       errors.push(
         `shotlist: run step ${step.step_id} failed or logged console errors but is not in flagged_for_review`,

@@ -1,0 +1,161 @@
+{
+  "feature_name": "Cash on Delivery Lifecycle",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 66500,
+  "shots": [
+    {
+      "step_id": "cp-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Payments Settings",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "cp-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review COD availability",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enable Cash on Delivery",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Set the minimum amount",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Set the maximum amount",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save the COD range",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-07",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify saved limits",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-08",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Check eligible checkout",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Select Cash on Delivery",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review the order without placing it",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Set a lower maximum",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save the tighter range",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-13",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify an ineligible checkout",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-14",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Disable COD entirely",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-15",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save disabled COD",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-16",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify COD is unavailable",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Restore COD availability",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-18",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save the restored range",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-19",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify COD is available again",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

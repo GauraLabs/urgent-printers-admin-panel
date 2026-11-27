@@ -1,0 +1,209 @@
+{
+  "feature_name": "Customer Reviews Lifecycle",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 87500,
+  "shots": [
+    {
+      "step_id": "cr-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open a delivered customer order",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "cr-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open Write a Review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Select a star rating",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Write the review title",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Write the customer feedback",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Submit the review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-07",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open admin Reviews",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Filter pending reviews",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-09",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Read the submitted feedback",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the linked order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-11",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Check unpublished visibility",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Approve the review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-13",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify the approved list",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-14",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify the published review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-15",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open the reply dialog",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Write a professional reply",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save the official reply",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-18",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify the saved reply",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-19",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Update the official reply",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-20",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save the corrected response",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-21",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Reject a review when necessary",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-22",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify rejected status",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-23",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify the review is hidden",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-24",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Restore publication",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cr-25",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Review the supported limits",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

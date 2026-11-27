@@ -1,0 +1,102 @@
+{
+  "feature_found": true,
+  "feature_name": "Content Theme",
+  "source_files": [
+    "src/features/content/components/ThemeManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/admin/theme.py"
+  ],
+  "business_goal": "Teach a website operator to configure, publish, verify, update and retire customer-facing content.",
+  "user_goal": "Website के colour presets चुनना, publish करना और वापस बदलना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Choose and publish a preset",
+      "route_or_state": "/content/theme and customer storefront"
+    },
+    {
+      "step": "Change the colour preset",
+      "route_or_state": "/content/theme and customer storefront"
+    },
+    {
+      "step": "Restore the previous theme",
+      "route_or_state": "/content/theme and customer storefront"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Inactive, scheduled or expired content must be checked on the actual storefront. Saved selections and published changes are different.",
+      "existing_validation": "Actual UI controls and actual public content responses, including customer links and visibility.",
+      "risk_note": "Use approved customer content. Deleting is permanent; hiding is reversible."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "th-01",
+      "action": "Open Theme",
+      "selector": null,
+      "expected_result": "Content में Theme खोलिए। यहाँ website का brand colour preset बदलता है।"
+    },
+    {
+      "step_id": "th-02",
+      "action": "Review the presets",
+      "selector": null,
+      "expected_result": "Available presets देखिए। यह product photos या content को नहीं बदलता।"
+    },
+    {
+      "step_id": "th-03",
+      "action": "Select Royal Gold",
+      "selector": null,
+      "expected_result": "Royal Gold चुनिए। अभी selection बदला है, website पर save नहीं हुआ।"
+    },
+    {
+      "step_id": "th-04",
+      "action": "Save the theme",
+      "selector": null,
+      "expected_result": "Save Theme दबाकर नया preset publish करें।"
+    },
+    {
+      "step_id": "th-05",
+      "action": "Check the storefront",
+      "selector": null,
+      "expected_result": "Storefront refresh करके buttons, links और accent colours जाँचिए।"
+    },
+    {
+      "step_id": "th-06",
+      "action": "Check another page",
+      "selector": null,
+      "expected_result": "एक और page पर colours देखें, ताकि website consistent लगे।"
+    },
+    {
+      "step_id": "th-07",
+      "action": "Select Emerald Heritage",
+      "selector": null,
+      "expected_result": "Admin में Emerald Heritage चुनिए।"
+    },
+    {
+      "step_id": "th-08",
+      "action": "Publish the new colours",
+      "selector": null,
+      "expected_result": "Save Theme दबाइए।"
+    },
+    {
+      "step_id": "th-09",
+      "action": "Verify the new preset",
+      "selector": null,
+      "expected_result": "Storefront पर नया colour preset verify करें।"
+    },
+    {
+      "step_id": "th-10",
+      "action": "Restore the previous theme",
+      "selector": null,
+      "expected_result": "पुराने preset पर वापस जाने के लिए उसे चुनकर Save Theme करें।"
+    },
+    {
+      "step_id": "th-11",
+      "action": "Check the restored colours",
+      "selector": null,
+      "expected_result": "Storefront refresh करके restored colours जाँचिए।"
+    }
+  ]
+}

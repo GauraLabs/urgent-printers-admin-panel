@@ -1,0 +1,185 @@
+{
+  "feature": "category-creation",
+  "title": "Category Creation",
+  "intro": "इस tutorial में category, subcategory, SEO और storefront visibility का पूरा setup सीखेंगे।",
+  "outro": "Category structure तैयार है। अगले tutorial में इसी subcategory के अंदर product बनाएँगे।",
+  "chapters": [
+    [
+      "ca-01",
+      "Create the parent category"
+    ],
+    [
+      "ca-09",
+      "SEO, content and FAQs"
+    ],
+    [
+      "ca-18",
+      "Create a subcategory"
+    ],
+    [
+      "ca-21",
+      "Verify the storefront"
+    ],
+    [
+      "ca-25",
+      "Edit, hide and restore"
+    ]
+  ],
+  "steps": [
+    {
+      "id": "ca-01",
+      "title": "Categories",
+      "text": "Categories खोलिए। यहाँ storefront की catalogue structure manage होती है।"
+    },
+    {
+      "id": "ca-02",
+      "title": "Add Category",
+      "text": "Add Category से एक नई top-level category बनाते हैं।"
+    },
+    {
+      "id": "ca-03",
+      "title": "Category name",
+      "text": "नाम Wedding Stationery रखिए। Demo edition से development records अलग पहचानेंगे।"
+    },
+    {
+      "id": "ca-04",
+      "title": "Stable URL slug",
+      "text": "Slug अपने आप बनता है। यही category के storefront URL का हिस्सा होगा।"
+    },
+    {
+      "id": "ca-05",
+      "title": "Parent category",
+      "text": "Top-level category के लिए Parent category में None रखिए। केवल दो levels supported हैं।"
+    },
+    {
+      "id": "ca-06",
+      "title": "Description",
+      "text": "Description में बताइए कि इस category में customer को क्या मिलेगा।"
+    },
+    {
+      "id": "ca-07",
+      "title": "Category image",
+      "text": "Category की अपनी image upload कीजिए। कम से कम एक photo required है।"
+    },
+    {
+      "id": "ca-08",
+      "title": "Active visibility",
+      "text": "Active switch on होने पर category storefront पर दिखाई दे सकती है।"
+    },
+    {
+      "id": "ca-09",
+      "title": "SEO title",
+      "text": "Meta Title लिखिए। इसे concise रखिए और category का मुख्य topic शामिल कीजिए।"
+    },
+    {
+      "id": "ca-10",
+      "title": "SEO description",
+      "text": "Meta Description में category का उपयोग साफ़ बताइए। नीचे snippet preview देख सकते हैं।"
+    },
+    {
+      "id": "ca-11",
+      "title": "Category introduction",
+      "text": "Intro text category page के ऊपर customer को context देता है।"
+    },
+    {
+      "id": "ca-12",
+      "title": "Detailed body",
+      "text": "Body text product grid के नीचे category की detail समझाता है।"
+    },
+    {
+      "id": "ca-13",
+      "title": "Add FAQ",
+      "text": "Add FAQ चुनिए। Customer के common सवालों के जवाब यहीं manage होंगे।"
+    },
+    {
+      "id": "ca-14",
+      "title": "FAQ question",
+      "text": "सवाल लिखिए: क्या invitations customize कर सकते हैं?"
+    },
+    {
+      "id": "ca-15",
+      "title": "FAQ answer",
+      "text": "जवाब में customization की उपलब्ध सुविधा साफ़ बताइए।"
+    },
+    {
+      "id": "ca-16",
+      "title": "Search visibility",
+      "text": "Noindex switch search engines के लिए है। यह storefront visibility वाले Active switch से अलग है।"
+    },
+    {
+      "id": "ca-17",
+      "title": "Create category",
+      "text": "Create Category पर click करके saved category को list में verify कीजिए।"
+    },
+    {
+      "id": "ca-18",
+      "title": "Create a subcategory",
+      "text": "अब इसी parent के नीचे Foil Invitations subcategory बनाते हैं।"
+    },
+    {
+      "id": "ca-19",
+      "title": "Choose the parent",
+      "text": "Parent category में अभी बनाई Wedding Stationery चुनिए।"
+    },
+    {
+      "id": "ca-20",
+      "title": "Subcategory image",
+      "text": "Subcategory की image और description भरकर उसे create कीजिए।"
+    },
+    {
+      "id": "ca-21",
+      "title": "Storefront category",
+      "text": "Storefront पर parent category खोलिए। Admin का नाम और introduction यहाँ आ गया है।"
+    },
+    {
+      "id": "ca-22",
+      "title": "Empty categories stay out of menus",
+      "text": "अभी category में कोई product नहीं है। Empty categories navigation से छिपी रहती हैं; product publish होने पर browsing में दिखेंगी।"
+    },
+    {
+      "id": "ca-23",
+      "title": "Preview the child category",
+      "text": "Subcategory का direct preview URL खोलिए। Breadcrumb में parent और child का relationship दिखता है।"
+    },
+    {
+      "id": "ca-24",
+      "title": "Review SEO and FAQ",
+      "text": "Parent page पर detailed text और FAQ देखिए। ये वही fields हैं जो admin में भरे थे।"
+    },
+    {
+      "id": "ca-25",
+      "title": "Edit the category",
+      "text": "Admin में saved category edit कीजिए। नाम बदलते हैं, लेकिन slug वैसा ही रखते हैं।"
+    },
+    {
+      "id": "ca-26",
+      "title": "Save a stable URL",
+      "text": "Save Changes कीजिए। नाम बदला है, पुराने storefront URL का slug नहीं बदला।"
+    },
+    {
+      "id": "ca-27",
+      "title": "Verify the update",
+      "text": "उसी storefront URL पर updated category name verify कीजिए।"
+    },
+    {
+      "id": "ca-28",
+      "title": "Hide the category",
+      "text": "Category को temporarily hide करने के लिए Active off करके save कीजिए।"
+    },
+    {
+      "id": "ca-29",
+      "title": "Verify hidden state",
+      "text": "Public catalogue API में inactive category नहीं आती। इसलिए नया customer उसे browse नहीं कर सकता।"
+    },
+    {
+      "id": "ca-30",
+      "title": "Restore visibility",
+      "text": "Active वापस on करके save कीजिए। अगले product tutorial में इसी category का उपयोग करेंगे।"
+    },
+    {
+      "id": "ca-31",
+      "title": "Ready for product assignment",
+      "text": "Restored parent और child active हैं। अगले product tutorial में product publish करके storefront navigation भी verify करेंगे।"
+    }
+  ]
+}

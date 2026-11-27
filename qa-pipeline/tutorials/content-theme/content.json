@@ -1,0 +1,83 @@
+{
+  "feature": "content-theme",
+  "title": "Content Theme",
+  "intro": "Website के colour presets चुनना, publish करना और वापस बदलना सीखिए।",
+  "outro": "अब आप website का theme बदलना और restore करना जानते हैं। Publish के बाद customer view जरूर जाँचिए।",
+  "chapters": [
+    [
+      "th-01",
+      "Choose and publish a preset"
+    ],
+    [
+      "th-07",
+      "Change the colour preset"
+    ],
+    [
+      "th-10",
+      "Restore the previous theme"
+    ]
+  ],
+  "steps": [
+    {
+      "id": "th-01",
+      "title": "Open Theme",
+      "text": "Content में Theme खोलिए। यहाँ website का brand colour preset बदलता है।"
+    },
+    {
+      "id": "th-02",
+      "title": "Review the presets",
+      "text": "Available presets देखिए। यह product photos या content को नहीं बदलता।"
+    },
+    {
+      "id": "th-03",
+      "title": "Select Royal Gold",
+      "text": "Royal Gold चुनिए। अभी selection बदला है, website पर save नहीं हुआ।"
+    },
+    {
+      "id": "th-04",
+      "title": "Save the theme",
+      "text": "Save Theme दबाकर नया preset publish करें।"
+    },
+    {
+      "id": "th-05",
+      "title": "Check the storefront",
+      "text": "Storefront refresh करके buttons, links और accent colours जाँचिए।"
+    },
+    {
+      "id": "th-06",
+      "title": "Check another page",
+      "text": "एक और page पर colours देखें, ताकि website consistent लगे।"
+    },
+    {
+      "id": "th-07",
+      "title": "Select Emerald Heritage",
+      "text": "Admin में Emerald Heritage चुनिए।"
+    },
+    {
+      "id": "th-08",
+      "title": "Publish the new colours",
+      "text": "Save Theme दबाइए।"
+    },
+    {
+      "id": "th-09",
+      "title": "Verify the new preset",
+      "text": "Storefront पर नया colour preset verify करें।"
+    },
+    {
+      "id": "th-10",
+      "title": "Restore the previous theme",
+      "text": "पुराने preset पर वापस जाने के लिए उसे चुनकर Save Theme करें।"
+    },
+    {
+      "id": "th-11",
+      "title": "Check the restored colours",
+      "text": "Storefront refresh करके restored colours जाँचिए।"
+    }
+  ],
+  "source_files": [
+    "src/features/content/components/ThemeManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/admin/theme.py"
+  ]
+}

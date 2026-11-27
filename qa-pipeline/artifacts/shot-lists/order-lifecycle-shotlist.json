@@ -1,0 +1,497 @@
+{
+  "feature_name": "Order Lifecycle",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 213500,
+  "shots": [
+    {
+      "step_id": "or-01",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open the storefront",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "or-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose quantity",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Upload customer artwork",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify uploaded artwork",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Add to cart",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review the cart",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Checkout",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Delivery address",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Cash on Delivery",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Place order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Customer order details",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-13",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Find the admin order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-14",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add an internal note",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-15",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save the note",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-16",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Confirm the order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save confirmation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-18",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Download invoice",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-19",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Prepare artwork review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-20",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Select proof version one",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-21",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save proof draft",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-22",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Send proof for review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-23",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review proof as customer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-24",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Request a revision",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-25",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Describe the correction",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-26",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Submit revision request",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-27",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review customer feedback",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-28",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Upload revised proof",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-29",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save revised draft",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-30",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Send revised proof",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-31",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review proof version two",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-32",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Approve artwork",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-33",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify approval in admin",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-34",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Ready to print queue",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-35",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Start printing",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-36",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Printing queue",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-37",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Complete production",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-38",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Ready to dispatch",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-39",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open dispatch details",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-40",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review packaging",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-41",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Choose manual shipment",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-42",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Courier name",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-43",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Tracking reference",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-44",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save shipment",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-45",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Customer tracking",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-46",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Mark picked up",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-47",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Mark in transit",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-48",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Out for delivery",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-49",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Confirm delivered",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-50",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save delivery confirmation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-51",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Customer delivery status",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-52",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Payment versus delivery",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-53",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Cancellation and refund example",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-54",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Cancel the prepaid sample",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-55",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Confirm cancellation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-56",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open refund",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-57",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Refund amount",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-58",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Refund reason",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-59",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Issue simulated refund",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-60",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify refund record",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "or-61",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review the full history",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

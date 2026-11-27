@@ -70,7 +70,8 @@ function TypingOverlay({ shot, viewport, opacity, localFrame, brand, fieldStyle,
 
   // Composition pixels per CSS pixel of the captured viewport.
   const unit = width / viewport.width;
-  const fontPx = shot.box.height * 0.39 * unit;
+  const multiline = shot.box.height > 48;
+  const fontPx = (multiline ? 14 : shot.box.height * 0.39) * unit;
 
   return (
     <div
@@ -85,15 +86,20 @@ function TypingOverlay({ shot, viewport, opacity, localFrame, brand, fieldStyle,
         height: `${((shot.box.height - 4) / viewport.height) * 100}%`,
         background: fieldStyle.background,
         borderRadius: 6 * unit,
-        display: 'flex',
+        display: multiline ? 'block' : 'flex',
         alignItems: 'center',
         paddingLeft: 11 * unit,
+        paddingRight: multiline ? 11 * unit : undefined,
+        paddingTop: multiline ? 8 * unit : undefined,
+        boxSizing: multiline ? 'border-box' : undefined,
+        lineHeight: multiline ? 1.45 : undefined,
         opacity,
         fontFamily: brand.font_family,
         fontSize: fontPx,
         letterSpacing: shot.typedMasked ? fontPx * 0.12 : 'normal',
         color: fieldStyle.text,
-        whiteSpace: 'pre',
+        whiteSpace: multiline ? 'pre-wrap' : 'pre',
+        overflowWrap: multiline ? 'break-word' : undefined,
         overflow: 'hidden',
       }}
     >
@@ -239,6 +245,7 @@ function Callout({ text, position, box, camera, viewport, brand, localFrame, dur
         position: 'absolute',
         ...layout,
         opacity,
+        width: 'max-content',
         maxWidth: `${maxWidthPct}%`,
         textAlign: align,
         // Wrapping inside a bounded width is what actually stops a long label running off
@@ -346,7 +353,8 @@ function NarrationAudio({ line, from }) {
 function Plate({ shot, screenshotBase, brand, width }) {
   const frame = useCurrentFrame();
   const opacity = ramp(frame, shot.plateDelayFrames, shot.plateFadeFrames);
-  if (opacity <= 0) return null;
+  const before = shot.step?.before_screenshot_path;
+  if (opacity <= 0 && !before) return null;
 
   const src = shot.step?.screenshot_path
     ? staticFile(
@@ -355,9 +363,10 @@ function Plate({ shot, screenshotBase, brand, width }) {
     : null;
 
   return (
-    <AbsoluteFill style={{ opacity }}>
+    <AbsoluteFill style={{ opacity: before ? 1 : opacity }}>
+      {before ? <Img src={staticFile(screenshotBase ? before.replace(screenshotBase, '') : before)} style={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
       {src ? (
-        <Img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <Img src={src} style={{ position: 'absolute', opacity: before ? opacity : 1, width: '100%', height: '100%', objectFit: 'cover' }} />
       ) : (
         <AbsoluteFill
           style={{
@@ -513,6 +522,8 @@ export function FeatureDemo({
   screenshotBase,
   narration,
   narrationTiming,
+  soundEffects = false,
+  draft = false,
 }) {
   const { fps, width } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -529,6 +540,18 @@ export function FeatureDemo({
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0b1220' }}>
+      {soundEffects ? timeline.shots.filter(s => s.hasTarget).map(shot => (
+        <React.Fragment key={`sfx-${shot.step_id}`}>
+          <Sequence from={shot.from + shot.travelFrames} durationInFrames={Math.max(1, Math.round(fps * 0.09))}>
+            <Audio src={staticFile('video/sfx/click.wav')} volume={0.22} />
+          </Sequence>
+          {shot.typedText ? Array.from({ length: Math.min(shot.typedText.length, 24) }, (_, i) => (
+            <Sequence key={i} from={shot.from + shot.typingFrom + Math.floor(i / Math.min(shot.typedText.length, 24) * (shot.typingTo - shot.typingFrom))} durationInFrames={Math.max(1, Math.round(fps * 0.045))}>
+              <Audio src={staticFile('video/sfx/key.wav')} volume={0.09} />
+            </Sequence>
+          )) : null}
+        </React.Fragment>
+      )) : null}
       <Sequence durationInFrames={timeline.introSequenceFrames}>
         <BrandCard
           title={shotlist.feature_name}
@@ -608,6 +631,7 @@ export function FeatureDemo({
           frames={timeline.outroFrames}
         />
       </Sequence>
+      {draft ? <div style={{ position: 'absolute', right: 24 * width / 1920, top: 20 * width / 1920, color: 'white', background: '#0f172acc', padding: '8px 14px', borderRadius: 8, fontFamily: 'sans-serif', fontSize: 18 * width / 1920 }}>VISUAL DRAFT · Narration pending</div> : null}
     </AbsoluteFill>
   );
 }

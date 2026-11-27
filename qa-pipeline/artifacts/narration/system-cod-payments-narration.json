@@ -1,0 +1,91 @@
+{
+  "lines": [
+    {
+      "step_id": "intro",
+      "text": "COD चालू करना, amount range तय करना और customer payment choices verify करना सीखिए।"
+    },
+    {
+      "step_id": "cp-01",
+      "text": "Settings में Payments खोलिए। ऊपर gateway fields अभी demo हैं; नीचे COD वास्तविक control है।"
+    },
+    {
+      "step_id": "cp-02",
+      "text": "Cash on Delivery section देखें। COD setting save होने पर customer checkout पर लागू होती है।"
+    },
+    {
+      "step_id": "cp-03",
+      "text": "Enable COD चालू करें। Phone, courier और collection की business व्यवस्था अलग से जरूरी है।"
+    },
+    {
+      "step_id": "cp-04",
+      "text": "Minimum order amount में पाँच सौ लिखिए। खाली field का मतलब उस तरफ कोई limit नहीं।"
+    },
+    {
+      "step_id": "cp-05",
+      "text": "Maximum में पाँच हजार लिखिए। Minimum हमेशा maximum से छोटा या बराबर होना चाहिए।"
+    },
+    {
+      "step_id": "cp-06",
+      "text": "Save COD settings दबाइए। यह gateway section के Save Changes से अलग है।"
+    },
+    {
+      "step_id": "cp-07",
+      "text": "Page reload करके COD on, minimum पाँच सौ और maximum पाँच हजार जाँचिए।"
+    },
+    {
+      "step_id": "cp-08",
+      "text": "Customer checkout में payment step खोलिए। Range के अंदर final payable amount पर Cash on Delivery available होना चाहिए।"
+    },
+    {
+      "step_id": "cp-09",
+      "text": "Cash on Delivery चुनिए। Final payable amount में coupon और shipping का असर भी शामिल होता है।"
+    },
+    {
+      "step_id": "cp-10",
+      "text": "Review Order पर amount और payment method जाँचिए। इस lesson में order place नहीं करेंगे।"
+    },
+    {
+      "step_id": "cp-11",
+      "text": "Admin में maximum एक हजार करें। हमारा example order इस limit से ऊपर है।"
+    },
+    {
+      "step_id": "cp-12",
+      "text": "Save COD settings दबाइए। Eligibility अब नई range से तय होगी।"
+    },
+    {
+      "step_id": "cp-13",
+      "text": "Customer payment step reload करें। COD disabled और range वाला कारण जाँचिए।"
+    },
+    {
+      "step_id": "cp-14",
+      "text": "Admin में Enable COD बंद करें। इससे online payment अपने आप बंद नहीं होता।"
+    },
+    {
+      "step_id": "cp-15",
+      "text": "Save COD settings दबाइए। Toggle बदलना और save करना दोनों जरूरी हैं।"
+    },
+    {
+      "step_id": "cp-16",
+      "text": "Customer payment step में COD unavailable message जाँचिए।"
+    },
+    {
+      "step_id": "cp-17",
+      "text": "Admin में COD फिर चालू करें और maximum पाँच हजार वापस रखें।"
+    },
+    {
+      "step_id": "cp-18",
+      "text": "Save COD settings दबाकर फिर reload में values जाँचिए।"
+    },
+    {
+      "step_id": "cp-19",
+      "text": "Customer payment step पर COD वापस available होना confirm करें। जरूरत बदलने पर यही lifecycle दोहराएँ।"
+    },
+    {
+      "step_id": "outro",
+      "text": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।"
+    }
+  ],
+  "feature_name": "system-cod-payments",
+  "language": "hinglish",
+  "voice_persona": "Calm clear male Hindi-English trainer"
+}

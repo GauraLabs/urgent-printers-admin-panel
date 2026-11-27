@@ -1,0 +1,233 @@
+{
+  "feature_name": "Content Navigation",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 98000,
+  "shots": [
+    {
+      "step_id": "na-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Navigation",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "na-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose the header",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-03",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add a header link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-04",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Write a clear label",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-05",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Choose a category target",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-06",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Create the link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the header link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Test the category link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Edit the link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-10",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Rename the label",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-11",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save the renamed link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-12",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add a custom page link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-13",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Name the help link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-14",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose a custom URL",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-15",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save the help link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Change display order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Test the help destination",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-18",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose the footer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-19",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add a footer link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-20",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Set the footer destination",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-21",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Publish the footer link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-22",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the footer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-23",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Test the footer link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-24",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Hide a navigation link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-25",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify hidden navigation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-26",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Restore the link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-27",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Delete an unused link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "na-28",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Confirm deletion",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

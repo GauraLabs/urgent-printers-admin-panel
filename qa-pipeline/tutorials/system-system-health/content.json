@@ -1,0 +1,94 @@
+{
+  "feature": "system-system-health",
+  "title": "System Health Monitoring",
+  "intro": "Service status पढ़ना, refresh करना और सही information के साथ technical team तक issue पहुँचाना सीखिए।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "sh-01",
+      "Read and refresh service status"
+    ],
+    [
+      "sh-07",
+      "Find pricing diagnostics"
+    ],
+    [
+      "sh-08",
+      "Read background jobs"
+    ],
+    [
+      "sh-10",
+      "Review errors and follow up"
+    ]
+  ],
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "steps": [
+    {
+      "id": "sh-01",
+      "title": "Open System Health",
+      "text": "System में System Health खोलिए। यह monitoring page है; यहाँ customer order edit नहीं होता।"
+    },
+    {
+      "id": "sh-02",
+      "title": "Read service status",
+      "text": "Healthy, Degraded, Down और Unknown अलग states हैं। Unknown का मतलब service ठीक होने की पुष्टि नहीं है।"
+    },
+    {
+      "id": "sh-03",
+      "title": "Check response and timestamps",
+      "text": "Response time और Checked time देखें। पुराने status को current result न समझें।"
+    },
+    {
+      "id": "sh-04",
+      "title": "Refresh the overview",
+      "text": "Refresh दबाइए। Updated timestamps और status की तुलना करें।"
+    },
+    {
+      "id": "sh-05",
+      "title": "Recheck a service",
+      "text": "Database card का Re-check control इस्तेमाल करें। Re-check status जाँचता है; खराब service अपने आप repair नहीं करता।"
+    },
+    {
+      "id": "sh-06",
+      "title": "Review external-service evidence",
+      "text": "External services में Last success, Last failure या No traffic recorded देखें। Traffic न होने पर diagnosis अधूरा है।"
+    },
+    {
+      "id": "sh-07",
+      "title": "Find Pricing Diagnostics",
+      "text": "Pricing Diagnostics से storefront और server prices के differences जाँचे जाते हैं। इसका अलग detailed lesson है।"
+    },
+    {
+      "id": "sh-08",
+      "title": "Inspect background jobs",
+      "text": "Background Jobs में queued, processing, completed, failed और retrying status पढ़िए।"
+    },
+    {
+      "id": "sh-09",
+      "title": "Read job failures carefully",
+      "text": "Retries और Error column देखें। इस page पर job retry या delete करने का button नहीं है।"
+    },
+    {
+      "id": "sh-10",
+      "title": "Review the error log",
+      "text": "Error Log में Warning, Error या Critical देखें। कोई entry न हो तो भी customer issue अलग से verify करें।"
+    },
+    {
+      "id": "sh-11",
+      "title": "Report useful incident details",
+      "text": "Technical team को service name, समय, status और customer impact दें। Screenshots में private information साझा न करें।"
+    },
+    {
+      "id": "sh-12",
+      "title": "Verify after recovery",
+      "text": "Issue ठीक होने के बाद Refresh करके status और customer flow फिर जाँचिए। केवल green badge पर भरोसा न करें।"
+    }
+  ]
+}

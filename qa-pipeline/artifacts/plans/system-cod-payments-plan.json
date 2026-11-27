@@ -1,0 +1,164 @@
+{
+  "feature_found": true,
+  "feature_name": "Cash on Delivery Lifecycle",
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "business_goal": "Teach website operators to manage staff access, saved settings, monitoring and incident follow-up; explicitly identify demo-only settings.",
+  "user_goal": "COD चालू करना, amount range तय करना और customer payment choices verify करना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Understand COD settings",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Enable and save an amount range",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Verify eligible checkout",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Check an ineligible amount",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Disable COD",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Restore COD availability",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Some settings forms are demo-only; never present those as persistent controls.",
+      "existing_validation": "Real saved staff/preferences/COD/order-halt and pricing resolution responses; reload and storefront checks.",
+      "risk_note": "Use owned development fixtures. Health states are observed, not simulated. Do not claim alert delivery or repair from a toggle."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "cp-01",
+      "action": "Open Payments Settings",
+      "selector": null,
+      "expected_result": "Settings में Payments खोलिए। ऊपर gateway fields अभी demo हैं; नीचे COD वास्तविक control है।"
+    },
+    {
+      "step_id": "cp-02",
+      "action": "Review COD availability",
+      "selector": null,
+      "expected_result": "Cash on Delivery section देखें। COD setting save होने पर customer checkout पर लागू होती है।"
+    },
+    {
+      "step_id": "cp-03",
+      "action": "Enable Cash on Delivery",
+      "selector": null,
+      "expected_result": "Enable COD चालू करें। Phone, courier और collection की business व्यवस्था अलग से जरूरी है।"
+    },
+    {
+      "step_id": "cp-04",
+      "action": "Set the minimum amount",
+      "selector": null,
+      "expected_result": "Minimum order amount में पाँच सौ लिखिए। खाली field का मतलब उस तरफ कोई limit नहीं।"
+    },
+    {
+      "step_id": "cp-05",
+      "action": "Set the maximum amount",
+      "selector": null,
+      "expected_result": "Maximum में पाँच हजार लिखिए। Minimum हमेशा maximum से छोटा या बराबर होना चाहिए।"
+    },
+    {
+      "step_id": "cp-06",
+      "action": "Save the COD range",
+      "selector": null,
+      "expected_result": "Save COD settings दबाइए। यह gateway section के Save Changes से अलग है।"
+    },
+    {
+      "step_id": "cp-07",
+      "action": "Verify saved limits",
+      "selector": null,
+      "expected_result": "Page reload करके COD on, minimum पाँच सौ और maximum पाँच हजार जाँचिए।"
+    },
+    {
+      "step_id": "cp-08",
+      "action": "Check eligible checkout",
+      "selector": null,
+      "expected_result": "Customer checkout में payment step खोलिए। Range के अंदर final payable amount पर Cash on Delivery available होना चाहिए।"
+    },
+    {
+      "step_id": "cp-09",
+      "action": "Select Cash on Delivery",
+      "selector": null,
+      "expected_result": "Cash on Delivery चुनिए। Final payable amount में coupon और shipping का असर भी शामिल होता है।"
+    },
+    {
+      "step_id": "cp-10",
+      "action": "Review the order without placing it",
+      "selector": null,
+      "expected_result": "Review Order पर amount और payment method जाँचिए। इस lesson में order place नहीं करेंगे।"
+    },
+    {
+      "step_id": "cp-11",
+      "action": "Set a lower maximum",
+      "selector": null,
+      "expected_result": "Admin में maximum एक हजार करें। हमारा example order इस limit से ऊपर है।"
+    },
+    {
+      "step_id": "cp-12",
+      "action": "Save the tighter range",
+      "selector": null,
+      "expected_result": "Save COD settings दबाइए। Eligibility अब नई range से तय होगी।"
+    },
+    {
+      "step_id": "cp-13",
+      "action": "Verify an ineligible checkout",
+      "selector": null,
+      "expected_result": "Customer payment step reload करें। COD disabled और range वाला कारण जाँचिए।"
+    },
+    {
+      "step_id": "cp-14",
+      "action": "Disable COD entirely",
+      "selector": null,
+      "expected_result": "Admin में Enable COD बंद करें। इससे online payment अपने आप बंद नहीं होता।"
+    },
+    {
+      "step_id": "cp-15",
+      "action": "Save disabled COD",
+      "selector": null,
+      "expected_result": "Save COD settings दबाइए। Toggle बदलना और save करना दोनों जरूरी हैं।"
+    },
+    {
+      "step_id": "cp-16",
+      "action": "Verify COD is unavailable",
+      "selector": null,
+      "expected_result": "Customer payment step में COD unavailable message जाँचिए।"
+    },
+    {
+      "step_id": "cp-17",
+      "action": "Restore COD availability",
+      "selector": null,
+      "expected_result": "Admin में COD फिर चालू करें और maximum पाँच हजार वापस रखें।"
+    },
+    {
+      "step_id": "cp-18",
+      "action": "Save the restored range",
+      "selector": null,
+      "expected_result": "Save COD settings दबाकर फिर reload में values जाँचिए।"
+    },
+    {
+      "step_id": "cp-19",
+      "action": "Verify COD is available again",
+      "selector": null,
+      "expected_result": "Customer payment step पर COD वापस available होना confirm करें। जरूरत बदलने पर यही lifecycle दोहराएँ।"
+    }
+  ]
+}

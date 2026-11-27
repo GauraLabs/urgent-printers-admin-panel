@@ -1,0 +1,419 @@
+{
+  "feature_found": true,
+  "feature_name": "Order Lifecycle",
+  "source_files": [
+    "src/features/orders/components/OrderDetail/OrderDetailClient.tsx",
+    "src/features/printing-queue/components/QueueTable.tsx",
+    "src/features/shipping/components/ShipmentStatusControl.tsx",
+    "../urgent-printers-backend/app/services/proof_approval_service.py",
+    "../urgent-printers-backend/app/services/shipping_service.py"
+  ],
+  "business_goal": "Teach customer and staff responsibilities from checkout through production, delivery and refund with real development state transitions.",
+  "user_goal": "इस tutorial में एक order का checkout, artwork revision, customer approval, printing, shipping, delivery और refund exception सीखेंगे।",
+  "user_journey": [
+    {
+      "step": "Storefront order and artwork",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Admin confirmation, notes and invoice",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Proof review, revision and approval",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Printing and quality check",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Dispatch and manual shipment",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Tracking and delivery",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Cancellation and simulated refund",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "COD delivery and payment collection are separate; simulated prepaid refunds use a dedicated fixture and fake payment provider.",
+      "existing_validation": "Actual API and UI assertions at each production, shipping, delivery and refund state.",
+      "risk_note": "No real messages, payment or courier booking; no staff mock approval actions are used."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "or-01",
+      "action": "Open the storefront",
+      "selector": null,
+      "expected_result": "इस tutorial में customer checkout से proof approval, printing, dispatch और delivery तक एक order पूरा करेंगे।"
+    },
+    {
+      "step_id": "or-02",
+      "action": "Choose quantity",
+      "selector": null,
+      "expected_result": "Quantity two hundred fifty रखिए। Nine rupees per piece पर subtotal twenty-two hundred fifty होगा।"
+    },
+    {
+      "step_id": "or-03",
+      "action": "Upload customer artwork",
+      "selector": null,
+      "expected_result": "अपनी print file upload कीजिए। यह actual development storage में जाएगी।"
+    },
+    {
+      "step_id": "or-04",
+      "action": "Verify uploaded artwork",
+      "selector": null,
+      "expected_result": "Upload पूरा होने पर filename और preview verify करें। सही artwork के साथ ही cart में आगे जाएँ।"
+    },
+    {
+      "step_id": "or-05",
+      "action": "Add to cart",
+      "selector": null,
+      "expected_result": "Add to Cart कीजिए। Selected size, paper, finish और artwork order configuration में जाएँगे।"
+    },
+    {
+      "step_id": "or-06",
+      "action": "Review the cart",
+      "selector": null,
+      "expected_result": "Cart में quantity, configuration और subtotal दोबारा verify कीजिए।"
+    },
+    {
+      "step_id": "or-07",
+      "action": "Checkout",
+      "selector": null,
+      "expected_result": "Proceed to Checkout चुनिए। हम dedicated development customer इस्तेमाल कर रहे हैं।"
+    },
+    {
+      "step_id": "or-08",
+      "action": "Delivery address",
+      "selector": null,
+      "expected_result": "Saved delivery address verify करके Continue to Payment चुनिए।"
+    },
+    {
+      "step_id": "or-09",
+      "action": "Cash on Delivery",
+      "selector": null,
+      "expected_result": "Cash on Delivery चुनते हैं। इस order में अभी कोई online payment charge नहीं होगा।"
+    },
+    {
+      "step_id": "or-10",
+      "action": "Review order",
+      "selector": null,
+      "expected_result": "Review Order पर server-confirmed prices और total verify कीजिए।"
+    },
+    {
+      "step_id": "or-11",
+      "action": "Place order",
+      "selector": null,
+      "expected_result": "Place Order कीजिए। Order number confirmation पर मिल जाएगा।"
+    },
+    {
+      "step_id": "or-12",
+      "action": "Customer order details",
+      "selector": null,
+      "expected_result": "Customer account में order खोलिए। यहाँ status, artwork और order summary देख सकते हैं।"
+    },
+    {
+      "step_id": "or-13",
+      "action": "Find the admin order",
+      "selector": null,
+      "expected_result": "Admin में इसी order number का record खोलिए। Customer और selected items verify करें।"
+    },
+    {
+      "step_id": "or-14",
+      "action": "Add an internal note",
+      "selector": null,
+      "expected_result": "Internal note में production team के लिए instruction लिखिए। यह customer message नहीं है।"
+    },
+    {
+      "step_id": "or-15",
+      "action": "Save the note",
+      "selector": null,
+      "expected_result": "Note save कीजिए। Team को order के अंदर instruction और उसका author दिखाई देंगे।"
+    },
+    {
+      "step_id": "or-16",
+      "action": "Confirm the order",
+      "selector": null,
+      "expected_result": "Change Status खोलिए और Confirmed चुनिए। COD order को staff approval के बाद आगे बढ़ाते हैं।"
+    },
+    {
+      "step_id": "or-17",
+      "action": "Save confirmation",
+      "selector": null,
+      "expected_result": "Update Status कीजिए। Timeline में Confirmed entry verify करें।"
+    },
+    {
+      "step_id": "or-18",
+      "action": "Download invoice",
+      "selector": null,
+      "expected_result": "Confirmed order की invoice download कीजिए। File में order number और total verify होना चाहिए।"
+    },
+    {
+      "step_id": "or-19",
+      "action": "Prepare artwork review",
+      "selector": null,
+      "expected_result": "Artwork approve करने से पहले staff print file और customer requirements review करे। अब proof upload करते हैं।"
+    },
+    {
+      "step_id": "or-20",
+      "action": "Select proof version one",
+      "selector": null,
+      "expected_result": "पहला proof select कीजिए। Original file और customer-facing proof अलग records हैं।"
+    },
+    {
+      "step_id": "or-21",
+      "action": "Save proof draft",
+      "selector": null,
+      "expected_result": "Upload and Save Draft कीजिए। अभी customer decision के लिए proof भेजा नहीं गया है।"
+    },
+    {
+      "step_id": "or-22",
+      "action": "Send proof for review",
+      "selector": null,
+      "expected_result": "Send to Customer चुनिए। इस development recording में outbound notifications disabled हैं।"
+    },
+    {
+      "step_id": "or-23",
+      "action": "Review proof as customer",
+      "selector": null,
+      "expected_result": "Customer account में Review Proof version one खोलिए। Preview देखकर decision लीजिए।"
+    },
+    {
+      "step_id": "or-24",
+      "action": "Request a revision",
+      "selector": null,
+      "expected_result": "अगर बदलाव चाहिए तो Request Revision चुनिए। Approval देने से पहले corrections बताना ज़रूरी है।"
+    },
+    {
+      "step_id": "or-25",
+      "action": "Describe the correction",
+      "selector": null,
+      "expected_result": "Feedback में लिखिए: please increase the name size. Clear feedback से revision सही बनेगा।"
+    },
+    {
+      "step_id": "or-26",
+      "action": "Submit revision request",
+      "selector": null,
+      "expected_result": "Revision request submit कीजिए। Order production में नहीं जाएगा; team नया proof तैयार करेगी।"
+    },
+    {
+      "step_id": "or-27",
+      "action": "Review customer feedback",
+      "selector": null,
+      "expected_result": "Admin में revision status और customer feedback verify कीजिए। पुराना proof history में सुरक्षित रहेगा।"
+    },
+    {
+      "step_id": "or-28",
+      "action": "Upload revised proof",
+      "selector": null,
+      "expected_result": "अब corrected proof version two upload करें। पुराने approval record को overwrite नहीं करते।"
+    },
+    {
+      "step_id": "or-29",
+      "action": "Save revised draft",
+      "selector": null,
+      "expected_result": "Revised file upload करके draft save कीजिए। Filename और successful upload verify करें।"
+    },
+    {
+      "step_id": "or-30",
+      "action": "Send revised proof",
+      "selector": null,
+      "expected_result": "Version two customer review के लिए भेजिए। Order फिर artwork approval का इंतज़ार करेगा।"
+    },
+    {
+      "step_id": "or-31",
+      "action": "Review proof version two",
+      "selector": null,
+      "expected_result": "Customer account में नया proof खोलिए। Corrected design verify करके ही approve करें।"
+    },
+    {
+      "step_id": "or-32",
+      "action": "Approve artwork",
+      "selector": null,
+      "expected_result": "Approve Artwork चुनिए। इस order के सभी items approve होने पर Artwork Approved status मिलेगा।"
+    },
+    {
+      "step_id": "or-33",
+      "action": "Verify approval in admin",
+      "selector": null,
+      "expected_result": "Admin timeline और proof status में customer approval verify कीजिए। तभी printing शुरू करें।"
+    },
+    {
+      "step_id": "or-34",
+      "action": "Ready to print queue",
+      "selector": null,
+      "expected_result": "Printing Queue में Ready to Print tab खोलिए। Approved order यहाँ दिखाई देता है।"
+    },
+    {
+      "step_id": "or-35",
+      "action": "Start printing",
+      "selector": null,
+      "expected_result": "इस order की Start Printing action चुनिए। Physical printing वास्तव में पूरी होने पर अगला step करें।"
+    },
+    {
+      "step_id": "or-36",
+      "action": "Printing queue",
+      "selector": null,
+      "expected_result": "Printing tab में उसी order की quantity और print configuration verify कीजिए।"
+    },
+    {
+      "step_id": "or-37",
+      "action": "Complete production",
+      "selector": null,
+      "expected_result": "Printing और quality check पूरा होने पर Mark Complete चुनिए। Order Ready to Dispatch में जाएगा।"
+    },
+    {
+      "step_id": "or-38",
+      "action": "Ready to dispatch",
+      "selector": null,
+      "expected_result": "Ready to Dispatch tab खोलिए। Packaging और delivery details verify करके shipment बनाएँ।"
+    },
+    {
+      "step_id": "or-39",
+      "action": "Open dispatch details",
+      "selector": null,
+      "expected_result": "Create Shipment खोलिए। Shipping address और package details review कीजिए।"
+    },
+    {
+      "step_id": "or-40",
+      "action": "Review packaging",
+      "selector": null,
+      "expected_result": "Weight और dimensions वास्तविक packed parcel के हिसाब से भरने चाहिए। यहाँ sample package दिख रहा है।"
+    },
+    {
+      "step_id": "or-41",
+      "action": "Choose manual shipment",
+      "selector": null,
+      "expected_result": "इस demo में manual shipment record करेंगे। यह external courier booking या pickup request नहीं भेजता।"
+    },
+    {
+      "step_id": "or-42",
+      "action": "Courier name",
+      "selector": null,
+      "expected_result": "Courier का नाम लिखिए। Demo Courier केवल इस development recording का sample है।"
+    },
+    {
+      "step_id": "or-43",
+      "action": "Tracking reference",
+      "selector": null,
+      "expected_result": "Unique tracking reference लिखिए। इसे genuine courier tracking number समझकर इस्तेमाल न करें।"
+    },
+    {
+      "step_id": "or-44",
+      "action": "Save shipment",
+      "selector": null,
+      "expected_result": "Save Shipment कीजिए। Order Shipped होगा और shipment source Manual दिखेगा।"
+    },
+    {
+      "step_id": "or-45",
+      "action": "Customer tracking",
+      "selector": null,
+      "expected_result": "Customer account में courier और tracking reference verify कीजिए। Manual shipment में automatic live tracking नहीं है।"
+    },
+    {
+      "step_id": "or-46",
+      "action": "Mark picked up",
+      "selector": null,
+      "expected_result": "Parcel pickup confirm होने पर shipment status Picked Up करें। Recording में यह simulated development event है।"
+    },
+    {
+      "step_id": "or-47",
+      "action": "Mark in transit",
+      "selector": null,
+      "expected_result": "अगली update In Transit है। Shipment progress और overall order status अलग fields हैं।"
+    },
+    {
+      "step_id": "or-48",
+      "action": "Out for delivery",
+      "selector": null,
+      "expected_result": "Courier out for delivery बताए तभी यह status रखें। Customer को tracking progress दिखाई देगा।"
+    },
+    {
+      "step_id": "or-49",
+      "action": "Confirm delivered",
+      "selector": null,
+      "expected_result": "Delivered चुनने पर confirmation पढ़िए। इससे shipment और overall order दोनों delivered होंगे।"
+    },
+    {
+      "step_id": "or-50",
+      "action": "Save delivery confirmation",
+      "selector": null,
+      "expected_result": "Confirm कीजिए और order का Delivered status verify करें। Delivery का वास्तविक प्रमाण होने पर ही यह action करें।"
+    },
+    {
+      "step_id": "or-51",
+      "action": "Customer delivery status",
+      "selector": null,
+      "expected_result": "Customer account में Delivered और tracking timeline verify कीजिए। Fulfilment lifecycle पूरा हो गया है।"
+    },
+    {
+      "step_id": "or-52",
+      "action": "Payment versus delivery",
+      "selector": null,
+      "expected_result": "COD delivery अपने आप payment collected नहीं बनाती। Payment record अलग reconcile करना ज़रूरी है।"
+    },
+    {
+      "step_id": "or-53",
+      "action": "Cancellation and refund example",
+      "selector": null,
+      "expected_result": "अब दूसरे development fixture में prepaid cancellation और refund देखते हैं। इसमें captured payment simulated है; real money नहीं लिया गया।"
+    },
+    {
+      "step_id": "or-54",
+      "action": "Cancel the prepaid sample",
+      "selector": null,
+      "expected_result": "Admin में Cancel चुनिए। Customer request और fulfilment stage verify करके ही order cancel करें।"
+    },
+    {
+      "step_id": "or-55",
+      "action": "Confirm cancellation",
+      "selector": null,
+      "expected_result": "Confirmation पढ़कर Yes cancel order चुनिए। Paid order पर refund की ज़रूरत अलग से बनी रहती है।"
+    },
+    {
+      "step_id": "or-56",
+      "action": "Open refund",
+      "selector": null,
+      "expected_result": "Refund खोलिए। केवल captured payment वाला order refund के लिए eligible होता है।"
+    },
+    {
+      "step_id": "or-57",
+      "action": "Refund amount",
+      "selector": null,
+      "expected_result": "Refund amount verify कीजिए। यहाँ full amount twenty-two hundred fifty है; partial refund अलग amount से हो सकता है।"
+    },
+    {
+      "step_id": "or-58",
+      "action": "Refund reason",
+      "selector": null,
+      "expected_result": "Reason Order Cancelled रखिए। Reason और notes refund audit record में उपयोगी हैं।"
+    },
+    {
+      "step_id": "or-59",
+      "action": "Issue simulated refund",
+      "selector": null,
+      "expected_result": "Issue Refund चुनिए। हमारे isolated development API में fake payment provider है, इसलिए real bank transaction नहीं होगा।"
+    },
+    {
+      "step_id": "or-60",
+      "action": "Verify refund record",
+      "selector": null,
+      "expected_result": "Refunded status, amount और refund reference verify कीजिए। Unconfirmed refund को बार-बार retry नहीं करना चाहिए।"
+    },
+    {
+      "step_id": "or-61",
+      "action": "Review the full history",
+      "selector": null,
+      "expected_result": "Main order Delivered है और दूसरा sample Refunded है। Timeline, proofs, invoice और shipment evidence सुरक्षित हैं।"
+    }
+  ]
+}

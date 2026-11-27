@@ -1,0 +1,230 @@
+{
+  "feature_found": true,
+  "feature_name": "Category Creation",
+  "source_files": [
+    "src/features/categories/components/CategoryForm.tsx",
+    "src/features/products/components/ProductForm/index.tsx",
+    "../urgent-printers-frontend/app/products/[categorySlug]/page.tsx",
+    "../urgent-printers-frontend/features/products/configurator/ProductConfigurator.tsx"
+  ],
+  "business_goal": "Teach staff to configure the catalogue and verify the resulting storefront and order behavior with reproducible footage.",
+  "user_goal": "इस tutorial में category, subcategory, SEO और storefront visibility का पूरा setup सीखेंगे।",
+  "user_journey": [
+    {
+      "step": "Create the parent category",
+      "route_or_state": "/categories and storefront /products/{categorySlug}"
+    },
+    {
+      "step": "SEO, content and FAQs",
+      "route_or_state": "/categories and storefront /products/{categorySlug}"
+    },
+    {
+      "step": "Create a subcategory",
+      "route_or_state": "/categories and storefront /products/{categorySlug}"
+    },
+    {
+      "step": "Verify the storefront",
+      "route_or_state": "/categories and storefront /products/{categorySlug}"
+    },
+    {
+      "step": "Edit, hide and restore",
+      "route_or_state": "/categories and storefront /products/{categorySlug}"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Empty categories are intentionally excluded from storefront navigation until an active product is assigned.",
+      "existing_validation": "Real public category and product data; storefront empty state and navigation checks.",
+      "risk_note": "Preview direct URLs separately from menu visibility; never claim an empty category appears in navigation."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "ca-01",
+      "action": "Categories",
+      "selector": null,
+      "expected_result": "Categories खोलिए। यहाँ storefront की catalogue structure manage होती है।"
+    },
+    {
+      "step_id": "ca-02",
+      "action": "Add Category",
+      "selector": null,
+      "expected_result": "Add Category से एक नई top-level category बनाते हैं।"
+    },
+    {
+      "step_id": "ca-03",
+      "action": "Category name",
+      "selector": null,
+      "expected_result": "नाम Wedding Stationery रखिए। Demo edition से development records अलग पहचानेंगे।"
+    },
+    {
+      "step_id": "ca-04",
+      "action": "Stable URL slug",
+      "selector": null,
+      "expected_result": "Slug अपने आप बनता है। यही category के storefront URL का हिस्सा होगा।"
+    },
+    {
+      "step_id": "ca-05",
+      "action": "Parent category",
+      "selector": null,
+      "expected_result": "Top-level category के लिए Parent category में None रखिए। केवल दो levels supported हैं।"
+    },
+    {
+      "step_id": "ca-06",
+      "action": "Description",
+      "selector": null,
+      "expected_result": "Description में बताइए कि इस category में customer को क्या मिलेगा।"
+    },
+    {
+      "step_id": "ca-07",
+      "action": "Category image",
+      "selector": null,
+      "expected_result": "Category की अपनी image upload कीजिए। कम से कम एक photo required है।"
+    },
+    {
+      "step_id": "ca-08",
+      "action": "Active visibility",
+      "selector": null,
+      "expected_result": "Active switch on होने पर category storefront पर दिखाई दे सकती है।"
+    },
+    {
+      "step_id": "ca-09",
+      "action": "SEO title",
+      "selector": null,
+      "expected_result": "Meta Title लिखिए। इसे concise रखिए और category का मुख्य topic शामिल कीजिए।"
+    },
+    {
+      "step_id": "ca-10",
+      "action": "SEO description",
+      "selector": null,
+      "expected_result": "Meta Description में category का उपयोग साफ़ बताइए। नीचे snippet preview देख सकते हैं।"
+    },
+    {
+      "step_id": "ca-11",
+      "action": "Category introduction",
+      "selector": null,
+      "expected_result": "Intro text category page के ऊपर customer को context देता है।"
+    },
+    {
+      "step_id": "ca-12",
+      "action": "Detailed body",
+      "selector": null,
+      "expected_result": "Body text product grid के नीचे category की detail समझाता है।"
+    },
+    {
+      "step_id": "ca-13",
+      "action": "Add FAQ",
+      "selector": null,
+      "expected_result": "Add FAQ चुनिए। Customer के common सवालों के जवाब यहीं manage होंगे।"
+    },
+    {
+      "step_id": "ca-14",
+      "action": "FAQ question",
+      "selector": null,
+      "expected_result": "सवाल लिखिए: क्या invitations customize कर सकते हैं?"
+    },
+    {
+      "step_id": "ca-15",
+      "action": "FAQ answer",
+      "selector": null,
+      "expected_result": "जवाब में customization की उपलब्ध सुविधा साफ़ बताइए।"
+    },
+    {
+      "step_id": "ca-16",
+      "action": "Search visibility",
+      "selector": null,
+      "expected_result": "Noindex switch search engines के लिए है। यह storefront visibility वाले Active switch से अलग है।"
+    },
+    {
+      "step_id": "ca-17",
+      "action": "Create category",
+      "selector": null,
+      "expected_result": "Create Category पर click करके saved category को list में verify कीजिए।"
+    },
+    {
+      "step_id": "ca-18",
+      "action": "Create a subcategory",
+      "selector": null,
+      "expected_result": "अब इसी parent के नीचे Foil Invitations subcategory बनाते हैं।"
+    },
+    {
+      "step_id": "ca-19",
+      "action": "Choose the parent",
+      "selector": null,
+      "expected_result": "Parent category में अभी बनाई Wedding Stationery चुनिए।"
+    },
+    {
+      "step_id": "ca-20",
+      "action": "Subcategory image",
+      "selector": null,
+      "expected_result": "Subcategory की image और description भरकर उसे create कीजिए।"
+    },
+    {
+      "step_id": "ca-21",
+      "action": "Storefront category",
+      "selector": null,
+      "expected_result": "Storefront पर parent category खोलिए। Admin का नाम और introduction यहाँ आ गया है।"
+    },
+    {
+      "step_id": "ca-22",
+      "action": "Empty categories stay out of menus",
+      "selector": null,
+      "expected_result": "अभी category में कोई product नहीं है। Empty categories navigation से छिपी रहती हैं; product publish होने पर browsing में दिखेंगी।"
+    },
+    {
+      "step_id": "ca-23",
+      "action": "Preview the child category",
+      "selector": null,
+      "expected_result": "Subcategory का direct preview URL खोलिए। Breadcrumb में parent और child का relationship दिखता है।"
+    },
+    {
+      "step_id": "ca-24",
+      "action": "Review SEO and FAQ",
+      "selector": null,
+      "expected_result": "Parent page पर detailed text और FAQ देखिए। ये वही fields हैं जो admin में भरे थे।"
+    },
+    {
+      "step_id": "ca-25",
+      "action": "Edit the category",
+      "selector": null,
+      "expected_result": "Admin में saved category edit कीजिए। नाम बदलते हैं, लेकिन slug वैसा ही रखते हैं।"
+    },
+    {
+      "step_id": "ca-26",
+      "action": "Save a stable URL",
+      "selector": null,
+      "expected_result": "Save Changes कीजिए। नाम बदला है, पुराने storefront URL का slug नहीं बदला।"
+    },
+    {
+      "step_id": "ca-27",
+      "action": "Verify the update",
+      "selector": null,
+      "expected_result": "उसी storefront URL पर updated category name verify कीजिए।"
+    },
+    {
+      "step_id": "ca-28",
+      "action": "Hide the category",
+      "selector": null,
+      "expected_result": "Category को temporarily hide करने के लिए Active off करके save कीजिए।"
+    },
+    {
+      "step_id": "ca-29",
+      "action": "Verify hidden state",
+      "selector": null,
+      "expected_result": "Public catalogue API में inactive category नहीं आती। इसलिए नया customer उसे browse नहीं कर सकता।"
+    },
+    {
+      "step_id": "ca-30",
+      "action": "Restore visibility",
+      "selector": null,
+      "expected_result": "Active वापस on करके save कीजिए। अगले product tutorial में इसी category का उपयोग करेंगे।"
+    },
+    {
+      "step_id": "ca-31",
+      "action": "Ready for product assignment",
+      "selector": null,
+      "expected_result": "Restored parent और child active हैं। अगले product tutorial में product publish करके storefront navigation भी verify करेंगे।"
+    }
+  ]
+}

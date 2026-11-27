@@ -1,0 +1,129 @@
+{
+  "feature_name": "Pause and Resume New Orders",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 52500,
+  "shots": [
+    {
+      "step_id": "oc-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Operations Settings",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "oc-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review the halt control",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open halt confirmation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Write the customer message",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Record the internal reason",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Confirm Halt Orders",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the blocked state",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-08",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Check the storefront message",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-09",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Check checkout restrictions",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-10",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Return to Operations",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open resume confirmation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Resume accepting orders",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-13",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify the public notice is gone",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-14",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify checkout is available",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "oc-15",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify saved state after reload",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

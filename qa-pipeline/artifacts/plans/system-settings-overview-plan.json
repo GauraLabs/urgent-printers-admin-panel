@@ -1,0 +1,114 @@
+{
+  "feature_found": true,
+  "feature_name": "Settings Overview and Current Limits",
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "business_goal": "Teach website operators to manage staff access, saved settings, monitoring and incident follow-up; explicitly identify demo-only settings.",
+  "user_goal": "Settings के sections समझिए और पहचानिए कि कौन से controls अभी website पर काम करते हैं।",
+  "user_journey": [
+    {
+      "step": "General: current limits",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Operations: live and demo controls",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Notification settings limits",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Payments: gateway limits and live COD",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Some settings forms are demo-only; never present those as persistent controls.",
+      "existing_validation": "Real saved staff/preferences/COD/order-halt and pricing resolution responses; reload and storefront checks.",
+      "risk_note": "Use owned development fixtures. Health states are observed, not simulated. Do not claim alert delivery or repair from a toggle."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "so-01",
+      "action": "Open Settings",
+      "selector": null,
+      "expected_result": "System में Settings खोलिए। ऊपर General, Operations, Notifications और Payments tabs हैं।"
+    },
+    {
+      "step_id": "so-02",
+      "action": "Review business details",
+      "selector": null,
+      "expected_result": "General में business name, GST और invoice address के fields हैं। इस version में इनकी live saving अभी उपलब्ध नहीं है।"
+    },
+    {
+      "step_id": "so-03",
+      "action": "Review support contacts",
+      "selector": null,
+      "expected_result": "Support Email और Phone के fields देखें। अभी यहाँ edit करने से customer website के contacts update होने का भरोसा न करें।"
+    },
+    {
+      "step_id": "so-04",
+      "action": "Review localisation",
+      "selector": null,
+      "expected_result": "Timezone और Currency choices दिखती हैं। इन demo fields से website की currency बदलने की कोशिश न करें।"
+    },
+    {
+      "step_id": "so-05",
+      "action": "Open Operations",
+      "selector": null,
+      "expected_result": "Operations tab खोलिए। Emergency Halt वास्तविक control है और तुरंत save होता है।"
+    },
+    {
+      "step_id": "so-06",
+      "action": "Review production fields",
+      "selector": null,
+      "expected_result": "Turnaround, capacity और artwork rules के बाकी fields अभी demo values दिखाते हैं। इन्हें लागू settings न समझें।"
+    },
+    {
+      "step_id": "so-07",
+      "action": "Open Notifications",
+      "selector": null,
+      "expected_result": "Notifications tab में customer और admin alert categories दिखाई देती हैं।"
+    },
+    {
+      "step_id": "so-08",
+      "action": "Review customer alert fields",
+      "selector": null,
+      "expected_result": "Order Confirmed, Dispatched और Artwork Approval के Email और SMS fields अभी live delivery settings से जुड़े नहीं हैं।"
+    },
+    {
+      "step_id": "so-09",
+      "action": "Find live staff preferences",
+      "selector": null,
+      "expected_result": "Staff alerts बदलने के लिए System का Notification Preferences page इस्तेमाल करें।"
+    },
+    {
+      "step_id": "so-10",
+      "action": "Open Payments",
+      "selector": null,
+      "expected_result": "Payments tab खोलिए। ऊपर Razorpay और Paytm fields अभी demo हैं; ये असली gateway configure नहीं करते।"
+    },
+    {
+      "step_id": "so-11",
+      "action": "Locate Cash on Delivery",
+      "selector": null,
+      "expected_result": "नीचे Cash on Delivery वास्तविक saved control है। COD enable और amount limits अलग Save COD settings से बदलती हैं।"
+    },
+    {
+      "step_id": "so-12",
+      "action": "Use the supported workflows",
+      "selector": null,
+      "expected_result": "अगले lessons में Emergency Halt और COD का actual customer view जाँचेंगे। बाकी demo fields के लिए administrator से संपर्क करें।"
+    }
+  ]
+}

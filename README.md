@@ -31,3 +31,9 @@ Open [http://localhost:3001](http://localhost:3001).
 
 - `urgent-printers-backend/` — FastAPI backend
 - `urgent-printers-frontend/` — Customer storefront
+
+### Tutorial recordings
+
+Reusable lesson definitions and scripts live under `qa-pipeline/tutorials`. Capture logs, rendered media, recovery copies and source snapshots are local artifacts excluded from Git; they remain on disk for rebuilding existing recordings.
+
+Set `QA_ADMIN_EMAIL` and `QA_ADMIN_PASSWORD` in the recording process environment. Development passwords are not embedded in the tutorial scripts. Keep ElevenLabs credentials in `~/.config/urgentprinters-tutorials/.env.local`, outside the repositories. The application TypeScript check excludes the separate QA/recording workspace.

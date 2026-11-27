@@ -1,0 +1,131 @@
+{
+  "feature": "content-testimonials",
+  "title": "Content Testimonials",
+  "intro": "Customer की approved review जोड़ना, दिखाना और update करना सीखिए।",
+  "outro": "अब आप Testimonials को create, verify और update कर सकते हैं। Changes के बाद customer view जरूर जाँचिए।",
+  "chapters": [
+    [
+      "te-01",
+      "Create an approved review"
+    ],
+    [
+      "te-11",
+      "Publish and check the homepage"
+    ],
+    [
+      "te-14",
+      "Correct, hide and restore"
+    ],
+    [
+      "te-19",
+      "Delete a review"
+    ]
+  ],
+  "steps": [
+    {
+      "id": "te-01",
+      "title": "Open Testimonials",
+      "text": "Content में Testimonials खोलिए। Homepage की customer quotes यहाँ manage होती हैं।"
+    },
+    {
+      "id": "te-02",
+      "title": "Add a testimonial",
+      "text": "Add Testimonial दबाइए। केवल customer की approved review इस्तेमाल करें।"
+    },
+    {
+      "id": "te-03",
+      "title": "Enter the customer name",
+      "text": "Customer का नाम सही लिखिए।"
+    },
+    {
+      "id": "te-04",
+      "title": "Add a title or company",
+      "text": "Title या company optional है। गलत designation न जोड़ें।"
+    },
+    {
+      "id": "te-05",
+      "title": "Upload an approved image",
+      "text": "Avatar optional है। Photo इस्तेमाल करने की permission होनी चाहिए।"
+    },
+    {
+      "id": "te-06",
+      "title": "Write the review",
+      "text": "Customer की approved feedback लिखिए। उसके मतलब को न बदलें।"
+    },
+    {
+      "id": "te-07",
+      "title": "Select the rating",
+      "text": "Stars में वही rating चुनिए जो customer ने दी है।"
+    },
+    {
+      "id": "te-08",
+      "title": "Keep it unpublished",
+      "text": "Active off रखकर पहले review save कर सकते हैं।"
+    },
+    {
+      "id": "te-09",
+      "title": "Create the testimonial",
+      "text": "Create दबाइए। Review अब admin list में save है।"
+    },
+    {
+      "id": "te-10",
+      "title": "Check inactive visibility",
+      "text": "Homepage पर inactive review नहीं दिखनी चाहिए।"
+    },
+    {
+      "id": "te-11",
+      "title": "Edit the saved review",
+      "text": "उसी review का pencil icon खोलिए।"
+    },
+    {
+      "id": "te-12",
+      "title": "Publish the review",
+      "text": "Active on करके Save दबाइए।"
+    },
+    {
+      "id": "te-13",
+      "title": "Check the homepage",
+      "text": "Homepage के testimonials section में नाम, review और stars जाँचिए।"
+    },
+    {
+      "id": "te-14",
+      "title": "Update the review",
+      "text": "Approved correction आने पर review edit कीजिए।"
+    },
+    {
+      "id": "te-15",
+      "title": "Save the correction",
+      "text": "Save करके homepage पर नया text verify करें।"
+    },
+    {
+      "id": "te-16",
+      "title": "Hide a review",
+      "text": "Review temporarily हटाने के लिए Active off करके Save करें।"
+    },
+    {
+      "id": "te-17",
+      "title": "Verify the hidden review",
+      "text": "Homepage refresh करें। Hidden review customer को नहीं दिखती।"
+    },
+    {
+      "id": "te-18",
+      "title": "Restore a review",
+      "text": "Active on करके Save करें। Review फिर से दिखने लगेगी।"
+    },
+    {
+      "id": "te-19",
+      "title": "Delete a review",
+      "text": "हमेशा के लिए हटाना हो तो trash icon दबाइए।"
+    },
+    {
+      "id": "te-20",
+      "title": "Confirm deletion",
+      "text": "Delete confirm करके admin और homepage दोनों पर removal verify करें।"
+    }
+  ],
+  "source_files": [
+    "src/features/content/components/TestimonialsManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ]
+}

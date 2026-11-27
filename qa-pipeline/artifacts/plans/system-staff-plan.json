@@ -1,0 +1,182 @@
+{
+  "feature_found": true,
+  "feature_name": "Staff Access Lifecycle",
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "business_goal": "Teach website operators to manage staff access, saved settings, monitoring and incident follow-up; explicitly identify demo-only settings.",
+  "user_goal": "Team member बनाना, सही access देना और account deactivate या restore करना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Open and understand the controls",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Configure or investigate",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Verify, restore and follow up",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Some settings forms are demo-only; never present those as persistent controls.",
+      "existing_validation": "Real saved staff/preferences/COD/order-halt and pricing resolution responses; reload and storefront checks.",
+      "risk_note": "Use owned development fixtures. Health states are observed, not simulated. Do not claim alert delivery or repair from a toggle."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "st-01",
+      "action": "Open Staff",
+      "selector": null,
+      "expected_result": "System में Staff खोलिए। हर व्यक्ति का अपना account और काम के अनुसार role होना चाहिए।"
+    },
+    {
+      "step_id": "st-02",
+      "action": "Review role permissions",
+      "selector": null,
+      "expected_result": "Role Permissions से roles का access समझिए। Super Admin केवल जिम्मेदार administrator को दें।"
+    },
+    {
+      "step_id": "st-03",
+      "action": "Add a team member",
+      "selector": null,
+      "expected_result": "Add Member दबाइए। इस उदाहरण में एक support team member बनाएँगे।"
+    },
+    {
+      "step_id": "st-04",
+      "action": "Enter the full name",
+      "selector": null,
+      "expected_result": "Full Name में व्यक्ति का पूरा नाम लिखिए।"
+    },
+    {
+      "step_id": "st-05",
+      "action": "Enter the work email",
+      "selector": null,
+      "expected_result": "Email सही जाँचिए। Invite और sign-in इसी address से जुड़े हैं।"
+    },
+    {
+      "step_id": "st-06",
+      "action": "Choose Customer Support",
+      "selector": null,
+      "expected_result": "Role में Customer Support चुनिए। Role से base permissions तय होती हैं।"
+    },
+    {
+      "step_id": "st-07",
+      "action": "Review sign-in choices",
+      "selector": null,
+      "expected_result": "Invite via email से व्यक्ति अपना password बनाएगा। Set a password now दूसरा विकल्प है।"
+    },
+    {
+      "step_id": "st-08",
+      "action": "Send the invitation",
+      "selector": null,
+      "expected_result": "Send Invite दबाइए। Account list में नया member जाँचिए; invite delivery अलग से confirm करें।"
+    },
+    {
+      "step_id": "st-09",
+      "action": "Open member actions",
+      "selector": null,
+      "expected_result": "नए member की तीन dots वाली actions menu खोलिए।"
+    },
+    {
+      "step_id": "st-10",
+      "action": "Edit the member",
+      "selector": null,
+      "expected_result": "Edit चुनिए। यहाँ role, phone, active status और permissions बदलते हैं।"
+    },
+    {
+      "step_id": "st-11",
+      "action": "Add the contact number",
+      "selector": null,
+      "expected_result": "Phone में सही country code सहित number डालिए। SMS और WhatsApp के लिए phone जरूरी है।"
+    },
+    {
+      "step_id": "st-12",
+      "action": "Review password reset",
+      "selector": null,
+      "expected_result": "New Password खाली छोड़ने पर password नहीं बदलता। जरूरत हो तो private तरीके से नया password दें।"
+    },
+    {
+      "step_id": "st-13",
+      "action": "Customise permissions",
+      "selector": null,
+      "expected_result": "Customise Permissions खोलिए। केवल काम के लिए जरूरी extra access दें।"
+    },
+    {
+      "step_id": "st-14",
+      "action": "Review permission groups",
+      "selector": null,
+      "expected_result": "Orders group खोलिए। From role base access है; Extra grant और Revoked अलग overrides हैं।"
+    },
+    {
+      "step_id": "st-15",
+      "action": "Save the member changes",
+      "selector": null,
+      "expected_result": "Save Changes दबाइए और list में member का सही role जाँचिए।"
+    },
+    {
+      "step_id": "st-16",
+      "action": "Change the role",
+      "selector": null,
+      "expected_result": "Member फिर Edit करें और Operations Manager role चुनिए। Role बदलने पर पुराने overrides reset होते हैं।"
+    },
+    {
+      "step_id": "st-17",
+      "action": "Save the new role",
+      "selector": null,
+      "expected_result": "Save Changes दबाइए। List में Operations Manager जाँचिए।"
+    },
+    {
+      "step_id": "st-18",
+      "action": "Open deactivation",
+      "selector": null,
+      "expected_result": "Actions से Deactivate चुनिए। काम छोड़ने पर access बंद करें; इसे permanent deletion न समझें।"
+    },
+    {
+      "step_id": "st-19",
+      "action": "Confirm deactivation",
+      "selector": null,
+      "expected_result": "Confirmation पढ़कर Deactivate दबाइए। अपने account को deactivate न करें।"
+    },
+    {
+      "step_id": "st-20",
+      "action": "Show deactivated members",
+      "selector": null,
+      "expected_result": "Show deactivated चालू करें।"
+    },
+    {
+      "step_id": "st-21",
+      "action": "Edit the inactive account",
+      "selector": null,
+      "expected_result": "Inactive member की actions से Edit खोलिए।"
+    },
+    {
+      "step_id": "st-22",
+      "action": "Restore account access",
+      "selector": null,
+      "expected_result": "Account active चालू करके Save Changes दबाइए। सही व्यक्ति को ही दोबारा access दें।"
+    },
+    {
+      "step_id": "st-23",
+      "action": "Unlock a login",
+      "selector": null,
+      "expected_result": "Actions में Unlock login से login lockout साफ होता है। यह password reset या permission change नहीं है।"
+    },
+    {
+      "step_id": "st-24",
+      "action": "Verify the restored member",
+      "selector": null,
+      "expected_result": "Page reload करके Active status और सही role verify करें।"
+    }
+  ]
+}

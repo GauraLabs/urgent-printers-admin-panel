@@ -1,0 +1,94 @@
+{
+  "feature": "system-settings-overview",
+  "title": "Settings Overview and Current Limits",
+  "intro": "Settings के sections समझिए और पहचानिए कि कौन से controls अभी website पर काम करते हैं।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "so-01",
+      "General: current limits"
+    ],
+    [
+      "so-05",
+      "Operations: live and demo controls"
+    ],
+    [
+      "so-07",
+      "Notification settings limits"
+    ],
+    [
+      "so-10",
+      "Payments: gateway limits and live COD"
+    ]
+  ],
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "steps": [
+    {
+      "id": "so-01",
+      "title": "Open Settings",
+      "text": "System में Settings खोलिए। ऊपर General, Operations, Notifications और Payments tabs हैं।"
+    },
+    {
+      "id": "so-02",
+      "title": "Review business details",
+      "text": "General में business name, GST और invoice address के fields हैं। इस version में इनकी live saving अभी उपलब्ध नहीं है।"
+    },
+    {
+      "id": "so-03",
+      "title": "Review support contacts",
+      "text": "Support Email और Phone के fields देखें। अभी यहाँ edit करने से customer website के contacts update होने का भरोसा न करें।"
+    },
+    {
+      "id": "so-04",
+      "title": "Review localisation",
+      "text": "Timezone और Currency choices दिखती हैं। इन demo fields से website की currency बदलने की कोशिश न करें।"
+    },
+    {
+      "id": "so-05",
+      "title": "Open Operations",
+      "text": "Operations tab खोलिए। Emergency Halt वास्तविक control है और तुरंत save होता है।"
+    },
+    {
+      "id": "so-06",
+      "title": "Review production fields",
+      "text": "Turnaround, capacity और artwork rules के बाकी fields अभी demo values दिखाते हैं। इन्हें लागू settings न समझें।"
+    },
+    {
+      "id": "so-07",
+      "title": "Open Notifications",
+      "text": "Notifications tab में customer और admin alert categories दिखाई देती हैं।"
+    },
+    {
+      "id": "so-08",
+      "title": "Review customer alert fields",
+      "text": "Order Confirmed, Dispatched और Artwork Approval के Email और SMS fields अभी live delivery settings से जुड़े नहीं हैं।"
+    },
+    {
+      "id": "so-09",
+      "title": "Find live staff preferences",
+      "text": "Staff alerts बदलने के लिए System का Notification Preferences page इस्तेमाल करें।"
+    },
+    {
+      "id": "so-10",
+      "title": "Open Payments",
+      "text": "Payments tab खोलिए। ऊपर Razorpay और Paytm fields अभी demo हैं; ये असली gateway configure नहीं करते।"
+    },
+    {
+      "id": "so-11",
+      "title": "Locate Cash on Delivery",
+      "text": "नीचे Cash on Delivery वास्तविक saved control है। COD enable और amount limits अलग Save COD settings से बदलती हैं।"
+    },
+    {
+      "id": "so-12",
+      "title": "Use the supported workflows",
+      "text": "अगले lessons में Emergency Halt और COD का actual customer view जाँचेंगे। बाकी demo fields के लिए administrator से संपर्क करें।"
+    }
+  ]
+}

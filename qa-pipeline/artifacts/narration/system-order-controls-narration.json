@@ -1,0 +1,75 @@
+{
+  "lines": [
+    {
+      "step_id": "intro",
+      "text": "Incident में नए orders रोकना, customer message जाँचना और checkout दोबारा शुरू करना सीखिए।"
+    },
+    {
+      "step_id": "oc-01",
+      "text": "Settings में Operations खोलिए। Emergency Halt केवल incident के दौरान इस्तेमाल करें।"
+    },
+    {
+      "step_id": "oc-02",
+      "text": "Halt नए checkouts को रोकता है। पहले से placed orders cancel नहीं होते और उनकी processing चलती रहती है।"
+    },
+    {
+      "step_id": "oc-03",
+      "text": "Emergency Halt switch चालू करें। Confirmation में customer message और internal reason भरेंगे।"
+    },
+    {
+      "step_id": "oc-04",
+      "text": "Customer को साफ और छोटा message दें। Internal details या private information यहाँ न लिखें।"
+    },
+    {
+      "step_id": "oc-05",
+      "text": "Internal reason staff के लिए है। Incident और जिम्मेदार team का context लिखिए।"
+    },
+    {
+      "step_id": "oc-06",
+      "text": "Halt Orders दबाइए। यह तुरंत save होता है; नीचे वाले Save Changes का इंतजार नहीं करता।"
+    },
+    {
+      "step_id": "oc-07",
+      "text": "Admin में BLOCKED status और customer-facing message जाँचिए।"
+    },
+    {
+      "step_id": "oc-08",
+      "text": "Customer website खोलिए। Public notice में वही message दिखना चाहिए; internal reason public नहीं होना चाहिए।"
+    },
+    {
+      "step_id": "oc-09",
+      "text": "Checkout में customer को paused message मिलता है और नया order place नहीं होना चाहिए।"
+    },
+    {
+      "step_id": "oc-10",
+      "text": "Admin Operations में वापस जाएँ। Incident ठीक होने की पुष्टि करने के बाद ही orders resume करें।"
+    },
+    {
+      "step_id": "oc-11",
+      "text": "Halt switch बंद करें। Resume confirmation ध्यान से पढ़िए।"
+    },
+    {
+      "step_id": "oc-12",
+      "text": "Resume Orders दबाइए। अब नए checkouts फिर से स्वीकार हो सकते हैं।"
+    },
+    {
+      "step_id": "oc-13",
+      "text": "Storefront reload करके paused notice हटना जाँचिए।"
+    },
+    {
+      "step_id": "oc-14",
+      "text": "Checkout फिर खोलिए। Pause message हटना confirm करें; test के लिए अनावश्यक order न बनाएँ।"
+    },
+    {
+      "step_id": "oc-15",
+      "text": "Admin reload करके Halt off जाँचिए। सामान्य turnaround fields अभी demo हैं; उनसे incident control नहीं बदलता।"
+    },
+    {
+      "step_id": "outro",
+      "text": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।"
+    }
+  ],
+  "feature_name": "system-order-controls",
+  "language": "hinglish",
+  "voice_persona": "Calm clear male Hindi-English trainer"
+}

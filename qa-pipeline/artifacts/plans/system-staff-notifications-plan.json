@@ -1,0 +1,132 @@
+{
+  "feature_found": true,
+  "feature_name": "Staff Notification Preferences",
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "business_goal": "Teach website operators to manage staff access, saved settings, monitoring and incident follow-up; explicitly identify demo-only settings.",
+  "user_goal": "किस staff member को किस order event का alert मिलेगा, यह configure और verify करना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Choose an event",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Choose staff channels",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Status-change alerts",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Verify and turn off a channel",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Some settings forms are demo-only; never present those as persistent controls.",
+      "existing_validation": "Real saved staff/preferences/COD/order-halt and pricing resolution responses; reload and storefront checks.",
+      "risk_note": "Use owned development fixtures. Health states are observed, not simulated. Do not claim alert delivery or repair from a toggle."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "sn-01",
+      "action": "Open Notification Preferences",
+      "selector": null,
+      "expected_result": "System में Notification Preferences खोलिए। यह staff alerts की अलग settings है।"
+    },
+    {
+      "step_id": "sn-02",
+      "action": "Choose the new-order event",
+      "selector": null,
+      "expected_result": "New Order Placed tab चुनिए। हर event की preferences अलग save होती हैं।"
+    },
+    {
+      "step_id": "sn-03",
+      "action": "Locate the team member",
+      "selector": null,
+      "expected_result": "Staff row पहचानिए। सही व्यक्ति के In-App, Email, SMS, WhatsApp और Push columns देखें।"
+    },
+    {
+      "step_id": "sn-04",
+      "action": "Enable In-App alerts",
+      "selector": null,
+      "expected_result": "In-App चालू करें। हर toggle तुरंत save होता है; अलग Save button नहीं है।"
+    },
+    {
+      "step_id": "sn-05",
+      "action": "Enable email alerts",
+      "selector": null,
+      "expected_result": "Email चालू करें। चुने हुए event के email alerts इस member को मिलेंगे।"
+    },
+    {
+      "step_id": "sn-06",
+      "action": "Check phone requirements",
+      "selector": null,
+      "expected_result": "Phone नहीं होने पर SMS और WhatsApp disabled हैं। पहले Staff में सही phone जोड़िए।"
+    },
+    {
+      "step_id": "sn-07",
+      "action": "Enable SMS for a phone contact",
+      "selector": null,
+      "expected_result": "Phone वाले member की SMS preference चालू करें। Number और delivery service दोनों सही होने चाहिए।"
+    },
+    {
+      "step_id": "sn-08",
+      "action": "Enable WhatsApp alerts",
+      "selector": null,
+      "expected_result": "WhatsApp toggle अलग से चालू करें। यह Email या SMS को अपने आप नहीं बदलता।"
+    },
+    {
+      "step_id": "sn-09",
+      "action": "Review Push alerts",
+      "selector": null,
+      "expected_result": "Push के लिए device permission और registered device भी जरूरी है। Toggle अकेले delivery की guarantee नहीं है।"
+    },
+    {
+      "step_id": "sn-10",
+      "action": "Choose status-change alerts",
+      "selector": null,
+      "expected_result": "Order Status Changed tab खोलिए। New Order की choices यहाँ अपने आप copy नहीं होतीं।"
+    },
+    {
+      "step_id": "sn-11",
+      "action": "Enable status-change In-App",
+      "selector": null,
+      "expected_result": "इस event के लिए In-App चालू करें। केवल जरूरी milestones की alerts रखें।"
+    },
+    {
+      "step_id": "sn-12",
+      "action": "Enable status-change email",
+      "selector": null,
+      "expected_result": "Order Status Changed के लिए Email चालू करें।"
+    },
+    {
+      "step_id": "sn-13",
+      "action": "Verify saved preferences",
+      "selector": null,
+      "expected_result": "Page reload करके दोनों events की saved settings जाँचिए।"
+    },
+    {
+      "step_id": "sn-14",
+      "action": "Turn off an unwanted alert",
+      "selector": null,
+      "expected_result": "New Order Placed में Email बंद करें। यह member का account या दूसरे channels बंद नहीं करता।"
+    },
+    {
+      "step_id": "sn-15",
+      "action": "Verify the disabled channel",
+      "selector": null,
+      "expected_result": "Reload के बाद Email off और In-App on confirm करें। जरूरत बदलने पर इन्हीं controls से restore करें।"
+    }
+  ]
+}

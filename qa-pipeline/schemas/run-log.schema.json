@@ -50,6 +50,7 @@
           },
           "timestamp_ms": { "type": "number", "minimum": 0 },
           "screenshot_path": { "type": "string", "minLength": 1 },
+          "before_screenshot_path": { "type": "string", "minLength": 1 },
           "status": { "type": "string", "enum": ["pass", "fail"] },
           "error": { "type": ["string", "null"] },
           "typed_text": {

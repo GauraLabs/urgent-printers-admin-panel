@@ -1,0 +1,254 @@
+{
+  "feature": "product-lifecycle",
+  "title": "Product Lifecycle",
+  "intro": "इस tutorial में product draft से publishing, storefront order, editing और retirement तक पूरा lifecycle सीखेंगे।",
+  "outro": "अब product lifecycle पूरा है। Source files बदलकर future UI updates के बाद यही tutorial फिर generate कर सकते हैं।",
+  "chapters": [
+    [
+      "pr-01",
+      "Create and configure"
+    ],
+    [
+      "pr-13",
+      "Pricing and order limits"
+    ],
+    [
+      "pr-21",
+      "Draft and publish"
+    ],
+    [
+      "pr-24",
+      "Storefront configuration"
+    ],
+    [
+      "pr-31",
+      "Checkout and order"
+    ],
+    [
+      "pr-38",
+      "Update and retire"
+    ]
+  ],
+  "steps": [
+    {
+      "id": "pr-01",
+      "title": "Product catalogue",
+      "text": "Products खोलिए। यहीं से draft, live और retired products manage करते हैं।"
+    },
+    {
+      "id": "pr-02",
+      "title": "Add Product",
+      "text": "Add Product चुनिए। हम category tutorial वाली Foil Invitations में नया product बनाएँगे।"
+    },
+    {
+      "id": "pr-03",
+      "title": "Product name",
+      "text": "Product Name में Foil Wedding Invitations लिखिए।"
+    },
+    {
+      "id": "pr-04",
+      "title": "Product URL",
+      "text": "Auto-generated slug verify कीजिए। Published URL बदलना हो तभी इसे edit करें।"
+    },
+    {
+      "id": "pr-05",
+      "title": "Short description",
+      "text": "Short Description में product की सबसे उपयोगी बात लिखिए।"
+    },
+    {
+      "id": "pr-06",
+      "title": "Full description",
+      "text": "Full Description में material, printing और customization की detail दीजिए।"
+    },
+    {
+      "id": "pr-07",
+      "title": "Assign category",
+      "text": "सबसे specific category चुनिए। यहाँ Foil Invitations subcategory सही है।"
+    },
+    {
+      "id": "pr-08",
+      "title": "Badge and tags",
+      "text": "New badge और relevant tags रखिए, ताकि catalogue में product की पहचान साफ़ रहे।"
+    },
+    {
+      "id": "pr-09",
+      "title": "Product photographs",
+      "text": "Product की तीन clear images upload कीजिए। पहली image मुख्य product photo रहेगी।"
+    },
+    {
+      "id": "pr-10",
+      "title": "Print sizes",
+      "text": "Print Specifications में size और dimensions verify कीजिए। Default option customer को पहले select मिलेगा।"
+    },
+    {
+      "id": "pr-11",
+      "title": "Paper options",
+      "text": "Paper type में material और GSM verify करें। Active option ही customer चुन सकेगा।"
+    },
+    {
+      "id": "pr-12",
+      "title": "Finish multipliers",
+      "text": "Finish और sides के price multipliers देखें। Premium option से configured price बढ़ सकता है।"
+    },
+    {
+      "id": "pr-13",
+      "title": "Quantity tiers",
+      "text": "Pricing tiers quantity के हिसाब से per-unit rate तय करते हैं। सौ pieces पर twelve rupees रखते हैं।"
+    },
+    {
+      "id": "pr-14",
+      "title": "Bulk pricing",
+      "text": "दो सौ पचास pieces पर nine rupees और पाँच सौ पर seven rupees हैं। Bulk quantity से unit price कम होता है।"
+    },
+    {
+      "id": "pr-15",
+      "title": "Listing quantity",
+      "text": "Listing quantity one hundred रखिए। Storefront card इसी quantity का price दिखाएगा।"
+    },
+    {
+      "id": "pr-16",
+      "title": "Order limits",
+      "text": "Minimum one hundred और maximum twenty-five hundred रखिए। Customer इन्हीं limits में order कर सकेगा।"
+    },
+    {
+      "id": "pr-17",
+      "title": "Turnaround",
+      "text": "Standard turnaround five days है। Express और Rush तभी enable करें जब वह service उपलब्ध हो।"
+    },
+    {
+      "id": "pr-18",
+      "title": "Inventory setting",
+      "text": "Made-to-order product के लिए inventory tracking off रखते हैं। Limited stock हो तो इसे on करके stock भरिए।"
+    },
+    {
+      "id": "pr-19",
+      "title": "Product SEO",
+      "text": "SEO Settings में title और description लिखिए। Search result के लिए product-specific copy रखें।"
+    },
+    {
+      "id": "pr-20",
+      "title": "Customization mode",
+      "text": "इस sample में customization mode None है। Artwork या template चाहिए तो उसका mode अलग चुनना होगा।"
+    },
+    {
+      "id": "pr-21",
+      "title": "Save as draft",
+      "text": "पहले Save as Draft कीजिए। Draft में details review कर सकते हैं, customer अभी order नहीं कर सकता।"
+    },
+    {
+      "id": "pr-22",
+      "title": "Draft is private",
+      "text": "Saved draft verify कीजिए। Public product API में यह अभी available नहीं है।"
+    },
+    {
+      "id": "pr-23",
+      "title": "Publish the product",
+      "text": "Draft edit खोलकर Active on कीजिए और Save Changes करें। अब product publish हो गया है।"
+    },
+    {
+      "id": "pr-24",
+      "title": "Browse the category",
+      "text": "Product publish होने पर parent page में subcategory tile आ जाती है। इसे खोलकर नया product card और listing price verify कीजिए।"
+    },
+    {
+      "id": "pr-25",
+      "title": "Open product details",
+      "text": "Product खोलिए। वही images, description और print options customer को मिल रहे हैं।"
+    },
+    {
+      "id": "pr-26",
+      "title": "Default configuration",
+      "text": "Default configuration में one hundred pieces हैं। Total twelve hundred rupees verify कीजिए।"
+    },
+    {
+      "id": "pr-27",
+      "title": "Choose bulk quantity",
+      "text": "Quantity two hundred fifty करने पर tier rate nine rupees होता है। Total twenty-two hundred fifty है।"
+    },
+    {
+      "id": "pr-28",
+      "title": "Choose a premium finish",
+      "text": "Premium finish चुनिए। Multiplier लागू होने पर total बढ़ता है; फिर standard finish वापस चुनते हैं।"
+    },
+    {
+      "id": "pr-29",
+      "title": "Add to cart",
+      "text": "Configuration verify करके Add to Cart कीजिए। Cart में selected options और quantity जाएँगे।"
+    },
+    {
+      "id": "pr-30",
+      "title": "Cart configuration",
+      "text": "Cart खोलिए और product name, quantity और twenty-two hundred fifty subtotal verify कीजिए।"
+    },
+    {
+      "id": "pr-31",
+      "title": "Proceed to checkout",
+      "text": "Proceed to Checkout चुनिए। इस recording में dedicated development customer इस्तेमाल हो रहा है।"
+    },
+    {
+      "id": "pr-32",
+      "title": "Delivery address",
+      "text": "Saved delivery address चुनकर Continue to Payment कीजिए।"
+    },
+    {
+      "id": "pr-33",
+      "title": "Cash on Delivery",
+      "text": "Cash on Delivery चुनते हैं। इस tutorial में कोई online payment charge नहीं होगा।"
+    },
+    {
+      "id": "pr-34",
+      "title": "Authoritative review",
+      "text": "Review Order पर server-confirmed prices verify कीजिए। Place Order से पहले total दोबारा देखना ज़रूरी है।"
+    },
+    {
+      "id": "pr-35",
+      "title": "Place development order",
+      "text": "Place Order कीजिए। यह real development order है, किसी external fulfilment provider को नहीं जाएगा।"
+    },
+    {
+      "id": "pr-36",
+      "title": "Order confirmation",
+      "text": "Confirmation में order number और product verify कीजिए। Customer account में order history भी available है।"
+    },
+    {
+      "id": "pr-37",
+      "title": "Admin order review",
+      "text": "Admin order खोलिए। Product snapshot, quantity और selected configuration यहाँ verify करें।"
+    },
+    {
+      "id": "pr-38",
+      "title": "Edit the live product",
+      "text": "अब live product की Short Description update करते हैं। Existing slug को unchanged रखिए।"
+    },
+    {
+      "id": "pr-39",
+      "title": "Verify storefront update",
+      "text": "उसी storefront URL पर updated description verify कीजिए। नया page link बनाने की ज़रूरत नहीं पड़ी।"
+    },
+    {
+      "id": "pr-40",
+      "title": "Retire the product",
+      "text": "Product को hide करने के लिए Active off करें और Save as Draft चुनिए। इससे नया customer इसे purchase नहीं कर पाएगा।"
+    },
+    {
+      "id": "pr-41",
+      "title": "Verify retirement",
+      "text": "Public catalogue से product हट गया है। Existing order का saved product snapshot फिर भी बना रहता है।"
+    },
+    {
+      "id": "pr-42",
+      "title": "Keep the order history",
+      "text": "Admin order में original product name, quantity और price अब भी verify कर सकते हैं।"
+    },
+    {
+      "id": "pr-43",
+      "title": "Cancel the demo order",
+      "text": "Recording का development order cancel कीजिए, ताकि इसे fulfilment के लिए आगे न बढ़ाया जाए।"
+    },
+    {
+      "id": "pr-44",
+      "title": "Complete the lifecycle",
+      "text": "Order Cancelled है और product inactive है। Category, publish, purchase, update और retirement का पूरा lifecycle verify हो गया।"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "lines": [
+    {
+      "step_id": "intro",
+      "text": "Price mismatch ढूँढना, details समझना, resolution note जोड़ना और जरूरत पर reopen करना सीखिए।"
+    },
+    {
+      "step_id": "pd-01",
+      "text": "System Health में Pricing Diagnostics खोलिए। Training example में storefront और server amounts अलग हैं।"
+    },
+    {
+      "step_id": "pd-02",
+      "text": "Last seven days की cause counts और unexplained items पढ़िए। Likely cause केवल जाँच की शुरुआत है।"
+    },
+    {
+      "step_id": "pd-03",
+      "text": "Status में Unresolved चुनिए ताकि pending cases दिखें।"
+    },
+    {
+      "step_id": "pd-04",
+      "text": "Stage में Preview चुनिए। Preview और Order create अलग moments हैं।"
+    },
+    {
+      "step_id": "pd-05",
+      "text": "Cause में Unexplained चुनिए। केवल label देखकर customer या staff को जिम्मेदार न ठहराएँ।"
+    },
+    {
+      "step_id": "pd-06",
+      "text": "Training example की row खोलिए। Details में दोनों calculations और context हैं।"
+    },
+    {
+      "step_id": "pd-07",
+      "text": "Client और server के unit, total और Difference की तुलना करें। Difference का sign और quantity दोनों पढ़ें।"
+    },
+    {
+      "step_id": "pd-08",
+      "text": "Options, recorded time और request context देखें। Resolve करने से product price या customer payment नहीं बदलता।"
+    },
+    {
+      "step_id": "pd-09",
+      "text": "जाँच और corrective action का छोटा note लिखिए। पहले actual issue ठीक होने की पुष्टि करें।"
+    },
+    {
+      "step_id": "pd-10",
+      "text": "Mark resolved दबाइए। यह case tracking update है; automatic refund या price fix नहीं।"
+    },
+    {
+      "step_id": "pd-11",
+      "text": "Status में Resolved चुनिए और वही case खोलिए।"
+    },
+    {
+      "step_id": "pd-12",
+      "text": "Saved note, resolver और resolved time verify करें।"
+    },
+    {
+      "step_id": "pd-13",
+      "text": "Issue वापस आए तो Unresolve दबाइए। History बचती है और case फिर open होता है।"
+    },
+    {
+      "step_id": "pd-14",
+      "text": "Status में Unresolved चुनिए। वही case दोबारा दिखना confirm करें।"
+    },
+    {
+      "step_id": "pd-15",
+      "text": "Case खोलकर follow-up note लिखिए। Clear और factual details रखें।"
+    },
+    {
+      "step_id": "pd-16",
+      "text": "Problem ठीक होने के बाद Mark resolved करें। Summary में historical occurrence मिटता नहीं है।"
+    },
+    {
+      "step_id": "pd-17",
+      "text": "Page reload करके Resolved filter में saved state और note जाँचिए।"
+    },
+    {
+      "step_id": "outro",
+      "text": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।"
+    }
+  ],
+  "feature_name": "system-pricing-diagnostics",
+  "language": "hinglish",
+  "voice_persona": "Calm clear male Hindi-English trainer"
+}

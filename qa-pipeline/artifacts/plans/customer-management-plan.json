@@ -1,0 +1,186 @@
+{
+  "feature_found": true,
+  "feature_name": "Customer Management",
+  "source_files": [
+    "src/features/customers/components/CustomersTable.tsx",
+    "src/features/customers/components/CustomerDetail/CustomerDetailClient.tsx",
+    "src/features/reviews/components/ReviewsTable.tsx",
+    "src/features/reviews/components/ReplyDialog.tsx",
+    "../urgent-printers-frontend/app/account/orders/[id]/review/page.tsx",
+    "../urgent-printers-frontend/features/products/ReviewsSection.tsx"
+  ],
+  "business_goal": "Teach operators to identify customers, inspect account history, ban and reinstate access, and moderate product reviews with honest storefront verification.",
+  "user_goal": "Customer ढूँढना, उसकी details समझना और जरूरत पर account ban या reinstate करना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Find and identify a customer",
+      "route_or_state": "/customers, /reviews and customer order/product pages"
+    },
+    {
+      "step": "Profile, orders and addresses",
+      "route_or_state": "/customers, /reviews and customer order/product pages"
+    },
+    {
+      "step": "Ban and verify access",
+      "route_or_state": "/customers, /reviews and customer order/product pages"
+    },
+    {
+      "step": "Reinstate and verify",
+      "route_or_state": "/customers, /reviews and customer order/product pages"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Use only the owned development buyer and delivered order; customer profile/address editing and review edit/delete buttons are not exposed here.",
+      "existing_validation": "Saved ban/reinstate, denied and restored login, review status/reply round trips and public approved-only visibility.",
+      "risk_note": "Do not send mail or claim notification delivery. Store reply is currently saved in admin but absent from storefront rendering."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "cm-01",
+      "action": "Open Customers",
+      "selector": null,
+      "expected_result": "Customers menu में Customers खोलिए। Account customer website से बनता है; इस page पर नया account बनाने का control नहीं है।"
+    },
+    {
+      "step_id": "cm-02",
+      "action": "Read the customer columns",
+      "selector": null,
+      "expected_result": "Customer, Status, Orders, Total Spent और Joined columns पढ़िए। सही customer पहचानने के बाद ही action लें।"
+    },
+    {
+      "step_id": "cm-03",
+      "action": "Search by email",
+      "selector": null,
+      "expected_result": "Search में customer का email लिखिए। मिलते-जुलते नामों में email से पहचान confirm करें।"
+    },
+    {
+      "step_id": "cm-04",
+      "action": "Filter active customers",
+      "selector": null,
+      "expected_result": "Status में Active चुनिए। Search और status filters साथ में लागू होते हैं।"
+    },
+    {
+      "step_id": "cm-05",
+      "action": "Open the customer profile",
+      "selector": null,
+      "expected_result": "Customer के नाम पर click करके उसका profile खोलिए।"
+    },
+    {
+      "step_id": "cm-06",
+      "action": "Review identity and verification",
+      "selector": null,
+      "expected_result": "Identity में नाम, email verification, phone और status जाँचिए। यह admin profile view है; यहाँ contact edit नहीं होता।"
+    },
+    {
+      "step_id": "cm-07",
+      "action": "Read the order summary",
+      "selector": null,
+      "expected_result": "Order Summary में orders और amounts देखें। Total Spent को settled collection न मानें; payment और refunds अलग जाँचें।"
+    },
+    {
+      "step_id": "cm-08",
+      "action": "Open order history",
+      "selector": null,
+      "expected_result": "Orders tab खोलिए। Status, amount और order date से customer की enquiry समझें।"
+    },
+    {
+      "step_id": "cm-09",
+      "action": "Open a related order",
+      "selector": null,
+      "expected_result": "संबंधित order number खोलिए। आगे का action उसी order के actual status के अनुसार करें।"
+    },
+    {
+      "step_id": "cm-10",
+      "action": "Return to the customer",
+      "selector": null,
+      "expected_result": "Customer profile पर वापस आएँ। यह lesson customer management पर है; order fulfilment अलग lesson में है।"
+    },
+    {
+      "step_id": "cm-11",
+      "action": "Review saved addresses",
+      "selector": null,
+      "expected_result": "Addresses tab में saved address और Default label देखें। यहाँ address edit करने का control नहीं है।"
+    },
+    {
+      "step_id": "cm-12",
+      "action": "Review customer activity",
+      "selector": null,
+      "expected_result": "Activity में orders और reviews की available history देखें। यह हर login और profile change की पूरी audit list नहीं है।"
+    },
+    {
+      "step_id": "cm-13",
+      "action": "Review the email shortcut",
+      "selector": null,
+      "expected_result": "Send Email एक mail-app shortcut है। Email address और message अलग से जाँचें; यहाँ से automatic message भेजने का दावा न करें।"
+    },
+    {
+      "step_id": "cm-14",
+      "action": "Open ban confirmation",
+      "selector": null,
+      "expected_result": "Ban Customer के लिए सही permission और उचित कारण जरूरी है। सही account की confirmation खोलिए।"
+    },
+    {
+      "step_id": "cm-15",
+      "action": "Read the ban confirmation",
+      "selector": null,
+      "expected_result": "Ban sign-in रोकता है, पुराने orders cancel नहीं करता। Confirmation में email लिखा है, पर automatic email अभी नहीं भेजता।"
+    },
+    {
+      "step_id": "cm-16",
+      "action": "Confirm the account ban",
+      "selector": null,
+      "expected_result": "Ban Customer confirm करें। Profile में Banned status verify करें।"
+    },
+    {
+      "step_id": "cm-17",
+      "action": "Find the banned account",
+      "selector": null,
+      "expected_result": "Customers list में Banned filter से वही account खोजिए। History अभी भी मौजूद है।"
+    },
+    {
+      "step_id": "cm-18",
+      "action": "Verify blocked sign-in",
+      "selector": null,
+      "expected_result": "Customer sign-in असफल दिखना जाँचिए। UI generic error दिखाता है; Banned स्थिति admin में confirm करें।"
+    },
+    {
+      "step_id": "cm-19",
+      "action": "Return to the banned profile",
+      "selector": null,
+      "expected_result": "Admin में उसी customer का profile खोलिए। Reinstate करने से पहले account identity फिर confirm करें।"
+    },
+    {
+      "step_id": "cm-20",
+      "action": "Open reinstatement confirmation",
+      "selector": null,
+      "expected_result": "Reinstate Customer दबाइए। इससे account access वापस मिलेगा।"
+    },
+    {
+      "step_id": "cm-21",
+      "action": "Confirm reinstatement",
+      "selector": null,
+      "expected_result": "Reinstate confirm करें और Active status जाँचिए।"
+    },
+    {
+      "step_id": "cm-22",
+      "action": "Verify restored customer access",
+      "selector": null,
+      "expected_result": "Customer website पर sign-in फिर सफल होना confirm करें। यह password reset नहीं करता।"
+    },
+    {
+      "step_id": "cm-23",
+      "action": "Verify saved active status",
+      "selector": null,
+      "expected_result": "Admin page reload करके Active status जाँचिए। केवल toast देखकर action पूरा न मानें।"
+    },
+    {
+      "step_id": "cm-24",
+      "action": "Clear filters and finish",
+      "selector": null,
+      "expected_result": "Customers list में search और status साफ करें। Existing orders और account history को अलग-अलग संभालें।"
+    }
+  ]
+}

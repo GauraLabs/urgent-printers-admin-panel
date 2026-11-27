@@ -1,0 +1,177 @@
+{
+  "feature_name": "Content Announcements",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 73500,
+  "shots": [
+    {
+      "step_id": "an-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Announcements",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "an-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Write the message",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose the link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Write link text",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose the background",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose the text colour",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review the preview",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-08",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Turn on visibility",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-09",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save the announcement",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the storefront bar",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Test the announcement link",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Update the message",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-13",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add a countdown",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-14",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Set the deadline in IST",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-15",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save and check the timer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify the saved deadline",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "See an expired countdown",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-18",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Restore a normal message",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-19",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Hide the announcement",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-20",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify it is hidden",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "an-21",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Publish it again",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

@@ -1,0 +1,370 @@
+{
+  "feature_name": "Product Lifecycle",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 154000,
+  "shots": [
+    {
+      "step_id": "pr-01",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Product catalogue",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "pr-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Add Product",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Product name",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Product URL",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Short description",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Full description",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Assign category",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Badge and tags",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Product photographs",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Print sizes",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Paper options",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Finish multipliers",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-13",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Quantity tiers",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-14",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Bulk pricing",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-15",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Listing quantity",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Order limits",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Turnaround",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-18",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Inventory setting",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-19",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Product SEO",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-20",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Customization mode",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-21",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save as draft",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-22",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Draft is private",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-23",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Publish the product",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-24",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Browse the category",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-25",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open product details",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-26",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Default configuration",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-27",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose bulk quantity",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-28",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose a premium finish",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-29",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Add to cart",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-30",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Cart configuration",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-31",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Proceed to checkout",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-32",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Delivery address",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-33",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Cash on Delivery",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-34",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Authoritative review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-35",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Place development order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-36",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Order confirmation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-37",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Admin order review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-38",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Edit the live product",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-39",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify storefront update",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-40",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Retire the product",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-41",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify retirement",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-42",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Keep the order history",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-43",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Cancel the demo order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pr-44",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Complete the lifecycle",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": [
+    {
+      "step_id": "pr-30",
+      "run_timestamp": "2026-11-24T18:27:42.056Z",
+      "messages": [
+        "Failed to load resource: net::ERR_NETWORK_CHANGED"
+      ],
+      "reason": "Reviewed the successful capture trace: only the Microsoft Clarity analytics beacon at https://q.clarity.ms/collect failed with ERR_NETWORK_CHANGED. Real cart totals, checkout, order creation and all 44 actions passed. No business API failed in this step."
+    }
+  ]
+}

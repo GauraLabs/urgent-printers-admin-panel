@@ -1,0 +1,94 @@
+{
+  "feature": "system-activity-log",
+  "title": "Activity Log and Audit",
+  "intro": "किसने क्या बदला, filters से ढूँढना और audit report export करना सीखिए।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "al-01",
+      "Read the audit trail"
+    ],
+    [
+      "al-03",
+      "Filter administrator and action"
+    ],
+    [
+      "al-07",
+      "Export loaded rows"
+    ],
+    [
+      "al-09",
+      "Reset filters and review history"
+    ]
+  ],
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "steps": [
+    {
+      "id": "al-01",
+      "title": "Open Activity Log",
+      "text": "System में Activity Log खोलिए। यहाँ website पर हुए actions की history मिलती है।"
+    },
+    {
+      "id": "al-02",
+      "title": "Read the audit columns",
+      "text": "Actor, Action, Resource और Time पढ़िए। Actor काम करने वाला व्यक्ति है; Resource बदली हुई चीज है।"
+    },
+    {
+      "id": "al-03",
+      "title": "Filter by administrator",
+      "text": "All admins से administrator चुनिए। इससे उसी व्यक्ति के actions दिखेंगे।"
+    },
+    {
+      "id": "al-04",
+      "title": "Choose staff resources",
+      "text": "All resources में admin user चुनिए। Staff changes को अलग देख सकते हैं।"
+    },
+    {
+      "id": "al-05",
+      "title": "Filter staff updates",
+      "text": "All actions में Staff updated चुनिए। बदले हुए fields का before और after देखें।"
+    },
+    {
+      "id": "al-06",
+      "title": "Read the change details",
+      "text": "Resource के नीचे role या active status जैसी changes पढ़िए। यह history है; यहाँ edit नहीं होता।"
+    },
+    {
+      "id": "al-07",
+      "title": "Export the filtered rows",
+      "text": "Export CSV दबाइए। Export में इस समय loaded rows आती हैं, पूरी unlimited history नहीं।"
+    },
+    {
+      "id": "al-08",
+      "title": "Inspect the export",
+      "text": "Downloaded CSV को report के रूप में सुरक्षित रखें। अगला page हो तो उसका export अलग चाहिए।"
+    },
+    {
+      "id": "al-09",
+      "title": "Clear the action filter",
+      "text": "All actions वापस चुनिए ताकि दूसरे staff events भी दिखें।"
+    },
+    {
+      "id": "al-10",
+      "title": "Review deactivation history",
+      "text": "Staff deactivated filter से account बंद करने का record जाँचिए।"
+    },
+    {
+      "id": "al-11",
+      "title": "Reset the filters",
+      "text": "All admins, All resources और All actions वापस रखें।"
+    },
+    {
+      "id": "al-12",
+      "title": "Review pagination",
+      "text": "नीचे pagination से पुराने records देखें। Audit history को delete या बदलने का control यहाँ नहीं है।"
+    }
+  ]
+}

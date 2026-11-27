@@ -1,0 +1,196 @@
+{
+  "feature_found": true,
+  "feature_name": "Customer Reviews Lifecycle",
+  "source_files": [
+    "src/features/customers/components/CustomersTable.tsx",
+    "src/features/customers/components/CustomerDetail/CustomerDetailClient.tsx",
+    "src/features/reviews/components/ReviewsTable.tsx",
+    "src/features/reviews/components/ReplyDialog.tsx",
+    "../urgent-printers-frontend/app/account/orders/[id]/review/page.tsx",
+    "../urgent-printers-frontend/features/products/ReviewsSection.tsx"
+  ],
+  "business_goal": "Teach operators to identify customers, inspect account history, ban and reinstate access, and moderate product reviews with honest storefront verification.",
+  "user_goal": "Delivered order से review आना, moderation, reply और public visibility जाँचना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Submit a customer review",
+      "route_or_state": "/customers, /reviews and customer order/product pages"
+    },
+    {
+      "step": "Find and verify pending feedback",
+      "route_or_state": "/customers, /reviews and customer order/product pages"
+    },
+    {
+      "step": "Approve and publish",
+      "route_or_state": "/customers, /reviews and customer order/product pages"
+    },
+    {
+      "step": "Reply and update the response",
+      "route_or_state": "/customers, /reviews and customer order/product pages"
+    },
+    {
+      "step": "Reject, hide and restore",
+      "route_or_state": "/customers, /reviews and customer order/product pages"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Use only the owned development buyer and delivered order; customer profile/address editing and review edit/delete buttons are not exposed here.",
+      "existing_validation": "Saved ban/reinstate, denied and restored login, review status/reply round trips and public approved-only visibility.",
+      "risk_note": "Do not send mail or claim notification delivery. Store reply is currently saved in admin but absent from storefront rendering."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "cr-01",
+      "action": "Open a delivered customer order",
+      "selector": null,
+      "expected_result": "Customer account में delivered order खोलिए। उसी customer और product की eligible purchase से review देना चाहिए।"
+    },
+    {
+      "step_id": "cr-02",
+      "action": "Open Write a Review",
+      "selector": null,
+      "expected_result": "Write a Review खोलिए। Pending delivery या दूसरे customer का order review के लिए eligible नहीं है।"
+    },
+    {
+      "step_id": "cr-03",
+      "action": "Select a star rating",
+      "selector": null,
+      "expected_result": "इस example में चार stars चुनिए। Rating customer के अपने अनुभव की होनी चाहिए।"
+    },
+    {
+      "step_id": "cr-04",
+      "action": "Write the review title",
+      "selector": null,
+      "expected_result": "छोटा और स्पष्ट review title लिखिए।"
+    },
+    {
+      "step_id": "cr-05",
+      "action": "Write the customer feedback",
+      "selector": null,
+      "expected_result": "Print quality और अनुभव का feedback लिखिए। इस form में कम से कम बीस characters चाहिए।"
+    },
+    {
+      "step_id": "cr-06",
+      "action": "Submit the review",
+      "selector": null,
+      "expected_result": "Submit Review दबाइए। Thank You और awaiting approval message जाँचिए; अभी यह public नहीं हुआ।"
+    },
+    {
+      "step_id": "cr-07",
+      "action": "Open admin Reviews",
+      "selector": null,
+      "expected_result": "Admin में Customers menu का Reviews खोलिए। यह product reviews हैं, homepage Testimonials से अलग।"
+    },
+    {
+      "step_id": "cr-08",
+      "action": "Filter pending reviews",
+      "selector": null,
+      "expected_result": "Status में Pending चुनिए। सही customer, product और linked order पहचानें।"
+    },
+    {
+      "step_id": "cr-09",
+      "action": "Read the submitted feedback",
+      "selector": null,
+      "expected_result": "Stars और review text पढ़िए। केवल कम rating होने के कारण genuine feedback reject न करें।"
+    },
+    {
+      "step_id": "cr-10",
+      "action": "Check the linked order",
+      "selector": null,
+      "expected_result": "Review का order number खोलकर customer और delivered status confirm करें।"
+    },
+    {
+      "step_id": "cr-11",
+      "action": "Check unpublished visibility",
+      "selector": null,
+      "expected_result": "Product page के Reviews tab में pending feedback public नहीं दिखना चाहिए।"
+    },
+    {
+      "step_id": "cr-12",
+      "action": "Approve the review",
+      "selector": null,
+      "expected_result": "Moderate Reviews permission वाले staff सही row का green approve icon दबाएँ।"
+    },
+    {
+      "step_id": "cr-13",
+      "action": "Verify the approved list",
+      "selector": null,
+      "expected_result": "Approved filter में वही review और status जाँचिए।"
+    },
+    {
+      "step_id": "cr-14",
+      "action": "Verify the published review",
+      "selector": null,
+      "expected_result": "Storefront reload करके Customer Reviews में title, feedback, stars और Verified Purchase देखें।"
+    },
+    {
+      "step_id": "cr-15",
+      "action": "Open the reply dialog",
+      "selector": null,
+      "expected_result": "Admin में message icon से Reply to Review खोलिए। Reply देने से rating नहीं बदलती।"
+    },
+    {
+      "step_id": "cr-16",
+      "action": "Write a professional reply",
+      "selector": null,
+      "expected_result": "Customer को छोटा और विनम्र official response लिखिए। Private order या payment details public reply में न डालें।"
+    },
+    {
+      "step_id": "cr-17",
+      "action": "Save the official reply",
+      "selector": null,
+      "expected_result": "Post Reply दबाइए। Replied column में Yes जाँचिए।"
+    },
+    {
+      "step_id": "cr-18",
+      "action": "Verify the saved reply",
+      "selector": null,
+      "expected_result": "Reply dialog फिर खोलकर saved text confirm करें। इस version के storefront पर store reply अभी display नहीं होता।"
+    },
+    {
+      "step_id": "cr-19",
+      "action": "Update the official reply",
+      "selector": null,
+      "expected_result": "जरूरत हो तो उसी dialog में response सुधारिए। Customer के original feedback को admin यहाँ edit नहीं करता।"
+    },
+    {
+      "step_id": "cr-20",
+      "action": "Save the corrected response",
+      "selector": null,
+      "expected_result": "Post Reply फिर दबाकर corrected response save करें और दोबारा खोलकर verify करें।"
+    },
+    {
+      "step_id": "cr-21",
+      "action": "Reject a review when necessary",
+      "selector": null,
+      "expected_result": "इस training example में red Reject icon दिखाएँगे। असली review केवल policy के अनुसार reject करें; rating के कारण नहीं। यह delete नहीं है।"
+    },
+    {
+      "step_id": "cr-22",
+      "action": "Verify rejected status",
+      "selector": null,
+      "expected_result": "Rejected filter में वही review जाँचिए। Record और saved reply अभी भी मौजूद हैं।"
+    },
+    {
+      "step_id": "cr-23",
+      "action": "Verify the review is hidden",
+      "selector": null,
+      "expected_result": "Storefront refresh करके rejected feedback public list से हटना confirm करें।"
+    },
+    {
+      "step_id": "cr-24",
+      "action": "Restore publication",
+      "selector": null,
+      "expected_result": "Decision बदलने पर उसी rejected row को approve करें। Public view में review वापस जाँचिए।"
+    },
+    {
+      "step_id": "cr-25",
+      "action": "Review the supported limits",
+      "selector": null,
+      "expected_result": "इस version में customer review edit या delete करने के buttons नहीं हैं। Admin के पास approve, reject और reply controls हैं।"
+    }
+  ]
+}
