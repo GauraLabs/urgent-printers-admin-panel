@@ -1,0 +1,169 @@
+{
+  "feature_name": "Content Testimonials",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 70000,
+  "shots": [
+    {
+      "step_id": "te-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Testimonials",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "te-02",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add a testimonial",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enter the customer name",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Add a title or company",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Upload an approved image",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-06",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Write the review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Select the rating",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Keep it unpublished",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-09",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Create the testimonial",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check inactive visibility",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Edit the saved review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-12",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Publish the review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-13",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the homepage",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-14",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Update the review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-15",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save the correction",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-16",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Hide a review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify the hidden review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-18",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Restore a review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-19",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Delete a review",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "te-20",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Confirm deletion",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

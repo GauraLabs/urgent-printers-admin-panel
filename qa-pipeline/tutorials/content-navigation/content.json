@@ -1,0 +1,171 @@
+{
+  "feature": "content-navigation",
+  "title": "Content Navigation",
+  "intro": "Header और footer में सही links जोड़ना और manage करना सीखिए।",
+  "outro": "अब आप Navigation को create, verify और update कर सकते हैं। Changes के बाद customer view जरूर जाँचिए।",
+  "chapters": [
+    [
+      "na-01",
+      "Header category links"
+    ],
+    [
+      "na-12",
+      "Custom page links and ordering"
+    ],
+    [
+      "na-18",
+      "Footer links"
+    ],
+    [
+      "na-24",
+      "Hide, restore and delete"
+    ]
+  ],
+  "steps": [
+    {
+      "id": "na-01",
+      "title": "Open Navigation",
+      "text": "Content में Navigation खोलिए। Header और Footer के links अलग manage होते हैं।"
+    },
+    {
+      "id": "na-02",
+      "title": "Choose the header",
+      "text": "Header tab चुनिए। ये links ऊपर navigation में दिखते हैं।"
+    },
+    {
+      "id": "na-03",
+      "title": "Add a header link",
+      "text": "Add Link दबाइए।"
+    },
+    {
+      "id": "na-04",
+      "title": "Write a clear label",
+      "text": "Label छोटा रखें। यहाँ Shop Cards लिखते हैं।"
+    },
+    {
+      "id": "na-05",
+      "title": "Choose a category target",
+      "text": "Category में सही category चुनिए। Category target उसका सही page खोलता है।"
+    },
+    {
+      "id": "na-06",
+      "title": "Create the link",
+      "text": "Active on रखकर Create Link दबाइए।"
+    },
+    {
+      "id": "na-07",
+      "title": "Check the header link",
+      "text": "Storefront header में नया link देखिए।"
+    },
+    {
+      "id": "na-08",
+      "title": "Test the category link",
+      "text": "Link खोलकर category का नाम और products जाँचिए।"
+    },
+    {
+      "id": "na-09",
+      "title": "Edit the link",
+      "text": "Pencil icon से link edit कीजिए।"
+    },
+    {
+      "id": "na-10",
+      "title": "Rename the label",
+      "text": "Label बदल सकते हैं। इससे category का नाम नहीं बदलता।"
+    },
+    {
+      "id": "na-11",
+      "title": "Save the renamed link",
+      "text": "Save Changes करके storefront पर नया label verify करें।"
+    },
+    {
+      "id": "na-12",
+      "title": "Add a custom page link",
+      "text": "Add Link से एक और header link बनाते हैं।"
+    },
+    {
+      "id": "na-13",
+      "title": "Name the help link",
+      "text": "Label Artwork Help रखिए।"
+    },
+    {
+      "id": "na-14",
+      "title": "Choose a custom URL",
+      "text": "Custom URL चुनकर artwork guidelines का page path लिखिए।"
+    },
+    {
+      "id": "na-15",
+      "title": "Save the help link",
+      "text": "Create Link दबाइए।"
+    },
+    {
+      "id": "na-16",
+      "title": "Change display order",
+      "text": "Up arrow से help link को सही position में रखें।"
+    },
+    {
+      "id": "na-17",
+      "title": "Test the help destination",
+      "text": "Storefront से Artwork Help खोलकर guidelines page verify करें।"
+    },
+    {
+      "id": "na-18",
+      "title": "Choose the footer",
+      "text": "अब Footer tab चुनिए। Header links यहाँ copy नहीं होते।"
+    },
+    {
+      "id": "na-19",
+      "title": "Add a footer link",
+      "text": "Add Link दबाकर Order Help label रखिए।"
+    },
+    {
+      "id": "na-20",
+      "title": "Set the footer destination",
+      "text": "Custom URL में FAQ page का path लिखिए।"
+    },
+    {
+      "id": "na-21",
+      "title": "Publish the footer link",
+      "text": "Create Link दबाइए।"
+    },
+    {
+      "id": "na-22",
+      "title": "Check the footer",
+      "text": "Storefront के footer में Order Help link ढूँढिए।"
+    },
+    {
+      "id": "na-23",
+      "title": "Test the footer link",
+      "text": "Order Help खोलकर FAQ page verify करें।"
+    },
+    {
+      "id": "na-24",
+      "title": "Hide a navigation link",
+      "text": "Pencil icon खोलकर Active off करें और Save Changes दबाएँ।"
+    },
+    {
+      "id": "na-25",
+      "title": "Verify hidden navigation",
+      "text": "Storefront refresh करें। Inactive link हट जाना चाहिए।"
+    },
+    {
+      "id": "na-26",
+      "title": "Restore the link",
+      "text": "Active on करके Save Changes से link वापस लाएँ।"
+    },
+    {
+      "id": "na-27",
+      "title": "Delete an unused link",
+      "text": "पुराने link का trash icon दबाइए।"
+    },
+    {
+      "id": "na-28",
+      "title": "Confirm deletion",
+      "text": "Delete Link confirm करके storefront पर removal verify करें।"
+    }
+  ],
+  "source_files": [
+    "src/features/content/components/NavLinksManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ]
+}

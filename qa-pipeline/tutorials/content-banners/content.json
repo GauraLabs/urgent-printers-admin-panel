@@ -1,0 +1,171 @@
+{
+  "feature": "content-banners",
+  "title": "Content Banners",
+  "intro": "Homepage banners बनाना, publish करना और पुराने banners हटाना सीखिए।",
+  "outro": "अब आप Banners को create, verify और update कर सकते हैं। Changes के बाद customer view जरूर जाँचिए।",
+  "chapters": [
+    [
+      "ba-01",
+      "Create a draft banner"
+    ],
+    [
+      "ba-14",
+      "Publish and check the homepage"
+    ],
+    [
+      "ba-19",
+      "Edit and schedule"
+    ],
+    [
+      "ba-25",
+      "Hide and delete"
+    ]
+  ],
+  "steps": [
+    {
+      "id": "ba-01",
+      "title": "Open Banners",
+      "text": "Content में Banners खोलिए। Homepage के बड़े slides यहाँ manage होते हैं।"
+    },
+    {
+      "id": "ba-02",
+      "title": "Add a banner",
+      "text": "Add Banner पर click करके नया banner बनाइए।"
+    },
+    {
+      "id": "ba-03",
+      "title": "Write the headline",
+      "text": "Title छोटा और साफ रखिए। यही headline customer को दिखेगी।"
+    },
+    {
+      "id": "ba-04",
+      "title": "Add supporting text",
+      "text": "Subtitle में collection के बारे में एक छोटी line लिखिए।"
+    },
+    {
+      "id": "ba-05",
+      "title": "Set a badge",
+      "text": "Badge optional है। यहाँ New Collection लिखते हैं।"
+    },
+    {
+      "id": "ba-06",
+      "title": "Upload artwork",
+      "text": "Landscape image upload कीजिए। Text वाली image की readability जाँचिए।"
+    },
+    {
+      "id": "ba-07",
+      "title": "Check image quality",
+      "text": "Preview और image quality देखिए। धुँधली image को publish से पहले बदलें।"
+    },
+    {
+      "id": "ba-08",
+      "title": "Choose a destination",
+      "text": "Link URL में All Products चुनिए। Button customer को इसी page पर ले जाएगा।"
+    },
+    {
+      "id": "ba-09",
+      "title": "Name the button",
+      "text": "Button text Explore Collection रखिए। यह action समझ में आना चाहिए।"
+    },
+    {
+      "id": "ba-10",
+      "title": "Set the display dates",
+      "text": "Valid From और Valid Until campaign की dates हैं। खाली रखने पर date limit नहीं लगती।"
+    },
+    {
+      "id": "ba-11",
+      "title": "Save without publishing",
+      "text": "पहले Active off रखिए, ताकि तैयारी के दौरान banner site पर न दिखे।"
+    },
+    {
+      "id": "ba-12",
+      "title": "Create the banner",
+      "text": "Create Banner दबाइए। Banner save हो गया है, लेकिन अभी inactive है।"
+    },
+    {
+      "id": "ba-13",
+      "title": "Check the hidden banner",
+      "text": "Storefront refresh करके देखिए। Inactive banner customer को नहीं दिखता।"
+    },
+    {
+      "id": "ba-14",
+      "title": "Open the saved banner",
+      "text": "Admin में उसी banner का pencil icon खोलिए।"
+    },
+    {
+      "id": "ba-15",
+      "title": "Publish the banner",
+      "text": "Active on करके Save Changes कीजिए।"
+    },
+    {
+      "id": "ba-16",
+      "title": "Set the slide order",
+      "text": "Up arrow से banner ऊपर लाइए। यही homepage slides का display order है।"
+    },
+    {
+      "id": "ba-17",
+      "title": "Preview the homepage",
+      "text": "Homepage पर image, headline, badge और button verify कीजिए।"
+    },
+    {
+      "id": "ba-18",
+      "title": "Test the button",
+      "text": "Explore Collection पर click कीजिए। Destination page सही खुलना चाहिए।"
+    },
+    {
+      "id": "ba-19",
+      "title": "Update the headline",
+      "text": "Banner edit करके headline बदलें। नया banner बनाने की जरूरत नहीं है।"
+    },
+    {
+      "id": "ba-20",
+      "title": "Save the update",
+      "text": "Save Changes दबाकर storefront पर नया title जाँचिए।"
+    },
+    {
+      "id": "ba-21",
+      "title": "Schedule a future banner",
+      "text": "Future start date और उसके बाद की end date रखकर save कीजिए।"
+    },
+    {
+      "id": "ba-22",
+      "title": "Check scheduled visibility",
+      "text": "Start date आने से पहले active banner भी storefront पर नहीं दिखता।"
+    },
+    {
+      "id": "ba-23",
+      "title": "Check an expired banner",
+      "text": "अब पुरानी end date वाला campaign देखिए। Expired banner भी छिप जाता है।"
+    },
+    {
+      "id": "ba-24",
+      "title": "Restore an evergreen banner",
+      "text": "दोनों dates साफ करके save कीजिए। Banner फिर से बिना date limit के दिखेगा।"
+    },
+    {
+      "id": "ba-25",
+      "title": "Hide the banner",
+      "text": "Campaign रोकने के लिए Active off करें और Save Changes दबाएँ।"
+    },
+    {
+      "id": "ba-26",
+      "title": "Verify it is hidden",
+      "text": "Homepage refresh करके confirm करें कि banner हट गया है।"
+    },
+    {
+      "id": "ba-27",
+      "title": "Delete an old banner",
+      "text": "अब पुराने banner का trash icon दबाइए। Temporary hide के लिए Active off ही रखें।"
+    },
+    {
+      "id": "ba-28",
+      "title": "Confirm deletion",
+      "text": "Delete Banner confirm कीजिए। Record और storefront दोनों से banner हट जाता है।"
+    }
+  ],
+  "source_files": [
+    "src/features/content/components/BannersManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ]
+}

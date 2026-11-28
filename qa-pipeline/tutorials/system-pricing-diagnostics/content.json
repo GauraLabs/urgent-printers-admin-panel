@@ -1,0 +1,127 @@
+{
+  "feature": "system-pricing-diagnostics",
+  "title": "Pricing Diagnostics Lifecycle",
+  "intro": "Price mismatch ढूँढना, details समझना, resolution note जोड़ना और जरूरत पर reopen करना सीखिए।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "pd-01",
+      "Filter pricing cases"
+    ],
+    [
+      "pd-06",
+      "Compare amounts and context"
+    ],
+    [
+      "pd-09",
+      "Record a resolution"
+    ],
+    [
+      "pd-11",
+      "Verify saved resolution"
+    ],
+    [
+      "pd-13",
+      "Reopen and follow up"
+    ],
+    [
+      "pd-15",
+      "Close and verify again"
+    ]
+  ],
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "steps": [
+    {
+      "id": "pd-01",
+      "title": "Open Pricing Diagnostics",
+      "text": "System Health में Pricing Diagnostics खोलिए। Training example में storefront और server amounts अलग हैं।"
+    },
+    {
+      "id": "pd-02",
+      "title": "Read the summary",
+      "text": "Last seven days की cause counts और unexplained items पढ़िए। Likely cause केवल जाँच की शुरुआत है।"
+    },
+    {
+      "id": "pd-03",
+      "title": "Choose unresolved items",
+      "text": "Status में Unresolved चुनिए ताकि pending cases दिखें।"
+    },
+    {
+      "id": "pd-04",
+      "title": "Filter the stage",
+      "text": "Stage में Preview चुनिए। Preview और Order create अलग moments हैं।"
+    },
+    {
+      "id": "pd-05",
+      "title": "Filter the cause",
+      "text": "Cause में Unexplained चुनिए। केवल label देखकर customer या staff को जिम्मेदार न ठहराएँ।"
+    },
+    {
+      "id": "pd-06",
+      "title": "Open a mismatch",
+      "text": "Training example की row खोलिए। Details में दोनों calculations और context हैं।"
+    },
+    {
+      "id": "pd-07",
+      "title": "Compare the amounts",
+      "text": "Client और server के unit, total और Difference की तुलना करें। Difference का sign और quantity दोनों पढ़ें।"
+    },
+    {
+      "id": "pd-08",
+      "title": "Read the diagnostic context",
+      "text": "Options, recorded time और request context देखें। Resolve करने से product price या customer payment नहीं बदलता।"
+    },
+    {
+      "id": "pd-09",
+      "title": "Write a resolution note",
+      "text": "जाँच और corrective action का छोटा note लिखिए। पहले actual issue ठीक होने की पुष्टि करें।"
+    },
+    {
+      "id": "pd-10",
+      "title": "Mark the case resolved",
+      "text": "Mark resolved दबाइए। यह case tracking update है; automatic refund या price fix नहीं।"
+    },
+    {
+      "id": "pd-11",
+      "title": "Find the resolved case",
+      "text": "Status में Resolved चुनिए और वही case खोलिए।"
+    },
+    {
+      "id": "pd-12",
+      "title": "Check the saved note",
+      "text": "Saved note, resolver और resolved time verify करें।"
+    },
+    {
+      "id": "pd-13",
+      "title": "Reopen an unresolved issue",
+      "text": "Issue वापस आए तो Unresolve दबाइए। History बचती है और case फिर open होता है।"
+    },
+    {
+      "id": "pd-14",
+      "title": "Verify the reopened case",
+      "text": "Status में Unresolved चुनिए। वही case दोबारा दिखना confirm करें।"
+    },
+    {
+      "id": "pd-15",
+      "title": "Update the investigation note",
+      "text": "Case खोलकर follow-up note लिखिए। Clear और factual details रखें।"
+    },
+    {
+      "id": "pd-16",
+      "title": "Close after the final check",
+      "text": "Problem ठीक होने के बाद Mark resolved करें। Summary में historical occurrence मिटता नहीं है।"
+    },
+    {
+      "id": "pd-17",
+      "title": "Verify saved resolution",
+      "text": "Page reload करके Resolved filter में saved state और note जाँचिए।"
+    }
+  ]
+}

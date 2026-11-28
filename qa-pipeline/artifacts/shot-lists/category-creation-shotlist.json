@@ -1,0 +1,257 @@
+{
+  "feature_name": "Category Creation",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 108500,
+  "shots": [
+    {
+      "step_id": "ca-01",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Categories",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "ca-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Add Category",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Category name",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Stable URL slug",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Parent category",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Description",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Category image",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Active visibility",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "SEO title",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "SEO description",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Category introduction",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Detailed body",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-13",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Add FAQ",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-14",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "FAQ question",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-15",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "FAQ answer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Search visibility",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Create category",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-18",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Create a subcategory",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-19",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose the parent",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-20",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Subcategory image",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-21",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Storefront category",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-22",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Empty categories stay out of menus",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-23",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Preview the child category",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-24",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review SEO and FAQ",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-25",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Edit the category",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-26",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save a stable URL",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-27",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify the update",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-28",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Hide the category",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-29",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify hidden state",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-30",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Restore visibility",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ca-31",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Ready for product assignment",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

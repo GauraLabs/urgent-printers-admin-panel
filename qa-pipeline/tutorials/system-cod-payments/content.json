@@ -1,0 +1,137 @@
+{
+  "feature": "system-cod-payments",
+  "title": "Cash on Delivery Lifecycle",
+  "intro": "COD चालू करना, amount range तय करना और customer payment choices verify करना सीखिए।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "cp-01",
+      "Understand COD settings"
+    ],
+    [
+      "cp-03",
+      "Enable and save an amount range"
+    ],
+    [
+      "cp-08",
+      "Verify eligible checkout"
+    ],
+    [
+      "cp-11",
+      "Check an ineligible amount"
+    ],
+    [
+      "cp-14",
+      "Disable COD"
+    ],
+    [
+      "cp-17",
+      "Restore COD availability"
+    ]
+  ],
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "steps": [
+    {
+      "id": "cp-01",
+      "title": "Open Payments Settings",
+      "text": "Settings में Payments खोलिए। ऊपर gateway fields अभी demo हैं; नीचे COD वास्तविक control है।"
+    },
+    {
+      "id": "cp-02",
+      "title": "Review COD availability",
+      "text": "Cash on Delivery section देखें। COD setting save होने पर customer checkout पर लागू होती है।"
+    },
+    {
+      "id": "cp-03",
+      "title": "Enable Cash on Delivery",
+      "text": "Enable COD चालू करें। Phone, courier और collection की business व्यवस्था अलग से जरूरी है।"
+    },
+    {
+      "id": "cp-04",
+      "title": "Set the minimum amount",
+      "text": "Minimum order amount में पाँच सौ लिखिए। खाली field का मतलब उस तरफ कोई limit नहीं।"
+    },
+    {
+      "id": "cp-05",
+      "title": "Set the maximum amount",
+      "text": "Maximum में पाँच हजार लिखिए। Minimum हमेशा maximum से छोटा या बराबर होना चाहिए।"
+    },
+    {
+      "id": "cp-06",
+      "title": "Save the COD range",
+      "text": "Save COD settings दबाइए। यह gateway section के Save Changes से अलग है।"
+    },
+    {
+      "id": "cp-07",
+      "title": "Verify saved limits",
+      "text": "Page reload करके COD on, minimum पाँच सौ और maximum पाँच हजार जाँचिए।"
+    },
+    {
+      "id": "cp-08",
+      "title": "Check eligible checkout",
+      "text": "Customer checkout में payment step खोलिए। Range के अंदर final payable amount पर Cash on Delivery available होना चाहिए।"
+    },
+    {
+      "id": "cp-09",
+      "title": "Select Cash on Delivery",
+      "text": "Cash on Delivery चुनिए। Final payable amount में coupon और shipping का असर भी शामिल होता है।"
+    },
+    {
+      "id": "cp-10",
+      "title": "Review the order without placing it",
+      "text": "Review Order पर amount और payment method जाँचिए। इस lesson में order place नहीं करेंगे।"
+    },
+    {
+      "id": "cp-11",
+      "title": "Set a lower maximum",
+      "text": "Admin में maximum एक हजार करें। हमारा example order इस limit से ऊपर है।"
+    },
+    {
+      "id": "cp-12",
+      "title": "Save the tighter range",
+      "text": "Save COD settings दबाइए। Eligibility अब नई range से तय होगी।"
+    },
+    {
+      "id": "cp-13",
+      "title": "Verify an ineligible checkout",
+      "text": "Customer payment step reload करें। COD disabled और range वाला कारण जाँचिए।"
+    },
+    {
+      "id": "cp-14",
+      "title": "Disable COD entirely",
+      "text": "Admin में Enable COD बंद करें। इससे online payment अपने आप बंद नहीं होता।"
+    },
+    {
+      "id": "cp-15",
+      "title": "Save disabled COD",
+      "text": "Save COD settings दबाइए। Toggle बदलना और save करना दोनों जरूरी हैं।"
+    },
+    {
+      "id": "cp-16",
+      "title": "Verify COD is unavailable",
+      "text": "Customer payment step में COD unavailable message जाँचिए।"
+    },
+    {
+      "id": "cp-17",
+      "title": "Restore COD availability",
+      "text": "Admin में COD फिर चालू करें और maximum पाँच हजार वापस रखें।"
+    },
+    {
+      "id": "cp-18",
+      "title": "Save the restored range",
+      "text": "Save COD settings दबाकर फिर reload में values जाँचिए।"
+    },
+    {
+      "id": "cp-19",
+      "title": "Verify COD is available again",
+      "text": "Customer payment step पर COD वापस available होना confirm करें। जरूरत बदलने पर यही lifecycle दोहराएँ।"
+    }
+  ]
+}

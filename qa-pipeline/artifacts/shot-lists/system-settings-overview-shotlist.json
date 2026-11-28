@@ -1,0 +1,105 @@
+{
+  "feature_name": "Settings Overview and Current Limits",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 42000,
+  "shots": [
+    {
+      "step_id": "so-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Settings",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "so-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review business details",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review support contacts",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review localisation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open Operations",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review production fields",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open Notifications",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review customer alert fields",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-09",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Find live staff preferences",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open Payments",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Locate Cash on Delivery",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "so-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Use the supported workflows",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

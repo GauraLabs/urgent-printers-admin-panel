@@ -1,0 +1,23 @@
+// Preserve a verified capture and editable production inputs while narration is pending.
+import {cpSync,existsSync,mkdirSync,readFileSync,rmSync,writeFileSync} from 'node:fs';
+import {dirname,join,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {spawnSync} from 'node:child_process';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../../..');
+const feature='order-lifecycle',art='qa-pipeline/artifacts';
+const read=path=>JSON.parse(readFileSync(resolve(root,path)));
+const run=read(`${art}/runs/${feature}-run.json`);
+const content=read(`qa-pipeline/tutorials/${feature}/content.json`);
+if(content.steps.some(step=>run.steps.find(row=>row.step_id===step.id)?.status!=='pass'))throw new Error('Complete every captured step before archiving source.');
+const narration=read(`${art}/narration/${feature}-narration.json`);
+const pending=narration.lines.filter(line=>!line.audio_path||!line.duration_ms);
+const stamp=new Date().toISOString().replace(/[:.]/g,'-');
+const dest=resolve(root,art,'video/archives',feature,`${stamp}-source`);
+mkdirSync(dest,{recursive:true});
+const paths=[`${art}/runs/${feature}-run.json`,`${art}/runs/${feature}-evidence.json`,`${art}/plans/${feature}-plan.json`,`${art}/shot-lists/${feature}-shotlist.json`,`${art}/narration/${feature}-narration.json`,`${art}/narration/${feature}`,`${art}/screenshots/${feature}`,`${art}/video/sfx`,`${art}/video/renders/${feature}`,`qa-pipeline/tutorials/${feature}`,'qa-pipeline/tutorials/catalog-production','qa-pipeline/remotion','qa-pipeline/schemas','qa-pipeline/scripts/validate.mjs','qa-pipeline/scripts/render-video.mjs','qa-pipeline/scripts/synthesize-narration.mjs','qa-pipeline/playwright/capture.js','qa-pipeline/playwright/capture-reporter.js','qa-pipeline/playwright/playwright.config.js','qa-pipeline/playwright/specs/catalog-tutorial.helpers.js',`qa-pipeline/playwright/specs/${feature}.video.spec.js`,'qa-pipeline/playwright/fixtures/catalog-tutorial','package.json','package-lock.json','project.config.json','next.config.ts'];
+paths.push(`${art}/runs/order-lifecycle-capture-segments`);
+for(const path of paths)if(existsSync(resolve(root,path)))cpSync(resolve(root,path),join(dest,path),{recursive:true});
+writeFileSync(join(dest,'manifest.json'),JSON.stringify({feature,created_at:new Date().toISOString(),kind:'editable-source-checkpoint',final_video_complete:false,capture_steps:run.steps.length,source_run:run.run_timestamp,private_sessions_included:false,pending_narration_lines:pending.map(line=>line.step_id),pending_narration_characters:pending.reduce((n,line)=>n+[...line.text].length,0),resume:'node qa-pipeline/tutorials/order-lifecycle/build.mjs --reuse-capture --gl=vulkan --concurrency=2'},null,2)+'\n');
+const result=spawnSync('tar',['-czf',dest+'.tar.gz','-C',dirname(dest),dest.split('/').at(-1)],{stdio:'inherit'});
+if(result.status!==0)throw new Error('Source archive failed');
+rmSync(dest,{recursive:true});console.log(dest+'.tar.gz');

@@ -1,0 +1,162 @@
+{
+  "feature": "system-staff",
+  "title": "Staff Access Lifecycle",
+  "intro": "Team member बनाना, सही access देना और account deactivate या restore करना सीखिए।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "st-01",
+      "Roles and access"
+    ],
+    [
+      "st-03",
+      "Invite a staff member"
+    ],
+    [
+      "st-09",
+      "Edit contact and permissions"
+    ],
+    [
+      "st-16",
+      "Change the role"
+    ],
+    [
+      "st-18",
+      "Deactivate access"
+    ],
+    [
+      "st-21",
+      "Restore and unlock"
+    ]
+  ],
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "steps": [
+    {
+      "id": "st-01",
+      "title": "Open Staff",
+      "text": "System में Staff खोलिए। हर व्यक्ति का अपना account और काम के अनुसार role होना चाहिए।"
+    },
+    {
+      "id": "st-02",
+      "title": "Review role permissions",
+      "text": "Role Permissions से roles का access समझिए। Super Admin केवल जिम्मेदार administrator को दें।"
+    },
+    {
+      "id": "st-03",
+      "title": "Add a team member",
+      "text": "Add Member दबाइए। इस उदाहरण में एक support team member बनाएँगे।"
+    },
+    {
+      "id": "st-04",
+      "title": "Enter the full name",
+      "text": "Full Name में व्यक्ति का पूरा नाम लिखिए।"
+    },
+    {
+      "id": "st-05",
+      "title": "Enter the work email",
+      "text": "Email सही जाँचिए। Invite और sign-in इसी address से जुड़े हैं।"
+    },
+    {
+      "id": "st-06",
+      "title": "Choose Customer Support",
+      "text": "Role में Customer Support चुनिए। Role से base permissions तय होती हैं।"
+    },
+    {
+      "id": "st-07",
+      "title": "Review sign-in choices",
+      "text": "Invite via email से व्यक्ति अपना password बनाएगा। Set a password now दूसरा विकल्प है।"
+    },
+    {
+      "id": "st-08",
+      "title": "Send the invitation",
+      "text": "Send Invite दबाइए। Account list में नया member जाँचिए; invite delivery अलग से confirm करें।"
+    },
+    {
+      "id": "st-09",
+      "title": "Open member actions",
+      "text": "नए member की तीन dots वाली actions menu खोलिए।"
+    },
+    {
+      "id": "st-10",
+      "title": "Edit the member",
+      "text": "Edit चुनिए। यहाँ role, phone, active status और permissions बदलते हैं।"
+    },
+    {
+      "id": "st-11",
+      "title": "Add the contact number",
+      "text": "Phone में सही country code सहित number डालिए। SMS और WhatsApp के लिए phone जरूरी है।"
+    },
+    {
+      "id": "st-12",
+      "title": "Review password reset",
+      "text": "New Password खाली छोड़ने पर password नहीं बदलता। जरूरत हो तो private तरीके से नया password दें।"
+    },
+    {
+      "id": "st-13",
+      "title": "Customise permissions",
+      "text": "Customise Permissions खोलिए। केवल काम के लिए जरूरी extra access दें।"
+    },
+    {
+      "id": "st-14",
+      "title": "Review permission groups",
+      "text": "Orders group खोलिए। From role base access है; Extra grant और Revoked अलग overrides हैं।"
+    },
+    {
+      "id": "st-15",
+      "title": "Save the member changes",
+      "text": "Save Changes दबाइए और list में member का सही role जाँचिए।"
+    },
+    {
+      "id": "st-16",
+      "title": "Change the role",
+      "text": "Member फिर Edit करें और Operations Manager role चुनिए। Role बदलने पर पुराने overrides reset होते हैं।"
+    },
+    {
+      "id": "st-17",
+      "title": "Save the new role",
+      "text": "Save Changes दबाइए। List में Operations Manager जाँचिए।"
+    },
+    {
+      "id": "st-18",
+      "title": "Open deactivation",
+      "text": "Actions से Deactivate चुनिए। काम छोड़ने पर access बंद करें; इसे permanent deletion न समझें।"
+    },
+    {
+      "id": "st-19",
+      "title": "Confirm deactivation",
+      "text": "Confirmation पढ़कर Deactivate दबाइए। अपने account को deactivate न करें।"
+    },
+    {
+      "id": "st-20",
+      "title": "Show deactivated members",
+      "text": "Show deactivated चालू करें।"
+    },
+    {
+      "id": "st-21",
+      "title": "Edit the inactive account",
+      "text": "Inactive member की actions से Edit खोलिए।"
+    },
+    {
+      "id": "st-22",
+      "title": "Restore account access",
+      "text": "Account active चालू करके Save Changes दबाइए। सही व्यक्ति को ही दोबारा access दें।"
+    },
+    {
+      "id": "st-23",
+      "title": "Unlock a login",
+      "text": "Actions में Unlock login से login lockout साफ होता है। यह password reset या permission change नहीं है।"
+    },
+    {
+      "id": "st-24",
+      "title": "Verify the restored member",
+      "text": "Page reload करके Active status और सही role verify करें।"
+    }
+  ]
+}

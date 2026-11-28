@@ -43,9 +43,8 @@ yarn-error.log*
 next-env.d.ts
 
 # QA pipeline (see ../pipeline/README.md): screenshots/traces/video/audio are build products.
-# Plans, run logs, analyses, shot lists and rendered docs stay tracked — diffing those is how
-# a flow change shows up, and a checked-in report degrading to a filename note when a
-# gitignored screenshot isn't on disk is expected, not a bug.
+# Keep reusable plans, narration definitions and shot lists in Git. Existing tracked
+# reports remain available; new capture logs and local recovery data stay on disk.
 qa-pipeline/artifacts/screenshots
 qa-pipeline/artifacts/traces
 qa-pipeline/artifacts/video
@@ -54,3 +53,15 @@ qa-pipeline/playwright/fixtures/oversized*
 qa-pipeline/artifacts/docs/**/*.pdf
 playwright-report
 test-results
+
+# Local Python caches from tutorial utilities
+__pycache__/
+*.py[cod]
+
+# Per-recording evidence, source snapshots and local recovery copies
+/qa-pipeline/artifacts/runs/
+/qa-pipeline/tutorials/**/frontend-reference/
+/qa-pipeline/tutorials/**/backend-reference/
+/qa-pipeline/tutorials/**/history/
+/qa-pipeline/tutorials/**/assets/recovered/
+/qa-pipeline/tutorials/**/assets/recovered-manifest.json

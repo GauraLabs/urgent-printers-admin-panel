@@ -1,0 +1,141 @@
+{
+  "feature": "content-faqs",
+  "title": "Content FAQs",
+  "intro": "FAQ बनाना, जवाब सुधारना और customer view जाँचना सीखिए।",
+  "outro": "अब आप FAQs को create, verify और update कर सकते हैं। Changes के बाद customer view जरूर जाँचिए।",
+  "chapters": [
+    [
+      "fa-01",
+      "Create a draft FAQ"
+    ],
+    [
+      "fa-09",
+      "Publish and read the answer"
+    ],
+    [
+      "fa-13",
+      "Edit and reorder"
+    ],
+    [
+      "fa-18",
+      "Hide, restore and delete"
+    ]
+  ],
+  "steps": [
+    {
+      "id": "fa-01",
+      "title": "Open FAQs",
+      "text": "Content में FAQs खोलिए। Customer के common questions यहाँ manage होते हैं।"
+    },
+    {
+      "id": "fa-02",
+      "title": "Add a question",
+      "text": "Add FAQ दबाइए।"
+    },
+    {
+      "id": "fa-03",
+      "title": "Write the question",
+      "text": "Question ग्राहक की भाषा में साफ लिखिए।"
+    },
+    {
+      "id": "fa-04",
+      "title": "Choose a group",
+      "text": "Category से related questions को एक group में रख सकते हैं।"
+    },
+    {
+      "id": "fa-05",
+      "title": "Write the answer",
+      "text": "Answer में छोटा और सही जवाब दीजिए। Product-specific promise न जोड़ें।"
+    },
+    {
+      "id": "fa-06",
+      "title": "Save as inactive",
+      "text": "पहले Active off रखकर जवाब review कर सकते हैं।"
+    },
+    {
+      "id": "fa-07",
+      "title": "Create the FAQ",
+      "text": "Create दबाइए। FAQ अब admin में save है।"
+    },
+    {
+      "id": "fa-08",
+      "title": "Check the unpublished FAQ",
+      "text": "Storefront FAQ page खोलिए। Inactive question वहाँ नहीं दिखता।"
+    },
+    {
+      "id": "fa-09",
+      "title": "Edit the saved question",
+      "text": "FAQ के pencil icon से editing खोलिए।"
+    },
+    {
+      "id": "fa-10",
+      "title": "Publish the FAQ",
+      "text": "Active on करके Save करें।"
+    },
+    {
+      "id": "fa-11",
+      "title": "Check the FAQ page",
+      "text": "FAQ page refresh करके अपना question ढूँढिए।"
+    },
+    {
+      "id": "fa-12",
+      "title": "Read the customer answer",
+      "text": "Question पर click करके पूरा answer पढ़िए।"
+    },
+    {
+      "id": "fa-13",
+      "title": "Update the answer",
+      "text": "जानकारी बदलने पर उसी FAQ का answer edit करें।"
+    },
+    {
+      "id": "fa-14",
+      "title": "Verify the correction",
+      "text": "Save करके customer page पर corrected answer जाँचिए।"
+    },
+    {
+      "id": "fa-15",
+      "title": "Add a related FAQ",
+      "text": "इसी category में एक और related question बनाइए।"
+    },
+    {
+      "id": "fa-16",
+      "title": "Reorder the questions",
+      "text": "Up arrow से question ऊपर रखिए। Important questions पहले रखें।"
+    },
+    {
+      "id": "fa-17",
+      "title": "Check the new order",
+      "text": "Customer page पर दोनों questions का क्रम verify करें।"
+    },
+    {
+      "id": "fa-18",
+      "title": "Hide a question",
+      "text": "पुराने answer को temporarily रोकने के लिए Active off करके Save करें।"
+    },
+    {
+      "id": "fa-19",
+      "title": "Check hidden visibility",
+      "text": "FAQ page refresh करें। Inactive question हट जाना चाहिए।"
+    },
+    {
+      "id": "fa-20",
+      "title": "Restore the question",
+      "text": "Active on और Save से question वापस publish होता है।"
+    },
+    {
+      "id": "fa-21",
+      "title": "Delete an outdated FAQ",
+      "text": "हमेशा के लिए हटाना हो तो trash icon चुनिए।"
+    },
+    {
+      "id": "fa-22",
+      "title": "Confirm removal",
+      "text": "Delete FAQ confirm कीजिए। Customer page पर भी removal जाँचिए।"
+    }
+  ],
+  "source_files": [
+    "src/features/content/components/FaqsManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ]
+}

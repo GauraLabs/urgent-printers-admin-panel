@@ -1,0 +1,343 @@
+{
+  "feature": "order-lifecycle",
+  "title": "Order Lifecycle",
+  "intro": "इस tutorial में एक order का checkout, artwork revision, customer approval, printing, shipping, delivery और refund exception सीखेंगे।",
+  "outro": "पूरा order lifecycle verify हो गया। Source files और narration बदलकर future UI updates के बाद यही video फिर बना सकते हैं।",
+  "chapters": [
+    [
+      "or-01",
+      "Storefront order and artwork"
+    ],
+    [
+      "or-13",
+      "Admin confirmation, notes and invoice"
+    ],
+    [
+      "or-19",
+      "Proof review, revision and approval"
+    ],
+    [
+      "or-34",
+      "Printing and quality check"
+    ],
+    [
+      "or-39",
+      "Dispatch and manual shipment"
+    ],
+    [
+      "or-45",
+      "Tracking and delivery"
+    ],
+    [
+      "or-53",
+      "Cancellation and simulated refund"
+    ]
+  ],
+  "steps": [
+    {
+      "id": "or-01",
+      "title": "Open the storefront",
+      "text": "इस tutorial में customer checkout से proof approval, printing, dispatch और delivery तक एक order पूरा करेंगे।"
+    },
+    {
+      "id": "or-02",
+      "title": "Choose quantity",
+      "text": "Quantity two hundred fifty रखिए। Nine rupees per piece पर subtotal twenty-two hundred fifty होगा।"
+    },
+    {
+      "id": "or-03",
+      "title": "Upload customer artwork",
+      "text": "अपनी print file upload कीजिए। यह actual development storage में जाएगी।"
+    },
+    {
+      "id": "or-04",
+      "title": "Verify uploaded artwork",
+      "text": "Upload पूरा होने पर filename और preview verify करें। सही artwork के साथ ही cart में आगे जाएँ।"
+    },
+    {
+      "id": "or-05",
+      "title": "Add to cart",
+      "text": "Add to Cart कीजिए। Selected size, paper, finish और artwork order configuration में जाएँगे।"
+    },
+    {
+      "id": "or-06",
+      "title": "Review the cart",
+      "text": "Cart में quantity, configuration और subtotal दोबारा verify कीजिए।"
+    },
+    {
+      "id": "or-07",
+      "title": "Checkout",
+      "text": "Proceed to Checkout चुनिए। हम dedicated development customer इस्तेमाल कर रहे हैं।"
+    },
+    {
+      "id": "or-08",
+      "title": "Delivery address",
+      "text": "Saved delivery address verify करके Continue to Payment चुनिए।"
+    },
+    {
+      "id": "or-09",
+      "title": "Cash on Delivery",
+      "text": "Cash on Delivery चुनते हैं। इस order में अभी कोई online payment charge नहीं होगा।"
+    },
+    {
+      "id": "or-10",
+      "title": "Review order",
+      "text": "Review Order पर server-confirmed prices और total verify कीजिए।"
+    },
+    {
+      "id": "or-11",
+      "title": "Place order",
+      "text": "Place Order कीजिए। Order number confirmation पर मिल जाएगा।"
+    },
+    {
+      "id": "or-12",
+      "title": "Customer order details",
+      "text": "Customer account में order खोलिए। यहाँ status, artwork और order summary देख सकते हैं।"
+    },
+    {
+      "id": "or-13",
+      "title": "Find the admin order",
+      "text": "Admin में इसी order number का record खोलिए। Customer और selected items verify करें।"
+    },
+    {
+      "id": "or-14",
+      "title": "Add an internal note",
+      "text": "Internal note में production team के लिए instruction लिखिए। यह customer message नहीं है।"
+    },
+    {
+      "id": "or-15",
+      "title": "Save the note",
+      "text": "Note save कीजिए। Team को order के अंदर instruction और उसका author दिखाई देंगे।"
+    },
+    {
+      "id": "or-16",
+      "title": "Confirm the order",
+      "text": "Change Status खोलिए और Confirmed चुनिए। COD order को staff approval के बाद आगे बढ़ाते हैं।"
+    },
+    {
+      "id": "or-17",
+      "title": "Save confirmation",
+      "text": "Update Status कीजिए। Timeline में Confirmed entry verify करें।"
+    },
+    {
+      "id": "or-18",
+      "title": "Download invoice",
+      "text": "Confirmed order की invoice download कीजिए। File में order number और total verify होना चाहिए।"
+    },
+    {
+      "id": "or-19",
+      "title": "Prepare artwork review",
+      "text": "Artwork approve करने से पहले staff print file और customer requirements review करे। अब proof upload करते हैं।"
+    },
+    {
+      "id": "or-20",
+      "title": "Select proof version one",
+      "text": "पहला proof select कीजिए। Original file और customer-facing proof अलग records हैं।"
+    },
+    {
+      "id": "or-21",
+      "title": "Save proof draft",
+      "text": "Upload and Save Draft कीजिए। अभी customer decision के लिए proof भेजा नहीं गया है।"
+    },
+    {
+      "id": "or-22",
+      "title": "Send proof for review",
+      "text": "Send to Customer चुनिए। इस development recording में outbound notifications disabled हैं।"
+    },
+    {
+      "id": "or-23",
+      "title": "Review proof as customer",
+      "text": "Customer account में Review Proof version one खोलिए। Preview देखकर decision लीजिए।"
+    },
+    {
+      "id": "or-24",
+      "title": "Request a revision",
+      "text": "अगर बदलाव चाहिए तो Request Revision चुनिए। Approval देने से पहले corrections बताना ज़रूरी है।"
+    },
+    {
+      "id": "or-25",
+      "title": "Describe the correction",
+      "text": "Feedback में लिखिए: please increase the name size. Clear feedback से revision सही बनेगा।"
+    },
+    {
+      "id": "or-26",
+      "title": "Submit revision request",
+      "text": "Revision request submit कीजिए। Order production में नहीं जाएगा; team नया proof तैयार करेगी।"
+    },
+    {
+      "id": "or-27",
+      "title": "Review customer feedback",
+      "text": "Admin में revision status और customer feedback verify कीजिए। पुराना proof history में सुरक्षित रहेगा।"
+    },
+    {
+      "id": "or-28",
+      "title": "Upload revised proof",
+      "text": "अब corrected proof version two upload करें। पुराने approval record को overwrite नहीं करते।"
+    },
+    {
+      "id": "or-29",
+      "title": "Save revised draft",
+      "text": "Revised file upload करके draft save कीजिए। Filename और successful upload verify करें।"
+    },
+    {
+      "id": "or-30",
+      "title": "Send revised proof",
+      "text": "Version two customer review के लिए भेजिए। Order फिर artwork approval का इंतज़ार करेगा।"
+    },
+    {
+      "id": "or-31",
+      "title": "Review proof version two",
+      "text": "Customer account में नया proof खोलिए। Corrected design verify करके ही approve करें।"
+    },
+    {
+      "id": "or-32",
+      "title": "Approve artwork",
+      "text": "Approve Artwork चुनिए। इस order के सभी items approve होने पर Artwork Approved status मिलेगा।"
+    },
+    {
+      "id": "or-33",
+      "title": "Verify approval in admin",
+      "text": "Admin timeline और proof status में customer approval verify कीजिए। तभी printing शुरू करें।"
+    },
+    {
+      "id": "or-34",
+      "title": "Ready to print queue",
+      "text": "Printing Queue में Ready to Print tab खोलिए। Approved order यहाँ दिखाई देता है।"
+    },
+    {
+      "id": "or-35",
+      "title": "Start printing",
+      "text": "इस order की Start Printing action चुनिए। Physical printing वास्तव में पूरी होने पर अगला step करें।"
+    },
+    {
+      "id": "or-36",
+      "title": "Printing queue",
+      "text": "Printing tab में उसी order की quantity और print configuration verify कीजिए।"
+    },
+    {
+      "id": "or-37",
+      "title": "Complete production",
+      "text": "Printing और quality check पूरा होने पर Mark Complete चुनिए। Order Ready to Dispatch में जाएगा।"
+    },
+    {
+      "id": "or-38",
+      "title": "Ready to dispatch",
+      "text": "Ready to Dispatch tab खोलिए। Packaging और delivery details verify करके shipment बनाएँ।"
+    },
+    {
+      "id": "or-39",
+      "title": "Open dispatch details",
+      "text": "Create Shipment खोलिए। Shipping address और package details review कीजिए।"
+    },
+    {
+      "id": "or-40",
+      "title": "Review packaging",
+      "text": "Weight और dimensions वास्तविक packed parcel के हिसाब से भरने चाहिए। यहाँ sample package दिख रहा है।"
+    },
+    {
+      "id": "or-41",
+      "title": "Choose manual shipment",
+      "text": "इस demo में manual shipment record करेंगे। यह external courier booking या pickup request नहीं भेजता।"
+    },
+    {
+      "id": "or-42",
+      "title": "Courier name",
+      "text": "Courier का नाम लिखिए। Demo Courier केवल इस development recording का sample है।"
+    },
+    {
+      "id": "or-43",
+      "title": "Tracking reference",
+      "text": "Unique tracking reference लिखिए। इसे genuine courier tracking number समझकर इस्तेमाल न करें।"
+    },
+    {
+      "id": "or-44",
+      "title": "Save shipment",
+      "text": "Save Shipment कीजिए। Order Shipped होगा और shipment source Manual दिखेगा।"
+    },
+    {
+      "id": "or-45",
+      "title": "Customer tracking",
+      "text": "Customer account में courier और tracking reference verify कीजिए। Manual shipment में automatic live tracking नहीं है।"
+    },
+    {
+      "id": "or-46",
+      "title": "Mark picked up",
+      "text": "Parcel pickup confirm होने पर shipment status Picked Up करें। Recording में यह simulated development event है।"
+    },
+    {
+      "id": "or-47",
+      "title": "Mark in transit",
+      "text": "अगली update In Transit है। Shipment progress और overall order status अलग fields हैं।"
+    },
+    {
+      "id": "or-48",
+      "title": "Out for delivery",
+      "text": "Courier out for delivery बताए तभी यह status रखें। Customer को tracking progress दिखाई देगा।"
+    },
+    {
+      "id": "or-49",
+      "title": "Confirm delivered",
+      "text": "Delivered चुनने पर confirmation पढ़िए। इससे shipment और overall order दोनों delivered होंगे।"
+    },
+    {
+      "id": "or-50",
+      "title": "Save delivery confirmation",
+      "text": "Confirm कीजिए और order का Delivered status verify करें। Delivery का वास्तविक प्रमाण होने पर ही यह action करें।"
+    },
+    {
+      "id": "or-51",
+      "title": "Customer delivery status",
+      "text": "Customer account में Delivered और tracking timeline verify कीजिए। Fulfilment lifecycle पूरा हो गया है।"
+    },
+    {
+      "id": "or-52",
+      "title": "Payment versus delivery",
+      "text": "COD delivery अपने आप payment collected नहीं बनाती। Payment record अलग reconcile करना ज़रूरी है।"
+    },
+    {
+      "id": "or-53",
+      "title": "Cancellation and refund example",
+      "text": "अब दूसरे development fixture में prepaid cancellation और refund देखते हैं। इसमें captured payment simulated है; real money नहीं लिया गया।"
+    },
+    {
+      "id": "or-54",
+      "title": "Cancel the prepaid sample",
+      "text": "Admin में Cancel चुनिए। Customer request और fulfilment stage verify करके ही order cancel करें।"
+    },
+    {
+      "id": "or-55",
+      "title": "Confirm cancellation",
+      "text": "Confirmation पढ़कर Yes cancel order चुनिए। Paid order पर refund की ज़रूरत अलग से बनी रहती है।"
+    },
+    {
+      "id": "or-56",
+      "title": "Open refund",
+      "text": "Refund खोलिए। केवल captured payment वाला order refund के लिए eligible होता है।"
+    },
+    {
+      "id": "or-57",
+      "title": "Refund amount",
+      "text": "Refund amount verify कीजिए। यहाँ full amount twenty-two hundred fifty है; partial refund अलग amount से हो सकता है।"
+    },
+    {
+      "id": "or-58",
+      "title": "Refund reason",
+      "text": "Reason Order Cancelled रखिए। Reason और notes refund audit record में उपयोगी हैं।"
+    },
+    {
+      "id": "or-59",
+      "title": "Issue simulated refund",
+      "text": "Issue Refund चुनिए। हमारे isolated development API में fake payment provider है, इसलिए real bank transaction नहीं होगा।"
+    },
+    {
+      "id": "or-60",
+      "title": "Verify refund record",
+      "text": "Refunded status, amount और refund reference verify कीजिए। Unconfirmed refund को बार-बार retry नहीं करना चाहिए।"
+    },
+    {
+      "id": "or-61",
+      "title": "Review the full history",
+      "text": "Main order Delivered है और दूसरा sample Refunded है। Timeline, proofs, invoice और shipment evidence सुरक्षित हैं।"
+    }
+  ]
+}

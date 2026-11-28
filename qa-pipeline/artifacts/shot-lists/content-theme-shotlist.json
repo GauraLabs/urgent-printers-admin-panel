@@ -1,0 +1,97 @@
+{
+  "feature_name": "Content Theme",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 38500,
+  "shots": [
+    {
+      "step_id": "th-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Theme",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "th-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review the presets",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "th-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Select Royal Gold",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "th-04",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save the theme",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "th-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the storefront",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "th-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check another page",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "th-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Select Emerald Heritage",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "th-08",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Publish the new colours",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "th-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify the new preset",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "th-10",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Restore the previous theme",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "th-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the restored colours",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

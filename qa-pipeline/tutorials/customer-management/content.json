@@ -1,0 +1,154 @@
+{
+  "feature": "customer-management",
+  "title": "Customer Management",
+  "intro": "Customer ढूँढना, उसकी details समझना और जरूरत पर account ban या reinstate करना सीखिए।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "cm-01",
+      "Find and identify a customer"
+    ],
+    [
+      "cm-05",
+      "Profile, orders and addresses"
+    ],
+    [
+      "cm-14",
+      "Ban and verify access"
+    ],
+    [
+      "cm-19",
+      "Reinstate and verify"
+    ]
+  ],
+  "source_files": [
+    "src/features/customers/components/CustomersTable.tsx",
+    "src/features/customers/components/CustomerDetail/CustomerDetailClient.tsx",
+    "src/features/reviews/components/ReviewsTable.tsx",
+    "src/features/reviews/components/ReplyDialog.tsx",
+    "../urgent-printers-frontend/app/account/orders/[id]/review/page.tsx",
+    "../urgent-printers-frontend/features/products/ReviewsSection.tsx"
+  ],
+  "steps": [
+    {
+      "id": "cm-01",
+      "title": "Open Customers",
+      "text": "Customers menu में Customers खोलिए। Account customer website से बनता है; इस page पर नया account बनाने का control नहीं है।"
+    },
+    {
+      "id": "cm-02",
+      "title": "Read the customer columns",
+      "text": "Customer, Status, Orders, Total Spent और Joined columns पढ़िए। सही customer पहचानने के बाद ही action लें।"
+    },
+    {
+      "id": "cm-03",
+      "title": "Search by email",
+      "text": "Search में customer का email लिखिए। मिलते-जुलते नामों में email से पहचान confirm करें।"
+    },
+    {
+      "id": "cm-04",
+      "title": "Filter active customers",
+      "text": "Status में Active चुनिए। Search और status filters साथ में लागू होते हैं।"
+    },
+    {
+      "id": "cm-05",
+      "title": "Open the customer profile",
+      "text": "Customer के नाम पर click करके उसका profile खोलिए।"
+    },
+    {
+      "id": "cm-06",
+      "title": "Review identity and verification",
+      "text": "Identity में नाम, email verification, phone और status जाँचिए। यह admin profile view है; यहाँ contact edit नहीं होता।"
+    },
+    {
+      "id": "cm-07",
+      "title": "Read the order summary",
+      "text": "Order Summary में orders और amounts देखें। Total Spent को settled collection न मानें; payment और refunds अलग जाँचें।"
+    },
+    {
+      "id": "cm-08",
+      "title": "Open order history",
+      "text": "Orders tab खोलिए। Status, amount और order date से customer की enquiry समझें।"
+    },
+    {
+      "id": "cm-09",
+      "title": "Open a related order",
+      "text": "संबंधित order number खोलिए। आगे का action उसी order के actual status के अनुसार करें।"
+    },
+    {
+      "id": "cm-10",
+      "title": "Return to the customer",
+      "text": "Customer profile पर वापस आएँ। यह lesson customer management पर है; order fulfilment अलग lesson में है।"
+    },
+    {
+      "id": "cm-11",
+      "title": "Review saved addresses",
+      "text": "Addresses tab में saved address और Default label देखें। यहाँ address edit करने का control नहीं है।"
+    },
+    {
+      "id": "cm-12",
+      "title": "Review customer activity",
+      "text": "Activity में orders और reviews की available history देखें। यह हर login और profile change की पूरी audit list नहीं है।"
+    },
+    {
+      "id": "cm-13",
+      "title": "Review the email shortcut",
+      "text": "Send Email एक mail-app shortcut है। Email address और message अलग से जाँचें; यहाँ से automatic message भेजने का दावा न करें।"
+    },
+    {
+      "id": "cm-14",
+      "title": "Open ban confirmation",
+      "text": "Ban Customer के लिए सही permission और उचित कारण जरूरी है। सही account की confirmation खोलिए।"
+    },
+    {
+      "id": "cm-15",
+      "title": "Read the ban confirmation",
+      "text": "Ban sign-in रोकता है, पुराने orders cancel नहीं करता। Confirmation में email लिखा है, पर automatic email अभी नहीं भेजता।"
+    },
+    {
+      "id": "cm-16",
+      "title": "Confirm the account ban",
+      "text": "Ban Customer confirm करें। Profile में Banned status verify करें।"
+    },
+    {
+      "id": "cm-17",
+      "title": "Find the banned account",
+      "text": "Customers list में Banned filter से वही account खोजिए। History अभी भी मौजूद है।"
+    },
+    {
+      "id": "cm-18",
+      "title": "Verify blocked sign-in",
+      "text": "Customer sign-in असफल दिखना जाँचिए। UI generic error दिखाता है; Banned स्थिति admin में confirm करें।"
+    },
+    {
+      "id": "cm-19",
+      "title": "Return to the banned profile",
+      "text": "Admin में उसी customer का profile खोलिए। Reinstate करने से पहले account identity फिर confirm करें।"
+    },
+    {
+      "id": "cm-20",
+      "title": "Open reinstatement confirmation",
+      "text": "Reinstate Customer दबाइए। इससे account access वापस मिलेगा।"
+    },
+    {
+      "id": "cm-21",
+      "title": "Confirm reinstatement",
+      "text": "Reinstate confirm करें और Active status जाँचिए।"
+    },
+    {
+      "id": "cm-22",
+      "title": "Verify restored customer access",
+      "text": "Customer website पर sign-in फिर सफल होना confirm करें। यह password reset नहीं करता।"
+    },
+    {
+      "id": "cm-23",
+      "title": "Verify saved active status",
+      "text": "Admin page reload करके Active status जाँचिए। केवल toast देखकर action पूरा न मानें।"
+    },
+    {
+      "id": "cm-24",
+      "title": "Clear filters and finish",
+      "text": "Customers list में search और status साफ करें। Existing orders और account history को अलग-अलग संभालें।"
+    }
+  ]
+}

@@ -16,6 +16,7 @@ import { buildTimeline } from '../remotion/timeline.js';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '../..');
@@ -124,13 +125,15 @@ const serveUrl = await bundle({
 });
 
 const baseProps = {
+  soundEffects: args.includes('--sound-effects'),
+  draft: args.includes('--draft'),
   shotlist,
   run,
   brand,
   // Form-field colours for the typing overlay. These describe the APP's inputs, not the
   // brand, so a dark-themed app overrides them without touching the renderer.
   fieldStyle: config.video_defaults?.field_style ?? { background: '#ffffff', text: '#0f172a' },
-  projectName: config.project_name,
+  projectName: flag('project-name') ?? config.project_name,
   logoDataUri,
   screenshotBase: 'qa-pipeline/artifacts/',
   narration,
@@ -146,7 +149,18 @@ if (narration) {
   console.log(`narration: ${narration.lines.length} lines, ${(spoken / 1000).toFixed(1)}s of speech (${narration.language})`);
 }
 
-for (const resolution of resolutions) {
+const masters = new Map();
+for (const resolution of [...resolutions].sort((a, b) => b.height - a.height)) {
+  const master = masters.get(resolution.fps);
+  if (args.includes('--derive-lower') && master && !previewOnly && !contactSheet) {
+    const output = join(outDir, `${args.includes('--draft') ? 'draft-' : ''}${resolution.label}.mp4`);
+    const result = spawnSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', '-i', master,
+      '-vf', `scale=${resolution.width}:${resolution.height}:flags=lanczos`, '-c:v', 'libx264', '-crf', '18',
+      '-preset', 'medium', '-threads', '2', '-c:a', 'copy', '-movflags', '+faststart', output], { stdio: 'inherit' });
+    if (result.status !== 0) throw new Error(`Downsampling ${resolution.label} failed`);
+    console.log(`✓ ${relative(REPO_ROOT, output)} (derived from master)`);
+    continue;
+  }
   const inputProps = { ...baseProps, width: resolution.width, height: resolution.height, fps: resolution.fps };
   const composition = await selectComposition({ serveUrl, id: 'FeatureDemo', inputProps });
 
@@ -179,29 +193,33 @@ for (const resolution of resolutions) {
         output: stillPath,
         inputProps,
         frame: Math.min(mark.frame, composition.durationInFrames - 1),
-        chromiumOptions: { gl: 'swangle' },
+        chromiumOptions: { gl: flag('gl') ?? 'swangle' },
       });
       console.log(`✓ ${relative(REPO_ROOT, stillPath)}`);
     }
     continue;
   }
 
-  const outputLocation = join(outDir, `${resolution.label}.mp4`);
+  const outputLocation = join(outDir, `${args.includes('--draft') ? 'draft-' : ''}${resolution.label}.mp4`);
   const seconds = (composition.durationInFrames / resolution.fps).toFixed(1);
   console.log(`rendering ${resolution.label} (${resolution.width}x${resolution.height}, ${seconds}s)…`);
 
+  let lastProgress = -1;
   await renderMedia({
     composition,
     serveUrl,
     codec: 'h264',
+    concurrency: Number(flag('concurrency') ?? 2),
     outputLocation,
     inputProps,
     // swangle is the software rasteriser: no GPU is available in CI or a container, and
     // the default GL backend fails there rather than falling back.
-    chromiumOptions: { gl: 'swangle' },
+    chromiumOptions: { gl: flag('gl') ?? 'swangle' },
     onProgress: ({ progress }) => {
-      if (Math.round(progress * 100) % 25 === 0) process.stdout.write(`  ${Math.round(progress * 100)}%\r`);
+      const percent = Math.floor(progress * 10) * 10;
+      if (percent > lastProgress) { console.log(`  ${percent}%`); lastProgress = percent; }
     },
   });
+  masters.set(resolution.fps, outputLocation);
   console.log(`✓ ${relative(REPO_ROOT, outputLocation)}`);
 }

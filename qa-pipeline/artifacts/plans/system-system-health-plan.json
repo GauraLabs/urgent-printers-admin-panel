@@ -1,0 +1,114 @@
+{
+  "feature_found": true,
+  "feature_name": "System Health Monitoring",
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "business_goal": "Teach website operators to manage staff access, saved settings, monitoring and incident follow-up; explicitly identify demo-only settings.",
+  "user_goal": "Service status पढ़ना, refresh करना और सही information के साथ technical team तक issue पहुँचाना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Read and refresh service status",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Find pricing diagnostics",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Read background jobs",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Review errors and follow up",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Some settings forms are demo-only; never present those as persistent controls.",
+      "existing_validation": "Real saved staff/preferences/COD/order-halt and pricing resolution responses; reload and storefront checks.",
+      "risk_note": "Use owned development fixtures. Health states are observed, not simulated. Do not claim alert delivery or repair from a toggle."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "sh-01",
+      "action": "Open System Health",
+      "selector": null,
+      "expected_result": "System में System Health खोलिए। यह monitoring page है; यहाँ customer order edit नहीं होता।"
+    },
+    {
+      "step_id": "sh-02",
+      "action": "Read service status",
+      "selector": null,
+      "expected_result": "Healthy, Degraded, Down और Unknown अलग states हैं। Unknown का मतलब service ठीक होने की पुष्टि नहीं है।"
+    },
+    {
+      "step_id": "sh-03",
+      "action": "Check response and timestamps",
+      "selector": null,
+      "expected_result": "Response time और Checked time देखें। पुराने status को current result न समझें।"
+    },
+    {
+      "step_id": "sh-04",
+      "action": "Refresh the overview",
+      "selector": null,
+      "expected_result": "Refresh दबाइए। Updated timestamps और status की तुलना करें।"
+    },
+    {
+      "step_id": "sh-05",
+      "action": "Recheck a service",
+      "selector": null,
+      "expected_result": "Database card का Re-check control इस्तेमाल करें। Re-check status जाँचता है; खराब service अपने आप repair नहीं करता।"
+    },
+    {
+      "step_id": "sh-06",
+      "action": "Review external-service evidence",
+      "selector": null,
+      "expected_result": "External services में Last success, Last failure या No traffic recorded देखें। Traffic न होने पर diagnosis अधूरा है।"
+    },
+    {
+      "step_id": "sh-07",
+      "action": "Find Pricing Diagnostics",
+      "selector": null,
+      "expected_result": "Pricing Diagnostics से storefront और server prices के differences जाँचे जाते हैं। इसका अलग detailed lesson है।"
+    },
+    {
+      "step_id": "sh-08",
+      "action": "Inspect background jobs",
+      "selector": null,
+      "expected_result": "Background Jobs में queued, processing, completed, failed और retrying status पढ़िए।"
+    },
+    {
+      "step_id": "sh-09",
+      "action": "Read job failures carefully",
+      "selector": null,
+      "expected_result": "Retries और Error column देखें। इस page पर job retry या delete करने का button नहीं है।"
+    },
+    {
+      "step_id": "sh-10",
+      "action": "Review the error log",
+      "selector": null,
+      "expected_result": "Error Log में Warning, Error या Critical देखें। कोई entry न हो तो भी customer issue अलग से verify करें।"
+    },
+    {
+      "step_id": "sh-11",
+      "action": "Report useful incident details",
+      "selector": null,
+      "expected_result": "Technical team को service name, समय, status और customer impact दें। Screenshots में private information साझा न करें।"
+    },
+    {
+      "step_id": "sh-12",
+      "action": "Verify after recovery",
+      "selector": null,
+      "expected_result": "Issue ठीक होने के बाद Refresh करके status और customer flow फिर जाँचिए। केवल green badge पर भरोसा न करें।"
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "feature_found": true,
+  "feature_name": "Content Navigation",
+  "source_files": [
+    "src/features/content/components/NavLinksManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ],
+  "business_goal": "Teach a website operator to configure, publish, verify, update and retire customer-facing content.",
+  "user_goal": "Header और footer में सही links जोड़ना और manage करना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Header category links",
+      "route_or_state": "/content/navigation and customer storefront"
+    },
+    {
+      "step": "Custom page links and ordering",
+      "route_or_state": "/content/navigation and customer storefront"
+    },
+    {
+      "step": "Footer links",
+      "route_or_state": "/content/navigation and customer storefront"
+    },
+    {
+      "step": "Hide, restore and delete",
+      "route_or_state": "/content/navigation and customer storefront"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Inactive, scheduled or expired content must be checked on the actual storefront. Saved selections and published changes are different.",
+      "existing_validation": "Actual UI controls and actual public content responses, including customer links and visibility.",
+      "risk_note": "Use approved customer content. Deleting is permanent; hiding is reversible."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "na-01",
+      "action": "Open Navigation",
+      "selector": null,
+      "expected_result": "Content में Navigation खोलिए। Header और Footer के links अलग manage होते हैं।"
+    },
+    {
+      "step_id": "na-02",
+      "action": "Choose the header",
+      "selector": null,
+      "expected_result": "Header tab चुनिए। ये links ऊपर navigation में दिखते हैं।"
+    },
+    {
+      "step_id": "na-03",
+      "action": "Add a header link",
+      "selector": null,
+      "expected_result": "Add Link दबाइए।"
+    },
+    {
+      "step_id": "na-04",
+      "action": "Write a clear label",
+      "selector": null,
+      "expected_result": "Label छोटा रखें। यहाँ Shop Cards लिखते हैं।"
+    },
+    {
+      "step_id": "na-05",
+      "action": "Choose a category target",
+      "selector": null,
+      "expected_result": "Category में सही category चुनिए। Category target उसका सही page खोलता है।"
+    },
+    {
+      "step_id": "na-06",
+      "action": "Create the link",
+      "selector": null,
+      "expected_result": "Active on रखकर Create Link दबाइए।"
+    },
+    {
+      "step_id": "na-07",
+      "action": "Check the header link",
+      "selector": null,
+      "expected_result": "Storefront header में नया link देखिए।"
+    },
+    {
+      "step_id": "na-08",
+      "action": "Test the category link",
+      "selector": null,
+      "expected_result": "Link खोलकर category का नाम और products जाँचिए।"
+    },
+    {
+      "step_id": "na-09",
+      "action": "Edit the link",
+      "selector": null,
+      "expected_result": "Pencil icon से link edit कीजिए।"
+    },
+    {
+      "step_id": "na-10",
+      "action": "Rename the label",
+      "selector": null,
+      "expected_result": "Label बदल सकते हैं। इससे category का नाम नहीं बदलता।"
+    },
+    {
+      "step_id": "na-11",
+      "action": "Save the renamed link",
+      "selector": null,
+      "expected_result": "Save Changes करके storefront पर नया label verify करें।"
+    },
+    {
+      "step_id": "na-12",
+      "action": "Add a custom page link",
+      "selector": null,
+      "expected_result": "Add Link से एक और header link बनाते हैं।"
+    },
+    {
+      "step_id": "na-13",
+      "action": "Name the help link",
+      "selector": null,
+      "expected_result": "Label Artwork Help रखिए।"
+    },
+    {
+      "step_id": "na-14",
+      "action": "Choose a custom URL",
+      "selector": null,
+      "expected_result": "Custom URL चुनकर artwork guidelines का page path लिखिए।"
+    },
+    {
+      "step_id": "na-15",
+      "action": "Save the help link",
+      "selector": null,
+      "expected_result": "Create Link दबाइए।"
+    },
+    {
+      "step_id": "na-16",
+      "action": "Change display order",
+      "selector": null,
+      "expected_result": "Up arrow से help link को सही position में रखें।"
+    },
+    {
+      "step_id": "na-17",
+      "action": "Test the help destination",
+      "selector": null,
+      "expected_result": "Storefront से Artwork Help खोलकर guidelines page verify करें।"
+    },
+    {
+      "step_id": "na-18",
+      "action": "Choose the footer",
+      "selector": null,
+      "expected_result": "अब Footer tab चुनिए। Header links यहाँ copy नहीं होते।"
+    },
+    {
+      "step_id": "na-19",
+      "action": "Add a footer link",
+      "selector": null,
+      "expected_result": "Add Link दबाकर Order Help label रखिए।"
+    },
+    {
+      "step_id": "na-20",
+      "action": "Set the footer destination",
+      "selector": null,
+      "expected_result": "Custom URL में FAQ page का path लिखिए।"
+    },
+    {
+      "step_id": "na-21",
+      "action": "Publish the footer link",
+      "selector": null,
+      "expected_result": "Create Link दबाइए।"
+    },
+    {
+      "step_id": "na-22",
+      "action": "Check the footer",
+      "selector": null,
+      "expected_result": "Storefront के footer में Order Help link ढूँढिए।"
+    },
+    {
+      "step_id": "na-23",
+      "action": "Test the footer link",
+      "selector": null,
+      "expected_result": "Order Help खोलकर FAQ page verify करें।"
+    },
+    {
+      "step_id": "na-24",
+      "action": "Hide a navigation link",
+      "selector": null,
+      "expected_result": "Pencil icon खोलकर Active off करें और Save Changes दबाएँ।"
+    },
+    {
+      "step_id": "na-25",
+      "action": "Verify hidden navigation",
+      "selector": null,
+      "expected_result": "Storefront refresh करें। Inactive link हट जाना चाहिए।"
+    },
+    {
+      "step_id": "na-26",
+      "action": "Restore the link",
+      "selector": null,
+      "expected_result": "Active on करके Save Changes से link वापस लाएँ।"
+    },
+    {
+      "step_id": "na-27",
+      "action": "Delete an unused link",
+      "selector": null,
+      "expected_result": "पुराने link का trash icon दबाइए।"
+    },
+    {
+      "step_id": "na-28",
+      "action": "Confirm deletion",
+      "selector": null,
+      "expected_result": "Delete Link confirm करके storefront पर removal verify करें।"
+    }
+  ]
+}

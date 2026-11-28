@@ -1,0 +1,136 @@
+{
+  "feature": "content-announcements",
+  "title": "Content Announcements",
+  "intro": "Website की top announcement bar बनाना और manage करना सीखिए।",
+  "outro": "अब आप Announcements को create, verify और update कर सकते हैं। Changes के बाद customer view जरूर जाँचिए।",
+  "chapters": [
+    [
+      "an-01",
+      "Message, link and appearance"
+    ],
+    [
+      "an-08",
+      "Publish and verify"
+    ],
+    [
+      "an-12",
+      "Countdown and expiry"
+    ],
+    [
+      "an-18",
+      "Restore, hide and republish"
+    ]
+  ],
+  "steps": [
+    {
+      "id": "an-01",
+      "title": "Open Announcements",
+      "text": "Content में Announcements खोलिए। यह पूरी website की top bar है।"
+    },
+    {
+      "id": "an-02",
+      "title": "Write the message",
+      "text": "Message छोटा रखिए, ताकि mobile पर भी आसानी से पढ़ा जाए।"
+    },
+    {
+      "id": "an-03",
+      "title": "Choose the link",
+      "text": "Link URL में All Products चुनिए। Link optional है।"
+    },
+    {
+      "id": "an-04",
+      "title": "Write link text",
+      "text": "Link Text में Explore Collection लिखिए।"
+    },
+    {
+      "id": "an-05",
+      "title": "Choose the background",
+      "text": "Background colour चुनकर text का contrast जाँचिए।"
+    },
+    {
+      "id": "an-06",
+      "title": "Choose the text colour",
+      "text": "Text colour readable रखें। Preview में दोनों colours साथ दिखते हैं।"
+    },
+    {
+      "id": "an-07",
+      "title": "Review the preview",
+      "text": "Preview में message और link text की spelling दोबारा जाँचिए।"
+    },
+    {
+      "id": "an-08",
+      "title": "Turn on visibility",
+      "text": "Show announcement bar on site on कीजिए।"
+    },
+    {
+      "id": "an-09",
+      "title": "Save the announcement",
+      "text": "Save Announcement दबाइए। Preview बदलना अकेले publish नहीं करता।"
+    },
+    {
+      "id": "an-10",
+      "title": "Check the storefront bar",
+      "text": "Storefront पर top bar का message, colours और link verify कीजिए।"
+    },
+    {
+      "id": "an-11",
+      "title": "Test the announcement link",
+      "text": "Announcement के link पर click करके सही destination जाँचिए।"
+    },
+    {
+      "id": "an-12",
+      "title": "Update the message",
+      "text": "Admin में message edit करके नया update लिखिए।"
+    },
+    {
+      "id": "an-13",
+      "title": "Add a countdown",
+      "text": "Insert timer दबाइए। इसी जगह countdown दिखेगा।"
+    },
+    {
+      "id": "an-14",
+      "title": "Set the deadline in IST",
+      "text": "Countdown deadline IST में चुनिए। तारीख और समय ध्यान से जाँचिए।"
+    },
+    {
+      "id": "an-15",
+      "title": "Save and check the timer",
+      "text": "Save करके storefront पर चलता हुआ countdown देखिए।"
+    },
+    {
+      "id": "an-16",
+      "title": "Verify the saved deadline",
+      "text": "Admin दोबारा खोलकर saved deadline verify करें।"
+    },
+    {
+      "id": "an-17",
+      "title": "See an expired countdown",
+      "text": "Deadline बीतने पर countdown वाली bar storefront से छिप जाती है।"
+    },
+    {
+      "id": "an-18",
+      "title": "Restore a normal message",
+      "text": "Timer हटाकर सामान्य message save करें। Bar फिर से दिख सकती है।"
+    },
+    {
+      "id": "an-19",
+      "title": "Hide the announcement",
+      "text": "Show announcement bar on site off करके Save करें।"
+    },
+    {
+      "id": "an-20",
+      "title": "Verify it is hidden",
+      "text": "Storefront refresh करें। Announcement bar अब नहीं दिखनी चाहिए।"
+    },
+    {
+      "id": "an-21",
+      "title": "Publish it again",
+      "text": "Switch on करके Save करें। इसी bar को दोबारा publish कर सकते हैं।"
+    }
+  ],
+  "source_files": [
+    "src/features/content/components/AnnouncementBar.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ]
+}

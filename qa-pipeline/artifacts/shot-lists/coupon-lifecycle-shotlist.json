@@ -1,0 +1,483 @@
+{
+  "feature_name": "Coupon Lifecycle",
+  "total_estimated_duration_ms": 145800,
+  "shots": [
+    {
+      "step_id": "cp-01",
+      "emphasis": "cut",
+      "duration_ms": 3600,
+      "callout_text": "Open Coupons",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "cp-02",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "New Coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-03",
+      "emphasis": "zoom",
+      "duration_ms": 4000,
+      "callout_text": "Coupon code",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-04",
+      "emphasis": "zoom",
+      "duration_ms": 4000,
+      "callout_text": "Description",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-05",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Discount type",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-06",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "10% discount",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-07",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Maximum ₹200",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-08",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Minimum ₹1,000",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-09",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "100 total uses",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-10",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Once per customer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-11",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Exclude sale items",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-12",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Product/category scope",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-13",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "All products",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-14",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Validity period",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-15",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Manual coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-16",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Inactive demo",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-17",
+      "emphasis": "zoom",
+      "duration_ms": 3600,
+      "callout_text": "Create Coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cp-18",
+      "emphasis": "cut",
+      "duration_ms": 3600,
+      "callout_text": "Verify saved coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "lc-01",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Activate the offer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "lc-02",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Active: ON",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "lc-03",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Save activation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-01",
+      "emphasis": "cut",
+      "duration_ms": 2200,
+      "callout_text": "Storefront: customer view",
+      "callout_position": "right",
+      "transition_in": "whip-pan"
+    },
+    {
+      "step_id": "sf-02",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Add 50 stickers",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-03",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Cart subtotal: ₹300",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-04",
+      "emphasis": "zoom",
+      "duration_ms": 3000,
+      "callout_text": "Use the same coupon code",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-05",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Minimum order validation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-06",
+      "emphasis": "zoom",
+      "duration_ms": 3000,
+      "callout_text": "Increase the quantity",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-07",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Apply the coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-08",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "₹250 calculated → ₹200 capped",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-09",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Remove a coupon",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-10",
+      "emphasis": "zoom",
+      "duration_ms": 3000,
+      "callout_text": "Re-enter the code",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-11",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Confirm ₹200 savings",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-12",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Proceed to Checkout",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-13",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Delivery address",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-14",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Cash on Delivery",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-15",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Review the order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-16",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Server-confirmed totals",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-17",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Place the order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-18",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Order confirmation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-19",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Account order history",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ad-01",
+      "emphasis": "cut",
+      "duration_ms": 2200,
+      "callout_text": "Admin: verify the order",
+      "callout_position": "right",
+      "transition_in": "whip-pan"
+    },
+    {
+      "step_id": "ad-02",
+      "emphasis": "cut",
+      "duration_ms": 2200,
+      "callout_text": "Redemption analytics",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-20",
+      "emphasis": "cut",
+      "duration_ms": 2200,
+      "callout_text": "Try a second eligible cart",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-21",
+      "emphasis": "zoom",
+      "duration_ms": 3000,
+      "callout_text": "Try the same code again",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-22",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "One use per customer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ad-03",
+      "emphasis": "cut",
+      "duration_ms": 2200,
+      "callout_text": "End the promotion",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ad-04",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Deactivate and save",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sf-23",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Inactive coupon rejected",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ad-05",
+      "emphasis": "cut",
+      "duration_ms": 2200,
+      "callout_text": "Historical discounts stay saved",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ad-06",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Cancel the demo order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ad-07",
+      "emphasis": "zoom",
+      "duration_ms": 2200,
+      "callout_text": "Confirm cancellation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ad-08",
+      "emphasis": "cut",
+      "duration_ms": 2200,
+      "callout_text": "Usage quota released",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ad-09",
+      "emphasis": "cut",
+      "duration_ms": 2200,
+      "callout_text": "Historical analytics ≠ quota",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "page_findings": [],
+  "camera_min_zoom": 1.4,
+  "reviewed_console_findings": [
+    {
+      "step_id": "sf-01",
+      "run_timestamp": "2026-11-23T18:53:18.617Z",
+      "messages": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "reason": "Existing product thumbnail/static asset 404s. The pictured UI was inspected and the real coupon/cart/order assertions passed; these findings remain in the run log and quality report. No failed step is approved."
+    },
+    {
+      "step_id": "sf-03",
+      "run_timestamp": "2026-11-23T18:53:18.617Z",
+      "messages": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "reason": "Existing product thumbnail/static asset 404s. The pictured UI was inspected and the real coupon/cart/order assertions passed; these findings remain in the run log and quality report. No failed step is approved."
+    },
+    {
+      "step_id": "ad-01",
+      "run_timestamp": "2026-11-23T18:53:18.617Z",
+      "messages": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "reason": "Existing product thumbnail/static asset 404s. The pictured UI was inspected and the real coupon/cart/order assertions passed; these findings remain in the run log and quality report. No failed step is approved."
+    },
+    {
+      "step_id": "sf-20",
+      "run_timestamp": "2026-11-23T18:53:18.617Z",
+      "messages": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "reason": "Existing product thumbnail/static asset 404s. The pictured UI was inspected and the real coupon/cart/order assertions passed; these findings remain in the run log and quality report. No failed step is approved."
+    },
+    {
+      "step_id": "sf-23",
+      "run_timestamp": "2026-11-23T18:53:18.617Z",
+      "messages": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "reason": "Existing product thumbnail/static asset 404s. The pictured UI was inspected and the real coupon/cart/order assertions passed; these findings remain in the run log and quality report. No failed step is approved."
+    },
+    {
+      "step_id": "ad-05",
+      "run_timestamp": "2026-11-23T18:53:18.617Z",
+      "messages": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "reason": "Existing product thumbnail/static asset 404s. The pictured UI was inspected and the real coupon/cart/order assertions passed; these findings remain in the run log and quality report. No failed step is approved."
+    }
+  ]
+}

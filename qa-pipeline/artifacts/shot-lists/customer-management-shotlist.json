@@ -1,0 +1,201 @@
+{
+  "feature_name": "Customer Management",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 84000,
+  "shots": [
+    {
+      "step_id": "cm-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Customers",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "cm-02",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Read the customer columns",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Search by email",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Filter active customers",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open the customer profile",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review identity and verification",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Read the order summary",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open order history",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open a related order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-10",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Return to the customer",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review saved addresses",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review customer activity",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-13",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review the email shortcut",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-14",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open ban confirmation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-15",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Read the ban confirmation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Confirm the account ban",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-17",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Find the banned account",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-18",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify blocked sign-in",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-19",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Return to the banned profile",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-20",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open reinstatement confirmation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-21",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Confirm reinstatement",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-22",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify restored customer access",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-23",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify saved active status",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "cm-24",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Clear filters and finish",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

@@ -1,0 +1,201 @@
+{
+  "feature_name": "Staff Access Lifecycle",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 84000,
+  "shots": [
+    {
+      "step_id": "st-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Staff",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "st-02",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Review role permissions",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Add a team member",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enter the full name",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enter the work email",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose Customer Support",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review sign-in choices",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Send the invitation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open member actions",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Edit the member",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-11",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add the contact number",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review password reset",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-13",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Customise permissions",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-14",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Review permission groups",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-15",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save the member changes",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Change the role",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Save the new role",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-18",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open deactivation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-19",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Confirm deactivation",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-20",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Show deactivated members",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-21",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Edit the inactive account",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-22",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Restore account access",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-23",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Unlock a login",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "st-24",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify the restored member",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

@@ -2,7 +2,8 @@ import type { NextConfig } from "next";
 
 function cdnRemotePatterns(): { protocol: "https" | "http"; hostname: string; pathname: string }[] {
   const urls = [
-    process.env.NEXT_PUBLIC_CDN_URL,
+    // Existing catalog/order thumbnails use the business CDN even in development.
+    process.env.NEXT_PUBLIC_CDN_URL || "https://cdn.urgentprinters.com",
     process.env.NEXT_PUBLIC_R2_PUBLIC_URL
   ].filter(Boolean) as string[];
 

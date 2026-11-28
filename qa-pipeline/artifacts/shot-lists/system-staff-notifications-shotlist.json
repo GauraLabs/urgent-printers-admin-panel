@@ -1,0 +1,129 @@
+{
+  "feature_name": "Staff Notification Preferences",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 52500,
+  "shots": [
+    {
+      "step_id": "sn-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Notification Preferences",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "sn-02",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose the new-order event",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-03",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Locate the team member",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enable In-App alerts",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enable email alerts",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check phone requirements",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enable SMS for a phone contact",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enable WhatsApp alerts",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Review Push alerts",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose status-change alerts",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enable status-change In-App",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Enable status-change email",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-13",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify saved preferences",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-14",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Turn off an unwanted alert",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "sn-15",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify the disabled channel",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

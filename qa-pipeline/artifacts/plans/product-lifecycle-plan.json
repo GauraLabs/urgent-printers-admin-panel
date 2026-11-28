@@ -1,0 +1,312 @@
+{
+  "feature_found": true,
+  "feature_name": "Product Lifecycle",
+  "source_files": [
+    "src/features/categories/components/CategoryForm.tsx",
+    "src/features/products/components/ProductForm/index.tsx",
+    "../urgent-printers-frontend/app/products/[categorySlug]/page.tsx",
+    "../urgent-printers-frontend/features/products/configurator/ProductConfigurator.tsx"
+  ],
+  "business_goal": "Teach staff to configure the catalogue and verify the resulting storefront and order behavior with reproducible footage.",
+  "user_goal": "इस tutorial में product draft से publishing, storefront order, editing और retirement तक पूरा lifecycle सीखेंगे।",
+  "user_journey": [
+    {
+      "step": "Create and configure",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Pricing and order limits",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Draft and publish",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Storefront configuration",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Checkout and order",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Update and retire",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Empty categories are intentionally excluded from storefront navigation until an active product is assigned.",
+      "existing_validation": "Real public category and product data; storefront empty state and navigation checks.",
+      "risk_note": "Preview direct URLs separately from menu visibility; never claim an empty category appears in navigation."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "pr-01",
+      "action": "Product catalogue",
+      "selector": null,
+      "expected_result": "Products खोलिए। यहीं से draft, live और retired products manage करते हैं।"
+    },
+    {
+      "step_id": "pr-02",
+      "action": "Add Product",
+      "selector": null,
+      "expected_result": "Add Product चुनिए। हम category tutorial वाली Foil Invitations में नया product बनाएँगे।"
+    },
+    {
+      "step_id": "pr-03",
+      "action": "Product name",
+      "selector": null,
+      "expected_result": "Product Name में Foil Wedding Invitations लिखिए।"
+    },
+    {
+      "step_id": "pr-04",
+      "action": "Product URL",
+      "selector": null,
+      "expected_result": "Auto-generated slug verify कीजिए। Published URL बदलना हो तभी इसे edit करें।"
+    },
+    {
+      "step_id": "pr-05",
+      "action": "Short description",
+      "selector": null,
+      "expected_result": "Short Description में product की सबसे उपयोगी बात लिखिए।"
+    },
+    {
+      "step_id": "pr-06",
+      "action": "Full description",
+      "selector": null,
+      "expected_result": "Full Description में material, printing और customization की detail दीजिए।"
+    },
+    {
+      "step_id": "pr-07",
+      "action": "Assign category",
+      "selector": null,
+      "expected_result": "सबसे specific category चुनिए। यहाँ Foil Invitations subcategory सही है।"
+    },
+    {
+      "step_id": "pr-08",
+      "action": "Badge and tags",
+      "selector": null,
+      "expected_result": "New badge और relevant tags रखिए, ताकि catalogue में product की पहचान साफ़ रहे।"
+    },
+    {
+      "step_id": "pr-09",
+      "action": "Product photographs",
+      "selector": null,
+      "expected_result": "Product की तीन clear images upload कीजिए। पहली image मुख्य product photo रहेगी।"
+    },
+    {
+      "step_id": "pr-10",
+      "action": "Print sizes",
+      "selector": null,
+      "expected_result": "Print Specifications में size और dimensions verify कीजिए। Default option customer को पहले select मिलेगा।"
+    },
+    {
+      "step_id": "pr-11",
+      "action": "Paper options",
+      "selector": null,
+      "expected_result": "Paper type में material और GSM verify करें। Active option ही customer चुन सकेगा।"
+    },
+    {
+      "step_id": "pr-12",
+      "action": "Finish multipliers",
+      "selector": null,
+      "expected_result": "Finish और sides के price multipliers देखें। Premium option से configured price बढ़ सकता है।"
+    },
+    {
+      "step_id": "pr-13",
+      "action": "Quantity tiers",
+      "selector": null,
+      "expected_result": "Pricing tiers quantity के हिसाब से per-unit rate तय करते हैं। सौ pieces पर twelve rupees रखते हैं।"
+    },
+    {
+      "step_id": "pr-14",
+      "action": "Bulk pricing",
+      "selector": null,
+      "expected_result": "दो सौ पचास pieces पर nine rupees और पाँच सौ पर seven rupees हैं। Bulk quantity से unit price कम होता है।"
+    },
+    {
+      "step_id": "pr-15",
+      "action": "Listing quantity",
+      "selector": null,
+      "expected_result": "Listing quantity one hundred रखिए। Storefront card इसी quantity का price दिखाएगा।"
+    },
+    {
+      "step_id": "pr-16",
+      "action": "Order limits",
+      "selector": null,
+      "expected_result": "Minimum one hundred और maximum twenty-five hundred रखिए। Customer इन्हीं limits में order कर सकेगा।"
+    },
+    {
+      "step_id": "pr-17",
+      "action": "Turnaround",
+      "selector": null,
+      "expected_result": "Standard turnaround five days है। Express और Rush तभी enable करें जब वह service उपलब्ध हो।"
+    },
+    {
+      "step_id": "pr-18",
+      "action": "Inventory setting",
+      "selector": null,
+      "expected_result": "Made-to-order product के लिए inventory tracking off रखते हैं। Limited stock हो तो इसे on करके stock भरिए।"
+    },
+    {
+      "step_id": "pr-19",
+      "action": "Product SEO",
+      "selector": null,
+      "expected_result": "SEO Settings में title और description लिखिए। Search result के लिए product-specific copy रखें।"
+    },
+    {
+      "step_id": "pr-20",
+      "action": "Customization mode",
+      "selector": null,
+      "expected_result": "इस sample में customization mode None है। Artwork या template चाहिए तो उसका mode अलग चुनना होगा।"
+    },
+    {
+      "step_id": "pr-21",
+      "action": "Save as draft",
+      "selector": null,
+      "expected_result": "पहले Save as Draft कीजिए। Draft में details review कर सकते हैं, customer अभी order नहीं कर सकता।"
+    },
+    {
+      "step_id": "pr-22",
+      "action": "Draft is private",
+      "selector": null,
+      "expected_result": "Saved draft verify कीजिए। Public product API में यह अभी available नहीं है।"
+    },
+    {
+      "step_id": "pr-23",
+      "action": "Publish the product",
+      "selector": null,
+      "expected_result": "Draft edit खोलकर Active on कीजिए और Save Changes करें। अब product publish हो गया है।"
+    },
+    {
+      "step_id": "pr-24",
+      "action": "Browse the category",
+      "selector": null,
+      "expected_result": "Product publish होने पर parent page में subcategory tile आ जाती है। इसे खोलकर नया product card और listing price verify कीजिए।"
+    },
+    {
+      "step_id": "pr-25",
+      "action": "Open product details",
+      "selector": null,
+      "expected_result": "Product खोलिए। वही images, description और print options customer को मिल रहे हैं।"
+    },
+    {
+      "step_id": "pr-26",
+      "action": "Default configuration",
+      "selector": null,
+      "expected_result": "Default configuration में one hundred pieces हैं। Total twelve hundred rupees verify कीजिए।"
+    },
+    {
+      "step_id": "pr-27",
+      "action": "Choose bulk quantity",
+      "selector": null,
+      "expected_result": "Quantity two hundred fifty करने पर tier rate nine rupees होता है। Total twenty-two hundred fifty है।"
+    },
+    {
+      "step_id": "pr-28",
+      "action": "Choose a premium finish",
+      "selector": null,
+      "expected_result": "Premium finish चुनिए। Multiplier लागू होने पर total बढ़ता है; फिर standard finish वापस चुनते हैं।"
+    },
+    {
+      "step_id": "pr-29",
+      "action": "Add to cart",
+      "selector": null,
+      "expected_result": "Configuration verify करके Add to Cart कीजिए। Cart में selected options और quantity जाएँगे।"
+    },
+    {
+      "step_id": "pr-30",
+      "action": "Cart configuration",
+      "selector": null,
+      "expected_result": "Cart खोलिए और product name, quantity और twenty-two hundred fifty subtotal verify कीजिए।"
+    },
+    {
+      "step_id": "pr-31",
+      "action": "Proceed to checkout",
+      "selector": null,
+      "expected_result": "Proceed to Checkout चुनिए। इस recording में dedicated development customer इस्तेमाल हो रहा है।"
+    },
+    {
+      "step_id": "pr-32",
+      "action": "Delivery address",
+      "selector": null,
+      "expected_result": "Saved delivery address चुनकर Continue to Payment कीजिए।"
+    },
+    {
+      "step_id": "pr-33",
+      "action": "Cash on Delivery",
+      "selector": null,
+      "expected_result": "Cash on Delivery चुनते हैं। इस tutorial में कोई online payment charge नहीं होगा।"
+    },
+    {
+      "step_id": "pr-34",
+      "action": "Authoritative review",
+      "selector": null,
+      "expected_result": "Review Order पर server-confirmed prices verify कीजिए। Place Order से पहले total दोबारा देखना ज़रूरी है।"
+    },
+    {
+      "step_id": "pr-35",
+      "action": "Place development order",
+      "selector": null,
+      "expected_result": "Place Order कीजिए। यह real development order है, किसी external fulfilment provider को नहीं जाएगा।"
+    },
+    {
+      "step_id": "pr-36",
+      "action": "Order confirmation",
+      "selector": null,
+      "expected_result": "Confirmation में order number और product verify कीजिए। Customer account में order history भी available है।"
+    },
+    {
+      "step_id": "pr-37",
+      "action": "Admin order review",
+      "selector": null,
+      "expected_result": "Admin order खोलिए। Product snapshot, quantity और selected configuration यहाँ verify करें।"
+    },
+    {
+      "step_id": "pr-38",
+      "action": "Edit the live product",
+      "selector": null,
+      "expected_result": "अब live product की Short Description update करते हैं। Existing slug को unchanged रखिए।"
+    },
+    {
+      "step_id": "pr-39",
+      "action": "Verify storefront update",
+      "selector": null,
+      "expected_result": "उसी storefront URL पर updated description verify कीजिए। नया page link बनाने की ज़रूरत नहीं पड़ी।"
+    },
+    {
+      "step_id": "pr-40",
+      "action": "Retire the product",
+      "selector": null,
+      "expected_result": "Product को hide करने के लिए Active off करें और Save as Draft चुनिए। इससे नया customer इसे purchase नहीं कर पाएगा।"
+    },
+    {
+      "step_id": "pr-41",
+      "action": "Verify retirement",
+      "selector": null,
+      "expected_result": "Public catalogue से product हट गया है। Existing order का saved product snapshot फिर भी बना रहता है।"
+    },
+    {
+      "step_id": "pr-42",
+      "action": "Keep the order history",
+      "selector": null,
+      "expected_result": "Admin order में original product name, quantity और price अब भी verify कर सकते हैं।"
+    },
+    {
+      "step_id": "pr-43",
+      "action": "Cancel the demo order",
+      "selector": null,
+      "expected_result": "Recording का development order cancel कीजिए, ताकि इसे fulfilment के लिए आगे न बढ़ाया जाए।"
+    },
+    {
+      "step_id": "pr-44",
+      "action": "Complete the lifecycle",
+      "selector": null,
+      "expected_result": "Order Cancelled है और product inactive है। Category, publish, purchase, update और retirement का पूरा lifecycle verify हो गया।"
+    }
+  ]
+}

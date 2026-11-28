@@ -49,7 +49,7 @@ if (!narrationPath) {
  * project that ports this, for a file format that is four lines of parsing.
  */
 function loadEnv() {
-  const envPath = resolve(REPO_ROOT, '.env');
+  const envPath = flag('env-file') ? resolve(flag('env-file')) : resolve(REPO_ROOT, '.env');
   if (!existsSync(envPath)) return;
   for (const raw of readFileSync(envPath, 'utf8').split('\n')) {
     const line = raw.trim();
@@ -67,6 +67,13 @@ const config = JSON.parse(readFileSync(resolve(REPO_ROOT, 'project.config.json')
 const tts = config.tts;
 if (!tts) {
   console.error('✗ project.config.json has no `tts` block. Module 8 cannot run.');
+  process.exit(2);
+}
+// A tutorial can keep credentials and voice selection entirely outside the app repo.
+tts.voice_id = process.env.ELEVENLABS_VOICE_ID || tts.voice_id;
+tts.voice_name = process.env.ELEVENLABS_VOICE_NAME || tts.voice_name;
+if ((flag('tts-provider') ?? tts.provider) === 'elevenlabs' && (!tts.voice_id || tts.voice_id === '__FILL_ME__') && !dryRun) {
+  console.error('Set ELEVENLABS_VOICE_ID in the external --env-file before synthesis.');
   process.exit(2);
 }
 const providerOverride = flag('tts-provider');
@@ -253,6 +260,7 @@ async function synthesizeElevenLabs(text) {
 
   const response = await fetch(url, {
     method: 'POST',
+    signal: AbortSignal.timeout(120_000),
     headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       text,
@@ -359,7 +367,7 @@ if (dryRun) {
   process.exit(0);
 }
 
-narration.synthesized_at = new Date().toISOString();
+if (synthesized || !narration.synthesized_at) narration.synthesized_at = new Date().toISOString();
 narration.tts = isLocal
   ? { provider: providerName, voice_id: providerName, voice_name: null, model_id: providerName }
   : { provider: providerName, voice_id: tts.voice_id, voice_name: tts.voice_name ?? null, model_id: tts.model_id };

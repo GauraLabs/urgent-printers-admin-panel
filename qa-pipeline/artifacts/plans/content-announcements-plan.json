@@ -1,0 +1,165 @@
+{
+  "feature_found": true,
+  "feature_name": "Content Announcements",
+  "source_files": [
+    "src/features/content/components/AnnouncementBar.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ],
+  "business_goal": "Teach a website operator to configure, publish, verify, update and retire customer-facing content.",
+  "user_goal": "Website की top announcement bar बनाना और manage करना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Message, link and appearance",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Publish and verify",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Countdown and expiry",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    },
+    {
+      "step": "Restore, hide and republish",
+      "route_or_state": "/products, storefront configuration, checkout and /orders/{id}"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Inactive, scheduled or expired content must be checked on the actual storefront. Saved selections and published changes are different.",
+      "existing_validation": "Actual UI controls and actual public content responses, including customer links and visibility.",
+      "risk_note": "Use approved customer content. Deleting is permanent; hiding is reversible."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "an-01",
+      "action": "Open Announcements",
+      "selector": null,
+      "expected_result": "Content में Announcements खोलिए। यह पूरी website की top bar है।"
+    },
+    {
+      "step_id": "an-02",
+      "action": "Write the message",
+      "selector": null,
+      "expected_result": "Message छोटा रखिए, ताकि mobile पर भी आसानी से पढ़ा जाए।"
+    },
+    {
+      "step_id": "an-03",
+      "action": "Choose the link",
+      "selector": null,
+      "expected_result": "Link URL में All Products चुनिए। Link optional है।"
+    },
+    {
+      "step_id": "an-04",
+      "action": "Write link text",
+      "selector": null,
+      "expected_result": "Link Text में Explore Collection लिखिए।"
+    },
+    {
+      "step_id": "an-05",
+      "action": "Choose the background",
+      "selector": null,
+      "expected_result": "Background colour चुनकर text का contrast जाँचिए।"
+    },
+    {
+      "step_id": "an-06",
+      "action": "Choose the text colour",
+      "selector": null,
+      "expected_result": "Text colour readable रखें। Preview में दोनों colours साथ दिखते हैं।"
+    },
+    {
+      "step_id": "an-07",
+      "action": "Review the preview",
+      "selector": null,
+      "expected_result": "Preview में message और link text की spelling दोबारा जाँचिए।"
+    },
+    {
+      "step_id": "an-08",
+      "action": "Turn on visibility",
+      "selector": null,
+      "expected_result": "Show announcement bar on site on कीजिए।"
+    },
+    {
+      "step_id": "an-09",
+      "action": "Save the announcement",
+      "selector": null,
+      "expected_result": "Save Announcement दबाइए। Preview बदलना अकेले publish नहीं करता।"
+    },
+    {
+      "step_id": "an-10",
+      "action": "Check the storefront bar",
+      "selector": null,
+      "expected_result": "Storefront पर top bar का message, colours और link verify कीजिए।"
+    },
+    {
+      "step_id": "an-11",
+      "action": "Test the announcement link",
+      "selector": null,
+      "expected_result": "Announcement के link पर click करके सही destination जाँचिए।"
+    },
+    {
+      "step_id": "an-12",
+      "action": "Update the message",
+      "selector": null,
+      "expected_result": "Admin में message edit करके नया update लिखिए।"
+    },
+    {
+      "step_id": "an-13",
+      "action": "Add a countdown",
+      "selector": null,
+      "expected_result": "Insert timer दबाइए। इसी जगह countdown दिखेगा।"
+    },
+    {
+      "step_id": "an-14",
+      "action": "Set the deadline in IST",
+      "selector": null,
+      "expected_result": "Countdown deadline IST में चुनिए। तारीख और समय ध्यान से जाँचिए।"
+    },
+    {
+      "step_id": "an-15",
+      "action": "Save and check the timer",
+      "selector": null,
+      "expected_result": "Save करके storefront पर चलता हुआ countdown देखिए।"
+    },
+    {
+      "step_id": "an-16",
+      "action": "Verify the saved deadline",
+      "selector": null,
+      "expected_result": "Admin दोबारा खोलकर saved deadline verify करें।"
+    },
+    {
+      "step_id": "an-17",
+      "action": "See an expired countdown",
+      "selector": null,
+      "expected_result": "Deadline बीतने पर countdown वाली bar storefront से छिप जाती है।"
+    },
+    {
+      "step_id": "an-18",
+      "action": "Restore a normal message",
+      "selector": null,
+      "expected_result": "Timer हटाकर सामान्य message save करें। Bar फिर से दिख सकती है।"
+    },
+    {
+      "step_id": "an-19",
+      "action": "Hide the announcement",
+      "selector": null,
+      "expected_result": "Show announcement bar on site off करके Save करें।"
+    },
+    {
+      "step_id": "an-20",
+      "action": "Verify it is hidden",
+      "selector": null,
+      "expected_result": "Storefront refresh करें। Announcement bar अब नहीं दिखनी चाहिए।"
+    },
+    {
+      "step_id": "an-21",
+      "action": "Publish it again",
+      "selector": null,
+      "expected_result": "Switch on करके Save करें। इसी bar को दोबारा publish कर सकते हैं।"
+    }
+  ]
+}

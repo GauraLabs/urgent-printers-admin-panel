@@ -1,0 +1,152 @@
+{
+  "feature_found": true,
+  "feature_name": "Pricing Diagnostics Lifecycle",
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "business_goal": "Teach website operators to manage staff access, saved settings, monitoring and incident follow-up; explicitly identify demo-only settings.",
+  "user_goal": "Price mismatch ढूँढना, details समझना, resolution note जोड़ना और जरूरत पर reopen करना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Filter pricing cases",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Compare amounts and context",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Record a resolution",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Verify saved resolution",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Reopen and follow up",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Close and verify again",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Some settings forms are demo-only; never present those as persistent controls.",
+      "existing_validation": "Real saved staff/preferences/COD/order-halt and pricing resolution responses; reload and storefront checks.",
+      "risk_note": "Use owned development fixtures. Health states are observed, not simulated. Do not claim alert delivery or repair from a toggle."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "pd-01",
+      "action": "Open Pricing Diagnostics",
+      "selector": null,
+      "expected_result": "System Health में Pricing Diagnostics खोलिए। Training example में storefront और server amounts अलग हैं।"
+    },
+    {
+      "step_id": "pd-02",
+      "action": "Read the summary",
+      "selector": null,
+      "expected_result": "Last seven days की cause counts और unexplained items पढ़िए। Likely cause केवल जाँच की शुरुआत है।"
+    },
+    {
+      "step_id": "pd-03",
+      "action": "Choose unresolved items",
+      "selector": null,
+      "expected_result": "Status में Unresolved चुनिए ताकि pending cases दिखें।"
+    },
+    {
+      "step_id": "pd-04",
+      "action": "Filter the stage",
+      "selector": null,
+      "expected_result": "Stage में Preview चुनिए। Preview और Order create अलग moments हैं।"
+    },
+    {
+      "step_id": "pd-05",
+      "action": "Filter the cause",
+      "selector": null,
+      "expected_result": "Cause में Unexplained चुनिए। केवल label देखकर customer या staff को जिम्मेदार न ठहराएँ।"
+    },
+    {
+      "step_id": "pd-06",
+      "action": "Open a mismatch",
+      "selector": null,
+      "expected_result": "Training example की row खोलिए। Details में दोनों calculations और context हैं।"
+    },
+    {
+      "step_id": "pd-07",
+      "action": "Compare the amounts",
+      "selector": null,
+      "expected_result": "Client और server के unit, total और Difference की तुलना करें। Difference का sign और quantity दोनों पढ़ें।"
+    },
+    {
+      "step_id": "pd-08",
+      "action": "Read the diagnostic context",
+      "selector": null,
+      "expected_result": "Options, recorded time और request context देखें। Resolve करने से product price या customer payment नहीं बदलता।"
+    },
+    {
+      "step_id": "pd-09",
+      "action": "Write a resolution note",
+      "selector": null,
+      "expected_result": "जाँच और corrective action का छोटा note लिखिए। पहले actual issue ठीक होने की पुष्टि करें।"
+    },
+    {
+      "step_id": "pd-10",
+      "action": "Mark the case resolved",
+      "selector": null,
+      "expected_result": "Mark resolved दबाइए। यह case tracking update है; automatic refund या price fix नहीं।"
+    },
+    {
+      "step_id": "pd-11",
+      "action": "Find the resolved case",
+      "selector": null,
+      "expected_result": "Status में Resolved चुनिए और वही case खोलिए।"
+    },
+    {
+      "step_id": "pd-12",
+      "action": "Check the saved note",
+      "selector": null,
+      "expected_result": "Saved note, resolver और resolved time verify करें।"
+    },
+    {
+      "step_id": "pd-13",
+      "action": "Reopen an unresolved issue",
+      "selector": null,
+      "expected_result": "Issue वापस आए तो Unresolve दबाइए। History बचती है और case फिर open होता है।"
+    },
+    {
+      "step_id": "pd-14",
+      "action": "Verify the reopened case",
+      "selector": null,
+      "expected_result": "Status में Unresolved चुनिए। वही case दोबारा दिखना confirm करें।"
+    },
+    {
+      "step_id": "pd-15",
+      "action": "Update the investigation note",
+      "selector": null,
+      "expected_result": "Case खोलकर follow-up note लिखिए। Clear और factual details रखें।"
+    },
+    {
+      "step_id": "pd-16",
+      "action": "Close after the final check",
+      "selector": null,
+      "expected_result": "Problem ठीक होने के बाद Mark resolved करें। Summary में historical occurrence मिटता नहीं है।"
+    },
+    {
+      "step_id": "pd-17",
+      "action": "Verify saved resolution",
+      "selector": null,
+      "expected_result": "Page reload करके Resolved filter में saved state और note जाँचिए।"
+    }
+  ]
+}

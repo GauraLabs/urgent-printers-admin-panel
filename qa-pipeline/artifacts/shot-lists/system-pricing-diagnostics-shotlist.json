@@ -1,0 +1,145 @@
+{
+  "feature_name": "Pricing Diagnostics Lifecycle",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 59500,
+  "shots": [
+    {
+      "step_id": "pd-01",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Open Pricing Diagnostics",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "pd-02",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Read the summary",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose unresolved items",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Filter the stage",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-05",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Filter the cause",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-06",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open a mismatch",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-07",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Compare the amounts",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Read the diagnostic context",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Write a resolution note",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Mark the case resolved",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-11",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Find the resolved case",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-12",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the saved note",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-13",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Reopen an unresolved issue",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-14",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify the reopened case",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-15",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Update the investigation note",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Close after the final check",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "pd-17",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Verify saved resolution",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

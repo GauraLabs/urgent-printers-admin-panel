@@ -20,7 +20,7 @@
  * screenshots at qa-pipeline/artifacts/screenshots/<feature-slug>/.
  */
 import { test as base, expect } from '@playwright/test';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync, renameSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -268,6 +268,12 @@ export const test = base.extend({
         pendingConsoleErrors = [];
         let status = 'pass';
         let error = null;
+        let beforeScreenshot = null;
+        if (captureOptions.preActionScreenshots) {
+          if (locator) await locator.evaluate(el => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+          beforeScreenshot = join(shotDir, `${stepId}-before.png`);
+          await page.screenshot({ path: beforeScreenshot, caret: captureOptions.screenshotCaret ?? 'hide', timeout: captureOptions.screenshotTimeout ?? 30_000 });
+        }
 
         // Measure BEFORE acting. The renderer animates a cursor toward the element the
         // user is about to hit, so the pre-action position is the correct one — and many
@@ -290,7 +296,7 @@ export const test = base.extend({
         if (!boundingBox) boundingBox = await measure(locator);
 
         const screenshotPath = join(shotDir, `${stepId}.png`);
-        await page.screenshot({ path: screenshotPath }).catch(() => {});
+        await page.screenshot({ path: screenshotPath, caret: captureOptions.screenshotCaret ?? 'hide', timeout: captureOptions.screenshotTimeout ?? 30_000 });
 
         const url = page.url();
         const navigated = url !== lastUrl;
@@ -318,6 +324,7 @@ export const test = base.extend({
           bounding_box: boundingBox,
           timestamp_ms: elapsed(),
           screenshot_path: relative(REPO_ROOT, screenshotPath),
+          ...(beforeScreenshot ? { before_screenshot_path: relative(REPO_ROOT, beforeScreenshot) } : {}),
           status,
           error,
           // What the user typed, when they typed. The renderer replays this character by
@@ -329,6 +336,11 @@ export const test = base.extend({
           console_errors: pendingConsoleErrors.slice(),
         });
 
+        if (captureOptions.persistEachStep) {
+          const checkpoint = join(ARTIFACTS, 'runs', `${slug}-partial-run.json`);
+          writeFileSync(checkpoint + '.tmp', JSON.stringify({ feature_name: feature, plan_path: resolvePlanPath(captureOptions.plan, slug), run_timestamp: runTimestamp, trace_path: null, viewport, steps, lighthouse }, null, 2) + '\n');
+          renameSync(checkpoint + '.tmp', checkpoint);
+        }
         pendingConsoleErrors = [];
         if (status === 'fail') throw new Error(`step ${stepId} (${action}) failed: ${error}`);
       },
@@ -374,6 +386,7 @@ export const test = base.extend({
       },
     };
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture callback, not a React hook.
     await use(capture);
 
     if (steps.length) {

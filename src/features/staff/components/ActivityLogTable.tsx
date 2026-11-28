@@ -12,6 +12,7 @@ import { useActivityLog, useStaff } from '../hooks/useStaff';
 import { ROLE_LABELS } from '@/lib/constants/roles';
 import { formatDateTime } from '@/lib/utils/formatDate';
 import { cn } from '@/lib/utils/cn';
+import { useAuthStore } from '@/store/authStore';
 import type { ActivityLog } from '@/types';
 import { ACTION_LABELS, actionLabel, resolveActivityActor, summarizeMeta } from '../utils/activityLog';
 
@@ -83,16 +84,23 @@ function renderMeta(action: string, meta: Record<string, unknown>): React.ReactN
 export function ActivityLogTable() {
   const { query, filters, setPage, setActorAdminId, setResourceType, setAction } = useActivityLog();
   const { query: staffQuery } = useStaff();
+  const currentUser = useAuthStore((state) => state.user);
+  const staffOptions = useMemo(() => {
+    const items = staffQuery.data?.items ?? [];
+    return currentUser && !items.some((member) => member.id === currentUser.id)
+      ? [currentUser, ...items]
+      : items;
+  }, [staffQuery.data, currentUser]);
   const logs = query.data?.items ?? [];
 
   // Lookup map for actor name/role from the staff list
   const staffById = useMemo(() => {
     const map = new Map<string, { name: string; role: string }>();
-    for (const m of staffQuery.data?.items ?? []) {
+    for (const m of staffOptions) {
       map.set(m.id, { name: m.name, role: m.role });
     }
     return map;
-  }, [staffQuery.data]);
+  }, [staffOptions]);
 
   const columns: ColumnDef<ActivityLog, unknown>[] = [
     {
@@ -189,7 +197,7 @@ export function ActivityLogTable() {
             <SelectTrigger size="sm" className="w-44"><SelectValue placeholder="All admins" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="">All admins</SelectItem>
-              {staffQuery.data?.items.map((m) => (
+              {staffOptions.map((m) => (
                 <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
               ))}
             </SelectContent>

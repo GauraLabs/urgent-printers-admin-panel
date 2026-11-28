@@ -1,0 +1,163 @@
+{
+  "feature": "customer-reviews",
+  "title": "Customer Reviews Lifecycle",
+  "intro": "Delivered order से review आना, moderation, reply और public visibility जाँचना सीखिए।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "cr-01",
+      "Submit a customer review"
+    ],
+    [
+      "cr-07",
+      "Find and verify pending feedback"
+    ],
+    [
+      "cr-12",
+      "Approve and publish"
+    ],
+    [
+      "cr-15",
+      "Reply and update the response"
+    ],
+    [
+      "cr-21",
+      "Reject, hide and restore"
+    ]
+  ],
+  "source_files": [
+    "src/features/customers/components/CustomersTable.tsx",
+    "src/features/customers/components/CustomerDetail/CustomerDetailClient.tsx",
+    "src/features/reviews/components/ReviewsTable.tsx",
+    "src/features/reviews/components/ReplyDialog.tsx",
+    "../urgent-printers-frontend/app/account/orders/[id]/review/page.tsx",
+    "../urgent-printers-frontend/features/products/ReviewsSection.tsx"
+  ],
+  "steps": [
+    {
+      "id": "cr-01",
+      "title": "Open a delivered customer order",
+      "text": "Customer account में delivered order खोलिए। उसी customer और product की eligible purchase से review देना चाहिए।"
+    },
+    {
+      "id": "cr-02",
+      "title": "Open Write a Review",
+      "text": "Write a Review खोलिए। Pending delivery या दूसरे customer का order review के लिए eligible नहीं है।"
+    },
+    {
+      "id": "cr-03",
+      "title": "Select a star rating",
+      "text": "इस example में चार stars चुनिए। Rating customer के अपने अनुभव की होनी चाहिए।"
+    },
+    {
+      "id": "cr-04",
+      "title": "Write the review title",
+      "text": "छोटा और स्पष्ट review title लिखिए।"
+    },
+    {
+      "id": "cr-05",
+      "title": "Write the customer feedback",
+      "text": "Print quality और अनुभव का feedback लिखिए। इस form में कम से कम बीस characters चाहिए।"
+    },
+    {
+      "id": "cr-06",
+      "title": "Submit the review",
+      "text": "Submit Review दबाइए। Thank You और awaiting approval message जाँचिए; अभी यह public नहीं हुआ।"
+    },
+    {
+      "id": "cr-07",
+      "title": "Open admin Reviews",
+      "text": "Admin में Customers menu का Reviews खोलिए। यह product reviews हैं, homepage Testimonials से अलग।"
+    },
+    {
+      "id": "cr-08",
+      "title": "Filter pending reviews",
+      "text": "Status में Pending चुनिए। सही customer, product और linked order पहचानें।"
+    },
+    {
+      "id": "cr-09",
+      "title": "Read the submitted feedback",
+      "text": "Stars और review text पढ़िए। केवल कम rating होने के कारण genuine feedback reject न करें।"
+    },
+    {
+      "id": "cr-10",
+      "title": "Check the linked order",
+      "text": "Review का order number खोलकर customer और delivered status confirm करें।"
+    },
+    {
+      "id": "cr-11",
+      "title": "Check unpublished visibility",
+      "text": "Product page के Reviews tab में pending feedback public नहीं दिखना चाहिए।"
+    },
+    {
+      "id": "cr-12",
+      "title": "Approve the review",
+      "text": "Moderate Reviews permission वाले staff सही row का green approve icon दबाएँ।"
+    },
+    {
+      "id": "cr-13",
+      "title": "Verify the approved list",
+      "text": "Approved filter में वही review और status जाँचिए।"
+    },
+    {
+      "id": "cr-14",
+      "title": "Verify the published review",
+      "text": "Storefront reload करके Customer Reviews में title, feedback, stars और Verified Purchase देखें।"
+    },
+    {
+      "id": "cr-15",
+      "title": "Open the reply dialog",
+      "text": "Admin में message icon से Reply to Review खोलिए। Reply देने से rating नहीं बदलती।"
+    },
+    {
+      "id": "cr-16",
+      "title": "Write a professional reply",
+      "text": "Customer को छोटा और विनम्र official response लिखिए। Private order या payment details public reply में न डालें।"
+    },
+    {
+      "id": "cr-17",
+      "title": "Save the official reply",
+      "text": "Post Reply दबाइए। Replied column में Yes जाँचिए।"
+    },
+    {
+      "id": "cr-18",
+      "title": "Verify the saved reply",
+      "text": "Reply dialog फिर खोलकर saved text confirm करें। इस version के storefront पर store reply अभी display नहीं होता।"
+    },
+    {
+      "id": "cr-19",
+      "title": "Update the official reply",
+      "text": "जरूरत हो तो उसी dialog में response सुधारिए। Customer के original feedback को admin यहाँ edit नहीं करता।"
+    },
+    {
+      "id": "cr-20",
+      "title": "Save the corrected response",
+      "text": "Post Reply फिर दबाकर corrected response save करें और दोबारा खोलकर verify करें।"
+    },
+    {
+      "id": "cr-21",
+      "title": "Reject a review when necessary",
+      "text": "इस training example में red Reject icon दिखाएँगे। असली review केवल policy के अनुसार reject करें; rating के कारण नहीं। यह delete नहीं है।"
+    },
+    {
+      "id": "cr-22",
+      "title": "Verify rejected status",
+      "text": "Rejected filter में वही review जाँचिए। Record और saved reply अभी भी मौजूद हैं।"
+    },
+    {
+      "id": "cr-23",
+      "title": "Verify the review is hidden",
+      "text": "Storefront refresh करके rejected feedback public list से हटना confirm करें।"
+    },
+    {
+      "id": "cr-24",
+      "title": "Restore publication",
+      "text": "Decision बदलने पर उसी rejected row को approve करें। Public view में review वापस जाँचिए।"
+    },
+    {
+      "id": "cr-25",
+      "title": "Review the supported limits",
+      "text": "इस version में customer review edit या delete करने के buttons नहीं हैं। Admin के पास approve, reject और reply controls हैं।"
+    }
+  ]
+}

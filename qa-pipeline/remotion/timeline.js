@@ -183,7 +183,7 @@ export function buildTimeline(shotlist, run, fps, options = {}) {
   for (const group of groups) {
     const union = unionOf(group.items.map((i) => i.box));
     group.union = union;
-    group.zoom = fitZoom(union, viewport, 1.55);
+    group.zoom = Math.max(fitZoom(union, viewport, 1.55), Math.min(1.55, shotlist.camera_min_zoom ?? 1));
     // The pull-back at the end of a group: wide enough to see the whole region again, so
     // the last action of a flow (submitting a form) is read in context rather than as a
     // close-up of a button.
@@ -223,7 +223,7 @@ export function buildTimeline(shotlist, run, fps, options = {}) {
     // pushed in hides the very page the shot is introducing. Zooming only ever happens on a
     // LATER shot in the group, once the page has been established.
     let camera;
-    if (isGroupStart || !hasTarget) {
+    if (isGroupStart || !hasTarget || entry.emphasis === 'pause') {
       camera = { cx: viewport.width / 2, cy: viewport.height / 2, zoom: 1 };
     } else if (isGroupEnd && group.items.length > 1) {
       // The last step of a multi-step group is its payoff (submitting the form). Framing it

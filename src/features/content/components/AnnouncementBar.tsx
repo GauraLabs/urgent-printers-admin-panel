@@ -12,6 +12,7 @@ import { LoadingSkeleton } from '@/components/common/LoadingSkeleton';
 import { useAnnouncement, useAnnouncementMutation } from '../hooks/useContent';
 import { usePermissions } from '@/hooks/usePermissions';
 import { LinkUrlPicker, LINK_URL_PATTERN, LINK_URL_INVALID_MESSAGE } from './LinkUrlPicker';
+import { istLocalToUtcIso, utcIsoToIstLocal } from '@/lib/utils/istDate';
 
 const schema = z.object({
   message: z.string().min(1, 'Message is required'),
@@ -53,7 +54,8 @@ function renderAnnouncementMessage(message: string, countdownEndAt: string | und
   const hasPlaceholder = message.includes(TIMER_PLACEHOLDER);
   if (!hasPlaceholder) return message;
 
-  const target = countdownEndAt ? new Date(countdownEndAt) : null;
+  const targetIso = istLocalToUtcIso(countdownEndAt);
+  const target = targetIso ? new Date(targetIso) : null;
   const active = !!target && !Number.isNaN(target.getTime()) && target.getTime() > now;
 
   if (active && target) {
@@ -64,7 +66,9 @@ function renderAnnouncementMessage(message: string, countdownEndAt: string | und
 
 function isCountdownExpired(message: string, countdownEndAt: string | undefined, now: number): boolean {
   if (!message.includes(TIMER_PLACEHOLDER) || !countdownEndAt) return false;
-  const target = new Date(countdownEndAt);
+  const targetIso = istLocalToUtcIso(countdownEndAt);
+  if (!targetIso) return false;
+  const target = new Date(targetIso);
   return !Number.isNaN(target.getTime()) && target.getTime() <= now;
 }
 
@@ -87,7 +91,7 @@ export function AnnouncementBar() {
         bg_color: announcement.bg_color,
         text_color: announcement.text_color,
         is_active: announcement.is_active,
-        countdown_end_at: announcement.countdown_end_at?.slice(0, 16) ?? '',
+        countdown_end_at: utcIsoToIstLocal(announcement.countdown_end_at),
       });
     }
   }, [announcement, reset]);
@@ -97,7 +101,7 @@ export function AnnouncementBar() {
     try {
       await mutation.mutateAsync({
         ...values,
-        countdown_end_at: values.countdown_end_at ? new Date(values.countdown_end_at).toISOString() : null,
+        countdown_end_at: istLocalToUtcIso(values.countdown_end_at),
       });
       toast.success('Announcement bar updated');
     } catch { toast.error('Failed to save'); }
@@ -222,7 +226,7 @@ export function AnnouncementBar() {
           </div>
 
           <div>
-            <label className={cls.label}>Countdown deadline (optional)</label>
+            <label className={cls.label}>Countdown deadline (IST, optional)</label>
             <input {...register('countdown_end_at')} type="datetime-local" className={cls.input} />
             <p className="mt-1 text-[11px] text-[var(--text-muted)]">
               Only shown if you include <code>{TIMER_PLACEHOLDER}</code> in your message above. Leave this blank (or omit <code>{TIMER_PLACEHOLDER}</code>) to skip the timer entirely.

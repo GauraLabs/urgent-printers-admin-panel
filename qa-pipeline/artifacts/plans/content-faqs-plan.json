@@ -1,0 +1,171 @@
+{
+  "feature_found": true,
+  "feature_name": "Content FAQs",
+  "source_files": [
+    "src/features/content/components/FaqsManager.tsx",
+    "../urgent-printers-backend/app/api/v1/routes/admin/content.py",
+    "../urgent-printers-backend/app/api/v1/routes/public/content.py"
+  ],
+  "business_goal": "Teach a website operator to configure, publish, verify, update and retire customer-facing content.",
+  "user_goal": "FAQ बनाना, जवाब सुधारना और customer view जाँचना सीखिए।",
+  "user_journey": [
+    {
+      "step": "Create a draft FAQ",
+      "route_or_state": "/content/faqs and customer storefront"
+    },
+    {
+      "step": "Publish and read the answer",
+      "route_or_state": "/content/faqs and customer storefront"
+    },
+    {
+      "step": "Edit and reorder",
+      "route_or_state": "/content/faqs and customer storefront"
+    },
+    {
+      "step": "Hide, restore and delete",
+      "route_or_state": "/content/faqs and customer storefront"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Inactive, scheduled or expired content must be checked on the actual storefront. Saved selections and published changes are different.",
+      "existing_validation": "Actual UI controls and actual public content responses, including customer links and visibility.",
+      "risk_note": "Use approved customer content. Deleting is permanent; hiding is reversible."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "fa-01",
+      "action": "Open FAQs",
+      "selector": null,
+      "expected_result": "Content में FAQs खोलिए। Customer के common questions यहाँ manage होते हैं।"
+    },
+    {
+      "step_id": "fa-02",
+      "action": "Add a question",
+      "selector": null,
+      "expected_result": "Add FAQ दबाइए।"
+    },
+    {
+      "step_id": "fa-03",
+      "action": "Write the question",
+      "selector": null,
+      "expected_result": "Question ग्राहक की भाषा में साफ लिखिए।"
+    },
+    {
+      "step_id": "fa-04",
+      "action": "Choose a group",
+      "selector": null,
+      "expected_result": "Category से related questions को एक group में रख सकते हैं।"
+    },
+    {
+      "step_id": "fa-05",
+      "action": "Write the answer",
+      "selector": null,
+      "expected_result": "Answer में छोटा और सही जवाब दीजिए। Product-specific promise न जोड़ें।"
+    },
+    {
+      "step_id": "fa-06",
+      "action": "Save as inactive",
+      "selector": null,
+      "expected_result": "पहले Active off रखकर जवाब review कर सकते हैं।"
+    },
+    {
+      "step_id": "fa-07",
+      "action": "Create the FAQ",
+      "selector": null,
+      "expected_result": "Create दबाइए। FAQ अब admin में save है।"
+    },
+    {
+      "step_id": "fa-08",
+      "action": "Check the unpublished FAQ",
+      "selector": null,
+      "expected_result": "Storefront FAQ page खोलिए। Inactive question वहाँ नहीं दिखता।"
+    },
+    {
+      "step_id": "fa-09",
+      "action": "Edit the saved question",
+      "selector": null,
+      "expected_result": "FAQ के pencil icon से editing खोलिए।"
+    },
+    {
+      "step_id": "fa-10",
+      "action": "Publish the FAQ",
+      "selector": null,
+      "expected_result": "Active on करके Save करें।"
+    },
+    {
+      "step_id": "fa-11",
+      "action": "Check the FAQ page",
+      "selector": null,
+      "expected_result": "FAQ page refresh करके अपना question ढूँढिए।"
+    },
+    {
+      "step_id": "fa-12",
+      "action": "Read the customer answer",
+      "selector": null,
+      "expected_result": "Question पर click करके पूरा answer पढ़िए।"
+    },
+    {
+      "step_id": "fa-13",
+      "action": "Update the answer",
+      "selector": null,
+      "expected_result": "जानकारी बदलने पर उसी FAQ का answer edit करें।"
+    },
+    {
+      "step_id": "fa-14",
+      "action": "Verify the correction",
+      "selector": null,
+      "expected_result": "Save करके customer page पर corrected answer जाँचिए।"
+    },
+    {
+      "step_id": "fa-15",
+      "action": "Add a related FAQ",
+      "selector": null,
+      "expected_result": "इसी category में एक और related question बनाइए।"
+    },
+    {
+      "step_id": "fa-16",
+      "action": "Reorder the questions",
+      "selector": null,
+      "expected_result": "Up arrow से question ऊपर रखिए। Important questions पहले रखें।"
+    },
+    {
+      "step_id": "fa-17",
+      "action": "Check the new order",
+      "selector": null,
+      "expected_result": "Customer page पर दोनों questions का क्रम verify करें।"
+    },
+    {
+      "step_id": "fa-18",
+      "action": "Hide a question",
+      "selector": null,
+      "expected_result": "पुराने answer को temporarily रोकने के लिए Active off करके Save करें।"
+    },
+    {
+      "step_id": "fa-19",
+      "action": "Check hidden visibility",
+      "selector": null,
+      "expected_result": "FAQ page refresh करें। Inactive question हट जाना चाहिए।"
+    },
+    {
+      "step_id": "fa-20",
+      "action": "Restore the question",
+      "selector": null,
+      "expected_result": "Active on और Save से question वापस publish होता है।"
+    },
+    {
+      "step_id": "fa-21",
+      "action": "Delete an outdated FAQ",
+      "selector": null,
+      "expected_result": "हमेशा के लिए हटाना हो तो trash icon चुनिए।"
+    },
+    {
+      "step_id": "fa-22",
+      "action": "Confirm removal",
+      "selector": null,
+      "expected_result": "Delete FAQ confirm कीजिए। Customer page पर भी removal जाँचिए।"
+    }
+  ]
+}

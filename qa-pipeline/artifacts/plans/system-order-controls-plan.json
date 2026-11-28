@@ -1,0 +1,132 @@
+{
+  "feature_found": true,
+  "feature_name": "Pause and Resume New Orders",
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "business_goal": "Teach website operators to manage staff access, saved settings, monitoring and incident follow-up; explicitly identify demo-only settings.",
+  "user_goal": "Incident में नए orders रोकना, customer message जाँचना और checkout दोबारा शुरू करना सीखिए।",
+  "user_journey": [
+    {
+      "step": "When to halt new orders",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Pause with a customer message",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Verify customer checkout is blocked",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    },
+    {
+      "step": "Resume and verify checkout",
+      "route_or_state": "/staff, /settings and /system; verify actual saved state and customer impact"
+    }
+  ],
+  "error_paths": [],
+  "edge_cases": [
+    {
+      "case": "Some settings forms are demo-only; never present those as persistent controls.",
+      "existing_validation": "Real saved staff/preferences/COD/order-halt and pricing resolution responses; reload and storefront checks.",
+      "risk_note": "Use owned development fixtures. Health states are observed, not simulated. Do not claim alert delivery or repair from a toggle."
+    }
+  ],
+  "happy_path": [
+    {
+      "step_id": "oc-01",
+      "action": "Open Operations Settings",
+      "selector": null,
+      "expected_result": "Settings में Operations खोलिए। Emergency Halt केवल incident के दौरान इस्तेमाल करें।"
+    },
+    {
+      "step_id": "oc-02",
+      "action": "Review the halt control",
+      "selector": null,
+      "expected_result": "Halt नए checkouts को रोकता है। पहले से placed orders cancel नहीं होते और उनकी processing चलती रहती है।"
+    },
+    {
+      "step_id": "oc-03",
+      "action": "Open halt confirmation",
+      "selector": null,
+      "expected_result": "Emergency Halt switch चालू करें। Confirmation में customer message और internal reason भरेंगे।"
+    },
+    {
+      "step_id": "oc-04",
+      "action": "Write the customer message",
+      "selector": null,
+      "expected_result": "Customer को साफ और छोटा message दें। Internal details या private information यहाँ न लिखें।"
+    },
+    {
+      "step_id": "oc-05",
+      "action": "Record the internal reason",
+      "selector": null,
+      "expected_result": "Internal reason staff के लिए है। Incident और जिम्मेदार team का context लिखिए।"
+    },
+    {
+      "step_id": "oc-06",
+      "action": "Confirm Halt Orders",
+      "selector": null,
+      "expected_result": "Halt Orders दबाइए। यह तुरंत save होता है; नीचे वाले Save Changes का इंतजार नहीं करता।"
+    },
+    {
+      "step_id": "oc-07",
+      "action": "Check the blocked state",
+      "selector": null,
+      "expected_result": "Admin में BLOCKED status और customer-facing message जाँचिए।"
+    },
+    {
+      "step_id": "oc-08",
+      "action": "Check the storefront message",
+      "selector": null,
+      "expected_result": "Customer website खोलिए। Public notice में वही message दिखना चाहिए; internal reason public नहीं होना चाहिए।"
+    },
+    {
+      "step_id": "oc-09",
+      "action": "Check checkout restrictions",
+      "selector": null,
+      "expected_result": "Checkout में customer को paused message मिलता है और नया order place नहीं होना चाहिए।"
+    },
+    {
+      "step_id": "oc-10",
+      "action": "Return to Operations",
+      "selector": null,
+      "expected_result": "Admin Operations में वापस जाएँ। Incident ठीक होने की पुष्टि करने के बाद ही orders resume करें।"
+    },
+    {
+      "step_id": "oc-11",
+      "action": "Open resume confirmation",
+      "selector": null,
+      "expected_result": "Halt switch बंद करें। Resume confirmation ध्यान से पढ़िए।"
+    },
+    {
+      "step_id": "oc-12",
+      "action": "Resume accepting orders",
+      "selector": null,
+      "expected_result": "Resume Orders दबाइए। अब नए checkouts फिर से स्वीकार हो सकते हैं।"
+    },
+    {
+      "step_id": "oc-13",
+      "action": "Verify the public notice is gone",
+      "selector": null,
+      "expected_result": "Storefront reload करके paused notice हटना जाँचिए।"
+    },
+    {
+      "step_id": "oc-14",
+      "action": "Verify checkout is available",
+      "selector": null,
+      "expected_result": "Checkout फिर खोलिए। Pause message हटना confirm करें; test के लिए अनावश्यक order न बनाएँ।"
+    },
+    {
+      "step_id": "oc-15",
+      "action": "Verify saved state after reload",
+      "selector": null,
+      "expected_result": "Admin reload करके Halt off जाँचिए। सामान्य turnaround fields अभी demo हैं; उनसे incident control नहीं बदलता।"
+    }
+  ]
+}

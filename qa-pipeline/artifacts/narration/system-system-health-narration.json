@@ -1,0 +1,63 @@
+{
+  "lines": [
+    {
+      "step_id": "intro",
+      "text": "Service status पढ़ना, refresh करना और सही information के साथ technical team तक issue पहुँचाना सीखिए।"
+    },
+    {
+      "step_id": "sh-01",
+      "text": "System में System Health खोलिए। यह monitoring page है; यहाँ customer order edit नहीं होता।"
+    },
+    {
+      "step_id": "sh-02",
+      "text": "Healthy, Degraded, Down और Unknown अलग states हैं। Unknown का मतलब service ठीक होने की पुष्टि नहीं है।"
+    },
+    {
+      "step_id": "sh-03",
+      "text": "Response time और Checked time देखें। पुराने status को current result न समझें।"
+    },
+    {
+      "step_id": "sh-04",
+      "text": "Refresh दबाइए। Updated timestamps और status की तुलना करें।"
+    },
+    {
+      "step_id": "sh-05",
+      "text": "Database card का Re-check control इस्तेमाल करें। Re-check status जाँचता है; खराब service अपने आप repair नहीं करता।"
+    },
+    {
+      "step_id": "sh-06",
+      "text": "External services में Last success, Last failure या No traffic recorded देखें। Traffic न होने पर diagnosis अधूरा है।"
+    },
+    {
+      "step_id": "sh-07",
+      "text": "Pricing Diagnostics से storefront और server prices के differences जाँचे जाते हैं। इसका अलग detailed lesson है।"
+    },
+    {
+      "step_id": "sh-08",
+      "text": "Background Jobs में queued, processing, completed, failed और retrying status पढ़िए।"
+    },
+    {
+      "step_id": "sh-09",
+      "text": "Retries और Error column देखें। इस page पर job retry या delete करने का button नहीं है।"
+    },
+    {
+      "step_id": "sh-10",
+      "text": "Error Log में Warning, Error या Critical देखें। कोई entry न हो तो भी customer issue अलग से verify करें।"
+    },
+    {
+      "step_id": "sh-11",
+      "text": "Technical team को service name, समय, status और customer impact दें। Screenshots में private information साझा न करें।"
+    },
+    {
+      "step_id": "sh-12",
+      "text": "Issue ठीक होने के बाद Refresh करके status और customer flow फिर जाँचिए। केवल green badge पर भरोसा न करें।"
+    },
+    {
+      "step_id": "outro",
+      "text": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।"
+    }
+  ],
+  "feature_name": "system-system-health",
+  "language": "hinglish",
+  "voice_persona": "Calm clear male Hindi-English trainer"
+}

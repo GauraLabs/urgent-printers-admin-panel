@@ -1,0 +1,109 @@
+{
+  "feature": "system-staff-notifications",
+  "title": "Staff Notification Preferences",
+  "intro": "किस staff member को किस order event का alert मिलेगा, यह configure और verify करना सीखिए।",
+  "outro": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।",
+  "chapters": [
+    [
+      "sn-01",
+      "Choose an event"
+    ],
+    [
+      "sn-03",
+      "Choose staff channels"
+    ],
+    [
+      "sn-10",
+      "Status-change alerts"
+    ],
+    [
+      "sn-13",
+      "Verify and turn off a channel"
+    ]
+  ],
+  "source_files": [
+    "src/components/layout/SidebarNav.tsx",
+    "src/features/staff/components/StaffTable.tsx",
+    "src/features/settings/components/CodSettings.tsx",
+    "src/features/settings/components/EmergencyOrderHalt.tsx",
+    "src/features/system/priceMismatches/PriceMismatchDrawer.tsx",
+    "src/lib/api/settings.ts"
+  ],
+  "steps": [
+    {
+      "id": "sn-01",
+      "title": "Open Notification Preferences",
+      "text": "System में Notification Preferences खोलिए। यह staff alerts की अलग settings है।"
+    },
+    {
+      "id": "sn-02",
+      "title": "Choose the new-order event",
+      "text": "New Order Placed tab चुनिए। हर event की preferences अलग save होती हैं।"
+    },
+    {
+      "id": "sn-03",
+      "title": "Locate the team member",
+      "text": "Staff row पहचानिए। सही व्यक्ति के In-App, Email, SMS, WhatsApp और Push columns देखें।"
+    },
+    {
+      "id": "sn-04",
+      "title": "Enable In-App alerts",
+      "text": "In-App चालू करें। हर toggle तुरंत save होता है; अलग Save button नहीं है।"
+    },
+    {
+      "id": "sn-05",
+      "title": "Enable email alerts",
+      "text": "Email चालू करें। चुने हुए event के email alerts इस member को मिलेंगे।"
+    },
+    {
+      "id": "sn-06",
+      "title": "Check phone requirements",
+      "text": "Phone नहीं होने पर SMS और WhatsApp disabled हैं। पहले Staff में सही phone जोड़िए।"
+    },
+    {
+      "id": "sn-07",
+      "title": "Enable SMS for a phone contact",
+      "text": "Phone वाले member की SMS preference चालू करें। Number और delivery service दोनों सही होने चाहिए।"
+    },
+    {
+      "id": "sn-08",
+      "title": "Enable WhatsApp alerts",
+      "text": "WhatsApp toggle अलग से चालू करें। यह Email या SMS को अपने आप नहीं बदलता।"
+    },
+    {
+      "id": "sn-09",
+      "title": "Review Push alerts",
+      "text": "Push के लिए device permission और registered device भी जरूरी है। Toggle अकेले delivery की guarantee नहीं है।"
+    },
+    {
+      "id": "sn-10",
+      "title": "Choose status-change alerts",
+      "text": "Order Status Changed tab खोलिए। New Order की choices यहाँ अपने आप copy नहीं होतीं।"
+    },
+    {
+      "id": "sn-11",
+      "title": "Enable status-change In-App",
+      "text": "इस event के लिए In-App चालू करें। केवल जरूरी milestones की alerts रखें।"
+    },
+    {
+      "id": "sn-12",
+      "title": "Enable status-change email",
+      "text": "Order Status Changed के लिए Email चालू करें।"
+    },
+    {
+      "id": "sn-13",
+      "title": "Verify saved preferences",
+      "text": "Page reload करके दोनों events की saved settings जाँचिए।"
+    },
+    {
+      "id": "sn-14",
+      "title": "Turn off an unwanted alert",
+      "text": "New Order Placed में Email बंद करें। यह member का account या दूसरे channels बंद नहीं करता।"
+    },
+    {
+      "id": "sn-15",
+      "title": "Verify the disabled channel",
+      "text": "Reload के बाद Email off और In-App on confirm करें। जरूरत बदलने पर इन्हीं controls से restore करें।"
+    }
+  ]
+}

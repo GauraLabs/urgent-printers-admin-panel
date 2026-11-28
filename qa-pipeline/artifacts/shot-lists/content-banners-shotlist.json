@@ -1,0 +1,233 @@
+{
+  "feature_name": "Content Banners",
+  "camera_min_zoom": 1.4,
+  "total_estimated_duration_ms": 98000,
+  "shots": [
+    {
+      "step_id": "ba-01",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open Banners",
+      "callout_position": "right",
+      "transition_in": "cut"
+    },
+    {
+      "step_id": "ba-02",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Add a banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-03",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Write the headline",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-04",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Add supporting text",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-05",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Set a badge",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-06",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Upload artwork",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-07",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Check image quality",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-08",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Choose a destination",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-09",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Name the button",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-10",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Set the display dates",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-11",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save without publishing",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-12",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Create the banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-13",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check the hidden banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-14",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Open the saved banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-15",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Publish the banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-16",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Set the slide order",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-17",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Preview the homepage",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-18",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Test the button",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-19",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Update the headline",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-20",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Save the update",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-21",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Schedule a future banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-22",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check scheduled visibility",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-23",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Check an expired banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-24",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Restore an evergreen banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-25",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Hide the banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-26",
+      "emphasis": "zoom",
+      "duration_ms": 3500,
+      "callout_text": "Verify it is hidden",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-27",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Delete an old banner",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    },
+    {
+      "step_id": "ba-28",
+      "emphasis": "pause",
+      "duration_ms": 3500,
+      "callout_text": "Confirm deletion",
+      "callout_position": "right",
+      "transition_in": "crossfade"
+    }
+  ],
+  "flagged_for_review": [],
+  "reviewed_console_findings": []
+}

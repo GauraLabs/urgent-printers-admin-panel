@@ -1,0 +1,63 @@
+{
+  "lines": [
+    {
+      "step_id": "intro",
+      "text": "Settings के sections समझिए और पहचानिए कि कौन से controls अभी website पर काम करते हैं।"
+    },
+    {
+      "step_id": "so-01",
+      "text": "System में Settings खोलिए। ऊपर General, Operations, Notifications और Payments tabs हैं।"
+    },
+    {
+      "step_id": "so-02",
+      "text": "General में business name, GST और invoice address के fields हैं। इस version में इनकी live saving अभी उपलब्ध नहीं है।"
+    },
+    {
+      "step_id": "so-03",
+      "text": "Support Email और Phone के fields देखें। अभी यहाँ edit करने से customer website के contacts update होने का भरोसा न करें।"
+    },
+    {
+      "step_id": "so-04",
+      "text": "Timezone और Currency choices दिखती हैं। इन demo fields से website की currency बदलने की कोशिश न करें।"
+    },
+    {
+      "step_id": "so-05",
+      "text": "Operations tab खोलिए। Emergency Halt वास्तविक control है और तुरंत save होता है।"
+    },
+    {
+      "step_id": "so-06",
+      "text": "Turnaround, capacity और artwork rules के बाकी fields अभी demo values दिखाते हैं। इन्हें लागू settings न समझें।"
+    },
+    {
+      "step_id": "so-07",
+      "text": "Notifications tab में customer और admin alert categories दिखाई देती हैं।"
+    },
+    {
+      "step_id": "so-08",
+      "text": "Order Confirmed, Dispatched और Artwork Approval के Email और SMS fields अभी live delivery settings से जुड़े नहीं हैं।"
+    },
+    {
+      "step_id": "so-09",
+      "text": "Staff alerts बदलने के लिए System का Notification Preferences page इस्तेमाल करें।"
+    },
+    {
+      "step_id": "so-10",
+      "text": "Payments tab खोलिए। ऊपर Razorpay और Paytm fields अभी demo हैं; ये असली gateway configure नहीं करते।"
+    },
+    {
+      "step_id": "so-11",
+      "text": "नीचे Cash on Delivery वास्तविक saved control है। COD enable और amount limits अलग Save COD settings से बदलती हैं।"
+    },
+    {
+      "step_id": "so-12",
+      "text": "अगले lessons में Emergency Halt और COD का actual customer view जाँचेंगे। बाकी demo fields के लिए administrator से संपर्क करें।"
+    },
+    {
+      "step_id": "outro",
+      "text": "हर change के बाद saved state और उसका actual असर जाँचिए। जरूरत हो तो इस lesson के chapter से step फिर देखिए।"
+    }
+  ],
+  "feature_name": "system-settings-overview",
+  "language": "hinglish",
+  "voice_persona": "Calm clear male Hindi-English trainer"
+}
